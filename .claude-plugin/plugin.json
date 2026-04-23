@@ -1,0 +1,41 @@
+{
+  "name": "chio",
+  "version": "0.1.0",
+  "description": "Bond Claude Code to a Chio policy. Mediate every tool call; stream signed receipts.",
+  "author": {
+    "name": "Backbay Industries",
+    "url": "https://github.com/backbay-industries"
+  },
+  "homepage": "https://chio.world/plugins/claude-code",
+  "repository": "https://github.com/backbay-industries/chio-claude-code-plugin",
+  "license": "Apache-2.0",
+  "keywords": ["chio", "capabilities", "receipts", "policy", "agent-governance"],
+  "commands": ["./commands/"],
+  "hooks": "./hooks/hooks.json",
+  "userConfig": {
+    "policy_path": {
+      "type": "file",
+      "title": "Policy path",
+      "description": "Path to the active Chio policy (.policy.yaml). Used by /chio:bond and the PreToolUse hook.",
+      "sensitive": false
+    },
+    "chio_binary": {
+      "type": "file",
+      "title": "chio binary",
+      "description": "Path to the `chio` CLI binary (default: chio on PATH).",
+      "sensitive": false
+    },
+    "trust_url": {
+      "type": "string",
+      "title": "Trust plane URL",
+      "description": "Trust-control plane base URL (default: http://127.0.0.1:8940).",
+      "sensitive": false
+    },
+    "service_token": {
+      "type": "string",
+      "title": "Trust plane service token",
+      "description": "Bearer token for the trust-control plane (only required when using a running `chio trust serve`).",
+      "sensitive": true
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "name": "@chio/claude-code-plugin",
+  "version": "0.2.0",
+  "description": "Claude Code plugin: bond any session to a Chio policy. Mediate every tool call through chio; stream signed receipts.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    ".claude-plugin",
+    "commands",
+    "hooks",
+    "scripts",
+    "examples",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test ./test/*.test.mjs",
+    "prepack": "node ./scripts/prep-publish.mjs && npm run build",
+    "postpack": "node ./scripts/restore-publish.mjs"
+  },
+  "keywords": [
+    "chio",
+    "claude-code",
+    "plugin",
+    "receipts",
+    "capabilities",
+    "agent-governance"
+  ],
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@chio-protocol/sdk": "file:../arc/packages/sdk/chio-ts",
+    "@chio/bridge": "file:../chio-bridge"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "~5.7.0"
+  }
+}

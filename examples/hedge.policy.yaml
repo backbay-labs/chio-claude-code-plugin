@@ -1,0 +1,40 @@
+# Policy for a small, self-contained trader.
+#
+# Parses through ChioBridge.loadPolicy against the real HushSpec schema
+# (crates/chio-policy/src/models.rs). Keys that are not first-class rules
+# in HushSpec 0.1.0 (`velocity:`, `human_in_loop:`) live under
+# extensions.chio.* per ARC_UPSTREAM_PROPOSAL; chio ignores unknown
+# extensions, and the bridge reads them for budget/velocity/HITL guards.
+
+hushspec: "0.1.0"
+name: tiny-hedge-fund
+description: A paper-trading book against Alpaca, bonded to Claude Code.
+
+rules:
+  tool_access:
+    enabled: true
+    default: block
+    allow:
+      - place_order
+      - read_prices
+      - email_receipt
+
+  egress:
+    enabled: true
+    default: block
+    allow:
+      - https://paper-api.alpaca.markets
+
+  shell_commands:
+    enabled: true
+    default: block
+    allow: []
+
+extensions:
+  chio:
+    velocity:
+      budget_usd: 500
+      max_invocations: 40
+      window_seconds: 3600
+    human_in_loop:
+      approve_above_usd: 150
