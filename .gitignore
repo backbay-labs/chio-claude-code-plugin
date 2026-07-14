@@ -1,5 +1,9 @@
 node_modules/
-dist/
+# Ship the bundled runtime JS (a marketplace install is a git clone with no
+# build step); keep type declarations and sourcemaps out of version control.
+/dist/**
+!/dist/**/
+!/dist/**/*.js
 *.log
 .DS_Store
 .env

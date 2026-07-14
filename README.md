@@ -6,17 +6,30 @@ Bond any Claude Code session to a Chio policy. Every tool Claude reaches for —
 
 ## Install
 
-```bash
-# 1. Build the plugin (installs @chio/bridge and @chio-protocol/sdk via workspace)
-cd standalone/chio-claude-code-plugin
-bun install
-bun run build
+This repo is a single-plugin Claude Code marketplace. Install it in two lines:
 
-# 2. Point Claude Code at it
-claude --plugin-dir ./ # for dev
-# or
-claude plugin install chio@<marketplace>
+```bash
+claude plugin marketplace add backbay-labs/chio-claude-code-plugin
+claude plugin install chio@chio
 ```
+
+The plugin ships a self-contained bundle under `dist/`, so there is no build
+step and no `npm install` at install time. Then bond a session with
+`/chio:bond <policy>`.
+
+### Develop / rebuild the bundle
+
+The bundle is generated from source and depends on the sibling `../chio-bridge`
+checkout. To regenerate it after changing `src/`:
+
+```bash
+bun install
+bun run build   # tsc types + esbuild self-contained bundle
+```
+
+`bun run build` bundles `@chio/bridge`, `@chio-protocol/sdk`, `yaml`, and `zod`
+into the four runtime entrypoints (`dist/index.js` and `dist/state/*.js`) so the
+hooks and command scripts run from a plain git clone.
 
 ## Slash commands
 

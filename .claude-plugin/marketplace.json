@@ -1,0 +1,14 @@
+{
+  "name": "chio",
+  "description": "Chio protocol plugins for Claude Code: policy mediation, capability bonding, and signed receipts.",
+  "owner": {
+    "name": "Backbay Industries"
+  },
+  "plugins": [
+    {
+      "name": "chio",
+      "source": "./",
+      "description": "Bond any Claude Code session to a Chio policy. Mediate every tool call through the chio kernel; stream signed receipts."
+    }
+  ]
+}
