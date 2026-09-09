@@ -284,6 +284,9 @@ outcome for each negative case, so generic gateway unavailability cannot satisfy
 a capability or receipt-rejection check. An actual-host interruption after the
 resource commit is implemented as a separate `cancel-after-dispatch` scenario;
 it remains unexecuted until the shared current runtime and artifact are ready.
+The separate `parallel-calls` scenario emits two tool calls together and requires
+distinct verified request identities plus both independent resource effects;
+it is likewise unexecuted pending that current runtime.
 
 
 ## Process boundary and read-observation limits
@@ -302,4 +305,4 @@ The independent file observer proves absence of forbidden file mutations. For
 a forbidden read, unchanged file hashes do not establish absence of the read
 itself. The probe has a verified denial and no secret returned to the model;
 an independent backend dispatch/access record is still needed to establish
-prevention at that read boundary. That requirement is not removed from I02.
+prevention at that read boundary. That requirement is not removed from I03.

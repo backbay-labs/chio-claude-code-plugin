@@ -12,7 +12,7 @@ p.add_argument('--output',type=Path,required=True)
 p.add_argument('--observer-image',required=True)
 p.add_argument('--volume',required=True)
 p.add_argument('--claude',default=shutil.which('claude'))
-p.add_argument('--scenario',choices=['workflow','native-inventory','forbidden-read','forbidden-write','config-tamper','unreachable','loss-between-calls','malformed-handshake','timeout-handshake','wrong-subject','wrong-capability','wrong-kernel-session','budget','fresh-valid','gateway-crash','unknown-outcome','revoked','forged-receipt','substituted-request','substituted-result','cancel-after-dispatch','restart-fenced'],default='workflow')
+p.add_argument('--scenario',choices=['workflow','native-inventory','forbidden-read','forbidden-write','config-tamper','unreachable','loss-between-calls','malformed-handshake','timeout-handshake','wrong-subject','wrong-capability','wrong-kernel-session','budget','fresh-valid','gateway-crash','unknown-outcome','revoked','forged-receipt','substituted-request','substituted-result','cancel-after-dispatch','restart-fenced','parallel-calls'],default='workflow')
 p.add_argument('--budget-read-path')
 p.add_argument('--valid-receipt-source',type=Path)
 p.add_argument('--retained-marker-path')
@@ -62,6 +62,7 @@ elif a.scenario in ['budget','fresh-valid']:
  steps=[('mcp__chio__read_text_file',{'path':a.budget_read_path}) for _ in range(65 if a.scenario=='budget' else 1)]
 elif a.scenario=='gateway-crash':steps=[('mcp__chio__write_file',{'path':marker,'content':'BEFORE_GATEWAY_CRASH'}),('mcp__chio__write_file',{'path':marker+'-second','content':'AFTER_GATEWAY_CRASH'}),('Bash',{'command':f'printf bypass > {local_marker}'})]
 elif a.scenario in ['unknown-outcome','forged-receipt','substituted-request','substituted-result']:steps=[('mcp__chio__write_file',{'path':marker,'content':'UNKNOWN_FIRST_COMMIT'}),('mcp__chio__write_file',{'path':marker,'content':'UNKNOWN_FIRST_COMMIT'}),('mcp__chio__write_file',{'path':marker+'-second','content':'FORBIDDEN_REDISPATCH'})]
+if a.scenario=='parallel-calls':steps=[('mcp__chio__write_file',{'path':marker,'content':'PARALLEL_ONE'}),('mcp__chio__write_file',{'path':marker+'-second','content':'PARALLEL_TWO'})]
 if a.scenario=='restart-fenced':steps=[('mcp__chio__write_file',{'path':marker,'content':'UNKNOWN_FIRST_COMMIT'}),('mcp__chio__write_file',{'path':marker+'-second','content':'FORBIDDEN_RESTART_REDISPATCH'})]
 if a.scenario=='cancel-after-dispatch':steps=[('mcp__chio__write_file',{'path':marker,'content':'COMMITTED_BEFORE_HOST_CANCELLATION'}),('mcp__chio__write_file',{'path':marker+'-second','content':'FORBIDDEN_AFTER_CANCELLATION'})]
 config_before=hashlib.sha256(a.gateway_config.read_bytes()).hexdigest()
@@ -85,17 +86,22 @@ class Model(http.server.BaseHTTPRequestHandler):
     except (ValueError,ProcessLookupError):pass
   requests.append({'tools':[t.get('name') for t in body.get('tools',[])],'tool_results':results})
   final=count>=len(steps) or len(requests)>len(steps)+2
-  if final: block={'type':'text','text':'Fixture finished; inspect resource observer and verified gateway outcomes.'}
-  else: name,params=steps[count];block={'type':'tool_use','id':f'toolu_chio_kernel_{count:03}','name':name,'input':params}
-  msg={'id':f'msg_chio_{len(requests)}','type':'message','role':'assistant','model':body['model'],'content':[block],
+  if final:blocks=[{'type':'text','text':'Fixture finished; inspect resource observer and verified gateway outcomes.'}]
+  else:
+   indices=range(count,len(steps)) if a.scenario=='parallel-calls' else [count]
+   blocks=[{'type':'tool_use','id':f'toolu_chio_kernel_{index:03}','name':steps[index][0],'input':steps[index][1]} for index in indices]
+  requests[-1]['returned_tool_calls']=[block['name'] for block in blocks if block['type']=='tool_use']
+  msg={'id':f'msg_chio_{len(requests)}','type':'message','role':'assistant','model':body['model'],'content':blocks,
        'stop_reason':'end_turn' if final else 'tool_use','stop_sequence':None,'usage':{'input_tokens':100,'output_tokens':10}}
   self.send_response(200);self.send_header('Content-Type','text/event-stream' if body.get('stream') else 'application/json');self.end_headers()
   if not body.get('stream'):self.wfile.write(json.dumps(msg).encode());return
   def emit(kind,value):self.wfile.write(f'event: {kind}\ndata: {json.dumps(dict(type=kind,**value))}\n\n'.encode());self.wfile.flush()
   emit('message_start',{'message':dict(msg,content=[],stop_reason=None,usage={'input_tokens':100,'output_tokens':0})})
-  emit('content_block_start',{'index':0,'content_block':dict(block,**({'input':{}} if block['type']=='tool_use' else {'text':''}))})
-  emit('content_block_delta',{'index':0,'delta':{'type':'input_json_delta','partial_json':json.dumps(block['input'])} if block['type']=='tool_use' else {'type':'text_delta','text':block['text']}})
-  emit('content_block_stop',{'index':0});emit('message_delta',{'delta':{'stop_reason':msg['stop_reason'],'stop_sequence':None},'usage':{'output_tokens':10}});emit('message_stop',{})
+  for index,block in enumerate(blocks):
+   emit('content_block_start',{'index':index,'content_block':dict(block,**({'input':{}} if block['type']=='tool_use' else {'text':''}))})
+   emit('content_block_delta',{'index':index,'delta':{'type':'input_json_delta','partial_json':json.dumps(block['input'])} if block['type']=='tool_use' else {'type':'text_delta','text':block['text']}})
+   emit('content_block_stop',{'index':index})
+  emit('message_delta',{'delta':{'stop_reason':msg['stop_reason'],'stop_sequence':None},'usage':{'output_tokens':10}});emit('message_stop',{})
 def observe():
  code="const fs=require('fs'),crypto=require('crypto');const out={};for(const path of "+json.dumps([observe_marker,observe_marker+'-second','/observe/forbidden.txt','/observe/secret.txt'])+" ){try{const b=fs.readFileSync(path);out[path]={exists:true,sha256:crypto.createHash('sha256').update(b).digest('hex'),bytes:b.length};if(path.startsWith('/observe/claude-'))out[path].content=b.toString('utf8');}catch(e){out[path]={exists:false,error:e.code}}}console.log(JSON.stringify(out));"
  cmd=['docker','run','--rm','--network','none','--read-only','--mount',f'type=volume,src={a.volume},dst=/observe,readonly','--entrypoint','node',a.observer_image,'-e',code]
@@ -218,6 +224,8 @@ if a.scenario=='workflow':
 elif a.scenario in ['loss-between-calls','gateway-crash','unknown-outcome','forged-receipt','substituted-request','substituted-result','cancel-after-dispatch']:
  expected={'loss-between-calls':'BEFORE_KERNEL_LOSS','gateway-crash':'BEFORE_GATEWAY_CRASH','unknown-outcome':'UNKNOWN_FIRST_COMMIT','forged-receipt':'UNKNOWN_FIRST_COMMIT','substituted-request':'UNKNOWN_FIRST_COMMIT','substituted-result':'UNKNOWN_FIRST_COMMIT','cancel-after-dispatch':'COMMITTED_BEFORE_HOST_CANCELLATION'}[a.scenario]
  if before[observe_marker]['exists'] or after[observe_marker].get('content')!=expected or after[observe_marker+'-second']['exists']:errors.append('kernel loss did not preserve the effect cutpoint')
+elif a.scenario=='parallel-calls':
+ if before[observe_marker]['exists'] or before[observe_marker+'-second']['exists'] or after[observe_marker].get('content')!='PARALLEL_ONE' or after[observe_marker+'-second'].get('content')!='PARALLEL_TWO':errors.append('parallel host calls did not commit the two independently observed results')
 elif a.scenario=='restart-fenced':
  if before[observe_marker].get('content')!='UNKNOWN_FIRST_COMMIT' or before[observe_marker]!=after[observe_marker] or after[observe_marker+'-second']['exists']:errors.append('retained unknown resource changed across restart')
 else:
@@ -252,6 +260,11 @@ if a.scenario in ['unknown-outcome','forged-receipt','substituted-request','subs
  require_outcome(0,'unknown','unverified')
  require_outcome(1,'not_dispatched','unverified','fences')
  require_outcome(2,'not_dispatched','unverified','fences')
+if a.scenario=='parallel-calls':
+ require_outcome(0,'completed','verified')
+ require_outcome(1,'completed','verified')
+ if not requests or len(requests[0].get('returned_tool_calls',[]))!=2:errors.append('model did not return two tool calls together')
+ if len(outcomes)<2 or outcomes[0].get('requestId')==outcomes[1].get('requestId'):errors.append('parallel operations lost distinct stable identities')
 if a.scenario=='restart-fenced':
  require_outcome(0,'unknown','unverified')
  require_outcome(1,'not_dispatched','unverified','fences')
