@@ -13,3 +13,5 @@ node_modules/
 coverage/
 .npmrc
 smoke-results/
+
+__pycache__/

@@ -1,0 +1,34 @@
+[
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [],
+    "returned_tool_calls": [
+      "mcp__chio__read_text_file"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "{\"state\":\"denied\",\"evidence\":\"verified\",\"requestId\":\"09b4326b-90d1-424d-82a8-97d7c2e685d4:d41b0e479b18c9b0c41741cd173ca9a0872e775729fe5917276520b12bd6e6d5\",\"receipt\":{\"action\":{\"parameter_hash\":\"2c98b3df041868746630bda0015a842d0df6a47168a98943b2eb4911fbf67e8b\",\"parameters\":{\"path\":\"/workspace/secret.txt\"}},\"boundary_class\":\"prevent\",\"capability_id\":\"cap-01a0877c-ac47-7a23-976b-ba622ca95d4a\",\"content_hash\":\"74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b\",\"decision\":{\"guard\":\"kernel\",\"reason\":\"guard denied the request: guard \\\"guard-pipeline\\\" denied the request\",\"verdict\":\"deny\"},\"evidence\":[{\"details\":\"action=deny; reason=guard denied request\",\"guard_name\":\"forbidden-path\",\"verdict\":false}],\"id\":\"afcb9604b6d0f4f7044b1956cf90b0c3b0204c5dcdcbb6c6fd361ffb5e6fe13f\",\"kernel_key\":\"4f7b043204cc4649daf200492e1c3903df8e221527e9a4d282ed9f0f9572442c\",\"metadata\":{\"attribution\":{\"delegation_depth\":0,\"issuer_key\":\"b6e210c32473a9ecded4714c85804c43f36ca98519d3c369e1c1bb09c539f1b3\",\"subject_key\":\"f22892deb2e1bd203ab23fc94d96db8c12ef910603d6fb05b999a46b2ab9bc81\"},\"budget_authority\":{\"authority_profile\":\"authoritative_hold_event\",\"guarantee_level\":\"single_node_atomic\",\"metering_profile\":\"max_cost_preauthorize_then_reconcile_actual\"},\"chio_receipt_signing_nonce\":\"rcpt-01a0877c-b11d-7823-84ce-91f7d4efda6d\",\"receipt_context\":{\"request_id\":\"09b4326b-90d1-424d-82a8-97d7c2e685d4:d41b0e479b18c9b0c41741cd173ca9a0872e775729fe5917276520b12bd6e6d5\"}},\"policy_hash\":\"057b9a8160375e7d90841325639bdd66050a454f393dae23e8c813b8df74b84e\",\"receipt_kind\":\"mediated_decision\",\"redaction_mode\":\"none\",\"signature\":\"868de786657f50fa39cb2f2402e058541bcbdc0d7b2047b1a3e2b36dfc1520f8f12e318a3193e1b98271162646e177f813b9e2f6614d8e159bba319d58b6630c\",\"timestamp\":1788979491,\"tool_name\":\"read_text_file\",\"tool_origin\":\"caller_executed\",\"tool_server\":\"fs\",\"trust_level\":\"mediated\"},\"reason\":\"guard denied the request: guard \\\"guard-pipeline\\\" denied the request\"}",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": []
+  }
+]

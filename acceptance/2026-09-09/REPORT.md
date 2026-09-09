@@ -334,3 +334,24 @@ still required. Actual Claude lifecycle, approvals, authority variations, final
 artifact installation and publication remain open. The latest 28 component
 tests and typecheck passed; the initial symlink-main import failure was repaired
 using canonical script-relative imports. No host is accepted by this checkpoint.
+
+
+## Clean-installed HTTP artifact
+
+Candidate tarball SHA256 `9f5ced4f47f8174b0de7dd9b469f9da4a6acb6147486ceaac611ac66d64f747c`
+installed offline with an empty npm cache. Its bundled qualification runner and
+launcher ran Claude 2.1.266 against the actual acknowledgement kernel
+`0e683f6f7cc8...`, using a deterministic local Messages fixture. Four scenarios
+passed: write/edit/read/list workflow, fresh-session forbidden read, fresh-session
+forbidden write, and 25 unavailable native tools. The separate audit volume
+recorded all four useful dispatches and no dispatch for the fresh forbidden
+read/write cases. Protected file hashes and operator configuration were unchanged
+by the negative cases. The actual fixture requests, tool results, independent
+resource/audit observations, exact runner and artifact identities are retained
+in `raw/packed-http`. All 28 component tests passed with zero skips.
+
+Authenticated Anthropic model use remains blocked on an isolated test credential.
+HTTP launcher death/cancellation, approvals and other remaining I01-I08 cases
+remain unresolved. The obsolete stdio gateway-crash branch in the historical
+harness has not been counted as a current HTTP lifecycle test. No integration
+acceptance or publication is claimed.
