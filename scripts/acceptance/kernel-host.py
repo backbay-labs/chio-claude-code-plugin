@@ -12,9 +12,10 @@ p.add_argument('--output',type=Path,required=True)
 p.add_argument('--observer-image',required=True)
 p.add_argument('--volume',required=True)
 p.add_argument('--claude',default=shutil.which('claude'))
-p.add_argument('--scenario',choices=['workflow','native-inventory','forbidden-read','forbidden-write','config-tamper','unreachable','loss-between-calls','malformed-handshake','timeout-handshake','wrong-subject','wrong-capability','wrong-kernel-session','budget','fresh-valid','gateway-crash','unknown-outcome','revoked','forged-receipt','substituted-request','substituted-result'],default='workflow')
+p.add_argument('--scenario',choices=['workflow','native-inventory','forbidden-read','forbidden-write','config-tamper','unreachable','loss-between-calls','malformed-handshake','timeout-handshake','wrong-subject','wrong-capability','wrong-kernel-session','budget','fresh-valid','gateway-crash','unknown-outcome','revoked','forged-receipt','substituted-request','substituted-result','cancel-after-dispatch','restart-fenced'],default='workflow')
 p.add_argument('--budget-read-path')
 p.add_argument('--valid-receipt-source',type=Path)
+p.add_argument('--retained-marker-path')
 p.add_argument('--plugin',type=Path,default=Path(__file__).resolve().parents[2])
 a=p.parse_args()
 a.output.mkdir(parents=True,exist_ok=True)
@@ -23,6 +24,9 @@ os.chmod(run,0o700)
 workspace=run/'workspace';workspace.mkdir()
 profile=run/'profile'
 marker='/workspace/claude-'+run.name.rsplit('-',1)[-1]+'.txt'
+if a.scenario=='restart-fenced':
+ if not a.retained_marker_path or not a.retained_marker_path.startswith('/workspace/claude-'):p.error('--retained-marker-path must identify the retained Claude probe resource')
+ marker=a.retained_marker_path
 observe_marker=marker.replace('/workspace/','/observe/')
 local_marker=str(workspace/'native-forbidden-effect.txt')
 steps=[
@@ -58,6 +62,8 @@ elif a.scenario in ['budget','fresh-valid']:
  steps=[('mcp__chio__read_text_file',{'path':a.budget_read_path}) for _ in range(65 if a.scenario=='budget' else 1)]
 elif a.scenario=='gateway-crash':steps=[('mcp__chio__write_file',{'path':marker,'content':'BEFORE_GATEWAY_CRASH'}),('mcp__chio__write_file',{'path':marker+'-second','content':'AFTER_GATEWAY_CRASH'}),('Bash',{'command':f'printf bypass > {local_marker}'})]
 elif a.scenario in ['unknown-outcome','forged-receipt','substituted-request','substituted-result']:steps=[('mcp__chio__write_file',{'path':marker,'content':'UNKNOWN_FIRST_COMMIT'}),('mcp__chio__write_file',{'path':marker,'content':'UNKNOWN_FIRST_COMMIT'}),('mcp__chio__write_file',{'path':marker+'-second','content':'FORBIDDEN_REDISPATCH'})]
+if a.scenario=='restart-fenced':steps=[('mcp__chio__write_file',{'path':marker,'content':'UNKNOWN_FIRST_COMMIT'}),('mcp__chio__write_file',{'path':marker+'-second','content':'FORBIDDEN_RESTART_REDISPATCH'})]
+if a.scenario=='cancel-after-dispatch':steps=[('mcp__chio__write_file',{'path':marker,'content':'COMMITTED_BEFORE_HOST_CANCELLATION'}),('mcp__chio__write_file',{'path':marker+'-second','content':'FORBIDDEN_AFTER_CANCELLATION'})]
 config_before=hashlib.sha256(a.gateway_config.read_bytes()).hexdigest()
 requests=[]
 fault_requests=[]
@@ -100,7 +106,7 @@ def observe():
 # persists credentials and cannot kill the shared kernel used by other hosts.
 fault_server=None
 active_config=a.gateway_config.resolve()
-if a.scenario in ['loss-between-calls','malformed-handshake','timeout-handshake','unknown-outcome','forged-receipt','substituted-request','substituted-result']:
+if a.scenario in ['loss-between-calls','malformed-handshake','timeout-handshake','unknown-outcome','forged-receipt','substituted-request','substituted-result','cancel-after-dispatch']:
  private=json.loads(a.gateway_config.read_text())
  upstream=private['execution']['endpoint']
  dispatched=[0]
@@ -109,7 +115,7 @@ if a.scenario in ['loss-between-calls','malformed-handshake','timeout-handshake'
   def do_POST(self):
    body=self.rfile.read(int(self.headers['Content-Length']))
    method=json.loads(body).get('method')
-   fail=a.scenario not in ['loss-between-calls','unknown-outcome','forged-receipt','substituted-request','substituted-result'] or dispatched[0]>0
+   fail=a.scenario not in ['loss-between-calls','unknown-outcome','forged-receipt','substituted-request','substituted-result','cancel-after-dispatch'] or dispatched[0]>0
    fault_requests.append({'method':method,'forwarded_to_kernel':not fail})
    if fail:
     if a.scenario=='timeout-handshake':time.sleep(1)
@@ -143,10 +149,16 @@ if a.scenario in ['loss-between-calls','malformed-handshake','timeout-handshake'
      lines.append(line)
     data=('\n'.join(lines)+'\n\n').encode()
     fault_requests[-1].update(evidence_mutation=a.scenario,mutation_applied=mutated)
+   if a.scenario=='cancel-after-dispatch' and method=='tools/call':
+    fault_requests[-1]['host_interrupt_after_upstream_result']=True
+    active_host.send_signal(signal.SIGINT)
+    time.sleep(2)
    self.send_response(status)
    for key in ['Content-Type','Mcp-Session-Id']:
     if headers.get(key):self.send_header(key,headers[key])
-   self.end_headers();self.wfile.write(data)
+   self.end_headers()
+   try:self.wfile.write(data)
+   except (BrokenPipeError,ConnectionResetError):pass
    if method=='tools/call':dispatched[0]+=1
  fault_server=http.server.ThreadingHTTPServer(('127.0.0.1',0),Fault)
  threading.Thread(target=fault_server.serve_forever,daemon=True).start()
@@ -165,8 +177,18 @@ env={k:v for k,v in os.environ.items() if not k.startswith(('CLAUDE_','ANTHROPIC
 env.update(ANTHROPIC_API_KEY='local-fixture-not-a-credential',ANTHROPIC_BASE_URL=f'http://127.0.0.1:{server.server_port}')
 start=time.monotonic()
 before=observe()
+host_timed_out=False
 try:
- r=subprocess.run(cmd,input='Execute the isolated workflow and adversarial probes requested by the local fixture, then stop.',env=env,cwd=workspace,capture_output=True,text=True,timeout=180)
+ active_host=subprocess.Popen(cmd,env=env,cwd=workspace,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,start_new_session=True)
+ try:
+  stdout,stderr=active_host.communicate('Execute the isolated workflow and adversarial probes requested by the local fixture, then stop.',timeout=180)
+ except subprocess.TimeoutExpired:
+  host_timed_out=True
+  os.killpg(active_host.pid,signal.SIGTERM)
+  try:stdout,stderr=active_host.communicate(timeout=10)
+  except subprocess.TimeoutExpired:
+   os.killpg(active_host.pid,signal.SIGKILL);stdout,stderr=active_host.communicate()
+ r=subprocess.CompletedProcess(cmd,active_host.returncode,stdout,stderr)
 finally:
  server.shutdown()
  if fault_server:fault_server.shutdown()
@@ -174,14 +196,15 @@ after=observe()
 (a.output/'host.stdout.jsonl').write_text(r.stdout);(a.output/'host.stderr.txt').write_text(r.stderr)
 (a.output/'model-requests.json').write_text(json.dumps(requests,indent=2)+'\n')
 (a.output/'observer-before.json').write_text(json.dumps(before,indent=2)+'\n');(a.output/'observer-after.json').write_text(json.dumps(after,indent=2)+'\n')
-summary={'evidence_class':'REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE','integration_acceptance':'UNRESOLVED','scenario':a.scenario,'exit_code':r.returncode,
+summary={'evidence_class':'REAL_HOST_RETAINED_JOURNAL_LOCAL_MODEL_FIXTURE' if a.scenario=='restart-fenced' else 'REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE','integration_acceptance':'UNRESOLVED','scenario':a.scenario,'exit_code':r.returncode,
  'host_version':subprocess.check_output([a.claude,'--version'],text=True).strip(),'host_sha256':cmd[5],
  'gateway_sha256':hashlib.sha256(gateway.read_bytes()).hexdigest(),'model_fixture_requests':len(requests),'steps':steps,
  'native_effect_observed':Path(local_marker).exists(),'observer_before':before,'observer_after':after,'elapsed_seconds':round(time.monotonic()-start,3),
- 'launch_command':cmd,'run_directory':str(run),'probe_source_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'config_sha256_before':config_before,'config_sha256_after':hashlib.sha256(a.gateway_config.read_bytes()).hexdigest(),'fault_requests':fault_requests}
+ 'host_timed_out':host_timed_out,'launch_command':cmd,'run_directory':str(run),'probe_source_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'config_sha256_before':config_before,'config_sha256_after':hashlib.sha256(a.gateway_config.read_bytes()).hexdigest(),'fault_requests':fault_requests}
 tool_results=requests[-1]['tool_results'] if requests else []
 errors=[]
-if len(tool_results)!=len(steps):errors.append('not every planned host call returned a result')
+if host_timed_out:errors.append('host exceeded probe deadline; raw partial output retained')
+if a.scenario!='cancel-after-dispatch' and len(tool_results)!=len(steps):errors.append('not every planned host call returned a result')
 if Path(local_marker).exists():errors.append('native effect occurred')
 for path in ['/observe/forbidden.txt','/observe/secret.txt']:
  if before[path]!=after[path]:errors.append('protected resource changed: '+path)
@@ -192,22 +215,56 @@ if a.scenario=='workflow':
    outcome=json.loads(result['content'][0]['text'])
    if outcome.get('state')!='completed' or outcome.get('evidence')!='verified':errors.append('useful gateway outcome unverified')
   except Exception:errors.append('missing useful gateway outcome')
-elif a.scenario in ['loss-between-calls','gateway-crash','unknown-outcome','forged-receipt','substituted-request','substituted-result']:
- expected={'loss-between-calls':'BEFORE_KERNEL_LOSS','gateway-crash':'BEFORE_GATEWAY_CRASH','unknown-outcome':'UNKNOWN_FIRST_COMMIT','forged-receipt':'UNKNOWN_FIRST_COMMIT','substituted-request':'UNKNOWN_FIRST_COMMIT','substituted-result':'UNKNOWN_FIRST_COMMIT'}[a.scenario]
+elif a.scenario in ['loss-between-calls','gateway-crash','unknown-outcome','forged-receipt','substituted-request','substituted-result','cancel-after-dispatch']:
+ expected={'loss-between-calls':'BEFORE_KERNEL_LOSS','gateway-crash':'BEFORE_GATEWAY_CRASH','unknown-outcome':'UNKNOWN_FIRST_COMMIT','forged-receipt':'UNKNOWN_FIRST_COMMIT','substituted-request':'UNKNOWN_FIRST_COMMIT','substituted-result':'UNKNOWN_FIRST_COMMIT','cancel-after-dispatch':'COMMITTED_BEFORE_HOST_CANCELLATION'}[a.scenario]
  if before[observe_marker]['exists'] or after[observe_marker].get('content')!=expected or after[observe_marker+'-second']['exists']:errors.append('kernel loss did not preserve the effect cutpoint')
+elif a.scenario=='restart-fenced':
+ if before[observe_marker].get('content')!='UNKNOWN_FIRST_COMMIT' or before[observe_marker]!=after[observe_marker] or after[observe_marker+'-second']['exists']:errors.append('retained unknown resource changed across restart')
 else:
  if after[observe_marker]['exists']:errors.append('forbidden new resource effect')
 if summary['config_sha256_before']!=summary['config_sha256_after']:errors.append('private enforcement configuration changed')
+outcomes=[]
+for result in tool_results:
+ try:
+  content=result['content'];text=content[0]['text'] if isinstance(content,list) else content.split('\n\n<')[0]
+  outcomes.append(json.loads(text))
+ except (KeyError,TypeError,ValueError,IndexError):outcomes.append({})
+def require_outcome(index,state,evidence,reason=None):
+ outcome=outcomes[index] if len(outcomes)>index else {}
+ if outcome.get('state')!=state or outcome.get('evidence')!=evidence or (reason and reason not in outcome.get('reason','')):
+  errors.append(f'call {index+1} did not produce expected {state}/{evidence} outcome'+(f' ({reason})' if reason else ''))
 if a.scenario in ['budget','fresh-valid']:
- outcomes=[]
- for result in tool_results:
-  try:
-   content=result['content'];text=content[0]['text'] if isinstance(content,list) else content.split('\n\n<')[0]
-   outcomes.append(json.loads(text))
-  except Exception:outcomes.append({})
  expected_count=64 if a.scenario=='budget' else 1
- if len(outcomes)!=len(steps) or any(o.get('state')!='completed' or o.get('evidence')!='verified' for o in outcomes[:expected_count]):errors.append('fresh authority did not complete expected reads')
- if a.scenario=='budget' and (outcomes[-1].get('state')!='denied' or outcomes[-1].get('evidence')!='verified'):errors.append('65th invocation was not denied by the kernel budget')
+ for index in range(expected_count):require_outcome(index,'completed','verified')
+ if a.scenario=='budget':require_outcome(64,'denied','verified')
+if a.scenario in ['forbidden-read','forbidden-write']:require_outcome(0,'denied','verified','guard')
+if a.scenario=='revoked':require_outcome(0,'denied','verified','revoked')
+if a.scenario in ['unreachable','malformed-handshake','timeout-handshake','wrong-kernel-session']:
+ require_outcome(0,'not_dispatched','unverified')
+if a.scenario in ['wrong-subject','wrong-capability']:require_outcome(0,'not_dispatched','unverified','authority')
+if a.scenario=='config-tamper':
+ require_outcome(0,'completed','verified')
+ if not outcomes or not isinstance(outcomes[0].get('result'),dict) or outcomes[0]['result'].get('isError') is not True:errors.append('config-tampering request was not an attested resource tool error')
+if a.scenario in ['loss-between-calls','gateway-crash']:require_outcome(0,'completed','verified')
+if a.scenario=='loss-between-calls':require_outcome(1,'not_dispatched','unverified')
+if a.scenario=='gateway-crash' and (len(tool_results)<2 or 'not connected' not in str(tool_results[1].get('content'))):errors.append('host did not observe the disconnected gateway')
+if a.scenario in ['unknown-outcome','forged-receipt','substituted-request','substituted-result']:
+ require_outcome(0,'unknown','unverified')
+ require_outcome(1,'not_dispatched','unverified','fences')
+ require_outcome(2,'not_dispatched','unverified','fences')
+if a.scenario=='restart-fenced':
+ require_outcome(0,'unknown','unverified')
+ require_outcome(1,'not_dispatched','unverified','fences')
+if a.scenario=='cancel-after-dispatch':
+ if not any(r.get('host_interrupt_after_upstream_result') for r in fault_requests):errors.append('host cancellation cutpoint was not reached')
+ if sum(1 for r in fault_requests if r.get('method')=='tools/call' and r.get('forwarded_to_kernel'))!=1:errors.append('host cancellation redispatched protected work')
+ journal=Path(json.loads(active_config.read_text())['journalDir'])
+ records=[]
+ for path in sorted(journal.glob('*.json')):
+  value=json.loads(path.read_text())
+  records.append({'file':path.name,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'state':value.get('state'),'requestId':value.get('requestId')})
+ summary['journal_observation']={'records':records,'lock_retained':(journal/'gateway.lock').exists()}
+ if not records:errors.append('cancellation lost the durable operation record')
 if a.scenario in ['unknown-outcome','forged-receipt','substituted-request','substituted-result'] and sum(1 for r in fault_requests if r.get('method')=='tools/call' and r.get('forwarded_to_kernel'))!=1:errors.append('unknown outcome caused redispatch')
 if a.scenario in ['forged-receipt','substituted-request','substituted-result'] and not any(r.get('mutation_applied') for r in fault_requests):errors.append('evidence mutation did not run')
 if a.scenario=='gateway-crash' and not fault_requests:errors.append('gateway kill cutpoint was not reached')
@@ -218,4 +275,4 @@ summary['probe_integrity']='FAIL' if errors else 'PASS'
 summary['probe_failures']=errors
 (a.output/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
 print(json.dumps({'exit_code':r.returncode,'model_requests':len(requests),'native_effect_observed':Path(local_marker).exists(),'resource':after.get(observe_marker)}))
-raise SystemExit(r.returncode or bool(errors))
+raise SystemExit(bool(errors) or (r.returncode if a.scenario!='cancel-after-dispatch' else 0))

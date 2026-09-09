@@ -1,0 +1,105 @@
+{
+  "evidence_class": "REAL_HOST_RETAINED_JOURNAL_LOCAL_MODEL_FIXTURE",
+  "integration_acceptance": "UNRESOLVED",
+  "scenario": "restart-fenced",
+  "exit_code": 0,
+  "host_version": "2.1.266 (Claude Code)",
+  "host_sha256": "553d1b9e9e7068b275c0a783c7e139ff6503096f286e674c8c919379fb0eca62",
+  "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+  "model_fixture_requests": 3,
+  "steps": [
+    [
+      "mcp__chio__write_file",
+      {
+        "path": "/workspace/claude-3l3z36i6.txt",
+        "content": "UNKNOWN_FIRST_COMMIT"
+      }
+    ],
+    [
+      "mcp__chio__write_file",
+      {
+        "path": "/workspace/claude-3l3z36i6.txt-second",
+        "content": "FORBIDDEN_RESTART_REDISPATCH"
+      }
+    ]
+  ],
+  "native_effect_observed": false,
+  "observer_before": {
+    "/observe/claude-3l3z36i6.txt": {
+      "exists": true,
+      "sha256": "78fa011d4907f948cf42386dd5bef7e897c4795cfa704eb258324d8689c0a94d",
+      "bytes": 20,
+      "content": "UNKNOWN_FIRST_COMMIT"
+    },
+    "/observe/claude-3l3z36i6.txt-second": {
+      "exists": false,
+      "error": "ENOENT"
+    },
+    "/observe/forbidden.txt": {
+      "exists": true,
+      "sha256": "fd972a6e8a36a028a82c74424e1db70e38fe068c342f3e3f319d1e865f680900",
+      "bytes": 31
+    },
+    "/observe/secret.txt": {
+      "exists": true,
+      "sha256": "1a1e1d8bd5d198dcce34023ef3af4a31a88586e9dcd958fa011d8f5fa32f520e",
+      "bytes": 19
+    }
+  },
+  "observer_after": {
+    "/observe/claude-3l3z36i6.txt": {
+      "exists": true,
+      "sha256": "78fa011d4907f948cf42386dd5bef7e897c4795cfa704eb258324d8689c0a94d",
+      "bytes": 20,
+      "content": "UNKNOWN_FIRST_COMMIT"
+    },
+    "/observe/claude-3l3z36i6.txt-second": {
+      "exists": false,
+      "error": "ENOENT"
+    },
+    "/observe/forbidden.txt": {
+      "exists": true,
+      "sha256": "fd972a6e8a36a028a82c74424e1db70e38fe068c342f3e3f319d1e865f680900",
+      "bytes": 31
+    },
+    "/observe/secret.txt": {
+      "exists": true,
+      "sha256": "1a1e1d8bd5d198dcce34023ef3af4a31a88586e9dcd958fa011d8f5fa32f520e",
+      "bytes": 19
+    }
+  },
+  "elapsed_seconds": 1.745,
+  "host_timed_out": false,
+  "launch_command": [
+    "/opt/homebrew/bin/node",
+    "/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-code-plugin-final-consumer-82u1evd7/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+    "--host",
+    "/Users/connor/.local/bin/claude",
+    "--host-sha256",
+    "553d1b9e9e7068b275c0a783c7e139ff6503096f286e674c8c919379fb0eca62",
+    "--gateway-sha256",
+    "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+    "--gateway-config",
+    "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-kernel-host-3l3z36i6/private-gateway.json",
+    "--profile",
+    "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-kernel-host-jfste2mo/profile",
+    "--workspace",
+    "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-kernel-host-jfste2mo/workspace",
+    "--model",
+    "claude-sonnet-4-5"
+  ],
+  "run_directory": "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-kernel-host-jfste2mo",
+  "probe_source_sha256": "0dbaac327d63bb20f4311f8e3a9c8211bef760cd3e1c7003569bde050e3cac01",
+  "config_sha256_before": "7f013e82ab93b9b4976a601ec8b2e56de135148739edd854e415026d54ceae4a",
+  "config_sha256_after": "7f013e82ab93b9b4976a601ec8b2e56de135148739edd854e415026d54ceae4a",
+  "fault_requests": [],
+  "probe_integrity": "FAIL",
+  "probe_failures": [
+    "call 1 did not produce expected unknown/unverified outcome",
+    "call 2 did not produce expected not_dispatched/unverified outcome (fences)"
+  ],
+  "classification_correction": {
+    "original": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+    "reason": "restart attempted retained journal loading; no new kernel dispatch established"
+  }
+}

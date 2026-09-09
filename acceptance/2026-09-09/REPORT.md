@@ -265,3 +265,22 @@ session-credential changes. Tests tied to older gateway digests remain bounded
 historical evidence until rerun against the final package and credential
 contract. Source/package CI is blocking but hosted execution and release
 provenance have not been claimed.
+
+
+## Retained journal restart observation
+
+A new actual Claude process attempted the exact private gateway configuration
+retained by `final-unknown-outcome`, with the earlier independently observed
+`UNKNOWN_FIRST_COMMIT` resource still present. The new host had no working MCP
+tools because a `gateway.lock` remained with a dead PID. The journal preserved
+its `unknown` record. The resource stayed unchanged and no second file appeared.
+This is a failed recovery probe, retained in `raw/historical-restart-fenced`:
+no-effect behavior alone does not establish usable restart or outcome recovery.
+The operator did not erase the lock or journal. This run used historical gateway
+`1af105d6...` and made no claim of a new kernel dispatch.
+
+The probe now also requires the intended attested denial or explicit failure
+outcome for each negative case, so generic gateway unavailability cannot satisfy
+a capability or receipt-rejection check. An actual-host interruption after the
+resource commit is implemented as a separate `cancel-after-dispatch` scenario;
+it remains unexecuted until the shared current runtime and artifact are ready.

@@ -1,0 +1,12 @@
+{
+  "lock_exists": true,
+  "records": [
+    {
+      "file": "c8b9d28b9265ad80ab1947ee0f3ec6dcbc8b2ab47be7472ab54d1f5c84977710.json",
+      "state": "unknown",
+      "requestId": "1374b9b7-bb7d-4d21-b4c5-5c168ac24a80:9e7e65453739bbc64ba155eed18a37bd5fb1196c7f29ded1da660b94414d7ad8"
+    }
+  ],
+  "lock_pid": 56810,
+  "lock_pid_alive": false
+}

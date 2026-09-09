@@ -250,13 +250,16 @@
       "integration_acceptance": "unresolved"
     },
     {
-      "path": "raw/host-contract/summary.json",
-      "evidence_class": "REAL_HOST_LOCAL_MODEL_FIXTURE_NO_CHIO_KERNEL",
-      "probe_integrity": "not asserted by preliminary script",
-      "probe_failures": [],
-      "scenario": null,
-      "gateway_sha256": null,
-      "source_sha256": null,
+      "path": "raw/historical-restart-fenced/summary.json",
+      "evidence_class": "REAL_HOST_RETAINED_JOURNAL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "FAIL",
+      "probe_failures": [
+        "call 1 did not produce expected unknown/unverified outcome",
+        "call 2 did not produce expected not_dispatched/unverified outcome (fences)"
+      ],
+      "scenario": "restart-fenced",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "0dbaac327d63bb20f4311f8e3a9c8211bef760cd3e1c7003569bde050e3cac01",
       "integration_acceptance": "unresolved"
     },
     {
@@ -270,6 +273,16 @@
       "integration_acceptance": "unresolved"
     },
     {
+      "path": "raw/host-contract/summary.json",
+      "evidence_class": "REAL_HOST_LOCAL_MODEL_FIXTURE_NO_CHIO_KERNEL",
+      "probe_integrity": "not asserted by preliminary script",
+      "probe_failures": [],
+      "scenario": null,
+      "gateway_sha256": null,
+      "source_sha256": null,
+      "integration_acceptance": "unresolved"
+    },
+    {
       "path": "raw/kernel-host/summary.json",
       "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
       "probe_integrity": "not asserted by preliminary script",
@@ -277,18 +290,6 @@
       "scenario": null,
       "gateway_sha256": "f623cf06663536bed7b947ec287e66d3217cabb21ac452e29bcea0dd83f14dd4",
       "source_sha256": "890fb468e07c34e2f93cc7c35d67ebf6ee7494826247d97f92de936fab1efa24",
-      "integration_acceptance": "unresolved"
-    },
-    {
-      "path": "raw/loss-between-calls/summary.json",
-      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
-      "probe_integrity": "FAIL",
-      "probe_failures": [
-        "kernel loss did not preserve the effect cutpoint"
-      ],
-      "scenario": "loss-between-calls",
-      "gateway_sha256": "f623cf06663536bed7b947ec287e66d3217cabb21ac452e29bcea0dd83f14dd4",
-      "source_sha256": "48ff025b464969e6b1be32c01b888270aeaf4d5a1e4cfb1b48e6a4f0bf8bd8fb",
       "integration_acceptance": "unresolved"
     },
     {
@@ -313,6 +314,18 @@
       "scenario": "loss-between-calls",
       "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
       "source_sha256": "f5a4e5e8a9cc729a320bca2f046a57a3ea3de42cc1c43ad86dcfd6a9f0f69cd3",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/loss-between-calls/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "FAIL",
+      "probe_failures": [
+        "kernel loss did not preserve the effect cutpoint"
+      ],
+      "scenario": "loss-between-calls",
+      "gateway_sha256": "f623cf06663536bed7b947ec287e66d3217cabb21ac452e29bcea0dd83f14dd4",
+      "source_sha256": "48ff025b464969e6b1be32c01b888270aeaf4d5a1e4cfb1b48e6a4f0bf8bd8fb",
       "integration_acceptance": "unresolved"
     },
     {
