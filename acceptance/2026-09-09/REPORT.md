@@ -24,12 +24,15 @@ scope. No other host's tests are credited here.
 - The real-kernel probes use the shared program's newly built MCP edge and
   Docker-owned filesystem resource, plus the bundled gateway. Each run records
   the exact gateway SHA-256, host SHA-256, source-probe SHA-256 and nonsecret
-  launch arguments. Kernel source/binary and final package pins are recorded
-  by the shared program and must be reconciled before acceptance.
+  launch arguments. The final immutable kernel and package pins below supersede the exploratory
+  runtime. Earlier exploratory runs lacked a recorded kernel binary SHA-256;
+  their gap is preserved, and the new hash is not retroactively assigned.
 - Private prepared gateway configs, credentials and journals remain under
-  `/tmp/chio-six-host-kernel-20260909`, outside agent workspaces and this Git
-  repository. They are not included in artifacts or evidence. The resource
-  volume is `chio-required-agents-20260909`; the independent observer uses a
+  `/tmp/chio-six-host-kernel-20260909` (exploratory) and
+  `/tmp/chio-final-resource-20260909` (immutable final kernel), outside agent
+  workspaces and this Git repository. They are not included in artifacts or
+  evidence. Final probes use volume `chio-required-agents-final-20260909`;
+  the independent observer uses a
   readonly Docker mount and no network. The agent receives neither that mount
   nor a Docker socket.
 
@@ -119,11 +122,11 @@ independent kernel negative tests. The gateway requires operator reconciliation.
 
 | Gate | Status | Current evidence and unresolved requirement |
 |---|---|---|
-| I01 Installation and versions | UNRESOLVED | Exact host and source baseline recorded; manifest validation and independent offline package installation are being qualified. Final package/kernel combination is not published; activated packaged real-host rerun remains required. |
+| I01 Installation and versions | UNRESOLVED | Exact host and source baseline recorded; manifest validation and independent offline package installation are being qualified. The standalone artifact was installed with an empty offline npm cache and its actual installed launcher completed real-host kernel probes. Publication and authenticated installation remain unresolved. |
 | I02 Useful work | PARTIAL | Real host + real kernel + independent resource observer completed the remote editing workflow. The model was local deterministic fixture. No authenticated real-model session has run in the isolated profile. |
 | I03 Denial and bypass prevention | PARTIAL | Real kernel forbidden write/read and isolated config-path denial; all 25 native tools unavailable. Full adversarial resource/path/network and alternative MCP schema cases remain open. |
-| I04 Kernel dependency | PARTIAL / HOOK MODE FAILS | Real host proves hook mode failure. Candidate removed hooks/native tools, and unreachable kernel prevents dispatch. During-session transport loss, malformed/timeout handshake, gateway failure and restart variants need their full retained results; shared kernel kill cutpoints are not yet covered through this host. |
-| I05 Authority | UNRESOLVED | Exact gateway caller/capability/request binding and hook expiry validation implemented. All required real-host expired/revoked/wrong caller/session/resource, escalation, budget and approval cases remain open. |
+| I04 Kernel dependency | PARTIAL / HOOK MODE FAILS | Real host proves hook mode failure. Candidate removed hooks/native tools, and unreachable kernel prevents dispatch. Real host tests prevent effects after between-call transport loss, malformed/timeout preflight, and dedicated gateway kill. Shared kernel kill/restart cutpoints are not yet covered through this host. |
+| I05 Authority | UNRESOLVED | Exact gateway caller/capability/request binding and hook expiry validation implemented. Actual host tests cover wrong pinned subject/capability/session, revocation, 64-invocation exhaustion and fresh valid authority. Expiry, monetary budgets, escalation and approval cases remain open. |
 | I06 Evidence | PARTIAL | Real-host results carry trusted verified bound receipts and match the independent observer. Hook substitution regressions pass. Complete real-host wrong-signer/request/result forgery matrix remains open. |
 | I07 Recovery | UNRESOLVED | Stable gateway request IDs, durable journal, conservative unknown/denial fences and no automatic retry implemented. Full cancellation, concurrent calls, crash/restart/resume and resource reconciliation still require host-specific evidence. |
 | I08 Delivery and operation | UNRESOLVED | Candidate runbook and independent packaging path exist. No published accepted combination, real-model install, upgrade, recovery/removal acceptance, complete overhead measurements or intervention record yet. |
@@ -171,3 +174,67 @@ SDK, bridge and plugin combination is also pending shared release gates.
 Independent implementation, real-host deterministic probes and real-kernel
 resource checks continue despite these blockers. Auth absence is not a reason
 to substitute unit tests for a completed integration.
+
+## Source and package CI
+
+The source workflow now installs the vendored dependencies directly, requires
+typecheck/build/unit success, stages the candidate and validates installation
+using a new empty offline npm cache. It no longer clones placeholder sibling
+repositories or turns a missing authenticated host into a green smoke step.
+This workflow is source/package validation only. The separate historical
+release workflow still depends on a placeholder `owner/chio-ci-actions` action;
+publication remains unresolved and its provenance requirement is retained.
+
+## Immutable kernel and installed artifact rerun
+
+The final runtime source is `04b7d366d62c886c39bc202f58ef0d44e8f5aee7`.
+Kernel binary SHA-256 is
+`e7539855906bd5eb7b4eb2e5a12ca0533889cf61ced3bf4adf5850b792aa6447`.
+Policy SHA-256 is
+`8c2c732d9115799b13150f7924da0e68fc1f9b2d42a2618912511d407035cc66`.
+The policy is snapshotted and grants at most 64 invocations per capability.
+The resource image is
+`sha256:0106edcb15a1c0d12d914ea0504f0e63ec85f5e6fdd3825b4d7a0d1367af3991`.
+[Public provenance](final-kernel-provenance.json) records the signer and volume.
+
+The candidate tarball
+`ceb271110be042c317128b94bbdc2fe7edb66757bc60a77cf404ed268105c7b5`
+was installed using an empty offline npm cache. Real-host probes used its
+installed launcher and bundled gateway
+`1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93`.
+A later shared gateway startup fix for symlinked entry paths supersedes this
+artifact for delivery; its replacement requires a further host rerun. Neither
+artifact is described as an accepted release.
+
+The `raw/final-*` runs establish these bounded observations:
+
+- The useful remote workflow succeeded with verified results and the exact
+  independently observed file content. The observed fixture run took 4.081 s
+  including process launch and resource observation; this is not real-model
+  latency or production overhead.
+- All 25 default native tools were unavailable. Independent forbidden secret
+  reads and writes were denied. Attempts to overwrite private configuration
+  returned a verified filesystem error; the private file hash stayed unchanged.
+- An unreachable kernel, malformed preflight and timed-out preflight prevented
+  dispatch. A per-session proxy cut the kernel transport between two calls:
+  the first file committed, the second did not. No shared kernel was killed.
+- Killing only the selected stdio gateway after the first verified result
+  preserved that result, prevented the second write and left a retained journal
+  lock. Native fallback remained unavailable.
+- Incorrect pinned subject, capability or kernel session produced no dispatch.
+  A real capability allowed exactly 64 verified reads and denied the 65th.
+  Separately prepared valid authority completed a legitimate read. An operator
+  revoked only a dedicated Claude capability; the actual host could not use it
+  to write a new resource.
+- A proxy discarded the response after a real write committed. The gateway
+  reported `unknown`, then rejected a host-driven retry of the same operation
+  and a different write. The independent observer retained the first effect and
+  no second effect; the proxy forwarded exactly one tool dispatch. Unknown
+  execution was never reported as a verified success.
+
+Earlier `loss-between-calls*` failures are retained. Their proxy routed to the
+wrong path and received HTTP 404 before dispatch; they did not establish the
+intended cutpoint. The corrected final proxy and immutable runtime passed. A
+separate old-runtime initialization failure came from the operator changing
+its unsnapshotted policy to a field unsupported by that old binary. The final
+launcher uses a policy snapshot. Neither issue is attributed to missing access.
