@@ -4,6 +4,7 @@
 import { readFileSync, writeFileSync, mkdirSync, mkdtempSync, realpathSync, rmSync, statSync, lstatSync, existsSync } from "node:fs";
 import { resolve, join, relative, isAbsolute, dirname, basename, sep } from "node:path";
 import { createHash } from "node:crypto";
+import { StringDecoder } from "node:string_decoder";
 import { spawn } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
 const scriptDirectory=dirname(realpathSync(fileURLToPath(import.meta.url)));
@@ -87,6 +88,7 @@ async function main() {
   try {
     const {startGatewayHttp}=await import(pathToFileURL(gateway).href);
     transport=await startGatewayHttp(config);
+    if(typeof transport.acknowledgeDelivery!=="function")throw new Error("Host delivery acknowledgement transport is required");
     writeFileSync(mcpPath,JSON.stringify({mcpServers:{chio:{type:"http",url:transport.url,headers:{Authorization:`Bearer ${transport.token}`}}}}),{mode:0o600,flag:"wx"});
     const policy=buildSandboxPolicy({host,node:process.execPath,gateway,config:configPath,profile,journal,workspace,temporary,controlFiles:[settingsPath,mcpPath],kernelPort:transport.port,modelPort:relay.port,operatorTransport:true});
     writeFileSync(sandboxPath,policy,{mode:0o600,flag:"wx"});
@@ -96,17 +98,44 @@ async function main() {
       ANTHROPIC_API_KEY:relay.token,ANTHROPIC_BASE_URL:`http://127.0.0.1:${relay.port}`,MAX_THINKING_TOKENS:"0",CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC:"1",DISABLE_AUTOUPDATER:"1",OPENSSL_CONF:"/dev/null"});
     const command=["-f",sandboxPath,host,...makeArguments({settingsPath,mcpPath,model:opts["--model"],sessionId}),"--debug-file",join(profile,"host-debug.log")];
     writeFileSync(join(profile,"launch.json"),JSON.stringify({schema:"chio.claude.restricted-launch.v2",host,hostSha256:opts["--host-sha256"],gatewaySha256,workspace,temporary,sessionId,sandboxPath,sandboxSha256:createHash("sha256").update(policy).digest("hex"),control,modelTransport:relay.fixture?"localhost-fixture-unaccepted":"operator-messages-relay",acceptance:"unverified"},null,2),{mode:0o600,flag:"wx"});
-    const child=spawn("/usr/bin/sandbox-exec",command,{cwd:workspace,env,stdio:"inherit"});
+    const child=spawn("/usr/bin/sandbox-exec",command,{cwd:workspace,env,stdio:["inherit","pipe","inherit"]});
+    const decoder=new StringDecoder("utf8");
+    let hostLines="",delivered=0,deliveryFailed=false;
+    let acknowledgements=Promise.resolve();
+    child.stdout.on("data",data=>{
+      process.stdout.write(data);hostLines+=decoder.write(data);
+      if(Buffer.byteLength(hostLines)>16*1024*1024){deliveryFailed=true;child.kill("SIGTERM");return;}
+      let end;
+      while((end=hostLines.indexOf("\n"))>=0){
+        const line=hostLines.slice(0,end);hostLines=hostLines.slice(end+1);
+        try{
+          const event=JSON.parse(line);
+          if(event.type!=="user"||event.message?.role!=="user"||!Array.isArray(event.message.content))continue;
+          for(const block of event.message.content){
+            if(block.type!=="tool_result")continue;
+            const content=block.content;
+            if(!Array.isArray(content)||content.length!==1||content[0].type!=="text")continue;
+            const outcome=JSON.parse(content[0].text);
+            if(outcome.state!=="completed"||outcome.evidence!=="verified"||!outcome.delivery)continue;
+            acknowledgements=acknowledgements.then(async()=>{
+              const receipt=await transport.acknowledgeDelivery(outcome.delivery);
+              if(receipt.acknowledged)delivered++;else deliveryFailed=true;
+            }).catch(()=>{deliveryFailed=true;});
+          }
+        }catch{/* Missing host proof leaves the operation fenced. */}
+      }
+    });
     const forward=signal=>child.kill(signal);
     const onInt=()=>forward("SIGINT"),onTerm=()=>forward("SIGTERM");
     process.on("SIGINT",onInt);process.on("SIGTERM",onTerm);
     const state=await new Promise(resolve=>{
       child.once("error",error=>resolve({code:1,signal:null,error:error.message}));
-      child.once("exit",(code,signal)=>resolve({code,signal}));
+      child.once("close",(code,signal)=>resolve({code,signal}));
     });
+    await acknowledgements;
     process.off("SIGINT",onInt);process.off("SIGTERM",onTerm);
-    writeFileSync(join(profile,"exit.json"),JSON.stringify({...state,executionOutcome:"not-verified-by-launcher",retry:"never-automatic"}),{mode:0o600});
-    process.exitCode=state.code??1;
+    writeFileSync(join(profile,"exit.json"),JSON.stringify({...state,hostDelivery:{confirmed:delivered,failed:deliveryFailed},executionOutcome:deliveryFailed?"delivery-unresolved":"inspect-verified-host-tool-results",retry:"never-automatic"}),{mode:0o600});
+    process.exitCode=deliveryFailed?2:state.code??1;
   } finally {
     await transport?.close();
     await relay.close();

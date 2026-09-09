@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "@chio-protocol/sdk": "file:vendor/chio-protocol-sdk-0.1.1-rc.1-ea8639364db1.tgz",
-    "@chio/bridge": "file:vendor/chio-bridge-0.3.0-c22c8dd094e3.tgz"
+    "@chio/bridge": "file:vendor/chio-bridge-0.3.0-ed680ff9d987.tgz"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

@@ -918,7 +918,7 @@ function readGatewayConfig(path) {
     throw new Error("chio_resume is reserved for explicit gateway resumption");
   return config;
 }
-function createGateway(config, executor = createMcpExecutionClient(config.execution)) {
+function createGateway(config, executor = createMcpExecutionClient(config.execution), delivery = {}) {
   const snapshot = JSON.parse(JSON.stringify(config));
   const directory = resolve(snapshot.journalDir);
   mkdirSync(directory, { recursive: true, mode: 448 });
@@ -970,7 +970,7 @@ function createGateway(config, executor = createMcpExecutionClient(config.execut
   let closed = false;
   let busy = false;
   const tools = new Map(snapshot.tools.map((tool) => [tool.name, tool]));
-  const fenced = () => [...records.values()].some((record) => record.state !== "not_dispatched" && !(record.state === "completed" && record.acknowledged === true));
+  const fenced = () => [...records.values()].some((record) => record.state !== "not_dispatched" && !(record.state === "completed" && record.acknowledged === true && (!delivery.requireHostAcknowledgement || record.hostDeliveryConfirmed === true)));
   function persist(record) {
     const key = operationKey(record.requestId);
     const path = join(directory, `${key}.json`);
@@ -988,7 +988,7 @@ function createGateway(config, executor = createMcpExecutionClient(config.execut
   }
   async function confirmDelivery(record) {
     const outcome = record.outcome;
-    if (outcome.state === "completed" && !record.acknowledged && executor.acknowledge) {
+    if (outcome.state === "completed" && !record.acknowledged && executor.acknowledge && (!delivery.requireHostAcknowledgement || record.hostDeliveryConfirmed === true)) {
       const acknowledgement = await executor.acknowledge(outcome);
       if (acknowledgement.acknowledged)
         persist({ ...record, acknowledged: true });
@@ -1003,7 +1003,7 @@ function createGateway(config, executor = createMcpExecutionClient(config.execut
       if (outcome.state === "completed" && !verifyCompletedOutcome(outcome, snapshot.execution, request)) {
         outcome = { state: "unknown", evidence: "unverified", requestId: request.requestId, reason: "completed result failed durable request verification" };
       }
-      const completed = { ...record, state: outcome.state, outcome, acknowledged: false, request };
+      const completed = { ...record, state: outcome.state, outcome, acknowledged: false, hostDeliveryRequired: delivery.requireHostAcknowledgement === true, request };
       persist(completed);
       return await confirmDelivery(completed);
     } catch {
@@ -1014,6 +1014,25 @@ function createGateway(config, executor = createMcpExecutionClient(config.execut
   }
   const resumeTool = { name: "chio_resume", description: "Explicitly resume one exact operator-approved proposal, retaining its original request identity. Never retries an unknown effect.", inputSchema: { type: "object", properties: { requestId: { type: "string" }, tool: { type: "string" }, arguments: { type: "object" } }, required: ["requestId", "tool", "arguments"], additionalProperties: false } };
   return {
+    /** Proof of receiving the exact retained result. This never dispatches a tool. */
+    async acknowledgeDelivery(proof) {
+      try {
+        const requestId = proof?.requestId;
+        if (closed || typeof requestId !== "string")
+          throw new Error("invalid delivery proof");
+        const record = records.get(requestId);
+        if (!record || record.state !== "completed" || !record.request || record.outcome?.state !== "completed" || !verifyCompletedOutcome(record.outcome, snapshot.execution, record.request) || canonicalizeJson(proof) !== canonicalizeJson(record.outcome.delivery))
+          throw new Error("delivery proof does not match retained outcome");
+        const confirmed = { ...record, hostDeliveryConfirmed: true };
+        persist(confirmed);
+        await confirmDelivery(confirmed);
+        if (!records.get(requestId)?.acknowledged)
+          throw new Error("kernel acknowledgement not confirmed");
+        return { acknowledged: true, requestId, receiptId: record.outcome.receipt.id };
+      } catch {
+        return { acknowledged: false, reason: "host delivery proof or kernel acknowledgement is unresolved; preserve the operation" };
+      }
+    },
     listTools: () => snapshot.approval ? [...snapshot.tools, resumeTool] : snapshot.tools,
     async call(id, name, args, signal) {
       const requestId = name === "chio_resume" ? String(args.requestId ?? "") : `${snapshot.sessionId}:${createHash2("sha256").update(canonicalizeJson({ id })).digest("hex")}`;
@@ -1193,7 +1212,7 @@ async function startGatewayHttp(config) {
   const validation = await executor.validateSession({ allowedTools: config.tools.map((tool) => tool.name) });
   if (!validation.ok)
     throw new Error(validation.reason);
-  const gateway = createGateway(config, executor);
+  const gateway = createGateway(config, executor, { requireHostAcknowledgement: true });
   const token = randomBytes(32).toString("base64url");
   const session = randomBytes(32).toString("base64url");
   let initialized = false;
@@ -1263,7 +1282,7 @@ async function startGatewayHttp(config) {
       initialized = true;
       response.setHeader("Mcp-Session-Id", session);
       const offered = message.params?.protocolVersion;
-      reply({ protocolVersion: ["2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25"].includes(offered) ? offered : "2025-11-25", capabilities: { tools: {} }, serverInfo: { name: "chio-protected-gateway", version: "0.3.0" } });
+      reply({ protocolVersion: ["2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25"].includes(offered) ? offered : "2025-11-25", capabilities: { tools: {}, experimental: { chioDeliveryAcknowledgement: "1" } }, serverInfo: { name: "chio-protected-gateway", version: "0.3.0" } });
       return;
     }
     if (!initialized || request.headers["mcp-session-id"] !== session) {
@@ -1282,6 +1301,14 @@ async function startGatewayHttp(config) {
     }
     if (message.method === "ping") {
       reply({});
+      return;
+    }
+    if (message.method === "chio/acknowledge") {
+      const result = await gateway.acknowledgeDelivery(message.params);
+      if (result.acknowledged)
+        reply({ schema: "chio.mcp.delivery-ack.v1", ...result });
+      else
+        fail(-32603, result.reason);
       return;
     }
     if (message.method === "tools/list") {
@@ -1336,6 +1363,8 @@ async function startGatewayHttp(config) {
     url: `http://127.0.0.1:${port}/mcp`,
     port,
     token,
+    /** Call only with proof received from the real host's completed tool result. */
+    acknowledgeDelivery: gateway.acknowledgeDelivery,
     async close() {
       if (closed)
         return;
