@@ -13,6 +13,15 @@ host's available filesystem and credentials. Do not mount a host-visible resourc
 volume or expose an unguarded second endpoint. Do not give the agent an admin
 bearer token or resource credentials.
 
+The current stdio launcher removes model-callable native tools but does not
+create an operating-system boundary between the Claude process and the gateway.
+Both run as the same user. Keeping configuration outside the workspace does not
+prevent arbitrary compromised host-process code from reading a session bearer,
+rewriting a journal, or sending fresh in-scope requests directly to the kernel.
+A trusted external gateway/journal or equivalent resource-owner enforcement is
+required before claiming that stronger boundary. A session-limited credential
+reduces authority but does not supply that isolation.
+
 Prepare a retained MCP kernel session with the companion bridge's
 `chio-prepare-gateway` command. Its operator request specifies the exact kernel
 endpoint, session-scoped bearer credential, trusted signer keys, server ID,

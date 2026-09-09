@@ -284,3 +284,22 @@ outcome for each negative case, so generic gateway unavailability cannot satisfy
 a capability or receipt-rejection check. An actual-host interruption after the
 resource commit is implemented as a separate `cancel-after-dispatch` scenario;
 it remains unexecuted until the shared current runtime and artifact are ready.
+
+
+## Process boundary and read-observation limits
+
+The fixed launcher successfully removes all observed model-callable native
+tools. It does not apply operating-system confinement between the Claude host
+and its stdio gateway, which share a user. Configuration and journal paths
+outside the workspace do not defend against arbitrary code execution inside
+the host process. Session-limited credentials alone do not prevent that code
+from rewriting a local uncertainty ledger or sending a fresh permitted request
+directly to the kernel. The stronger process-compromise boundary remains open
+pending an operator-external gateway/journal or equivalent resource-owner
+mechanism. No arbitrary-process isolation is credited to the native-tool tests.
+
+The independent file observer proves absence of forbidden file mutations. For
+a forbidden read, unchanged file hashes do not establish absence of the read
+itself. The probe has a verified denial and no secret returned to the model;
+an independent backend dispatch/access record is still needed to establish
+prevention at that read boundary. That requirement is not removed from I02.
