@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Candidate MCP-only launch mode. Resource isolation and I01-I08 acceptance
 // remain mandatory at the kernel endpoint; this launcher cannot supply them.
-import { readFileSync, writeFileSync, mkdirSync, mkdtempSync, realpathSync, rmSync, statSync, lstatSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, writeFileSync, mkdirSync, mkdtempSync, realpathSync, rmSync, statSync, lstatSync, existsSync } from "node:fs";
 import { resolve, join, relative, isAbsolute, dirname, basename, sep } from "node:path";
 import { createHash } from "node:crypto";
 import { StringDecoder } from "node:string_decoder";
@@ -147,8 +147,15 @@ async function main() {
     });
     await acknowledgements.catch(()=>{deliveryFailed=true;});
     process.off("SIGINT",onInt);process.off("SIGTERM",onTerm);
-    writeFileSync(join(profile,"exit.json"),JSON.stringify({...state,hostDelivery:{confirmed:delivered,failed:deliveryFailed},executionOutcome:deliveryFailed?"delivery-unresolved":"inspect-verified-host-tool-results",retry:"never-automatic"}),{mode:0o600});
-    process.exitCode=deliveryFailed?2:state.code??1;
+    let records=[];
+    try{records=readdirSync(journal).filter(name=>name.endsWith(".json")).map(name=>JSON.parse(readFileSync(join(journal,name),"utf8")));}catch{deliveryFailed=true;}
+    const unresolved=deliveryFailed||records.some(record=>["pending","unknown"].includes(record.state)||record.state==="completed"&&(!record.acknowledged||!record.hostDeliveryConfirmed));
+    const unsuccessful=records.some(record=>record.state==="denied"||record.state==="not_dispatched"||record.outcome?.result?.isError===true);
+    const pending=records.some(record=>record.state==="awaiting_approval");
+    const executionOutcome=unresolved?"unresolved":pending?"awaiting-approval":unsuccessful?"protected-work-incomplete":state.code===0?"completed":"host-failed";
+    const exitCode=unresolved?2:pending?4:unsuccessful?3:state.code??1;
+    writeFileSync(join(profile,"exit.json"),JSON.stringify({...state,exitCode,hostDelivery:{confirmed:delivered,failed:deliveryFailed},executionOutcome,retry:"never-automatic"}),{mode:0o600});
+    process.exitCode=exitCode;
   } finally {
     await transport?.close();
     await relay.close();

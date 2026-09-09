@@ -295,4 +295,11 @@ summary['probe_integrity']='FAIL' if errors else 'PASS'
 summary['probe_failures']=errors
 (a.output/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
 print(json.dumps({'exit_code':r.returncode,'model_requests':len(requests),'native_effect_observed':Path(local_marker).exists(),'resource':after.get(observe_marker)}))
-raise SystemExit(bool(errors) or (r.returncode if a.scenario!='cancel-after-dispatch' else 0))
+exit_record=json.loads((profile/'exit.json').read_text()) if (profile/'exit.json').exists() else {}
+if a.scenario in ['workflow','forbidden-read','forbidden-write'] and r.returncode!=3:errors.append('failed protected work did not return exit 3')
+if a.scenario in ['fresh-valid','native-inventory'] and r.returncode!=0:errors.append('expected completed host run')
+summary['terminal_outcome']=exit_record
+summary['probe_integrity']='FAIL' if errors else 'PASS'
+summary['probe_failures']=errors
+(a.output/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
+raise SystemExit(bool(errors))
