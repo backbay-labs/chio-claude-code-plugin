@@ -8,16 +8,15 @@ allowed-tools: Bash(node *)
 
 ## Bond result
 
-!`node "${CLAUDE_PLUGIN_ROOT}/scripts/bond.mjs" $ARGUMENTS`
+!`CLAUDE_SESSION_ID="${CLAUDE_SESSION_ID}" node "${CLAUDE_PLUGIN_ROOT}/scripts/bond.mjs" $ARGUMENTS`
 
 ## What just happened
 
 If the command above returned a JSON block with `did:chio:...`, Chio has issued
-an Agent Passport scoped to the policy file. Every tool call in this session
-will now be mediated through the Chio kernel: the PreToolUse hook calls
-`ChioBridge.check` → verdict → allow or deny. PostToolUse signs and streams
-the receipt.
+an Agent Passport scoped to the policy file. The compatibility hook requires this exact session identity and a trusted
+kernel receipt key. It performs an authorization precheck; it does not establish
+complete mediation or a verified execution result. See the acceptance record.
 
 If the command above printed an error (missing policy, parse failure, daemon
-unreachable), nothing is bonded and the next tool call will still fail-closed
-through the PreToolUse hook.
+unreachable), nothing is bonded. A functioning PreToolUse hook denies unbonded calls.
+The host does not guarantee denial when a command hook is missing or crashes.

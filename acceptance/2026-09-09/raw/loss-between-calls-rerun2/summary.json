@@ -1,0 +1,116 @@
+{
+  "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+  "integration_acceptance": "UNRESOLVED",
+  "scenario": "loss-between-calls",
+  "exit_code": 0,
+  "host_version": "2.1.266 (Claude Code)",
+  "host_sha256": "553d1b9e9e7068b275c0a783c7e139ff6503096f286e674c8c919379fb0eca62",
+  "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+  "model_fixture_requests": 4,
+  "steps": [
+    [
+      "mcp__chio__write_file",
+      {
+        "path": "/workspace/claude-3fdoxts1.txt",
+        "content": "BEFORE_KERNEL_LOSS"
+      }
+    ],
+    [
+      "mcp__chio__write_file",
+      {
+        "path": "/workspace/claude-3fdoxts1.txt-second",
+        "content": "AFTER_KERNEL_LOSS"
+      }
+    ],
+    [
+      "Bash",
+      {
+        "command": "printf bypass > /private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-kernel-host-3fdoxts1/workspace/native-forbidden-effect.txt"
+      }
+    ]
+  ],
+  "native_effect_observed": false,
+  "observer_before": {
+    "/observe/claude-3fdoxts1.txt": {
+      "exists": false,
+      "error": "ENOENT"
+    },
+    "/observe/claude-3fdoxts1.txt-second": {
+      "exists": false,
+      "error": "ENOENT"
+    },
+    "/observe/forbidden.txt": {
+      "exists": true,
+      "sha256": "fd972a6e8a36a028a82c74424e1db70e38fe068c342f3e3f319d1e865f680900",
+      "bytes": 31
+    },
+    "/observe/secret.txt": {
+      "exists": true,
+      "sha256": "1a1e1d8bd5d198dcce34023ef3af4a31a88586e9dcd958fa011d8f5fa32f520e",
+      "bytes": 19
+    }
+  },
+  "observer_after": {
+    "/observe/claude-3fdoxts1.txt": {
+      "exists": false,
+      "error": "ENOENT"
+    },
+    "/observe/claude-3fdoxts1.txt-second": {
+      "exists": false,
+      "error": "ENOENT"
+    },
+    "/observe/forbidden.txt": {
+      "exists": true,
+      "sha256": "fd972a6e8a36a028a82c74424e1db70e38fe068c342f3e3f319d1e865f680900",
+      "bytes": 31
+    },
+    "/observe/secret.txt": {
+      "exists": true,
+      "sha256": "1a1e1d8bd5d198dcce34023ef3af4a31a88586e9dcd958fa011d8f5fa32f520e",
+      "bytes": 19
+    }
+  },
+  "elapsed_seconds": 3.594,
+  "launch_command": [
+    "/opt/homebrew/bin/node",
+    "/Users/connor/Medica/backbay/standalone/chio-claude-code-plugin/.worktrees/required-agent-integrations-20260909/scripts/restricted.mjs",
+    "--host",
+    "/Users/connor/.local/bin/claude",
+    "--host-sha256",
+    "553d1b9e9e7068b275c0a783c7e139ff6503096f286e674c8c919379fb0eca62",
+    "--gateway-sha256",
+    "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+    "--gateway-config",
+    "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-kernel-host-3fdoxts1/private-gateway.json",
+    "--profile",
+    "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-kernel-host-3fdoxts1/profile",
+    "--workspace",
+    "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-kernel-host-3fdoxts1/workspace",
+    "--model",
+    "claude-sonnet-4-5"
+  ],
+  "run_directory": "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-kernel-host-3fdoxts1",
+  "probe_source_sha256": "f5a4e5e8a9cc729a320bca2f046a57a3ea3de42cc1c43ad86dcfd6a9f0f69cd3",
+  "config_sha256_before": "2a38b44a294b3d3471ba30660b6d0224bea703a1adb5e019b2f8f807861ce5a2",
+  "config_sha256_after": "2a38b44a294b3d3471ba30660b6d0224bea703a1adb5e019b2f8f807861ce5a2",
+  "fault_requests": [
+    {
+      "method": "chio/execution-context",
+      "forwarded_to_kernel": true,
+      "upstream_status": 404,
+      "upstream_content_type": null,
+      "upstream_bytes": 0
+    },
+    {
+      "method": "chio/execution-context",
+      "forwarded_to_kernel": true,
+      "upstream_status": 404,
+      "upstream_content_type": null,
+      "upstream_bytes": 0
+    }
+  ],
+  "probe_integrity": "FAIL",
+  "probe_failures": [
+    "kernel loss did not preserve the effect cutpoint"
+  ]
+}

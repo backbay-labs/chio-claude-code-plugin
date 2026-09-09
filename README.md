@@ -1,90 +1,85 @@
-# @chio/claude-code-plugin
+# Chio for Claude Code
 
-Bond any Claude Code session to a Chio policy. Every tool Claude reaches for — Bash, Write, Edit, Read, and any MCP server — is mediated through the chio kernel, metered, and receipt-signed.
+The current candidate adds an MCP-only launcher and repairs the historical
+compatibility hooks. **Claude Code is not yet accepted against gates I01-I08.**
+The current record is [acceptance/2026-09-09/REPORT.md](acceptance/2026-09-09/REPORT.md).
 
-> The runtime binary is `chio`; the SDK package is `@chio-protocol/sdk`; this plugin talks to chio via the shared `@chio/bridge` library.
+Real Claude Code 2.1.266 tests demonstrate that a command hook which crashes,
+is missing, times out, emits malformed JSON, or silently omits a decision lets
+an otherwise permitted native tool execute. A working deny hook prevents the
+same disposable write. Consequently, installing the hook plugin does not
+establish complete mediation.
 
-## Install
+## Candidate protected mode
 
-This repo is a single-plugin Claude Code marketplace. Install it in two lines:
+Use the [operator runbook](docs/RESTRICTED-MODE.md). The launcher removes all
+native tools and exposes only the bundled Chio MCP gateway. The gateway checks
+signed kernel evidence, binds requests to its prepared session and scoped
+authority, and retains uncertain operations in its private journal. The resource
+server and its credentials must be inaccessible to host-native paths. A local
+permission precheck followed by unrestricted execution does not provide that
+boundary.
 
-```bash
+This mode is intended for useful remote workspace tools selected by the
+operator. Native Bash, file tools, direct web tools, delegation, background
+jobs, skills, hooks, arbitrary MCP servers and resumed sessions are unavailable.
+Do not broaden the mode without running the corresponding acceptance cases.
+
+The runtime includes bundled JavaScript under `dist/`; the launcher itself uses
+only Node built-ins. Follow the version and artifact pins in the operator
+record. No accepted release is claimed by this repository.
+
+## Compatibility hooks
+
+The historical plugin remains available for bounded compatibility testing:
+
+```sh
 claude plugin marketplace add backbay-labs/chio-claude-code-plugin
 claude plugin install chio@chio
 ```
 
-The plugin ships a self-contained bundle under `dist/`, so there is no build
-step and no `npm install` at install time. Then bond a session with
-`/chio:bond <policy>`.
+That marketplace installation has not been qualified as protected mode.
+`PreToolUse` now requires an exact session bond, a nonexpired capability, an
+explicit allow decision, a receipt matching the request and capability, and an
+operator-pinned `CHIO_TRUSTED_RECEIPT_KEY`. Budgeted calls require a cost oracle;
+oracle errors deny. Authorization evidence is persisted before native admission.
+The historical bridge daemon path is rejected because it dispatched an MCP
+tool during a precheck and could cause duplicate effects.
 
-### Develop / rebuild the bundle
+`PostToolUse` keeps host-reported outcomes explicitly unverified. It does not
+turn a signed authorization into a signed execution result. Invalid or
+substituted evidence is not archived as successful.
 
-The bundle is generated from source and depends on the sibling `../chio-bridge`
-checkout. To regenerate it after changing `src/`:
+`CHIO_STATE_DIR` selects isolated plugin state. Otherwise state follows
+`CLAUDE_CONFIG_DIR`, then the normal Claude directory. `/chio:bond` passes the
+actual host session ID; a random session fallback is no longer accepted.
+These repairs do not fix host-level hook failure or precheck gaps.
 
-```bash
-bun install
-bun run build   # tsc types + esbuild self-contained bundle
+## Verification
+
+```sh
+npm ci
+npm run typecheck
+npm run build
+npm test
+npm run pack:release -- /absolute/output-directory
+bash smoke.sh /absolute/new-evidence-directory
 ```
 
-`bun run build` bundles `@chio/bridge`, `@chio-protocol/sdk`, `yaml`, and `zod`
-into the four runtime entrypoints (`dist/index.js` and `dist/state/*.js`) so the
-hooks and command scripts run from a plain git clone.
+The release packaging command stages bundled production dependencies and verifies
+that the package can install with an empty offline cache. Direct `npm pack`
+refuses an unbundled candidate. A successful local package still requires the
+release and host acceptance gates before publication.
 
-## Slash commands
+`smoke.sh` uses the real installed host with local deterministic model and
+resource fixtures. It observes actual disposable file effects and never uses
+the normal host profile. Its passing result means the recorded host contract
+was reproduced, including demonstrated hook bypasses. It does not mean the
+integration passed kernel acceptance.
 
-| Command | What it does | Real work |
-|---|---|---|
-| `/chio:bond <policy> [ttl] [usd]` | Issue an Agent Passport | `ChioBridge.bond` → `chio passport create` / `/v1/capabilities/issue` |
-| `/chio:policy-show` | Pretty-print the active ruleset | `ChioBridge.loadPolicy` + `lintPolicy` |
-| `/chio:guard-pause <guard> [ttl]` | Disable a named guard for a TTL | `ChioBridge.attenuate({ pauseGuards })` |
-| `/chio:budget-set <usd>` | Adjust the session spend ceiling | `ChioBridge.attenuate({ budget })` → `POST /v1/budgets/increment` |
-| `/chio:approve <receipt-id>` | Countersign a gated action | `signJsonStringEd25519` + `ChioBridge.countersign` |
-| `/chio:revoke` | Tear down the active passport | `ChioBridge.revoke` → `POST /v1/revocations` |
-| `/chio:receipt-last` | Print the most recent receipt | `ChioBridge.receipts` + `verifyReceipt` |
-| `/chio:receipt-export [since] [out]` | Export a signed evidence bundle | `ChioBridge.exportEvidence` |
-
-## Hooks
-
-| Event | Script | Contract |
-|---|---|---|
-| `PreToolUse` | `hooks/pretooluse.mjs` | Exit-0 with `{hookSpecificOutput: {permissionDecision: "deny", permissionDecisionReason}}` to block. **Fail-closed** on any bridge error. |
-| `PostToolUse` | `hooks/posttooluse.mjs` | Informational; verifies the receipt signature and persists it locally. Always exits 0. |
-
-The PreToolUse hook calls `ChioBridge.check({tool, params, serverId, policyPath})`. Its stdin follows the real Claude Code hook schema (`tool_name`, `tool_input`, `session_id`, `tool_use_id`). MCP tools arriving as `mcp__<server>__<tool>` are decomposed into `(serverId, tool)` before the check.
-
-## Config
-
-Driven by `userConfig` in `plugin.json`. Claude Code prompts on first enable and exposes the values as `CLAUDE_PLUGIN_OPTION_*` env vars to hooks and scripts:
-
-| Key | Purpose |
-|---|---|
-| `policy_path` | Default policy for the PreToolUse hook if no `/chio:bond` has run |
-| `chio_binary` | Path to `chio` (CLI mode) |
-| `trust_url` | Trust-control plane URL (default `http://127.0.0.1:8940`) |
-| `service_token` | Bearer token for the trust plane; enables daemon mode |
-
-## Policy
-
-See `examples/hedge.policy.yaml`. Uses real HushSpec 0.1.0 keys under `rules:` and puts plugin-only controls (`velocity`, `human_in_loop`) under `extensions.chio.*`. chio's `deny_unknown_fields` would reject them under `rules:` today.
-
-## Architecture
-
-```
-Claude Code
-  └─ PreToolUse hook
-      └─ node hooks/pretooluse.mjs
-          └─ import @chio/bridge
-              ├─ daemon mode: ChioClient / ReceiptQueryClient over HTTP
-              └─ cli mode:    `chio check --policy ... --tool ... --params ...`
-```
+See [SMOKE.md](SMOKE.md) for exact scope and unresolved tests. The old script
+is retained as inert historical text because it deleted normal plugin state.
 
 ## License
 
 Apache-2.0
-
-## CI
-
-[![ci](https://github.com/owner/chio-claude-code-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/owner/chio-claude-code-plugin/actions/workflows/ci.yml)
-
-Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml). Runs lint/typecheck (non-blocking in Wave 5.1), unit tests, and a chio-backed smoke pass. Swap `owner/...` once the GitHub org is live.

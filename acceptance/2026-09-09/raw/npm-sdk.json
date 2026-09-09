@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "dist": {
+    "integrity": "sha512-Qb34HETKZrOH+Z/A3vVB/MHcJlItZtLtf74TZHu0qGO7S2X/mw6kuSeYFW6aqfoL4OmN2X8QJOo2Paxm3lnCXg==",
+    "shasum": "ee7410058a0de052de6df5fa321c3248647394ca",
+    "tarball": "https://registry.npmjs.org/@chio-protocol/sdk/-/sdk-0.1.0.tgz",
+    "fileCount": 94,
+    "unpackedSize": 106109,
+    "signatures": [
+      {
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+        "sig": "MEYCIQDtPKun3CLcjyBlihczBhVrlZUf+zrvicLleRHWXLNMXwIhAN1Nfi5gTFiQ2JCo/ci5tdeMkCU41cLMT9L+Ec77CrLN"
+      }
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+[
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": []
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "tool_use_id": "toolu_chio_kernel_000",
+        "type": "tool_result",
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"state\":\"completed\",\"evidence\":\"verified\",\"requestId\":\"0ac95dd7-23bb-4da5-8301-51d017f9f4a5:9e7e65453739bbc64ba155eed18a37bd5fb1196c7f29ded1da660b94414d7ad8\",\"receipt\":{\"action\":{\"parameter_hash\":\"2b0c5949db143d3256dd19926b5436a654c055281446aba501d07ac54ec4d561\",\"parameters\":{\"content\":\"tamper\",\"path\":\"/private/tmp/chio-six-host-kernel-20260909/claude-config-tamper-gateway.json\"}},\"boundary_class\":\"prevent\",\"capability_id\":\"cap-01a086c9-44a4-7071-b935-d4f6bac7632e\",\"content_hash\":\"8de32ce33e00c808e8c8b9e73c2904ca8bc1bc9e31e48495cebd345adde39746\",\"decision\":{\"verdict\":\"allow\"},\"evidence\":[{\"details\":\"sanitizer detected 1 findings (secret_high_entropy_token:1)\",\"guard_name\":\"output-sanitizer\",\"verdict\":true}],\"id\":\"2a4d72feb4d1685055c47f1040f4cd4ef60c5ea30441b2a8a40a31d3d7543f43\",\"kernel_key\":\"fdd1d3e5702ccb18232cf353b365e17a5ce8ad4249cade41fdcde2b7e8d3dc4b\",\"metadata\":{\"admission_operation\":{\"compensation_status\":\"not_compensated\",\"coordinator_lease_epoch\":2,\"coordinator_lease_id\":\"01a086bf-77f5-7bb0-803c-d0d36983cb0f\",\"operation_id\":\"bac33742c2321c9e1601c81a7dec1d63999dd8554876da82da349ba6be7dc9e5\",\"projected_dispatch_state\":\"terminal\",\"projected_operation_version\":8,\"projected_state\":\"completed\",\"request_binding_hash\":\"3bf92aa518e4ff14ccfb3c84b7556bdaefbec5374803331a919eebfb49bb30a5\",\"request_id\":\"0ac95dd7-23bb-4da5-8301-51d017f9f4a5:9e7e65453739bbc64ba155eed18a37bd5fb1196c7f29ded1da660b94414d7ad8\",\"request_namespace_digest\":\"317b6ced64e709063b924446f3b32b82f43134b8ad0723133ef67eb4bad08fd4\",\"retained_dispatch_commit\":{\"committed_version\":6,\"coordinator_lease_epoch\":2,\"coordinator_lease_id\":\"01a086bf-77f5-7bb0-803c-d0d36983cb0f\",\"provider_attempt\":{\"attempt_id\":\"attempt:bac33742c2321c9e1601c81a7dec1d63999dd8554876da82da349ba6be7dc9e5\",\"operation_id\":\"bac33742c2321c9e1601c81a7dec1d63999dd8554876da82da349ba6be7dc9e5\",\"transport_id\":\"kernel-tool-server:fs\",\"transport_key_epoch\":2},\"store_fence\":{\"lease_id\":\"01a086bf-77f5-7bb0-803c-d0d36983cb0f\",\"owner_epoch\":2,\"store_uuid\":\"01a086b1-e802-77f1-be74-f58fc6efbbb3\"}},\"schema\":\"chio.admission-receipt.v1\",\"store_fence\":{\"lease_id\":\"01a086bf-77f5-7bb0-803c-d0d36983cb0f\",\"owner_epoch\":2,\"store_uuid\":\"01a086b1-e802-77f1-be74-f58fc6efbbb3\"},\"tool_outcome_id\":\"dd81eee61fac0a0ea717d5c4aacb0b8488674ce45fc69a4c0e60c146a415edbc\",\"tool_outcome_version\":2,\"trusted_time_unix_ms\":1788967779188},\"attribution\":{\"delegation_depth\":0,\"grant_index\":1,\"issuer_key\":\"6da6aad8e003689f72f9879a9cd2a14ddd859a2d197e33854a313fcc05532dfb\",\"subject_key\":\"4e4aa4ddc77d67be48a46ba12242ac9cd7fbf6cceff3e4d943e83533c8329869\"},\"chio_receipt_signing_nonce\":\"rcpt-01a086c9-fc24-7b52-a8db-e3e6558dbef6\",\"post_invocation\":{\"sanitized\":true},\"receipt_context\":{\"request_id\":\"0ac95dd7-23bb-4da5-8301-51d017f9f4a5:9e7e65453739bbc64ba155eed18a37bd5fb1196c7f29ded1da660b94414d7ad8\"}},\"policy_hash\":\"a397798b04d1b93737ec46f21bb62be358bc16532abd7770fb2eaef5cd6b4cf9\",\"receipt_kind\":\"mediated_decision\",\"redaction_mode\":\"none\",\"signature\":\"431e3e3a005973e4f19d61569728115fc5870526172d189bbb9263bd59e96a3569e0ac0fc2ffe6efb8ab64c57b66f0c0b1da85d9fe60552d8e9ebd8d1cea6a05\",\"timestamp\":1788967779,\"tool_name\":\"write_file\",\"tool_origin\":\"caller_executed\",\"tool_server\":\"fs\",\"trust_level\":\"mediated\"},\"result\":{\"content\":[{\"text\":\"Access denied - path outside allowed directories: ****.json not in /workspace\",\"type\":\"text\"}],\"isError\":true}}"
+          }
+        ]
+      }
+    ]
+  }
+]

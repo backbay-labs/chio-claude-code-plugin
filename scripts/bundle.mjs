@@ -12,19 +12,22 @@
 // hook processes are separate, so the duplication costs disk, not correctness.
 
 import { build } from "esbuild";
+import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const bridgeRoot = dirname(createRequire(import.meta.url).resolve("@chio/bridge/package.json"));
 
 await build({
   absWorkingDir: root,
-  entryPoints: [
-    "src/index.ts",
-    "src/state/bridge.ts",
-    "src/state/store.ts",
-    "src/state/paths.ts",
-  ],
+  entryPoints: {
+    index: "src/index.ts",
+    "state/bridge": "src/state/bridge.ts",
+    "state/store": "src/state/store.ts",
+    "state/paths": "src/state/paths.ts",
+    gateway: join(bridgeRoot, "dist", "gateway.js"),
+  },
   outbase: "src",
   outdir: "dist",
   bundle: true,
