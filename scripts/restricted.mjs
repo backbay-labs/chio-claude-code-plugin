@@ -82,4 +82,4 @@ async function main() {
     process.exitCode=code??1;
   });
 }
-if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch(error=>{console.error(`[chio restricted] ${error.message}`);process.exitCode=1;});
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) main().catch(error=>{console.error(`[chio restricted] ${error.message}`);process.exitCode=1;});
