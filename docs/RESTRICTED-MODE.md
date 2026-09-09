@@ -23,11 +23,25 @@ required before claiming that stronger boundary. A session-limited credential
 reduces authority but does not supply that isolation.
 
 Prepare a retained MCP kernel session with the companion bridge's
-`chio-prepare-gateway` command. Its operator request specifies the exact kernel
-endpoint, session-scoped bearer credential, trusted signer keys, server ID,
-allowed tool names, a private journal directory and a fresh UUID `sessionId`.
-The UUID is also the Claude host session ID. The preparation command discovers
-and pins the kernel session's subject and single capability. It executes no tool.
+`chio-prepare-gateway` command. The operator request specifies the exact kernel
+origin, bootstrap `bearerToken`, a distinct `adminToken`, `credentialTtlSeconds`
+(an integer from 1 to 3600), trusted signer keys, server ID, allowed tool names,
+a private journal directory and a fresh UUID `sessionId`. The UUID is also the
+Claude host session ID. The bootstrap and admin credentials remain outside the
+host-readable process boundary; never give the operator request to Claude.
+
+```sh
+node /installed/chio/node_modules/@chio/bridge/dist/prepare-gateway.js \
+  /operator/private/claude-prepare.json \
+  /operator/private/new-claude-gateway.json
+```
+
+The command discovers and pins the kernel session's subject and single
+capability, then exchanges the operator authority for a credential restricted
+to that retained session, server and exact tool allowlist. Only the delegated
+bearer is written to the gateway config. The separate `sessionCredential`
+metadata records its scope and expiry. Preparation executes no protected tool.
+An older kernel without this exchange is incompatible and preparation fails.
 Keep both request and generated config private (0600). Keep the journal 0700.
 Never commit these files or put them in a transcript directory.
 
