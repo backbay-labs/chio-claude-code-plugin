@@ -158,7 +158,7 @@ no six-host or three-host completion claim in this record.
 - The legacy destructive smoke script is inert text. The replacement creates
   disposable workspaces/profiles and never cleans up normal plugin state.
 
-The 27 hook and launcher regression tests pass without skips. They use explicit bridge
+The 28 hook and launcher regression tests pass without skips. They use explicit bridge
 fixtures and establish unit behavior only. Build/typecheck/package tests do not
 replace any host gate.
 
@@ -238,3 +238,30 @@ intended cutpoint. The corrected final proxy and immutable runtime passed. A
 separate old-runtime initialization failure came from the operator changing
 its unsnapshotted policy to a field unsupported by that old binary. The final
 launcher uses a policy snapshot. Neither issue is attributed to missing access.
+
+## Additional evidence and unresolved reruns
+
+The revoked-capability real-host probe passed; only its dedicated capability
+was revoked by the operator helper. A post-revocation fresh-session preparation
+then failed, so that specific restoration sequence remains unresolved. A
+separate earlier fresh-capability read passed, and is kept distinct.
+
+The real-host wrong-signer probe altered an execution receipt after a known
+resource commit. The gateway rejected the evidence, reported an unknown outcome
+and fenced subsequent calls. An independent observer retained the original
+effect and no second effect. Valid-other-request receipt replay and substituted
+result probes were attempted, but the later runtime stopped returning preflight
+context promptly; those probes never reached their mutation cutpoint and failed
+probe integrity. Their failures remain in `CASE-INDEX.json`. They do not count
+as successful evidence-substitution checks.
+
+Three probe attempts also started before their dependent preparation completed.
+They failed before starting the host because the private config was absent.
+Those local coordination failures are retained as preflight records; none are
+credited as acceptance.
+
+The final artifact cascade remains open for shared gateway entrypoint and
+session-credential changes. Tests tied to older gateway digests remain bounded
+historical evidence until rerun against the final package and credential
+contract. Source/package CI is blocking but hosted execution and release
+provenance have not been claimed.

@@ -1,0 +1,6 @@
+{
+  "capability_id": "cap-01a086e4-fcbd-78a0-8892-a308db1ddcc0",
+  "exit_code": 0,
+  "stdout": "{\n  \"action\": \"revoke\",\n  \"result\": {\n    \"capabilityId\": \"cap-01a086e4-fcbd-78a0-8892-a308db1ddcc0\",\n    \"newlyRevoked\": true,\n    \"revoked\": true\n  }\n}\n",
+  "stderr": ""
+}

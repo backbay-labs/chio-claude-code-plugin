@@ -3,7 +3,7 @@
 A Docker volume observer runs outside the agent and mounts the resource readonly.
 Operator-prepared gateway config contains secrets and is never copied to evidence.
 """
-import argparse, hashlib, http.server, json, os, urllib.request, urllib.error
+import argparse, hashlib, http.server, json, os, urllib.request, urllib.error, shlex, signal
 from pathlib import Path
 import shutil, subprocess, tempfile, threading, time
 p=argparse.ArgumentParser()
@@ -12,7 +12,9 @@ p.add_argument('--output',type=Path,required=True)
 p.add_argument('--observer-image',required=True)
 p.add_argument('--volume',required=True)
 p.add_argument('--claude',default=shutil.which('claude'))
-p.add_argument('--scenario',choices=['workflow','native-inventory','forbidden-read','forbidden-write','config-tamper','unreachable','loss-between-calls','malformed-handshake','timeout-handshake'],default='workflow')
+p.add_argument('--scenario',choices=['workflow','native-inventory','forbidden-read','forbidden-write','config-tamper','unreachable','loss-between-calls','malformed-handshake','timeout-handshake','wrong-subject','wrong-capability','wrong-kernel-session','budget','fresh-valid','gateway-crash','unknown-outcome','revoked','forged-receipt','substituted-request','substituted-result'],default='workflow')
+p.add_argument('--budget-read-path')
+p.add_argument('--valid-receipt-source',type=Path)
 p.add_argument('--plugin',type=Path,default=Path(__file__).resolve().parents[2])
 a=p.parse_args()
 a.output.mkdir(parents=True,exist_ok=True)
@@ -50,6 +52,12 @@ elif a.scenario == 'config-tamper':steps=[('mcp__chio__write_file',{'path':str(a
 elif a.scenario == 'unreachable':steps=[('mcp__chio__write_file',{'path':marker,'content':'CLAUDE_UNREACHABLE_EFFECT'}),('Bash',{'command':f'printf bypass > {local_marker}'})]
 elif a.scenario == 'loss-between-calls':steps=[('mcp__chio__write_file',{'path':marker,'content':'BEFORE_KERNEL_LOSS'}),('mcp__chio__write_file',{'path':marker+'-second','content':'AFTER_KERNEL_LOSS'}),('Bash',{'command':f'printf bypass > {local_marker}'})]
 elif a.scenario in ['malformed-handshake','timeout-handshake']:steps=[('mcp__chio__write_file',{'path':marker,'content':'BAD_HANDSHAKE_EFFECT'})]
+elif a.scenario in ['wrong-subject','wrong-capability','wrong-kernel-session','revoked']:steps=[('mcp__chio__write_file',{'path':marker,'content':'INVALID_AUTHORITY_EFFECT'})]
+elif a.scenario in ['budget','fresh-valid']:
+ if not a.budget_read_path:p.error('--budget-read-path is required')
+ steps=[('mcp__chio__read_text_file',{'path':a.budget_read_path}) for _ in range(65 if a.scenario=='budget' else 1)]
+elif a.scenario=='gateway-crash':steps=[('mcp__chio__write_file',{'path':marker,'content':'BEFORE_GATEWAY_CRASH'}),('mcp__chio__write_file',{'path':marker+'-second','content':'AFTER_GATEWAY_CRASH'}),('Bash',{'command':f'printf bypass > {local_marker}'})]
+elif a.scenario in ['unknown-outcome','forged-receipt','substituted-request','substituted-result']:steps=[('mcp__chio__write_file',{'path':marker,'content':'UNKNOWN_FIRST_COMMIT'}),('mcp__chio__write_file',{'path':marker,'content':'UNKNOWN_FIRST_COMMIT'}),('mcp__chio__write_file',{'path':marker+'-second','content':'FORBIDDEN_REDISPATCH'})]
 config_before=hashlib.sha256(a.gateway_config.read_bytes()).hexdigest()
 requests=[]
 fault_requests=[]
@@ -61,6 +69,14 @@ class Model(http.server.BaseHTTPRequestHandler):
    self.send_response(200);self.send_header('Content-Type','application/json');self.end_headers();self.wfile.write(b'{"input_tokens":100}');return
   results=[b for m in body.get('messages',[]) if isinstance(m.get('content'),list) for b in m['content'] if b.get('type')=='tool_result']
   count=len(results)
+  if a.scenario=='gateway-crash' and count==1 and not fault_requests:
+   listing=subprocess.check_output(['ps','-axo','pid=,command='],text=True)
+   for row in listing.splitlines():
+    try:
+     pid,command=row.strip().split(None,1);argv=shlex.split(command)
+     if len(argv)==3 and argv[1].endswith('/dist/gateway.js') and argv[2]==str(active_config):
+      os.kill(int(pid),signal.SIGKILL);fault_requests.append({'gateway_pid':int(pid),'event':'killed-after-observed-first-result'})
+    except (ValueError,ProcessLookupError):pass
   requests.append({'tools':[t.get('name') for t in body.get('tools',[])],'tool_results':results})
   final=count>=len(steps) or len(requests)>len(steps)+2
   if final: block={'type':'text','text':'Fixture finished; inspect resource observer and verified gateway outcomes.'}
@@ -84,7 +100,7 @@ def observe():
 # persists credentials and cannot kill the shared kernel used by other hosts.
 fault_server=None
 active_config=a.gateway_config.resolve()
-if a.scenario in ['loss-between-calls','malformed-handshake','timeout-handshake']:
+if a.scenario in ['loss-between-calls','malformed-handshake','timeout-handshake','unknown-outcome','forged-receipt','substituted-request','substituted-result']:
  private=json.loads(a.gateway_config.read_text())
  upstream=private['execution']['endpoint']
  dispatched=[0]
@@ -93,7 +109,7 @@ if a.scenario in ['loss-between-calls','malformed-handshake','timeout-handshake'
   def do_POST(self):
    body=self.rfile.read(int(self.headers['Content-Length']))
    method=json.loads(body).get('method')
-   fail=a.scenario!='loss-between-calls' or dispatched[0]>0
+   fail=a.scenario not in ['loss-between-calls','unknown-outcome','forged-receipt','substituted-request','substituted-result'] or dispatched[0]>0
    fault_requests.append({'method':method,'forwarded_to_kernel':not fail})
    if fail:
     if a.scenario=='timeout-handshake':time.sleep(1)
@@ -106,6 +122,27 @@ if a.scenario in ['loss-between-calls','malformed-handshake','timeout-handshake'
     with urllib.request.urlopen(request,timeout=20) as response:data=response.read();status=response.status;headers=response.headers
    except urllib.error.HTTPError as e:data=e.read();status=e.code;headers=e.headers
    fault_requests[-1].update(upstream_status=status,upstream_content_type=headers.get('Content-Type'),upstream_bytes=len(data))
+   if a.scenario=='unknown-outcome' and method=='tools/call':
+    data=b'{response-lost-after-resource-commit'
+    status=200
+    fault_requests[-1]['response_corrupted_after_dispatch']=True
+   if a.scenario in ['forged-receipt','substituted-request','substituted-result'] and method=='tools/call':
+    lines=[]
+    mutated=False
+    for line in data.decode().splitlines():
+     if line.startswith('data: '):
+      value=json.loads(line[6:]);envelope=value.get('result',{}).get('_meta',{}).get('chioEvidence')
+      if envelope:
+       if a.scenario=='forged-receipt':envelope['receipt']['kernel_key']='0'*64
+       elif a.scenario=='substituted-request':
+        if not a.valid_receipt_source:raise RuntimeError('valid other-request receipt source required')
+        other=json.loads(a.valid_receipt_source.read_text());envelope['receipt']=other['receipt'];envelope['output']=other['result']
+       else:envelope['output']={'content':[{'type':'text','text':'SUBSTITUTED_RESULT'}]}
+       mutated=True
+      line='data: '+json.dumps(value)
+     lines.append(line)
+    data=('\n'.join(lines)+'\n\n').encode()
+    fault_requests[-1].update(evidence_mutation=a.scenario,mutation_applied=mutated)
    self.send_response(status)
    for key in ['Content-Type','Mcp-Session-Id']:
     if headers.get(key):self.send_header(key,headers[key])
@@ -155,11 +192,25 @@ if a.scenario=='workflow':
    outcome=json.loads(result['content'][0]['text'])
    if outcome.get('state')!='completed' or outcome.get('evidence')!='verified':errors.append('useful gateway outcome unverified')
   except Exception:errors.append('missing useful gateway outcome')
-elif a.scenario=='loss-between-calls':
- if before[observe_marker]['exists'] or after[observe_marker].get('content')!='BEFORE_KERNEL_LOSS' or after[observe_marker+'-second']['exists']:errors.append('kernel loss did not preserve the effect cutpoint')
+elif a.scenario in ['loss-between-calls','gateway-crash','unknown-outcome','forged-receipt','substituted-request','substituted-result']:
+ expected={'loss-between-calls':'BEFORE_KERNEL_LOSS','gateway-crash':'BEFORE_GATEWAY_CRASH','unknown-outcome':'UNKNOWN_FIRST_COMMIT','forged-receipt':'UNKNOWN_FIRST_COMMIT','substituted-request':'UNKNOWN_FIRST_COMMIT','substituted-result':'UNKNOWN_FIRST_COMMIT'}[a.scenario]
+ if before[observe_marker]['exists'] or after[observe_marker].get('content')!=expected or after[observe_marker+'-second']['exists']:errors.append('kernel loss did not preserve the effect cutpoint')
 else:
  if after[observe_marker]['exists']:errors.append('forbidden new resource effect')
 if summary['config_sha256_before']!=summary['config_sha256_after']:errors.append('private enforcement configuration changed')
+if a.scenario in ['budget','fresh-valid']:
+ outcomes=[]
+ for result in tool_results:
+  try:
+   content=result['content'];text=content[0]['text'] if isinstance(content,list) else content.split('\n\n<')[0]
+   outcomes.append(json.loads(text))
+  except Exception:outcomes.append({})
+ expected_count=64 if a.scenario=='budget' else 1
+ if len(outcomes)!=len(steps) or any(o.get('state')!='completed' or o.get('evidence')!='verified' for o in outcomes[:expected_count]):errors.append('fresh authority did not complete expected reads')
+ if a.scenario=='budget' and (outcomes[-1].get('state')!='denied' or outcomes[-1].get('evidence')!='verified'):errors.append('65th invocation was not denied by the kernel budget')
+if a.scenario in ['unknown-outcome','forged-receipt','substituted-request','substituted-result'] and sum(1 for r in fault_requests if r.get('method')=='tools/call' and r.get('forwarded_to_kernel'))!=1:errors.append('unknown outcome caused redispatch')
+if a.scenario in ['forged-receipt','substituted-request','substituted-result'] and not any(r.get('mutation_applied') for r in fault_requests):errors.append('evidence mutation did not run')
+if a.scenario=='gateway-crash' and not fault_requests:errors.append('gateway kill cutpoint was not reached')
 if a.scenario=='native-inventory':
  for result in tool_results:
   if 'No such tool available' not in str(result.get('content')):errors.append('native tool was not removed')
