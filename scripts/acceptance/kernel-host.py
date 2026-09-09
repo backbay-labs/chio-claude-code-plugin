@@ -13,10 +13,11 @@ p.add_argument('--observer-image',required=True)
 p.add_argument('--volume',required=True)
 p.add_argument('--audit-volume',required=True)
 p.add_argument('--claude',default=shutil.which('claude'))
-p.add_argument('--scenario',choices=['workflow','native-inventory','forbidden-read','forbidden-write','config-tamper','unreachable','loss-between-calls','malformed-handshake','timeout-handshake','wrong-subject','wrong-capability','wrong-kernel-session','budget','fresh-valid','gateway-crash','unknown-outcome','revoked','forged-receipt','substituted-request','substituted-result','cancel-after-dispatch','restart-fenced','parallel-calls'],default='workflow')
+p.add_argument('--scenario',choices=['host-response-loss','host-delivery-restart','workflow','native-inventory','forbidden-read','forbidden-write','config-tamper','unreachable','loss-between-calls','malformed-handshake','timeout-handshake','wrong-subject','wrong-capability','wrong-kernel-session','budget','fresh-valid','gateway-crash','unknown-outcome','revoked','forged-receipt','substituted-request','substituted-result','cancel-after-dispatch','restart-fenced','parallel-calls'],default='workflow')
 p.add_argument('--budget-read-path')
 p.add_argument('--valid-receipt-source',type=Path)
 p.add_argument('--retained-marker-path')
+p.add_argument('--fault-injector',type=Path)
 p.add_argument('--plugin',type=Path,default=Path(__file__).resolve().parents[2])
 a=p.parse_args()
 a.output.mkdir(parents=True,exist_ok=True)
@@ -25,7 +26,7 @@ os.chmod(run,0o700)
 workspace=run/'workspace';workspace.mkdir()
 profile=run/'profile'
 marker='/workspace/claude-'+run.name.rsplit('-',1)[-1]+'.txt'
-if a.scenario=='restart-fenced':
+if a.scenario in ['restart-fenced','host-delivery-restart']:
  if not a.retained_marker_path or not a.retained_marker_path.startswith('/workspace/claude-'):p.error('--retained-marker-path must identify the retained Claude probe resource')
  marker=a.retained_marker_path
 observe_marker=marker.replace('/workspace/','/observe/')
@@ -64,8 +65,9 @@ elif a.scenario in ['budget','fresh-valid']:
 elif a.scenario=='gateway-crash':steps=[('mcp__chio__write_file',{'path':marker,'content':'BEFORE_GATEWAY_CRASH'}),('mcp__chio__write_file',{'path':marker+'-second','content':'AFTER_GATEWAY_CRASH'}),('Bash',{'command':f'printf bypass > {local_marker}'})]
 elif a.scenario in ['unknown-outcome','forged-receipt','substituted-request','substituted-result']:steps=[('mcp__chio__write_file',{'path':marker,'content':'UNKNOWN_FIRST_COMMIT'}),('mcp__chio__write_file',{'path':marker,'content':'UNKNOWN_FIRST_COMMIT'}),('mcp__chio__write_file',{'path':marker+'-second','content':'FORBIDDEN_REDISPATCH'})]
 if a.scenario=='parallel-calls':steps=[('mcp__chio__write_file',{'path':marker,'content':'PARALLEL_ONE'}),('mcp__chio__write_file',{'path':marker+'-second','content':'PARALLEL_TWO'})]
-if a.scenario=='restart-fenced':steps=[('mcp__chio__write_file',{'path':marker,'content':'UNKNOWN_FIRST_COMMIT'}),('mcp__chio__write_file',{'path':marker+'-second','content':'FORBIDDEN_RESTART_REDISPATCH'})]
+if a.scenario in ['restart-fenced','host-delivery-restart']:steps=[('mcp__chio__write_file',{'path':marker,'content':'UNKNOWN_FIRST_COMMIT'}),('mcp__chio__write_file',{'path':marker+'-second','content':'FORBIDDEN_RESTART_REDISPATCH'})]
 if a.scenario=='cancel-after-dispatch':steps=[('mcp__chio__write_file',{'path':marker,'content':'COMMITTED_BEFORE_HOST_CANCELLATION'}),('mcp__chio__write_file',{'path':marker+'-second','content':'FORBIDDEN_AFTER_CANCELLATION'})]
+if a.scenario=='host-response-loss':steps=[('mcp__chio__write_file',{'path':marker,'content':'UNKNOWN_FIRST_COMMIT'}),('mcp__chio__write_file',{'path':marker+'-second','content':'FORBIDDEN_REDISPATCH'})]
 config_before=hashlib.sha256(a.gateway_config.read_bytes()).hexdigest()
 requests=[]
 fault_requests=[]
@@ -182,6 +184,10 @@ cmd=[shutil.which('node'),str(a.plugin/'scripts/restricted.mjs'),'--host',a.clau
  '--profile',str(profile),'--workspace',str(workspace),'--model','claude-sonnet-4-5']
 env={k:v for k,v in os.environ.items() if not k.startswith(('CLAUDE_','ANTHROPIC_','CHIO_')) and k!='CLAUDECODE'}
 env.update(ANTHROPIC_API_KEY='local-fixture-not-a-credential',ANTHROPIC_BASE_URL=f'http://127.0.0.1:{server.server_port}')
+if a.scenario=='host-response-loss':
+ if not a.fault_injector or not a.fault_injector.is_file():p.error('explicit --fault-injector required')
+ env['NODE_OPTIONS']='--import='+str(a.fault_injector.resolve())
+ env['CHIO_HOST_RESPONSE_FAULT_LOG']=str(a.output/'host-response-fault.jsonl')
 start=time.monotonic()
 before=observe()
 host_timed_out=False
@@ -222,12 +228,12 @@ if a.scenario=='workflow':
    outcome=json.loads(result['content'][0]['text'])
    if outcome.get('state')!='completed' or outcome.get('evidence')!='verified':errors.append('useful gateway outcome unverified')
   except Exception:errors.append('missing useful gateway outcome')
-elif a.scenario in ['loss-between-calls','gateway-crash','unknown-outcome','forged-receipt','substituted-request','substituted-result','cancel-after-dispatch']:
- expected={'loss-between-calls':'BEFORE_KERNEL_LOSS','gateway-crash':'BEFORE_GATEWAY_CRASH','unknown-outcome':'UNKNOWN_FIRST_COMMIT','forged-receipt':'UNKNOWN_FIRST_COMMIT','substituted-request':'UNKNOWN_FIRST_COMMIT','substituted-result':'UNKNOWN_FIRST_COMMIT','cancel-after-dispatch':'COMMITTED_BEFORE_HOST_CANCELLATION'}[a.scenario]
+elif a.scenario in ['host-response-loss','loss-between-calls','gateway-crash','unknown-outcome','forged-receipt','substituted-request','substituted-result','cancel-after-dispatch']:
+ expected={'host-response-loss':'UNKNOWN_FIRST_COMMIT','loss-between-calls':'BEFORE_KERNEL_LOSS','gateway-crash':'BEFORE_GATEWAY_CRASH','unknown-outcome':'UNKNOWN_FIRST_COMMIT','forged-receipt':'UNKNOWN_FIRST_COMMIT','substituted-request':'UNKNOWN_FIRST_COMMIT','substituted-result':'UNKNOWN_FIRST_COMMIT','cancel-after-dispatch':'COMMITTED_BEFORE_HOST_CANCELLATION'}[a.scenario]
  if before[observe_marker]['exists'] or after[observe_marker].get('content')!=expected or after[observe_marker+'-second']['exists']:errors.append('kernel loss did not preserve the effect cutpoint')
 elif a.scenario=='parallel-calls':
  if before[observe_marker]['exists'] or before[observe_marker+'-second']['exists'] or after[observe_marker].get('content')!='PARALLEL_ONE' or after[observe_marker+'-second'].get('content')!='PARALLEL_TWO':errors.append('parallel host calls did not commit the two independently observed results')
-elif a.scenario=='restart-fenced':
+elif a.scenario in ['restart-fenced','host-delivery-restart']:
  if before[observe_marker].get('content')!='UNKNOWN_FIRST_COMMIT' or before[observe_marker]!=after[observe_marker] or after[observe_marker+'-second']['exists']:errors.append('retained unknown resource changed across restart')
 else:
  if after[observe_marker]['exists']:errors.append('forbidden new resource effect')
@@ -288,6 +294,20 @@ if a.scenario=='cancel-after-dispatch':
 if a.scenario in ['unknown-outcome','forged-receipt','substituted-request','substituted-result'] and sum(1 for r in fault_requests if r.get('method')=='tools/call' and r.get('forwarded_to_kernel'))!=1:errors.append('unknown outcome caused redispatch')
 if a.scenario in ['forged-receipt','substituted-request','substituted-result'] and not any(r.get('mutation_applied') for r in fault_requests):errors.append('evidence mutation did not run')
 if a.scenario=='gateway-crash' and not fault_requests:errors.append('gateway kill cutpoint was not reached')
+if a.scenario=='host-response-loss':
+ faults=[json.loads(line) for line in (a.output/'host-response-fault.jsonl').read_text().splitlines()]
+ journal=Path(json.loads(active_config.read_text())['journalDir'])
+ records=[json.loads(path.read_text()) for path in journal.glob('*.json')]
+ completed=[record for record in records if record.get('state')=='completed']
+ if not faults or len(completed)!=1 or completed[0].get('hostDeliveryConfirmed') or completed[0].get('acknowledged'):errors.append('host delivery loss cutpoint missing')
+ if len(after['dispatch'])!=len(before['dispatch'])+1:errors.append('host response loss redispatched')
+ if any(outcome.get('state')=='completed' for outcome in outcomes):errors.append('host received dropped completion')
+ if r.returncode!=2:errors.append('host response loss did not return unresolved exit 2')
+ summary['retainedRequestId']=completed[0]['requestId'] if completed else None
+ summary['faults']=faults
+if a.scenario=='host-delivery-restart':
+ for index in range(len(steps)):require_outcome(index,'not_dispatched','unverified','fences')
+ if before['dispatch']!=after['dispatch'] or r.returncode!=2:errors.append('restart lost retained delivery fence')
 if a.scenario=='native-inventory':
  for result in tool_results:
   if 'No such tool available' not in str(result.get('content')):errors.append('native tool was not removed')

@@ -1,0 +1,2362 @@
+[
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [],
+    "returned_tool_calls": [
+      "Task"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "Bash"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "CronCreate"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "CronDelete"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "CronList"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "Edit"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "EnterWorktree"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "ExitWorktree"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "ListAgents"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "NotebookEdit"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: NotebookEdit. NotebookEdit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_009",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "Read"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: NotebookEdit. NotebookEdit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_009"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Read. Read is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_010",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "ReportFindings"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: NotebookEdit. NotebookEdit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_009"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Read. Read is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_010"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ReportFindings. ReportFindings is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_011",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "ScheduleWakeup"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: NotebookEdit. NotebookEdit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_009"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Read. Read is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_010"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ReportFindings. ReportFindings is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_011"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ScheduleWakeup. ScheduleWakeup is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_012",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "SendMessage"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: NotebookEdit. NotebookEdit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_009"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Read. Read is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_010"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ReportFindings. ReportFindings is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_011"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ScheduleWakeup. ScheduleWakeup is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_012"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: SendMessage. SendMessage is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_013",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "Skill"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: NotebookEdit. NotebookEdit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_009"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Read. Read is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_010"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ReportFindings. ReportFindings is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_011"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ScheduleWakeup. ScheduleWakeup is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_012"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: SendMessage. SendMessage is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_013"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Skill. Skill is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_014",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "TaskCreate"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: NotebookEdit. NotebookEdit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_009"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Read. Read is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_010"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ReportFindings. ReportFindings is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_011"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ScheduleWakeup. ScheduleWakeup is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_012"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: SendMessage. SendMessage is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_013"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Skill. Skill is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_014"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskCreate. TaskCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_015",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "TaskGet"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: NotebookEdit. NotebookEdit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_009"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Read. Read is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_010"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ReportFindings. ReportFindings is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_011"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ScheduleWakeup. ScheduleWakeup is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_012"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: SendMessage. SendMessage is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_013"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Skill. Skill is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_014"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskCreate. TaskCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_015"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskGet. TaskGet is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_016",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "TaskList"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: NotebookEdit. NotebookEdit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_009"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Read. Read is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_010"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ReportFindings. ReportFindings is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_011"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ScheduleWakeup. ScheduleWakeup is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_012"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: SendMessage. SendMessage is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_013"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Skill. Skill is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_014"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskCreate. TaskCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_015"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskGet. TaskGet is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_016"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskList. TaskList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_017",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "TaskOutput"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: NotebookEdit. NotebookEdit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_009"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Read. Read is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_010"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ReportFindings. ReportFindings is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_011"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ScheduleWakeup. ScheduleWakeup is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_012"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: SendMessage. SendMessage is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_013"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Skill. Skill is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_014"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskCreate. TaskCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_015"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskGet. TaskGet is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_016"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskList. TaskList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_017"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskOutput. TaskOutput is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_018",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "TaskStop"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: NotebookEdit. NotebookEdit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_009"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Read. Read is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_010"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ReportFindings. ReportFindings is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_011"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ScheduleWakeup. ScheduleWakeup is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_012"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: SendMessage. SendMessage is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_013"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Skill. Skill is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_014"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskCreate. TaskCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_015"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskGet. TaskGet is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_016"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskList. TaskList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_017"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskOutput. TaskOutput is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_018"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskStop. TaskStop is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_019",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "TaskUpdate"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: NotebookEdit. NotebookEdit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_009"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Read. Read is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_010"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ReportFindings. ReportFindings is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_011"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ScheduleWakeup. ScheduleWakeup is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_012"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: SendMessage. SendMessage is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_013"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Skill. Skill is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_014"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskCreate. TaskCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_015"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskGet. TaskGet is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_016"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskList. TaskList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_017"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskOutput. TaskOutput is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_018"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskStop. TaskStop is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_019"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskUpdate. TaskUpdate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_020",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "WebFetch"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: NotebookEdit. NotebookEdit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_009"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Read. Read is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_010"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ReportFindings. ReportFindings is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_011"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ScheduleWakeup. ScheduleWakeup is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_012"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: SendMessage. SendMessage is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_013"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Skill. Skill is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_014"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskCreate. TaskCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_015"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskGet. TaskGet is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_016"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskList. TaskList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_017"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskOutput. TaskOutput is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_018"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskStop. TaskStop is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_019"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskUpdate. TaskUpdate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_020"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: WebFetch. WebFetch is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_021",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "WebSearch"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: NotebookEdit. NotebookEdit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_009"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Read. Read is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_010"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ReportFindings. ReportFindings is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_011"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ScheduleWakeup. ScheduleWakeup is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_012"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: SendMessage. SendMessage is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_013"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Skill. Skill is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_014"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskCreate. TaskCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_015"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskGet. TaskGet is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_016"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskList. TaskList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_017"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskOutput. TaskOutput is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_018"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskStop. TaskStop is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_019"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskUpdate. TaskUpdate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_020"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: WebFetch. WebFetch is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_021"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: WebSearch. WebSearch is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_022",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "Workflow"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: NotebookEdit. NotebookEdit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_009"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Read. Read is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_010"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ReportFindings. ReportFindings is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_011"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ScheduleWakeup. ScheduleWakeup is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_012"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: SendMessage. SendMessage is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_013"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Skill. Skill is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_014"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskCreate. TaskCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_015"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskGet. TaskGet is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_016"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskList. TaskList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_017"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskOutput. TaskOutput is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_018"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskStop. TaskStop is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_019"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskUpdate. TaskUpdate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_020"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: WebFetch. WebFetch is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_021"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: WebSearch. WebSearch is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_022"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Workflow. Workflow is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_023",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "Write"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_002"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronDelete. CronDelete is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_003"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronList. CronList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_004"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_005"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: EnterWorktree. EnterWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_006"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ExitWorktree. ExitWorktree is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_007"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ListAgents. ListAgents is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_008"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: NotebookEdit. NotebookEdit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_009"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Read. Read is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_010"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ReportFindings. ReportFindings is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_011"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: ScheduleWakeup. ScheduleWakeup is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_012"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: SendMessage. SendMessage is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_013"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Skill. Skill is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_014"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskCreate. TaskCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_015"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskGet. TaskGet is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_016"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskList. TaskList is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_017"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskOutput. TaskOutput is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_018"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskStop. TaskStop is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_019"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: TaskUpdate. TaskUpdate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_020"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: WebFetch. WebFetch is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_021"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: WebSearch. WebSearch is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_022"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Workflow. Workflow is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_023"
+      },
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Write. Write is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_024",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": []
+  }
+]
