@@ -306,3 +306,31 @@ a forbidden read, unchanged file hashes do not establish absence of the read
 itself. The probe has a verified denial and no secret returned to the model;
 an independent backend dispatch/access record is still needed to establish
 prevention at that read boundary. That requirement is not removed from I03.
+
+## Launcher-owned HTTP candidate
+
+The later launcher places the gateway outside the guest process sandbox, removes
+direct kernel/config/journal access from Claude, and denies process forks. The
+bounded model relay retains the operator API key. The shared HTTP transport dies
+with its launcher and namespaces fresh host RPC counters without changing the
+kernel capability or clearing uncertainty fences. Earlier stdio evidence above
+remains historical.
+
+A real Claude 2.1.266 run through this launcher and the acknowledgement kernel
+completed write, edit, read and directory listing. The independent file contained
+`Claude kernel integration verified` followed by a newline. Forbidden writes,
+native Bash/Write/Read/WebFetch/Agent requests and config tampering produced no
+forbidden effect. The observer and raw tool outcomes are retained in
+`raw/ack-http-workflow/`; all 12 fixture-requested steps ran in 3.757 seconds,
+with host exit 0 and probe integrity PASS. The kernel binary SHA256 was
+`0e683f6f7cc8f21816b10641e3c18fba2dd1445fbcd28752cd3260d8ac5edb5a`,
+the bridge dependency was the self-contained candidate
+`c22c8dd094e39249484b3f4631d9ee6728db76bfd9e6f1f767c22538ab18a0ff`.
+
+This run used a deterministic local Messages fixture. Authenticated real-model
+acceptance is still unavailable. The forbidden read followed a prior denial
+that had already fenced the gateway, so a dedicated fresh-session read case is
+still required. Actual Claude lifecycle, approvals, authority variations, final
+artifact installation and publication remain open. The latest 28 component
+tests and typecheck passed; the initial symlink-main import failure was repaired
+using canonical script-relative imports. No host is accepted by this checkpoint.

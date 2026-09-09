@@ -27,6 +27,7 @@ await build({
     "state/store": "src/state/store.ts",
     "state/paths": "src/state/paths.ts",
     gateway: join(bridgeRoot, "dist", "gateway.js"),
+    "gateway-http": join(bridgeRoot, "dist", "gateway-http.js"),
   },
   outbase: "src",
   outdir: "dist",

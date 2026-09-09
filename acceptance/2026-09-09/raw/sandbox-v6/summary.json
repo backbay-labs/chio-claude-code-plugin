@@ -1,0 +1,116 @@
+{
+  "evidence_class": "REAL_HOST_AND_ADVERSARIAL_PROCESS_LOCAL_FIXTURES_NO_KERNEL",
+  "accepted": false,
+  "host_exit": 0,
+  "process_exit": 0,
+  "probe_integrity": "PASS",
+  "failures": [],
+  "checks": {
+    "own_config_read": {
+      "allowed": true
+    },
+    "operator_read": {
+      "allowed": false,
+      "error": "EPERM"
+    },
+    "crosshost_read": {
+      "allowed": false,
+      "error": "EPERM"
+    },
+    "data_alias_read": {
+      "allowed": false,
+      "error": "EPERM"
+    },
+    "tmp_alias_read": {
+      "allowed": false,
+      "error": "EPERM"
+    },
+    "profile_symlink_read": {
+      "allowed": false,
+      "error": "EPERM"
+    },
+    "config_write": {
+      "allowed": false,
+      "error": "EPERM"
+    },
+    "gateway_write": {
+      "allowed": false,
+      "error": "EPERM"
+    },
+    "host_write": {
+      "allowed": false,
+      "error": "EPERM"
+    },
+    "node_write": {
+      "allowed": false,
+      "error": "EPERM"
+    },
+    "settings_write": {
+      "allowed": false,
+      "error": "EPERM"
+    },
+    "workspace_write": {
+      "allowed": false,
+      "error": "EPERM"
+    },
+    "profile_write": {
+      "allowed": true
+    },
+    "journal_write": {
+      "allowed": true
+    },
+    "config_hardlink": {
+      "allowed": false,
+      "error": "EPERM"
+    },
+    "shell_exec": {
+      "allowed": false,
+      "error": "EPERM",
+      "status": null
+    },
+    "curl_exec": {
+      "allowed": false,
+      "error": "EPERM",
+      "status": null
+    },
+    "sandbox_exec": {
+      "allowed": false,
+      "error": "EPERM",
+      "status": null
+    },
+    "node_descendant": {
+      "allowed": true,
+      "status": 0,
+      "deniedRead": true
+    },
+    "kernel_network": {
+      "allowed": true
+    },
+    "model_network": {
+      "allowed": true
+    },
+    "unrelated_network": {
+      "allowed": false,
+      "error": "EPERM"
+    }
+  },
+  "network_observations": [
+    {
+      "port": 60769,
+      "path": "/kernel_network"
+    },
+    {
+      "port": 60773,
+      "path": "/model_network"
+    },
+    {
+      "port": 60770,
+      "path": "/operator-control"
+    }
+  ],
+  "run_directory": "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-os-vf_mqdl8",
+  "host_sha256": "553d1b9e9e7068b275c0a783c7e139ff6503096f286e674c8c919379fb0eca62",
+  "gateway_sha256": "e84dc20c825dd18c43deb9f01df253c43982b5c3cad096ec747c2a6fb2add8d5",
+  "sandbox_sha256": "33877d8cc66f2442ad94e92f5259f7ed7a247bdb8d792f0cc17549a46ec895df",
+  "probe_sha256": "65ae5402227de628cc2cef7ef25f78ee18a5ba670550c64b9dc97c1e44c20a1d"
+}

@@ -1,0 +1,82 @@
+
+> @chio/claude-code-plugin@0.3.0 test
+> node --test ./test/*.test.mjs
+
+✔ matching explicit allow persists authorization before native dispatch (187.682292ms)
+✔ non-allow verdict undefined denies (96.017458ms)
+✔ non-allow verdict pending denies (92.46975ms)
+✔ non-allow verdict ask denies (95.260208ms)
+✔ non-allow verdict incomplete denies (99.106917ms)
+✔ non-allow verdict cancelled denies (92.113333ms)
+✔ non-allow verdict deny denies (92.399916ms)
+✔ non-allow verdict true denies (87.860333ms)
+✔ failure denies: {"checkThrow":true} (91.77325ms)
+✔ failure denies: {"buildThrow":true} (99.024ms)
+✔ failure denies: {"bond":null} (100.533375ms)
+✔ failure denies: {"bond":{"sessionId":"session-b","policyPath":"/tmp/policy","passport":{"capabilityId":"cap-a","expiresAt":"2099-01-01T00:00:00Z"}}} (91.364334ms)
+✔ failure denies: {"bond":{"sessionId":"session-a","policyPath":"/tmp/policy","passport":{"capabilityId":"cap-a","expiresAt":"2001-01-01T00:00:00Z"}}} (91.945083ms)
+✔ failure denies: {"verify":false} (104.014958ms)
+✔ failure denies: {"env":{"CHIO_TRUSTED_RECEIPT_KEY":""}} (95.909916ms)
+✔ failure denies: {"env":{"CHIO_SERVICE_TOKEN":"fixture"}} (94.367709ms)
+✔ substituted receipt rejected: kernel_key (101.610292ms)
+✔ substituted receipt rejected: capability_id (106.798792ms)
+✔ substituted receipt rejected: tool_server (100.163959ms)
+✔ substituted receipt rejected: tool_name (96.417209ms)
+✔ substituted receipt rejected: action (101.986792ms)
+✔ cost oracle failures never become zero spend (97.073958ms)
+✔ budgeted calls require an oracle (102.90025ms)
+✔ missing exact session is rejected even with sole bond (93.29475ms)
+✔ untrusted receipt is not archived after a post-tool event (188.755834ms)
+✔ post-tool observation stays unverified and request bound (284.249083ms)
+✔ private paths cannot hide inside workspace using two-dot names or symlink ancestors (2.688375ms)
+✖ launcher runs validation through preserved symlink main paths (88.566458ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 27
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2997.805416
+
+✖ failing tests:
+
+test at test/restricted.test.mjs:24:1
+✖ launcher runs validation through preserved symlink main paths (88.566458ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /--host is required/. Input:
+  
+  'node:internal/modules/esm/resolve:275\n' +
+    '    throw new ERR_MODULE_NOT_FOUND(\n' +
+    '          ^\n' +
+    '\n' +
+    "Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-entrypoint-5wENUw/sandbox.mjs' imported from /var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-entrypoint-5wENUw/restricted.mjs\n" +
+    '    at finalizeResolution (node:internal/modules/esm/resolve:275:11)\n' +
+    '    at moduleResolve (node:internal/modules/esm/resolve:865:10)\n' +
+    '    at defaultResolve (node:internal/modules/esm/resolve:991:11)\n' +
+    '    at #cachedDefaultResolve (node:internal/modules/esm/loader:713:20)\n' +
+    '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:730:38)\n' +
+    '    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:52)\n' +
+    '    at #resolve (node:internal/modules/esm/loader:695:17)\n' +
+    '    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:615:35)\n' +
+    '    at ModuleJob.syncLink (node:internal/modules/esm/module_job:160:33)\n' +
+    '    at ModuleJob.link (node:internal/modules/esm/module_job:245:17) {\n' +
+    "  code: 'ERR_MODULE_NOT_FOUND',\n" +
+    "  url: 'file:///var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-entrypoint-5wENUw/sandbox.mjs'\n" +
+    '}\n' +
+    '\n' +
+    'Node.js v25.5.0\n'
+  
+      at TestContext.<anonymous> (file:///Users/connor/Medica/backbay/standalone/chio-claude-code-plugin/.worktrees/required-agent-integrations-20260909/test/restricted.test.mjs:31:10)
+      at Test.runInAsyncScope (node:async_hooks:212:14)
+      at Test.run (node:internal/test_runner/test:1109:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:786:18)
+      at Test.postRun (node:internal/test_runner/test:1238:19)
+      at Test.run (node:internal/test_runner/test:1166:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: "node:internal/modules/esm/resolve:275\n    throw new ERR_MODULE_NOT_FOUND(\n          ^\n\nError [ERR_MODULE_NOT_FOUND]: Cannot find module '/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-entrypoint-5wENUw/sandbox.mjs' imported from /var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-entrypoint-5wENUw/restricted.mjs\n    at finalizeResolution (node:internal/modules/esm/resolve:275:11)\n    at moduleResolve (node:internal/modules/esm/resolve:865:10)\n    at defaultResolve (node:internal/modules/esm/resolve:991:11)\n    at #cachedDefaultResolve (node:internal/modules/esm/loader:713:20)\n    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:730:38)\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:52)\n    at #resolve (node:internal/modules/esm/loader:695:17)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:615:35)\n    at ModuleJob.syncLink (node:internal/modules/esm/module_job:160:33)\n    at ModuleJob.link (node:internal/modules/esm/module_job:245:17) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-entrypoint-5wENUw/sandbox.mjs'\n}\n\nNode.js v25.5.0\n",
+    expected: /--host is required/,
+    operator: 'match',
+    diff: 'simple'
+  }

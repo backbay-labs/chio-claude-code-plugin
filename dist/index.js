@@ -7360,7 +7360,7 @@ var require_dist = __commonJS({
 });
 
 // src/commands/bond.ts
-import { resolve } from "node:path";
+import { resolve as resolve2 } from "node:path";
 
 // node_modules/@chio/bridge/dist/client/cli.js
 import { spawn, spawnSync } from "node:child_process";
@@ -7477,7 +7477,7 @@ raw: ${text.slice(0, 500)}`);
   }
 };
 function runCommand(binary, args, options = {}) {
-  return new Promise((resolve3, reject) => {
+  return new Promise((resolve4, reject) => {
     const spawnOptions = {
       stdio: ["pipe", "pipe", "pipe"],
       env: options.env ?? process.env
@@ -7504,7 +7504,7 @@ function runCommand(binary, args, options = {}) {
     child.on("close", (code) => {
       if (timer)
         clearTimeout(timer);
-      resolve3({ stdout, stderr, exitCode: code });
+      resolve4({ stdout, stderr, exitCode: code });
     });
     if (options.timeoutMs !== void 0) {
       timer = setTimeout(() => {
@@ -8218,6 +8218,9 @@ function verifyReceipt(receipt, trustedSigners = []) {
     ok: signatureValid && parameterHashValid && receiptIdValid && signerTrusted
   };
 }
+function verifyReceiptWithTrustedSigners(receipt, trustedSigners) {
+  return verifyReceipt(receipt, trustedSigners);
+}
 function verifyReceiptJson(input) {
   return verifyReceipt(parseReceiptJson(input));
 }
@@ -8231,6 +8234,11 @@ var REQUIRED_PERMISSION_FIELDS = [
 ];
 var REQUIRED_PERMISSION_FIELD_SET = new Set(REQUIRED_PERMISSION_FIELDS);
 var U64_MAX_EXCLUSIVE = 2 ** 64;
+
+// node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/invariants/signing.js
+function verifyUtf8MessageEd25519(input, publicKeyHex, signatureHex) {
+  return verifyEd25519Signature(input, publicKeyHex, signatureHex);
+}
 
 // node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/errors.js
 var ChioError = class extends Error {
@@ -8737,14 +8745,14 @@ async function wrapMcp(cli, cmd, options = {}) {
     if (child.exitCode !== null)
       return;
     child.kill("SIGTERM");
-    await new Promise((resolve3) => {
+    await new Promise((resolve4) => {
       const timer = setTimeout(() => {
         child.kill("SIGKILL");
-        resolve3();
+        resolve4();
       }, 2e3);
       child.once("exit", () => {
         clearTimeout(timer);
-        resolve3();
+        resolve4();
       });
     });
   };
@@ -8755,7 +8763,7 @@ function deriveServerId(cmdHead) {
   return `chio-wrap-${h}`;
 }
 async function waitForReady(child, timeoutMs) {
-  return new Promise((resolve3, reject) => {
+  return new Promise((resolve4, reject) => {
     let buffer = "";
     let settled = false;
     const timer = setTimeout(() => {
@@ -8772,7 +8780,7 @@ async function waitForReady(child, timeoutMs) {
         settled = true;
         clearTimeout(timer);
         detach();
-        resolve3({ url: exact[1], listen: exact[2] });
+        resolve4({ url: exact[1], listen: exact[2] });
         return;
       }
       const loose = buffer.match(/listening on (https?:\/\/([^\s/]+)(?:\/\S*)?)/i) ?? buffer.match(/bound to (?:http:\/\/)?([^\s]+)/i);
@@ -8781,10 +8789,10 @@ async function waitForReady(child, timeoutMs) {
         clearTimeout(timer);
         detach();
         if (loose.length >= 3 && loose[1].startsWith("http")) {
-          resolve3({ url: loose[1], listen: loose[2] });
+          resolve4({ url: loose[1], listen: loose[2] });
         } else {
           const hostport = loose[1].replace(/^https?:\/\//, "").replace(/\/.*$/, "");
-          resolve3({
+          resolve4({
             url: loose[1].startsWith("http") ? loose[1] : `http://${loose[1]}`,
             listen: hostport
           });
@@ -9245,18 +9253,560 @@ async function exportEvidence(daemon, opts) {
   return opts.outPath;
 }
 function sleep(ms, signal) {
-  return new Promise((resolve3) => {
-    const timer = setTimeout(resolve3, ms);
+  return new Promise((resolve4) => {
+    const timer = setTimeout(resolve4, ms);
     if (signal) {
       const handler = () => {
         clearTimeout(timer);
-        resolve3();
+        resolve4();
       };
       if (signal.aborted)
         handler();
       else
         signal.addEventListener("abort", handler, { once: true });
     }
+  });
+}
+
+// node_modules/@chio/bridge/dist/approval.js
+function verifyApprovalToolCall(input, expected) {
+  try {
+    const params = input;
+    const intent = params?._meta?.chioGovernedIntent;
+    const token = params?._meta?.chioApprovalToken;
+    const now = Math.floor(Date.now() / 1e3);
+    if (params?.name !== expected.tool || canonicalizeJson(params.arguments) !== canonicalizeJson(expected.arguments) || params?._meta?.chioRequestId !== expected.requestId || intent?.server_id !== expected.serverId || intent.tool_name !== expected.tool || intent?.body?.kind !== "bound_tool_invocation" || intent.body.value?.capability_id !== expected.capabilityId || intent.body.value.parameters_hash !== "0x" + sha256Hex(canonicalizeJson(expected.arguments)) || intent.context?.mcpSessionId !== expected.sessionId || intent.context?.capabilityId !== expected.capabilityId || !token || !["approved", "denied"].includes(token.decision) || token.subject !== expected.subjectKey || token.request_id !== expected.requestId || typeof token.approver !== "string" || !expected.trustedSigners.some((key) => key.toLowerCase() === token.approver.toLowerCase()) || token.governed_intent_hash !== sha256Hex(canonicalizeJson(intent)) || typeof token.id !== "string" || !token.id || !Number.isSafeInteger(token.issued_at) || !Number.isSafeInteger(token.expires_at) || token.issued_at > now + 5 || token.expires_at <= now || token.expires_at <= token.issued_at || token.expires_at - token.issued_at > 3600 || token.algorithm !== void 0 || token.threshold_proposal_hash !== void 0)
+      return void 0;
+    const body = {
+      id: token.id,
+      approver: token.approver,
+      subject: token.subject,
+      governed_intent_hash: token.governed_intent_hash,
+      request_id: token.request_id,
+      issued_at: token.issued_at,
+      expires_at: token.expires_at,
+      decision: token.decision
+    };
+    if (!verifyUtf8MessageEd25519(canonicalizeJson(body), token.approver, token.signature))
+      return void 0;
+    return { decision: token.decision, params: JSON.parse(canonicalizeJson(params)) };
+  } catch {
+    return void 0;
+  }
+}
+
+// node_modules/@chio/bridge/dist/execution.js
+function validateContext(authority, config, requiredTools) {
+  const denied = () => ({ ok: false, reason: "authenticated session credential does not match the retained caller, capability, resource owner, tool scope or lifetime" });
+  const binding = authority?.sessionCredential;
+  const now = Math.floor(Date.now() / 1e3);
+  if (authority?.schema !== "chio.mcp.execution-context.v1" || authority.evidenceVersion !== "1" || authority.deliveryAcknowledgementVersion !== "1" || authority.subjectKey !== config.subjectKey || authority.serverId !== config.serverId || !Array.isArray(authority.capabilityIds) || authority.capabilityIds.length !== 1 || authority.capabilityIds[0] !== config.capabilityId || binding?.schema !== "chio.mcp.session-credential.v1" || binding.sessionId !== config.sessionId || binding.subjectKey !== config.subjectKey || binding.serverId !== config.serverId || binding.endpointPath !== "/mcp" || !Array.isArray(binding.capabilityIds) || binding.capabilityIds.length !== 1 || binding.capabilityIds[0] !== config.capabilityId || !Array.isArray(binding.allowedTools) || !binding.allowedTools.length || binding.allowedTools.some((name) => typeof name !== "string" || !/^[a-zA-Z0-9_.-]{1,128}$/.test(name)) || new Set(binding.allowedTools).size !== binding.allowedTools.length || !Number.isSafeInteger(binding.issuedAt) || binding.issuedAt > now + 5 || !Number.isSafeInteger(binding.expiresAt) || binding.expiresAt <= now || binding.expiresAt <= binding.issuedAt || binding.expiresAt - binding.issuedAt > 3600)
+    return denied();
+  if (requiredTools && (requiredTools.length !== binding.allowedTools.length || [...requiredTools].sort().some((name, index) => name !== [...binding.allowedTools].sort()[index])))
+    return denied();
+  return { ok: true, sessionCredential: JSON.parse(JSON.stringify(binding)) };
+}
+function verifyBoundReceipt(input, expected) {
+  try {
+    if (!input || typeof input !== "object" || !expected.trustedSigners.length)
+      return false;
+    const receipt = input;
+    const verification = verifyReceiptWithTrustedSigners(receipt, expected.trustedSigners);
+    const metadata = receipt.metadata;
+    return verification.ok && receipt.receipt_kind === "mediated_decision" && receipt.boundary_class === "prevent" && receipt.trust_level === "mediated" && receipt.capability_id === expected.capabilityId && receipt.tool_server === expected.serverId && receipt.tool_name === expected.tool && metadata?.receipt_context?.request_id === expected.requestId && metadata?.attribution?.subject_key === expected.subjectKey && canonicalizeJson(receipt.action.parameters) === canonicalizeJson(expected.parameters);
+  } catch {
+    return false;
+  }
+}
+function verifyCompletedOutcome(outcome, config, request) {
+  try {
+    const receipt = outcome.receipt;
+    const delivery = outcome.delivery;
+    if (outcome.state !== "completed" || !receipt || !delivery || outcome.requestId !== request.requestId || !verifyBoundReceipt(receipt, { ...config, tool: request.tool, parameters: request.arguments, requestId: request.requestId }))
+      return false;
+    const admission = receipt.metadata?.admission_operation;
+    const params = { name: request.tool, arguments: request.arguments, _meta: { chioRequestId: request.requestId, ...request.approval } };
+    return receipt.decision?.verdict === "allow" && admission?.schema === "chio.admission-receipt.v1" && admission.request_id === request.requestId && admission.projected_state === "completed" && admission.projected_dispatch_state === "terminal" && typeof admission.tool_outcome_id === "string" && outcome.result !== void 0 && receipt.content_hash === sha256Hex(canonicalizeJson(outcome.result)) && delivery.schema === "chio.mcp.delivery-ack.v1" && delivery.requestId === request.requestId && delivery.receiptId === receipt.id && delivery.resultHash === receipt.content_hash && delivery.requestHash === sha256Hex(canonicalizeJson({ method: "tools/call", params })) && typeof delivery.acknowledgement === "string" && /^[A-Za-z0-9_-]{43}$/.test(delivery.acknowledgement);
+  } catch {
+    return false;
+  }
+}
+function createMcpExecutionClient(options) {
+  const endpoint = new URL(options.endpoint);
+  if (endpoint.protocol !== "https:" && !(endpoint.protocol === "http:" && ["127.0.0.1", "localhost", "[::1]"].includes(endpoint.hostname))) {
+    throw new ChioBridgeError("invalid_arg", "MCP endpoint requires HTTPS or loopback HTTP");
+  }
+  if (endpoint.username || endpoint.password || endpoint.hash || endpoint.search) {
+    throw new ChioBridgeError("invalid_arg", "MCP endpoint must not contain credentials, query or fragment");
+  }
+  if (!options.sessionId || !options.bearerToken || !options.capabilityId || !options.serverId || !/^[a-f0-9]{64}$/i.test(options.subjectKey) || !options.trustedSigners.length || options.trustedSigners.some((key) => !/^[a-f0-9]{64}$/i.test(key))) {
+    throw new ChioBridgeError("invalid_arg", "execution requires a retained session, delegated bearer, capability, server, subject and pinned signer keys");
+  }
+  const timeoutMs = options.timeoutMs ?? 3e4;
+  if (!Number.isSafeInteger(timeoutMs) || timeoutMs <= 0)
+    throw new ChioBridgeError("invalid_arg", "invalid execution timeout");
+  const config = { ...options, trustedSigners: [...options.trustedSigners] };
+  const operations = /* @__PURE__ */ new Map();
+  return {
+    /** Run in the trusted launcher before making credentials readable to an agent. */
+    async validateSession(control = {}) {
+      const deadline = AbortSignal.timeout(timeoutMs);
+      const signal = control.signal ? AbortSignal.any([deadline, control.signal]) : deadline;
+      const fetchImpl = (input, init) => (config.fetchImpl ?? fetch)(input, { ...init, signal, redirect: "error" });
+      try {
+        const session = new ChioSession({ baseUrl: config.endpoint, authToken: config.bearerToken, sessionId: config.sessionId, protocolVersion: "2025-11-25", fetchImpl });
+        const response = await session.requestResult("chio/execution-context");
+        return validateContext("result" in response ? response.result : void 0, config, control.allowedTools);
+      } catch {
+        return { ok: false, reason: "delegated session validation failed before dispatch" };
+      }
+    },
+    /** The durable owner must save the verified outcome before invoking this method. */
+    async acknowledge(outcome) {
+      const delivery = outcome?.delivery;
+      const receipt = outcome?.receipt;
+      try {
+        if (outcome.state !== "completed" || outcome.evidence !== "verified" || !delivery || !receipt || delivery.schema !== "chio.mcp.delivery-ack.v1" || delivery.requestId !== outcome.requestId || delivery.receiptId !== receipt.id || delivery.resultHash !== receipt.content_hash || delivery.resultHash !== sha256Hex(canonicalizeJson(outcome.result)) || !verifyBoundReceipt(receipt, { ...config, tool: receipt.tool_name, parameters: receipt.action.parameters, requestId: outcome.requestId })) {
+          return { acknowledged: false, reason: "only an exact verified completed result can be acknowledged" };
+        }
+      } catch {
+        return { acknowledged: false, reason: "malformed durable outcome cannot be acknowledged" };
+      }
+      const signal = AbortSignal.timeout(timeoutMs);
+      const fetchImpl = (input, init) => (config.fetchImpl ?? fetch)(input, { ...init, signal, redirect: "error" });
+      try {
+        const session = new ChioSession({ baseUrl: config.endpoint, authToken: config.bearerToken, sessionId: config.sessionId, protocolVersion: "2025-11-25", fetchImpl });
+        const response = await session.requestResult("chio/acknowledge", delivery);
+        const result = "result" in response ? response.result : void 0;
+        if (result?.schema !== delivery.schema || result.requestId !== delivery.requestId || result.receiptId !== delivery.receiptId || result.acknowledged !== true)
+          throw new Error("invalid acknowledgement response");
+        return { acknowledged: true, requestId: delivery.requestId, receiptId: delivery.receiptId };
+      } catch {
+        return { acknowledged: false, reason: "acknowledgement not confirmed; retain durable result and retry only acknowledgement" };
+      }
+    },
+    execute(request, control = {}) {
+      if (!request.requestId || request.requestId.length > 2048 || !request.tool || !request.arguments || typeof request.arguments !== "object" || Array.isArray(request.arguments)) {
+        return Promise.resolve({ state: "not_dispatched", evidence: "unverified", requestId: request.requestId, reason: "invalid execution request" });
+      }
+      let snapshot;
+      let digest;
+      try {
+        snapshot = JSON.parse(canonicalizeJson(request));
+        digest = sha256Hex(canonicalizeJson({ tool: snapshot.tool, arguments: snapshot.arguments, ...snapshot.approval ? { approval: snapshot.approval } : {} }));
+      } catch {
+        return Promise.resolve({ state: "not_dispatched", evidence: "unverified", requestId: request.requestId, reason: "request is not canonical JSON" });
+      }
+      const prior = operations.get(snapshot.requestId);
+      if (prior) {
+        if (prior.digest !== digest)
+          return Promise.resolve({ state: "not_dispatched", evidence: "unverified", requestId: snapshot.requestId, reason: "request ID reused with different arguments" });
+        return prior.outcome;
+      }
+      const outcome = dispatch(snapshot, control.signal);
+      operations.set(snapshot.requestId, { digest, outcome });
+      return outcome;
+    }
+  };
+  async function dispatch(request, signal) {
+    let sent = false;
+    const failure = (reason) => ({
+      state: sent ? "unknown" : "not_dispatched",
+      evidence: "unverified",
+      requestId: request.requestId,
+      reason
+    });
+    if (signal?.aborted)
+      return failure("cancelled before admission");
+    const deadline = AbortSignal.timeout(timeoutMs);
+    const combined = signal ? AbortSignal.any([signal, deadline]) : deadline;
+    const fetchImpl = (input, init) => (config.fetchImpl ?? fetch)(input, { ...init, signal: combined, redirect: "error" });
+    let session;
+    try {
+      session = new ChioSession({
+        baseUrl: config.endpoint,
+        authToken: config.bearerToken,
+        sessionId: config.sessionId,
+        protocolVersion: "2025-11-25",
+        fetchImpl
+      });
+      const context = await session.requestResult("chio/execution-context");
+      const authority = validateContext("result" in context ? context.result : void 0, config);
+      if (!authority.ok)
+        return failure(authority.reason);
+      if (!authority.sessionCredential.allowedTools.includes(request.tool))
+        return failure("tool is outside the authenticated session credential scope");
+      const params = { name: request.tool, arguments: request.arguments, _meta: { chioRequestId: request.requestId, ...request.approval } };
+      if (request.approval && verifyApprovalToolCall(params, { ...config, sessionId: config.sessionId, tool: request.tool, arguments: request.arguments, requestId: request.requestId })?.decision !== "approved")
+        return failure("approval does not authorize the exact retained action");
+      if (combined.aborted)
+        return failure("cancelled before dispatch");
+      sent = true;
+      const response = await session.requestResult("tools/call", params);
+      if (!("result" in response))
+        return failure("kernel RPC error after dispatch; reconcile the resource before retry");
+      const result = response.result;
+      const envelope = result?._meta?.chioEvidence;
+      if (envelope?.schema !== "chio.mcp.execution-evidence.v1" || envelope.requestId !== request.requestId)
+        return failure("missing or substituted execution evidence");
+      if (!verifyBoundReceipt(envelope.receipt, { ...config, tool: request.tool, parameters: request.arguments, requestId: request.requestId }))
+        return failure("execution receipt failed trusted request verification");
+      const receipt = envelope.receipt;
+      if (receipt.decision?.verdict === "deny") {
+        if (receipt.decision.guard === "kernel" && receipt.decision.reason?.startsWith("durable admission failed:")) {
+          return {
+            state: "unknown",
+            evidence: "verified",
+            requestId: request.requestId,
+            receipt,
+            reason: "durable admission rejected this attempt; the original operation requires reconciliation"
+          };
+        }
+        return { state: "denied", evidence: "verified", requestId: request.requestId, receipt, reason: receipt.decision.reason };
+      }
+      const admission = receipt.metadata?.admission_operation;
+      if (receipt.decision?.verdict !== "allow" || admission?.schema !== "chio.admission-receipt.v1" || admission.request_id !== request.requestId || admission.projected_state !== "completed" || admission.projected_dispatch_state !== "terminal" || typeof admission.tool_outcome_id !== "string" || envelope.terminalState !== "completed" || envelope.outputKind !== "value" || envelope.output === void 0 || receipt.content_hash !== sha256Hex(canonicalizeJson(envelope.output))) {
+        return { state: "unknown", evidence: "verified", requestId: request.requestId, receipt, reason: "no verified completed result; preserve the operation fence" };
+      }
+      const delivery = result?._meta?.chioDelivery;
+      if (!delivery || delivery.schema !== "chio.mcp.delivery-ack.v1" || delivery.requestId !== request.requestId || delivery.receiptId !== receipt.id || delivery.resultHash !== receipt.content_hash || delivery.requestHash !== sha256Hex(canonicalizeJson({ method: "tools/call", params })) || typeof delivery.acknowledgement !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(delivery.acknowledgement)) {
+        return { state: "unknown", evidence: "verified", requestId: request.requestId, receipt, reason: "verified result lacks exact retained delivery acknowledgement; preserve operation fence" };
+      }
+      return { state: "completed", evidence: "verified", requestId: request.requestId, receipt, result: envelope.output, delivery };
+    } catch {
+      return failure(sent ? "execution outcome unknown; no automatic retry" : "kernel unavailable or malformed handshake before dispatch");
+    }
+  }
+}
+
+// node_modules/@chio/bridge/dist/gateway.js
+import { createHash as createHash3 } from "node:crypto";
+import { constants, closeSync, fsyncSync, lstatSync, mkdirSync, openSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
+import { hostname } from "node:os";
+import { resolve, join as join2 } from "node:path";
+import { createInterface } from "node:readline";
+import { fileURLToPath } from "node:url";
+function operationKey(requestId) {
+  return createHash3("sha256").update(requestId).digest("hex");
+}
+function gatewayApprovalPath(config, requestId) {
+  return join2(resolve(config.journalDir), "approvals", `${operationKey(requestId)}.json`);
+}
+function gatewayBinding(config) {
+  return canonicalizeJson({
+    sessionId: config.sessionId,
+    kernelSessionId: config.execution.sessionId,
+    endpoint: config.execution.endpoint,
+    subjectKey: config.execution.subjectKey,
+    capabilityId: config.execution.capabilityId,
+    serverId: config.execution.serverId,
+    trustedSigners: config.execution.trustedSigners,
+    tools: config.tools,
+    ...config.approval ? { approval: config.approval } : {}
+  });
+}
+function syncDirectory(path) {
+  const fd = openSync(path, constants.O_RDONLY);
+  try {
+    fsyncSync(fd);
+  } finally {
+    closeSync(fd);
+  }
+}
+function privatePath(path, directory) {
+  const stat = lstatSync(path);
+  if (stat.isSymbolicLink() || (directory ? !stat.isDirectory() : !stat.isFile()) || (stat.mode & 63) !== 0) {
+    throw new Error("operator config and journal must be private regular paths");
+  }
+}
+function readGatewayConfig(path) {
+  privatePath(path, false);
+  if (lstatSync(path).size > 1024 * 1024)
+    throw new Error("gateway config exceeds size limit");
+  const config = JSON.parse(readFileSync(path, "utf8"));
+  if (!config?.execution?.sessionId || !config.sessionId || !config.journalDir || !Array.isArray(config.tools) || !config.tools.length) {
+    throw new Error("gateway requires an operator-established kernel session, journal and explicit tools");
+  }
+  if (config.execution.fetchImpl !== void 0)
+    throw new Error("config cannot provide executable transport");
+  const names = /* @__PURE__ */ new Set();
+  for (const tool of config.tools) {
+    if (!tool || typeof tool.name !== "string" || !/^[a-zA-Z0-9_.-]{1,128}$/.test(tool.name) || names.has(tool.name) || !tool.inputSchema || typeof tool.inputSchema !== "object" || Array.isArray(tool.inputSchema))
+      throw new Error("invalid or duplicate operator tool");
+    names.add(tool.name);
+  }
+  if (config.approval && (!Array.isArray(config.approval.requiredTools) || !config.approval.requiredTools.length || config.approval.requiredTools.some((name) => !names.has(name)) || !config.approval.purpose || !Number.isSafeInteger(config.approval.ttlSeconds) || config.approval.ttlSeconds < 1 || config.approval.ttlSeconds > 3600))
+    throw new Error("invalid approval configuration");
+  if (names.has("chio_resume"))
+    throw new Error("chio_resume is reserved for explicit gateway resumption");
+  return config;
+}
+function createGateway(config, executor = createMcpExecutionClient(config.execution)) {
+  const snapshot = JSON.parse(JSON.stringify(config));
+  const directory = resolve(snapshot.journalDir);
+  mkdirSync(directory, { recursive: true, mode: 448 });
+  privatePath(directory, true);
+  if (readdirSync(directory).includes("recovery.lock"))
+    throw new Error("operator recovery is active");
+  const lockPath = join2(directory, "gateway.lock");
+  const lock = openSync(lockPath, constants.O_CREAT | constants.O_EXCL | constants.O_WRONLY, 384);
+  writeFileSync(lock, JSON.stringify({ pid: process.pid, hostname: hostname(), sessionId: snapshot.sessionId }));
+  fsyncSync(lock);
+  closeSync(lock);
+  syncDirectory(directory);
+  const binding = gatewayBinding(snapshot);
+  const bindingPath = join2(directory, "authority.binding");
+  if (readdirSync(directory).includes("authority.binding")) {
+    privatePath(bindingPath, false);
+    if (readFileSync(bindingPath, "utf8") !== binding)
+      throw new Error("journal belongs to a different authority or configuration");
+  } else {
+    if (readdirSync(directory).some((name) => name.endsWith(".json")))
+      throw new Error("operation journal is missing its authority binding");
+    const fd = openSync(bindingPath, constants.O_CREAT | constants.O_EXCL | constants.O_WRONLY, 384);
+    try {
+      writeFileSync(fd, binding);
+      fsyncSync(fd);
+    } finally {
+      closeSync(fd);
+    }
+    syncDirectory(directory);
+  }
+  const records = /* @__PURE__ */ new Map();
+  for (const filename of readdirSync(directory).filter((name) => name.endsWith(".json"))) {
+    const path = join2(directory, filename);
+    privatePath(path, false);
+    const record = JSON.parse(readFileSync(path, "utf8"));
+    if (!record.requestId || !record.digest || !["awaiting_approval", "pending", "not_dispatched", "unknown", "denied", "completed"].includes(record.state))
+      throw new Error("invalid operation journal");
+    if (record.state !== "pending" && (!record.outcome || record.outcome.state !== record.state || record.outcome.requestId !== record.requestId))
+      throw new Error("inconsistent operation journal result");
+    if (record.state === "awaiting_approval" && (!record.proposal || record.proposal.request_id !== record.requestId))
+      throw new Error("missing approval proposal");
+    if (record.state === "completed" && (!record.request || !record.outcome || record.requestId !== record.request.requestId || record.digest !== operationKey(canonicalizeJson({ name: record.request.tool, args: record.request.arguments })) || !verifyCompletedOutcome(record.outcome, snapshot.execution, record.request))) {
+      throw new Error("cached completion does not bind a trusted original request and result");
+    }
+    if (records.has(record.requestId))
+      throw new Error("duplicate operation journal identity");
+    records.set(record.requestId, record);
+  }
+  let closed = false;
+  let busy = false;
+  const tools = new Map(snapshot.tools.map((tool) => [tool.name, tool]));
+  const fenced = () => [...records.values()].some((record) => record.state !== "not_dispatched" && !(record.state === "completed" && record.acknowledged === true));
+  function persist(record) {
+    const key = operationKey(record.requestId);
+    const path = join2(directory, `${key}.json`);
+    const temp = join2(directory, `${key}.${process.pid}.tmp`);
+    const fd = openSync(temp, constants.O_CREAT | constants.O_EXCL | constants.O_WRONLY, 384);
+    try {
+      writeFileSync(fd, JSON.stringify(record));
+      fsyncSync(fd);
+    } finally {
+      closeSync(fd);
+    }
+    renameSync(temp, path);
+    syncDirectory(directory);
+    records.set(record.requestId, record);
+  }
+  async function confirmDelivery(record) {
+    const outcome = record.outcome;
+    if (outcome.state === "completed" && !record.acknowledged && executor.acknowledge) {
+      const acknowledgement = await executor.acknowledge(outcome);
+      if (acknowledgement.acknowledged)
+        persist({ ...record, acknowledged: true });
+    }
+    return outcome;
+  }
+  async function dispatch(record, request, signal) {
+    busy = true;
+    try {
+      persist({ ...record, state: "pending", outcome: void 0, request });
+      let outcome = await executor.execute(request, signal ? { signal } : {});
+      if (outcome.state === "completed" && !verifyCompletedOutcome(outcome, snapshot.execution, request)) {
+        outcome = { state: "unknown", evidence: "unverified", requestId: request.requestId, reason: "completed result failed durable request verification" };
+      }
+      const completed = { ...record, state: outcome.state, outcome, acknowledged: false, request };
+      persist(completed);
+      return await confirmDelivery(completed);
+    } catch {
+      return { state: "unknown", evidence: "unverified", requestId: record.requestId, reason: "dispatch or persistence interrupted; no automatic retry" };
+    } finally {
+      busy = false;
+    }
+  }
+  const resumeTool = { name: "chio_resume", description: "Explicitly resume one exact operator-approved proposal, retaining its original request identity. Never retries an unknown effect.", inputSchema: { type: "object", properties: { requestId: { type: "string" }, tool: { type: "string" }, arguments: { type: "object" } }, required: ["requestId", "tool", "arguments"], additionalProperties: false } };
+  return {
+    listTools: () => snapshot.approval ? [...snapshot.tools, resumeTool] : snapshot.tools,
+    async call(id, name, args, signal) {
+      const requestId = name === "chio_resume" ? String(args.requestId ?? "") : `${snapshot.sessionId}:${createHash3("sha256").update(canonicalizeJson({ id })).digest("hex")}`;
+      const refused = (reason) => ({ state: "not_dispatched", evidence: "unverified", requestId, reason });
+      if (closed || busy)
+        return refused("gateway closed or another operation in flight");
+      const resuming = name === "chio_resume";
+      if (resuming && !snapshot.approval)
+        return refused("explicit approval resumption is not configured");
+      const tool = resuming ? String(args.tool ?? "") : name;
+      const parameters = resuming ? args.arguments : args;
+      if (!tools.has(tool) || !parameters || typeof parameters !== "object" || Array.isArray(parameters))
+        return refused("tool or arguments are outside the operator allowlist");
+      let digest;
+      try {
+        digest = operationKey(canonicalizeJson({ name: tool, args: parameters }));
+      } catch {
+        return refused("invalid canonical arguments");
+      }
+      const prior = records.get(requestId);
+      if (prior) {
+        if (prior.digest !== digest)
+          return refused("operation identity conflicts with retained request");
+        if (prior.state !== "awaiting_approval")
+          return prior.outcome ? confirmDelivery(prior) : { state: "unknown", evidence: "unverified", requestId, reason: "interrupted dispatch requires resource reconciliation" };
+        if (!resuming)
+          return prior.outcome;
+        if (signal?.aborted)
+          return refused("cancelled before approval resumption");
+        let approved;
+        try {
+          const path = gatewayApprovalPath(snapshot, requestId);
+          privatePath(path, false);
+          if (lstatSync(path).size > 1024 * 1024)
+            throw new Error("oversized artifact");
+          const artifact = JSON.parse(readFileSync(path, "utf8"));
+          approved = verifyApprovalToolCall(artifact.toolCallParams, { ...snapshot.execution, sessionId: snapshot.execution.sessionId, tool, arguments: parameters, requestId });
+        } catch {
+        }
+        if (!approved)
+          return { ...prior.outcome, reason: "approval missing, expired, substituted or untrusted; proposal remains undispatched" };
+        if (approved.decision === "denied") {
+          const outcome = refused("operator denied the proposal before dispatch");
+          persist({ ...prior, state: "not_dispatched", outcome });
+          return outcome;
+        }
+        return dispatch(prior, { tool, arguments: parameters, requestId, approval: { chioGovernedIntent: approved.params._meta.chioGovernedIntent, chioApprovalToken: approved.params._meta.chioApprovalToken } }, signal);
+      }
+      if (resuming)
+        return refused("no retained proposal matches this request");
+      if (fenced())
+        return refused("an unresolved operation fences this gateway; operator reconciliation required");
+      if (signal?.aborted)
+        return refused("cancelled before admission");
+      if (snapshot.approval?.requiredTools.includes(tool)) {
+        const proposal = { session_id: snapshot.execution.sessionId, capability_id: snapshot.execution.capabilityId, request_id: requestId, tool_name: tool, arguments: JSON.parse(canonicalizeJson(parameters)), purpose: snapshot.approval.purpose, ttl_seconds: snapshot.approval.ttlSeconds };
+        const outcome = { state: "awaiting_approval", evidence: "unverified", requestId, proposal, reason: "proposal retained without dispatch; operator decision and explicit chio_resume are required" };
+        persist({ requestId, digest, state: "awaiting_approval", proposal, outcome });
+        return outcome;
+      }
+      return dispatch({ requestId, digest, state: "pending" }, { tool, arguments: parameters, requestId }, signal);
+    },
+    close() {
+      if (!closed) {
+        closed = true;
+        unlinkSync(lockPath);
+        syncDirectory(directory);
+      }
+    }
+  };
+}
+function gatewayToolResult(outcome) {
+  const toolError = "result" in outcome && outcome.result !== null && typeof outcome.result === "object" && outcome.result.isError === true;
+  return {
+    isError: outcome.state !== "completed" || toolError,
+    content: [{ type: "text", text: JSON.stringify(outcome) }]
+  };
+}
+async function main() {
+  if (process.argv.length !== 3)
+    throw new Error("usage: chio-mcp-gateway /absolute/operator-config.json");
+  const configPath = process.argv[2];
+  if (resolve(configPath) !== configPath)
+    throw new Error("config path must be absolute");
+  const gateway = createGateway(readGatewayConfig(configPath));
+  const reader = createInterface({ input: process.stdin, crlfDelay: Infinity });
+  const active = /* @__PURE__ */ new Map();
+  let initialized = false;
+  let queued = Promise.resolve();
+  const send = (value) => process.stdout.write(JSON.stringify(value) + "\n");
+  reader.on("line", (line) => {
+    if (Buffer.byteLength(line) > 1024 * 1024) {
+      send({ jsonrpc: "2.0", id: null, error: { code: -32600, message: "request exceeds size limit" } });
+      return;
+    }
+    let message;
+    try {
+      message = JSON.parse(line);
+    } catch {
+      send({ jsonrpc: "2.0", id: null, error: { code: -32700, message: "invalid JSON" } });
+      return;
+    }
+    if (message?.method === "notifications/cancelled") {
+      active.get(JSON.stringify(message.params?.requestId))?.abort();
+      return;
+    }
+    if (message?.method === "notifications/initialized") {
+      initialized = true;
+      return;
+    }
+    if (message?.id === void 0)
+      return;
+    const key = JSON.stringify(message.id);
+    const controller = message.method === "tools/call" ? new AbortController() : void 0;
+    if (controller) {
+      if (active.has(key)) {
+        send({ jsonrpc: "2.0", id: message.id, error: { code: -32600, message: "request ID is already in flight" } });
+        return;
+      }
+      active.set(key, controller);
+    }
+    queued = queued.then(async () => {
+      const error = (code, text) => send({ jsonrpc: "2.0", id: message.id, error: { code, message: text } });
+      const result = (value) => send({ jsonrpc: "2.0", id: message.id, result: value });
+      if (message.jsonrpc !== "2.0" || !["string", "number"].includes(typeof message.id)) {
+        error(-32600, "invalid request");
+        return;
+      }
+      if (message.method === "initialize") {
+        result({ protocolVersion: "2025-11-25", capabilities: { tools: {} }, serverInfo: { name: "chio-mcp-gateway", version: "0.3.0" } });
+        return;
+      }
+      if (message.method === "ping") {
+        result({});
+        return;
+      }
+      if (!initialized) {
+        error(-32600, "session not initialized");
+        return;
+      }
+      if (message.method === "tools/list") {
+        result({ tools: gateway.listTools() });
+        return;
+      }
+      if (message.method !== "tools/call") {
+        error(-32601, "unsupported method");
+        return;
+      }
+      const args = message.params?.arguments;
+      if (!args || typeof args !== "object" || Array.isArray(args)) {
+        error(-32602, "tool arguments must be an object");
+        return;
+      }
+      const outcome = await gateway.call(message.id, message.params.name, args, controller?.signal);
+      result(gatewayToolResult(outcome));
+    }).catch(() => {
+      send({ jsonrpc: "2.0", id: message.id, error: { code: -32603, message: "gateway failed; no automatic retry" } });
+    }).finally(() => {
+      if (controller)
+        active.delete(key);
+    });
+  });
+  await new Promise((done) => reader.on("close", done));
+  await queued;
+  gateway.close();
+}
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
+  main().catch(() => {
+    process.stderr.write("Chio gateway startup or persistence failed; protected tools unavailable.\n");
+    process.exitCode = 1;
   });
 }
 
@@ -9598,22 +10148,22 @@ function getPolicyPath() {
 }
 
 // src/state/store.ts
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync as mkdirSync2, readFileSync as readFileSync2, writeFileSync as writeFileSync2 } from "node:fs";
 import { dirname } from "node:path";
 
 // src/state/paths.ts
 import { homedir } from "node:os";
-import { join as join2 } from "node:path";
-var STATE_DIR = process.env.CHIO_STATE_DIR ?? join2(process.env.CLAUDE_CONFIG_DIR ?? join2(homedir(), ".claude"), "plugins", "chio");
-var STATE_PATH = join2(STATE_DIR, "state.json");
-var KEYSTORE_DIR = join2(homedir(), ".chio", "keys");
-var PENDING_DIR = join2(STATE_DIR, "pending");
-var RECEIPT_CACHE_DIR = join2(STATE_DIR, "receipts");
+import { join as join3 } from "node:path";
+var STATE_DIR = process.env.CHIO_STATE_DIR ?? join3(process.env.CLAUDE_CONFIG_DIR ?? join3(homedir(), ".claude"), "plugins", "chio");
+var STATE_PATH = join3(STATE_DIR, "state.json");
+var KEYSTORE_DIR = join3(homedir(), ".chio", "keys");
+var PENDING_DIR = join3(STATE_DIR, "pending");
+var RECEIPT_CACHE_DIR = join3(STATE_DIR, "receipts");
 
 // src/state/store.ts
 function readState() {
   try {
-    const raw = readFileSync(STATE_PATH, "utf8");
+    const raw = readFileSync2(STATE_PATH, "utf8");
     const parsed = JSON.parse(raw);
     return { bonds: parsed.bonds ?? {} };
   } catch {
@@ -9621,8 +10171,8 @@ function readState() {
   }
 }
 function writeState(state) {
-  mkdirSync(dirname(STATE_PATH), { recursive: true });
-  writeFileSync(STATE_PATH, JSON.stringify(state, null, 2));
+  mkdirSync2(dirname(STATE_PATH), { recursive: true });
+  writeFileSync2(STATE_PATH, JSON.stringify(state, null, 2));
 }
 function upsertBond(bond2) {
   const state = readState();
@@ -9661,7 +10211,7 @@ async function bond(args) {
   }
   const sessionId = process.env.CLAUDE_SESSION_ID;
   if (!sessionId) throw new Error("CLAUDE_SESSION_ID is required; refusing to create an unbound capability");
-  const policyPath = resolve(policyArg);
+  const policyPath = resolve2(policyArg);
   const bridge = buildBridge();
   const budgetUsd = budgetArg ? Number(budgetArg) : void 0;
   const bondArgs = { policyPath, ttl };
@@ -9832,9 +10382,9 @@ async function budgetSet(args) {
 }
 
 // src/commands/approve.ts
-import { existsSync as existsSync2, mkdirSync as mkdirSync2, readFileSync as readFileSync2, writeFileSync as writeFileSync2 } from "node:fs";
+import { existsSync as existsSync2, mkdirSync as mkdirSync3, readFileSync as readFileSync3, writeFileSync as writeFileSync3 } from "node:fs";
 import { generateKeyPairSync as generateKeyPairSync3 } from "node:crypto";
-import { join as join3 } from "node:path";
+import { join as join4 } from "node:path";
 
 // node_modules/@chio-protocol/sdk/dist/invariants/errors.js
 var ChioInvariantError2 = class extends Error {
@@ -10033,7 +10583,7 @@ function canonicalizeJsonString2(input) {
 }
 
 // node_modules/@chio-protocol/sdk/dist/invariants/crypto.js
-import { createHash as createHash3, createPrivateKey as createPrivateKey3, createPublicKey as createPublicKey3, sign as signMessage2, verify as verifySignature2 } from "node:crypto";
+import { createHash as createHash4, createPrivateKey as createPrivateKey3, createPublicKey as createPublicKey3, sign as signMessage2, verify as verifySignature2 } from "node:crypto";
 var ED25519_PKCS8_PREFIX2 = Buffer.from("302e020100300506032b657004220420", "hex");
 var ED25519_SPKI_PREFIX2 = Buffer.from("302a300506032b6570032100", "hex");
 var P256_SPKI_PREFIX2 = Buffer.from("3059301306072a8648ce3d020106082a8648ce3d030107034200", "hex");
@@ -10121,9 +10671,9 @@ async function approve(args) {
     signature_hex: sig.signature_hex,
     signed_at: (/* @__PURE__ */ new Date()).toISOString()
   };
-  mkdirSync2(RECEIPT_CACHE_DIR, { recursive: true });
-  const bundlePath = join3(RECEIPT_CACHE_DIR, `${receiptId}.countersign.json`);
-  writeFileSync2(bundlePath, JSON.stringify(bundle, null, 2));
+  mkdirSync3(RECEIPT_CACHE_DIR, { recursive: true });
+  const bundlePath = join4(RECEIPT_CACHE_DIR, `${receiptId}.countersign.json`);
+  writeFileSync3(bundlePath, JSON.stringify(bundle, null, 2));
   let propagated = "skipped";
   let propagationError;
   if (process.env.CHIO_SERVICE_TOKEN || process.env.CLAUDE_PLUGIN_OPTION_SERVICE_TOKEN) {
@@ -10154,10 +10704,10 @@ async function approve(args) {
   );
 }
 async function loadReceipt(bridge, id) {
-  const cachePath = join3(RECEIPT_CACHE_DIR, `${id}.json`);
+  const cachePath = join4(RECEIPT_CACHE_DIR, `${id}.json`);
   if (existsSync2(cachePath)) {
     try {
-      return JSON.parse(readFileSync2(cachePath, "utf8"));
+      return JSON.parse(readFileSync3(cachePath, "utf8"));
     } catch {
     }
   }
@@ -10190,10 +10740,10 @@ async function postAuthority(bundle) {
   }
 }
 function ensureOperatorKey() {
-  mkdirSync2(KEYSTORE_DIR, { recursive: true });
-  const path = join3(KEYSTORE_DIR, "operator.json");
+  mkdirSync3(KEYSTORE_DIR, { recursive: true });
+  const path = join4(KEYSTORE_DIR, "operator.json");
   if (existsSync2(path)) {
-    return JSON.parse(readFileSync2(path, "utf8"));
+    return JSON.parse(readFileSync3(path, "utf8"));
   }
   const kp = generateKeyPairSync3("ed25519", {
     publicKeyEncoding: { type: "spki", format: "der" },
@@ -10206,7 +10756,7 @@ function ensureOperatorKey() {
     publicKeyHex: publicRaw,
     privateKeyHex: privateRaw
   };
-  writeFileSync2(path, JSON.stringify(key, null, 2), { mode: 384 });
+  writeFileSync3(path, JSON.stringify(key, null, 2), { mode: 384 });
   return key;
 }
 
@@ -10259,10 +10809,10 @@ async function receiptLast() {
 }
 
 // src/commands/receipt-export.ts
-import { resolve as resolve2 } from "node:path";
+import { resolve as resolve3 } from "node:path";
 async function receiptExport(args) {
   const [sinceArg = "session", outArg = "./chio-evidence.tar.zst"] = args;
-  const outPath = resolve2(outArg);
+  const outPath = resolve3(outArg);
   const since = resolveSince(sinceArg);
   const bridge = buildBridge();
   const writtenPath = await bridge.exportEvidence({ since, outPath });

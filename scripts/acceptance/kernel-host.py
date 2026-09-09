@@ -174,7 +174,7 @@ if a.scenario in ['loss-between-calls','malformed-handshake','timeout-handshake'
  active_config.write_text(json.dumps(private));os.chmod(active_config,0o600)
 server=http.server.ThreadingHTTPServer(('127.0.0.1',0),Model)
 threading.Thread(target=server.serve_forever,daemon=True).start()
-gateway=a.plugin/'dist/gateway.js'
+gateway=a.plugin/'dist/gateway-http.js'
 cmd=[shutil.which('node'),str(a.plugin/'scripts/restricted.mjs'),'--host',a.claude,
  '--host-sha256',hashlib.sha256(Path(a.claude).read_bytes()).hexdigest(),
  '--gateway-sha256',hashlib.sha256(gateway.read_bytes()).hexdigest(),'--gateway-config',str(active_config),

@@ -13,14 +13,14 @@ host's available filesystem and credentials. Do not mount a host-visible resourc
 volume or expose an unguarded second endpoint. Do not give the agent an admin
 bearer token or resource credentials.
 
-The current stdio launcher removes model-callable native tools but does not
-create an operating-system boundary between the Claude process and the gateway.
-Both run as the same user. Keeping configuration outside the workspace does not
-prevent arbitrary compromised host-process code from reading a session bearer,
-rewriting a journal, or sending fresh in-scope requests directly to the kernel.
-A trusted external gateway/journal or equivalent resource-owner enforcement is
-required before claiming that stronger boundary. A session-limited credential
-reduces authority but does not supply that isolation.
+The macOS candidate launcher applies a default-deny process sandbox. The retained
+gateway, journal and kernel credential stay in the operator launcher process.
+Claude receives only an ephemeral local HTTP MCP token. Its network access is
+limited to that transport and the operator's bounded Messages relay. It cannot
+read the kernel config or journal, contact the kernel directly, spawn descendant
+processes, or write configuration/code. Closing or killing the launcher removes
+the local transport. Per-host lifecycle and sandbox acceptance remain required;
+the older stdio evidence does not qualify this new boundary.
 
 Prepare a retained MCP kernel session with the companion bridge's
 `chio-prepare-gateway` command. The operator request specifies the exact kernel
@@ -47,15 +47,15 @@ Never commit these files or put them in a transcript directory.
 
 Record the kernel source revision, binary SHA-256, policy and resource-server
 identities, capability and subject identifiers, configured tools, host version,
-host SHA-256, plugin artifact SHA-256 and `dist/gateway.js` SHA-256. Record the
+host SHA-256, plugin artifact SHA-256 and `dist/gateway-http.js` SHA-256. Record the
 actual published package source separately from a development checkout.
 
 ## Launch
 
-Authenticate only through a supported explicitly supplied Claude API key or
-`CLAUDE_CODE_OAUTH_TOKEN` for a designated test account. The launcher does not
-read or copy credentials from the normal profile. The normal profile's OAuth
-login is not available in a fresh `CLAUDE_CONFIG_DIR` on the tested machine.
+Supply `ANTHROPIC_API_KEY` for a designated test account to the operator launcher.
+The key remains in its Messages relay; the sandboxed host gets a local relay
+token. This candidate supports the official Anthropic Messages origin and local
+fixtures only. Normal-profile OAuth credentials are not imported or qualified.
 
 ```sh
 node /installed/chio/scripts/restricted.mjs \
@@ -69,7 +69,7 @@ node /installed/chio/scripts/restricted.mjs \
 ```
 
 The profile must not exist. It, the gateway config and journal must be outside
-the resource workspace. The launcher supplies a fixed stdio gateway and fixed
+the resource workspace. The launcher supplies a fixed HTTP gateway and fixed
 host flags. It accepts no extra host arguments. It records a nonsecret launch
 manifest and process exit state in the profile. The transient MCP routing file
 is removed on normal exit. The private gateway config and journal are retained.
@@ -93,15 +93,18 @@ independent record and the stored request ID. Preserve unknown outcomes until
 reconciled. The launcher never retries automatically, and process exit status
 makes no claim that effects did or did not happen.
 
-Automatic resume, background sessions and handoff are unsupported in this
+Automatic retries, background sessions and handoff are unsupported in this
 candidate mode. A fresh profile is not permission to redispatch an unknown
-operation. Establish the outcome first, then have the trusted operator revoke
-old authority and prepare a fresh capability and session.
+operation. Preserve the same retained kernel authority and journal for controlled
+restart after known completion. New transports namespace host RPC counters so
+reset numeric IDs cannot conflict with earlier completed operations. Unknown
+operations still fence the shared journal and owner, regardless of a new profile.
 
-A stale gateway lock after a process crash requires operator reconciliation
-and confirmation that the old process is dead. Do not delete the lock while
-a resource outcome is unknown. A user-facing automatic recovery tool has not
-yet passed I07/I08.
+A stale lock after a crash can be inspected with `chio-gateway-operator status`
+and recovered with `chio-gateway-operator recover-lock`, supplying the absolute
+gateway config path. This checks dead process ownership and preserves unknown
+operation records. It is not resource-outcome reconciliation. Real Claude
+crash/restart acceptance on this procedure remains open.
 
 ## Upgrade and removal
 
