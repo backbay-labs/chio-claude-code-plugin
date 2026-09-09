@@ -122,7 +122,11 @@ async function main() {
       ANTHROPIC_API_KEY:relay.token,ANTHROPIC_BASE_URL:`http://127.0.0.1:${relay.port}`,MAX_THINKING_TOKENS:"0",CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC:"1",DISABLE_AUTOUPDATER:"1",OPENSSL_CONF:"/dev/null"});
     const command=["-f",sandboxPath,host,...makeArguments({settingsPath,mcpPath,model:opts["--model"],sessionId}),"--debug-file",join(profile,"host-debug.log")];
     writeFileSync(join(profile,"launch.json"),JSON.stringify({schema:"chio.claude.restricted-launch.v2",host,hostSha256:opts["--host-sha256"],gatewaySha256,workspace,temporary,sessionId,sandboxPath,sandboxSha256:createHash("sha256").update(policy).digest("hex"),control,modelTransport:relay.fixture?"localhost-fixture-unaccepted":"operator-messages-relay",acceptance:"unverified"},null,2),{mode:0o600,flag:"wx"});
-    const child=spawn("/usr/bin/sandbox-exec",command,{cwd:workspace,env,stdio:["inherit","pipe","inherit"]});
+    const supervisorConfig=join(control,"host-supervisor.json");
+    writeFileSync(supervisorConfig,JSON.stringify({command:"/usr/bin/sandbox-exec",args:command,cwd:workspace,env}),{mode:0o600,flag:"wx"});
+    const supervisor=fileURLToPath(new URL("./host-supervisor.mjs",import.meta.url));
+    const child=spawn(process.execPath,[supervisor,supervisorConfig],{cwd:workspace,
+      env:{PATH:process.env.PATH,LANG:"en_US.UTF-8",OPENSSL_CONF:"/dev/null"},stdio:["inherit","pipe","inherit","pipe"]});
     const decoder=new StringDecoder("utf8");
     let hostLines="";
     child.stdout.on("data",data=>{

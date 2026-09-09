@@ -30,3 +30,22 @@ test("launcher runs validation through preserved symlink main paths",t=>{
   assert.equal(result.status,1);
   assert.match(result.stderr,/--host is required/);
 });
+
+test("trusted host supervisor stops its process group when the parent lifeline closes", {skip:process.platform!=="darwin"}, async t=>{
+  const {writeFileSync}=await import('node:fs');
+  const {spawn}=await import('node:child_process');
+  const root=mkdtempSync(join(tmpdir(),'chio-supervisor-lifecycle-'));
+  t.after(()=>rmSync(root,{recursive:true,force:true}));
+  const policy=join(root,'test.sb'),config=join(root,'launch.json');
+  writeFileSync(policy,'(version 1) (allow default)');
+  writeFileSync(config,JSON.stringify({command:'/usr/bin/sandbox-exec',args:['-f',policy,process.execPath,'-e','process.stdout.write("ready\\n");setInterval(()=>{},1000)'],cwd:root,env:{PATH:'/usr/bin:/bin'}}));
+  const child=spawn(process.execPath,[fileURLToPath(new URL('../scripts/host-supervisor.mjs',import.meta.url)),config],{stdio:['ignore','pipe','pipe','pipe']});
+  let stderr='';child.stderr.on('data',data=>{stderr+=data});
+  t.after(()=>child.kill('SIGKILL'));
+  const closed=new Promise(resolve=>child.once('close',(code,signal)=>resolve({code,signal})));
+  await new Promise((resolve,reject)=>{child.stdout.once('data',data=>String(data).includes('ready')?resolve():reject(new Error('missing child readiness')));child.once('error',reject)});
+  child.stdio[3].end();
+  let deadline;
+  const result=await Promise.race([closed,new Promise((_,reject)=>{deadline=setTimeout(()=>reject(new Error('orphan host remains: '+stderr)),8000)})]).finally(()=>clearTimeout(deadline));
+  assert.equal(result.code,143,stderr);
+});
