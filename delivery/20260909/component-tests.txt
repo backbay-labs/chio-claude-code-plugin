@@ -1,0 +1,39 @@
+
+> @chio/claude-code-plugin@0.3.0 test
+> node --test ./test/*.test.mjs
+
+✔ matching explicit allow persists authorization before native dispatch (221.8285ms)
+✔ non-allow verdict undefined denies (102.11875ms)
+✔ non-allow verdict pending denies (95.165375ms)
+✔ non-allow verdict ask denies (98.92325ms)
+✔ non-allow verdict incomplete denies (98.407833ms)
+✔ non-allow verdict cancelled denies (96.641625ms)
+✔ non-allow verdict deny denies (102.508916ms)
+✔ non-allow verdict true denies (98.396083ms)
+✔ failure denies: {"checkThrow":true} (93.288416ms)
+✔ failure denies: {"buildThrow":true} (102.307208ms)
+✔ failure denies: {"bond":null} (95.843541ms)
+✔ failure denies: {"bond":{"sessionId":"session-b","policyPath":"/tmp/policy","passport":{"capabilityId":"cap-a","expiresAt":"2099-01-01T00:00:00Z"}}} (94.40575ms)
+✔ failure denies: {"bond":{"sessionId":"session-a","policyPath":"/tmp/policy","passport":{"capabilityId":"cap-a","expiresAt":"2001-01-01T00:00:00Z"}}} (100.912834ms)
+✔ failure denies: {"verify":false} (109.513166ms)
+✔ failure denies: {"env":{"CHIO_TRUSTED_RECEIPT_KEY":""}} (104.324334ms)
+✔ failure denies: {"env":{"CHIO_SERVICE_TOKEN":"fixture"}} (91.158917ms)
+✔ substituted receipt rejected: kernel_key (106.01425ms)
+✔ substituted receipt rejected: capability_id (98.74675ms)
+✔ substituted receipt rejected: tool_server (100.930208ms)
+✔ substituted receipt rejected: tool_name (95.567416ms)
+✔ substituted receipt rejected: action (110.318917ms)
+✔ cost oracle failures never become zero spend (97.992ms)
+✔ budgeted calls require an oracle (92.927917ms)
+✔ missing exact session is rejected even with sole bond (90.901375ms)
+✔ untrusted receipt is not archived after a post-tool event (189.6405ms)
+✔ post-tool observation stays unverified and request bound (289.073875ms)
+✔ private paths cannot hide inside workspace using two-dot names or symlink ancestors (3.60025ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3103.84975
