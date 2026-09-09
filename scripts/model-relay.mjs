@@ -27,7 +27,7 @@ export function validateModelRequest(body,model,toolNames) {
   // These values cannot authorize remote tools, references, files or background work.
   if (body.metadata!==undefined && (!object(body.metadata)||!keys(body.metadata,["user_id"]))) throw new Error("unsupported metadata");
 }
-export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.com",apiKey,model,toolNames}) {
+export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.com",apiKey,model,toolNames,onToolResults}) {
   const upstream=new URL(upstreamBaseUrl);
   if (!apiKey || upstream.username || upstream.password || upstream.search || upstream.hash || upstream.pathname!=="/" || !(upstream.origin==="https://api.anthropic.com" || upstream.protocol==="http:"&&upstream.hostname==="127.0.0.1"&&upstream.port)) throw new Error("explicit API credential and qualified provider or localhost fixture origin required");
   const token=randomBytes(32).toString("hex"),events=[];
@@ -40,6 +40,7 @@ export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.co
       let size=0;const chunks=[];
       for await (const chunk of request) {size+=chunk.length;if(size>8*1024*1024) throw new Error("model request too large");chunks.push(chunk);}
       const body=JSON.parse(Buffer.concat(chunks).toString());validateModelRequest(body,model,new Set(toolNames));
+      if(onToolResults) await onToolResults(body.messages);
       event.topLevelKeys=Object.keys(body);event.toolNames=body.tools?.map(tool=>tool.name)??[];event.forwarded=true;
       const result=await fetch(new URL(target.pathname,upstream),{method:"POST",redirect:"error",signal:controller.signal,headers:{"x-api-key":apiKey,"anthropic-version":"2023-06-01","content-type":"application/json"},body:JSON.stringify(body)});
       event.status=result.status;

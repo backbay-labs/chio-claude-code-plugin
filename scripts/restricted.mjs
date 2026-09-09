@@ -83,8 +83,32 @@ async function main() {
   const settingsPath=join(control,"settings.json"),mcpPath=join(control,"mcp-session.json"),sandboxPath=join(control,"host.sb");
   writeFileSync(settingsPath,JSON.stringify({disableAllHooks:true,enabledPlugins:{},permissions:{defaultMode:"dontAsk"}}),{mode:0o600,flag:"wx"});
   const toolNames=[...config.tools.map(tool=>`mcp__chio__${tool.name}`),...(config.approval?["mcp__chio__chio_resume"]:[])];
-  const relay=await startModelRelay({upstreamBaseUrl:process.env.ANTHROPIC_BASE_URL??"https://api.anthropic.com",apiKey:process.env.ANTHROPIC_API_KEY,model:opts["--model"],toolNames});
-  let transport;
+  let transport,delivered=0,deliveryFailed=false;
+  let acknowledgements=Promise.resolve();
+  const confirmed=new Set();
+  function receiveHostResults(messages) {
+    for(const message of messages) {
+      if(message.role!=="user"||!Array.isArray(message.content))continue;
+      for(const block of message.content) {
+        if(block.type!=="tool_result")continue;
+        const content=block.content;
+        let outcome;
+        try{outcome=JSON.parse(typeof content==="string"?content:Array.isArray(content)&&content.length===1&&content[0].type==="text"?content[0].text:"");}catch{continue;}
+        if(outcome.state!=="completed"||outcome.evidence!=="verified"||!outcome.delivery)continue;
+        acknowledgements=acknowledgements.then(async()=>{
+          const proof=JSON.stringify(outcome.delivery);
+          if(confirmed.has(proof))return;
+          const receipt=await transport.acknowledgeDelivery(outcome.delivery);
+          if(!receipt.acknowledged){deliveryFailed=true;throw new Error("Host delivery remains unresolved");}
+          confirmed.add(proof);delivered++;
+        });
+      }
+    }
+    return acknowledgements;
+  }
+  // A Messages request is actual host delivery evidence. Confirm it before
+  // returning the next model turn so fast providers cannot outrun kernel ACK.
+  const relay=await startModelRelay({upstreamBaseUrl:process.env.ANTHROPIC_BASE_URL??"https://api.anthropic.com",apiKey:process.env.ANTHROPIC_API_KEY,model:opts["--model"],toolNames,onToolResults:receiveHostResults});
   try {
     const {startGatewayHttp}=await import(pathToFileURL(gateway).href);
     transport=await startGatewayHttp(config);
@@ -100,8 +124,7 @@ async function main() {
     writeFileSync(join(profile,"launch.json"),JSON.stringify({schema:"chio.claude.restricted-launch.v2",host,hostSha256:opts["--host-sha256"],gatewaySha256,workspace,temporary,sessionId,sandboxPath,sandboxSha256:createHash("sha256").update(policy).digest("hex"),control,modelTransport:relay.fixture?"localhost-fixture-unaccepted":"operator-messages-relay",acceptance:"unverified"},null,2),{mode:0o600,flag:"wx"});
     const child=spawn("/usr/bin/sandbox-exec",command,{cwd:workspace,env,stdio:["inherit","pipe","inherit"]});
     const decoder=new StringDecoder("utf8");
-    let hostLines="",delivered=0,deliveryFailed=false;
-    let acknowledgements=Promise.resolve();
+    let hostLines="";
     child.stdout.on("data",data=>{
       process.stdout.write(data);hostLines+=decoder.write(data);
       if(Buffer.byteLength(hostLines)>16*1024*1024){deliveryFailed=true;child.kill("SIGTERM");return;}
@@ -111,17 +134,7 @@ async function main() {
         try{
           const event=JSON.parse(line);
           if(event.type!=="user"||event.message?.role!=="user"||!Array.isArray(event.message.content))continue;
-          for(const block of event.message.content){
-            if(block.type!=="tool_result")continue;
-            const content=block.content;
-            if(!Array.isArray(content)||content.length!==1||content[0].type!=="text")continue;
-            const outcome=JSON.parse(content[0].text);
-            if(outcome.state!=="completed"||outcome.evidence!=="verified"||!outcome.delivery)continue;
-            acknowledgements=acknowledgements.then(async()=>{
-              const receipt=await transport.acknowledgeDelivery(outcome.delivery);
-              if(receipt.acknowledged)delivered++;else deliveryFailed=true;
-            }).catch(()=>{deliveryFailed=true;});
-          }
+          void receiveHostResults([event.message]).catch(()=>{deliveryFailed=true;});
         }catch{/* Missing host proof leaves the operation fenced. */}
       }
     });
@@ -132,7 +145,7 @@ async function main() {
       child.once("error",error=>resolve({code:1,signal:null,error:error.message}));
       child.once("close",(code,signal)=>resolve({code,signal}));
     });
-    await acknowledgements;
+    await acknowledgements.catch(()=>{deliveryFailed=true;});
     process.off("SIGINT",onInt);process.off("SIGTERM",onTerm);
     writeFileSync(join(profile,"exit.json"),JSON.stringify({...state,hostDelivery:{confirmed:delivered,failed:deliveryFailed},executionOutcome:deliveryFailed?"delivery-unresolved":"inspect-verified-host-tool-results",retry:"never-automatic"}),{mode:0o600});
     process.exitCode=deliveryFailed?2:state.code??1;
