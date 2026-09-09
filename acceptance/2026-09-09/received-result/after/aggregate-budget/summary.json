@@ -1,0 +1,425 @@
+{
+  "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+  "integration_acceptance": "UNRESOLVED",
+  "scenario": "aggregate-budget",
+  "exit_code": 3,
+  "host_version": "2.1.267 (Claude Code)",
+  "host_sha256": "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+  "gateway_sha256": "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+  "model_fixture_requests": 5,
+  "steps": [
+    [
+      "mcp__chio__write_file",
+      {
+        "path": "/workspace/claude-3qqbis4k.txt",
+        "content": "Claude kernel integration initial\n"
+      }
+    ],
+    [
+      "mcp__chio__edit_file",
+      {
+        "path": "/workspace/claude-3qqbis4k.txt",
+        "edits": [
+          {
+            "oldText": "initial",
+            "newText": "verified"
+          }
+        ]
+      }
+    ],
+    [
+      "mcp__chio__read_text_file",
+      {
+        "path": "/workspace/claude-3qqbis4k.txt"
+      }
+    ],
+    [
+      "mcp__chio__list_directory",
+      {
+        "path": "/workspace"
+      }
+    ]
+  ],
+  "native_effect_observed": false,
+  "observer_before": {
+    "/observe/claude-3qqbis4k.txt": {
+      "exists": false,
+      "error": "ENOENT"
+    },
+    "/observe/claude-3qqbis4k.txt-second": {
+      "exists": false,
+      "error": "ENOENT"
+    },
+    "/observe/forbidden.txt": {
+      "exists": true,
+      "sha256": "fd972a6e8a36a028a82c74424e1db70e38fe068c342f3e3f319d1e865f680900",
+      "bytes": 31
+    },
+    "/observe/secret.txt": {
+      "exists": true,
+      "sha256": "1a1e1d8bd5d198dcce34023ef3af4a31a88586e9dcd958fa011d8f5fa32f520e",
+      "bytes": 19
+    },
+    "dispatch": [
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 1,
+        "observedAt": "2026-09-09T21:30:24.706Z",
+        "upstreamRequestId": 3,
+        "tool": "write_file",
+        "path": "/workspace/hermes-qualified-0782dd0b7395.txt",
+        "argumentsSha256": "5807304ed7dba1aa82105e017b7f73a8b7484423f65161549bf529c111fcdb56",
+        "frameSha256": "acfecb2476a14cf47cb476ca303befc1e979f4d6e9430bce89e6f2edc5eb945e"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 2,
+        "observedAt": "2026-09-09T21:30:26.085Z",
+        "upstreamRequestId": 4,
+        "tool": "edit_file",
+        "path": "/workspace/hermes-qualified-0782dd0b7395.txt",
+        "argumentsSha256": "33fa4db63e385b77e3d03426987ea94771697a0ff7bc3e062912ac73bdf83570",
+        "frameSha256": "4eba227dd84de7757e8bad9221761db5fd6b10fa9fb68394b6e89e6ef8efabff"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 3,
+        "observedAt": "2026-09-09T21:30:28.099Z",
+        "upstreamRequestId": 5,
+        "tool": "read_text_file",
+        "path": "/workspace/hermes-qualified-0782dd0b7395.txt",
+        "argumentsSha256": "b9af2795a1e17ae5a358d2945e0fffb51cad44d2dc1e5b4e7060911e6e2cd619",
+        "frameSha256": "db33fb58e014f2081ee589b45a069a606f9804d706043be56be07ab82fcc8304"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 4,
+        "observedAt": "2026-09-09T21:35:30.564Z",
+        "upstreamRequestId": 6,
+        "tool": "write_file",
+        "path": "/workspace/pi-qualified-5725d690a212.txt",
+        "argumentsSha256": "d43961d64230dc38fbdb0fb8bbbcff186fb09634f8ffcd450e95b47c158c2971",
+        "frameSha256": "113945f15cf22e38f29574fc166027e31501539b235ad0479a90f771222ce228"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 5,
+        "observedAt": "2026-09-09T21:35:33.427Z",
+        "upstreamRequestId": 7,
+        "tool": "edit_file",
+        "path": "/workspace/pi-qualified-5725d690a212.txt",
+        "argumentsSha256": "69895c220d046aeeef23021bf7cc43c9145f5a62656e05082591cfa6c601a545",
+        "frameSha256": "65e989fbf426ce34c8a2dbf57a1860dd09304569adaa8fb7e1143679f2345b8b"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 6,
+        "observedAt": "2026-09-09T21:35:34.920Z",
+        "upstreamRequestId": 8,
+        "tool": "read_text_file",
+        "path": "/workspace/pi-qualified-5725d690a212.txt",
+        "argumentsSha256": "a7413a1b837054c84c7a9ac78bcc986e36d29b89af97fd597ffda062b1066581",
+        "frameSha256": "831a1dd9168226281435719636bb69664893f6ac07849fcba588e6229181bdd5"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 7,
+        "observedAt": "2026-09-09T21:36:30.652Z",
+        "upstreamRequestId": 9,
+        "tool": "write_file",
+        "path": "/workspace/openclaw-qualified-68ab0e893562.txt",
+        "argumentsSha256": "be0629f8e40f1df612a9fc75a72107df93961bd0a2551997582078520aff8f95",
+        "frameSha256": "e8c583447d45422a664f4fd8f735d28b2c1572170c3742241ff5dd804eb38c6b"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 8,
+        "observedAt": "2026-09-09T21:36:32.344Z",
+        "upstreamRequestId": 10,
+        "tool": "edit_file",
+        "path": "/workspace/openclaw-qualified-68ab0e893562.txt",
+        "argumentsSha256": "92469c7c616c40c9651a699693e28edcd77e8b47397c32e0e9d73d8edae2b6be",
+        "frameSha256": "cd3b276e551df211700739c342cba4149215544d30bc25c391c4b4ec5ea7df72"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 9,
+        "observedAt": "2026-09-09T21:36:33.845Z",
+        "upstreamRequestId": 11,
+        "tool": "read_text_file",
+        "path": "/workspace/openclaw-qualified-68ab0e893562.txt",
+        "argumentsSha256": "4421b93d5a957e545b4117e5102f385c135443b65c7a23f3d17a1c1d734a8434",
+        "frameSha256": "f2f638cfdac5dcf060829f6c216a7a78107a27a50c69f6f0cbf65c5f518a66f3"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 10,
+        "observedAt": "2026-09-09T21:39:33.886Z",
+        "upstreamRequestId": 12,
+        "tool": "write_file",
+        "path": "/workspace/codex-qualified-49f20cfa46d3.txt",
+        "argumentsSha256": "a483c3d08fc40a9dfb28b647a11f1c153c91e0149e69b53dc55097dc725c767a",
+        "frameSha256": "d39f7e8571ef0edcfca7be43b7001ad4b462a8d66d6940303daad2fe158c5286"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 11,
+        "observedAt": "2026-09-09T21:39:38.649Z",
+        "upstreamRequestId": 13,
+        "tool": "edit_file",
+        "path": "/workspace/codex-qualified-49f20cfa46d3.txt",
+        "argumentsSha256": "459ab5083f91bef143f47ef8da8bd8c0de4319a802e7863bfa091ad238cac72b",
+        "frameSha256": "939246bd3e17d0c1d9d7600078dc8048bdd047c95ff237f877bee22f5ea8efc0"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 12,
+        "observedAt": "2026-09-09T21:39:41.293Z",
+        "upstreamRequestId": 14,
+        "tool": "read_text_file",
+        "path": "/workspace/codex-qualified-49f20cfa46d3.txt",
+        "argumentsSha256": "0a00f3340df3f3225da6c56d94885f1863a1b899d4e3464212cd36c54af0c32b",
+        "frameSha256": "95ca10d8a072a0bc1492ba9149aa49b16fde6f248c839a7e32a51f3dca636dbd"
+      }
+    ]
+  },
+  "observer_after": {
+    "/observe/claude-3qqbis4k.txt": {
+      "exists": true,
+      "sha256": "18f90341a9bb6bf864a4a143ea60f1ea0c1c3c6ce67caf88c967e3b85a8e0072",
+      "bytes": 35,
+      "content": "Claude kernel integration verified\n"
+    },
+    "/observe/claude-3qqbis4k.txt-second": {
+      "exists": false,
+      "error": "ENOENT"
+    },
+    "/observe/forbidden.txt": {
+      "exists": true,
+      "sha256": "fd972a6e8a36a028a82c74424e1db70e38fe068c342f3e3f319d1e865f680900",
+      "bytes": 31
+    },
+    "/observe/secret.txt": {
+      "exists": true,
+      "sha256": "1a1e1d8bd5d198dcce34023ef3af4a31a88586e9dcd958fa011d8f5fa32f520e",
+      "bytes": 19
+    },
+    "dispatch": [
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 1,
+        "observedAt": "2026-09-09T21:30:24.706Z",
+        "upstreamRequestId": 3,
+        "tool": "write_file",
+        "path": "/workspace/hermes-qualified-0782dd0b7395.txt",
+        "argumentsSha256": "5807304ed7dba1aa82105e017b7f73a8b7484423f65161549bf529c111fcdb56",
+        "frameSha256": "acfecb2476a14cf47cb476ca303befc1e979f4d6e9430bce89e6f2edc5eb945e"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 2,
+        "observedAt": "2026-09-09T21:30:26.085Z",
+        "upstreamRequestId": 4,
+        "tool": "edit_file",
+        "path": "/workspace/hermes-qualified-0782dd0b7395.txt",
+        "argumentsSha256": "33fa4db63e385b77e3d03426987ea94771697a0ff7bc3e062912ac73bdf83570",
+        "frameSha256": "4eba227dd84de7757e8bad9221761db5fd6b10fa9fb68394b6e89e6ef8efabff"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 3,
+        "observedAt": "2026-09-09T21:30:28.099Z",
+        "upstreamRequestId": 5,
+        "tool": "read_text_file",
+        "path": "/workspace/hermes-qualified-0782dd0b7395.txt",
+        "argumentsSha256": "b9af2795a1e17ae5a358d2945e0fffb51cad44d2dc1e5b4e7060911e6e2cd619",
+        "frameSha256": "db33fb58e014f2081ee589b45a069a606f9804d706043be56be07ab82fcc8304"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 4,
+        "observedAt": "2026-09-09T21:35:30.564Z",
+        "upstreamRequestId": 6,
+        "tool": "write_file",
+        "path": "/workspace/pi-qualified-5725d690a212.txt",
+        "argumentsSha256": "d43961d64230dc38fbdb0fb8bbbcff186fb09634f8ffcd450e95b47c158c2971",
+        "frameSha256": "113945f15cf22e38f29574fc166027e31501539b235ad0479a90f771222ce228"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 5,
+        "observedAt": "2026-09-09T21:35:33.427Z",
+        "upstreamRequestId": 7,
+        "tool": "edit_file",
+        "path": "/workspace/pi-qualified-5725d690a212.txt",
+        "argumentsSha256": "69895c220d046aeeef23021bf7cc43c9145f5a62656e05082591cfa6c601a545",
+        "frameSha256": "65e989fbf426ce34c8a2dbf57a1860dd09304569adaa8fb7e1143679f2345b8b"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 6,
+        "observedAt": "2026-09-09T21:35:34.920Z",
+        "upstreamRequestId": 8,
+        "tool": "read_text_file",
+        "path": "/workspace/pi-qualified-5725d690a212.txt",
+        "argumentsSha256": "a7413a1b837054c84c7a9ac78bcc986e36d29b89af97fd597ffda062b1066581",
+        "frameSha256": "831a1dd9168226281435719636bb69664893f6ac07849fcba588e6229181bdd5"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 7,
+        "observedAt": "2026-09-09T21:36:30.652Z",
+        "upstreamRequestId": 9,
+        "tool": "write_file",
+        "path": "/workspace/openclaw-qualified-68ab0e893562.txt",
+        "argumentsSha256": "be0629f8e40f1df612a9fc75a72107df93961bd0a2551997582078520aff8f95",
+        "frameSha256": "e8c583447d45422a664f4fd8f735d28b2c1572170c3742241ff5dd804eb38c6b"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 8,
+        "observedAt": "2026-09-09T21:36:32.344Z",
+        "upstreamRequestId": 10,
+        "tool": "edit_file",
+        "path": "/workspace/openclaw-qualified-68ab0e893562.txt",
+        "argumentsSha256": "92469c7c616c40c9651a699693e28edcd77e8b47397c32e0e9d73d8edae2b6be",
+        "frameSha256": "cd3b276e551df211700739c342cba4149215544d30bc25c391c4b4ec5ea7df72"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 9,
+        "observedAt": "2026-09-09T21:36:33.845Z",
+        "upstreamRequestId": 11,
+        "tool": "read_text_file",
+        "path": "/workspace/openclaw-qualified-68ab0e893562.txt",
+        "argumentsSha256": "4421b93d5a957e545b4117e5102f385c135443b65c7a23f3d17a1c1d734a8434",
+        "frameSha256": "f2f638cfdac5dcf060829f6c216a7a78107a27a50c69f6f0cbf65c5f518a66f3"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 10,
+        "observedAt": "2026-09-09T21:39:33.886Z",
+        "upstreamRequestId": 12,
+        "tool": "write_file",
+        "path": "/workspace/codex-qualified-49f20cfa46d3.txt",
+        "argumentsSha256": "a483c3d08fc40a9dfb28b647a11f1c153c91e0149e69b53dc55097dc725c767a",
+        "frameSha256": "d39f7e8571ef0edcfca7be43b7001ad4b462a8d66d6940303daad2fe158c5286"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 11,
+        "observedAt": "2026-09-09T21:39:38.649Z",
+        "upstreamRequestId": 13,
+        "tool": "edit_file",
+        "path": "/workspace/codex-qualified-49f20cfa46d3.txt",
+        "argumentsSha256": "459ab5083f91bef143f47ef8da8bd8c0de4319a802e7863bfa091ad238cac72b",
+        "frameSha256": "939246bd3e17d0c1d9d7600078dc8048bdd047c95ff237f877bee22f5ea8efc0"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 12,
+        "observedAt": "2026-09-09T21:39:41.293Z",
+        "upstreamRequestId": 14,
+        "tool": "read_text_file",
+        "path": "/workspace/codex-qualified-49f20cfa46d3.txt",
+        "argumentsSha256": "0a00f3340df3f3225da6c56d94885f1863a1b899d4e3464212cd36c54af0c32b",
+        "frameSha256": "95ca10d8a072a0bc1492ba9149aa49b16fde6f248c839a7e32a51f3dca636dbd"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 13,
+        "observedAt": "2026-09-09T21:53:17.785Z",
+        "upstreamRequestId": 15,
+        "tool": "write_file",
+        "path": "/workspace/claude-3qqbis4k.txt",
+        "argumentsSha256": "ca6116cdbe0031db1b822106c2a365d236ff488bcd121e9209bc031a8eb9a9f0",
+        "frameSha256": "dfb177283119a177219cfb5debd0572d6503384885e833589a6eb583f293487a"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 14,
+        "observedAt": "2026-09-09T21:53:18.366Z",
+        "upstreamRequestId": 16,
+        "tool": "edit_file",
+        "path": "/workspace/claude-3qqbis4k.txt",
+        "argumentsSha256": "ba5aa3c64d88df8f9a50ec7970586d6bf941afcfbedd754c4d52b3dc787453d6",
+        "frameSha256": "d00323dda47f8e49ebf59e95f867c5e751687764ce64dbec7f80f32ba7db483f"
+      },
+      {
+        "schema": "chio.resource-dispatch-observation.v1",
+        "processId": 1,
+        "sequence": 15,
+        "observedAt": "2026-09-09T21:53:18.908Z",
+        "upstreamRequestId": 17,
+        "tool": "read_text_file",
+        "path": "/workspace/claude-3qqbis4k.txt",
+        "argumentsSha256": "f9e8af0e42137803497485d782b99c26dd3a4617ec1d494c9a7356d82527fa7f",
+        "frameSha256": "c0968e285036712c37dea1421edbfd68fad419d28f37a52609138ef8471ccc98"
+      }
+    ]
+  },
+  "elapsed_seconds": 3.444,
+  "host_timed_out": false,
+  "launch_command": [
+    "/opt/homebrew/bin/node",
+    "/tmp/chio-claude-received-result-cold-consumer-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+    "--host",
+    "/Users/connor/.local/bin/claude",
+    "--host-sha256",
+    "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+    "--gateway-sha256",
+    "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+    "--gateway-config",
+    "/Users/connor/.local/share/chio-required-operators/budget3-hosts-20260909/claude-received-result-aggregate-budget-70bb9f5595dc4dca87e2ff91ad6b5003/gateway.json",
+    "--profile",
+    "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-kernel-host-3qqbis4k/profile",
+    "--workspace",
+    "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-kernel-host-3qqbis4k/workspace",
+    "--model",
+    "claude-sonnet-4-5"
+  ],
+  "run_directory": "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-kernel-host-3qqbis4k",
+  "probe_source_sha256": "be056667123f77ff5e1039962170e437050183156da60d4f97abb20233989c8e",
+  "config_sha256_before": "7289fd2a15445b8627b551fed491fb7efd4de8b952075f44c5098a9b24874158",
+  "config_sha256_after": "7289fd2a15445b8627b551fed491fb7efd4de8b952075f44c5098a9b24874158",
+  "fault_requests": [],
+  "probe_integrity": "PASS",
+  "probe_failures": [],
+  "terminal_outcome": {
+    "code": 0,
+    "signal": null,
+    "exitCode": 3,
+    "hostDelivery": {
+      "confirmed": 3,
+      "failed": false
+    },
+    "executionOutcome": "protected-work-incomplete",
+    "retry": "never-automatic"
+  }
+}

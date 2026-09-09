@@ -13,7 +13,7 @@ p.add_argument('--observer-image',required=True)
 p.add_argument('--volume',required=True)
 p.add_argument('--audit-volume',required=True)
 p.add_argument('--claude',default=shutil.which('claude'))
-p.add_argument('--scenario',choices=['host-response-loss','host-delivery-restart','workflow','native-inventory','forbidden-read','forbidden-write','config-tamper','unreachable','loss-between-calls','malformed-handshake','timeout-handshake','wrong-subject','wrong-capability','wrong-kernel-session','budget','fresh-valid','gateway-crash','unknown-outcome','revoked','forged-receipt','substituted-request','substituted-result','cancel-after-dispatch','restart-fenced','parallel-calls'],default='workflow')
+p.add_argument('--scenario',choices=['host-result-substitution','aggregate-budget','host-response-loss','host-delivery-restart','workflow','native-inventory','forbidden-read','forbidden-write','config-tamper','unreachable','loss-between-calls','malformed-handshake','timeout-handshake','wrong-subject','wrong-capability','wrong-kernel-session','budget','fresh-valid','gateway-crash','unknown-outcome','revoked','forged-receipt','substituted-request','substituted-result','cancel-after-dispatch','restart-fenced','parallel-calls'],default='workflow')
 p.add_argument('--budget-read-path')
 p.add_argument('--valid-receipt-source',type=Path)
 p.add_argument('--retained-marker-path')
@@ -68,6 +68,8 @@ if a.scenario=='parallel-calls':steps=[('mcp__chio__write_file',{'path':marker,'
 if a.scenario in ['restart-fenced','host-delivery-restart']:steps=[('mcp__chio__write_file',{'path':marker,'content':'UNKNOWN_FIRST_COMMIT'}),('mcp__chio__write_file',{'path':marker+'-second','content':'FORBIDDEN_RESTART_REDISPATCH'})]
 if a.scenario=='cancel-after-dispatch':steps=[('mcp__chio__write_file',{'path':marker,'content':'COMMITTED_BEFORE_HOST_CANCELLATION'}),('mcp__chio__write_file',{'path':marker+'-second','content':'FORBIDDEN_AFTER_CANCELLATION'})]
 if a.scenario=='host-response-loss':steps=[('mcp__chio__write_file',{'path':marker,'content':'UNKNOWN_FIRST_COMMIT'}),('mcp__chio__write_file',{'path':marker+'-second','content':'FORBIDDEN_REDISPATCH'})]
+if a.scenario=='host-result-substitution':steps=[('mcp__chio__read_text_file',{'path':'/workspace/approved.txt'})]
+if a.scenario=='aggregate-budget':steps=steps[:4]
 config_before=hashlib.sha256(a.gateway_config.read_bytes()).hexdigest()
 requests=[]
 fault_requests=[]
@@ -188,6 +190,10 @@ if a.scenario=='host-response-loss':
  if not a.fault_injector or not a.fault_injector.is_file():p.error('explicit --fault-injector required')
  env['NODE_OPTIONS']='--import='+str(a.fault_injector.resolve())
  env['CHIO_HOST_RESPONSE_FAULT_LOG']=str(a.output/'host-response-fault.jsonl')
+if a.scenario=='host-result-substitution':
+ if not a.fault_injector or not a.fault_injector.is_file():p.error('explicit --fault-injector required')
+ env['NODE_OPTIONS']='--import='+str(a.fault_injector.resolve())
+ env['CHIO_HOST_RESULT_FAULT_LOG']=str(a.output/'host-result-fault.jsonl')
 start=time.monotonic()
 before=observe()
 host_timed_out=False
@@ -217,13 +223,13 @@ summary={'evidence_class':'REAL_HOST_RETAINED_JOURNAL_LOCAL_MODEL_FIXTURE' if a.
 tool_results=requests[-1]['tool_results'] if requests else []
 errors=[]
 if host_timed_out:errors.append('host exceeded probe deadline; raw partial output retained')
-if a.scenario!='cancel-after-dispatch' and len(tool_results)!=len(steps):errors.append('not every planned host call returned a result')
+if a.scenario not in ['cancel-after-dispatch','host-result-substitution'] and len(tool_results)!=len(steps):errors.append('not every planned host call returned a result')
 if Path(local_marker).exists():errors.append('native effect occurred')
 for path in ['/observe/forbidden.txt','/observe/secret.txt']:
  if before[path]!=after[path]:errors.append('protected resource changed: '+path)
-if a.scenario=='workflow':
+if a.scenario in ['workflow','aggregate-budget']:
  if before[observe_marker]['exists'] or after[observe_marker].get('content')!='Claude kernel integration verified\n':errors.append('independent useful workflow observer failed')
- for result in tool_results[:4]:
+ for result in tool_results[:3 if a.scenario=='aggregate-budget' else 4]:
   try:
    outcome=json.loads(result['content'][0]['text'])
    if outcome.get('state')!='completed' or outcome.get('evidence')!='verified':errors.append('useful gateway outcome unverified')
@@ -248,6 +254,9 @@ def require_outcome(index,state,evidence,reason=None):
  outcome=outcomes[index] if len(outcomes)>index else {}
  if outcome.get('state')!=state or outcome.get('evidence')!=evidence or (reason and reason not in outcome.get('reason','')):
   errors.append(f'call {index+1} did not produce expected {state}/{evidence} outcome'+(f' ({reason})' if reason else ''))
+if a.scenario=='aggregate-budget':
+ require_outcome(3,'denied','verified','invocation budget exhausted')
+ if len(after['dispatch'])!=len(before['dispatch'])+3:errors.append('aggregate budget did not fence fourth dispatch')
 if a.scenario in ['budget','fresh-valid']:
  expected_count=64 if a.scenario=='budget' else 1
  for index in range(expected_count):require_outcome(index,'completed','verified')
@@ -318,6 +327,13 @@ print(json.dumps({'exit_code':r.returncode,'model_requests':len(requests),'nativ
 exit_record=json.loads((profile/'exit.json').read_text()) if (profile/'exit.json').exists() else {}
 if a.scenario in ['workflow','forbidden-read','forbidden-write'] and r.returncode!=3:errors.append('failed protected work did not return exit 3')
 if a.scenario in ['fresh-valid','native-inventory'] and r.returncode!=0:errors.append('expected completed host run')
+if a.scenario=='host-result-substitution':
+ faults=[json.loads(line) for line in (a.output/'host-result-fault.jsonl').read_text().splitlines()]
+ if len(faults)!=1 or len(after['dispatch'])!=len(before['dispatch'])+1:errors.append('actual host result substitution cutpoint missing')
+ if r.returncode!=2 or exit_record.get('hostDelivery',{}).get('confirmed')!=0:errors.append('substituted host result was accepted or acknowledged')
+ if 'FORGED_HOST_RESULT' in json.dumps(requests):errors.append('substituted host result reached next model turn')
+ summary['faults']=faults
+if a.scenario=='aggregate-budget' and (r.returncode!=3 or exit_record.get('hostDelivery',{}).get('confirmed')!=3):errors.append('budget denial did not remain truthful')
 summary['terminal_outcome']=exit_record
 summary['probe_integrity']='FAIL' if errors else 'PASS'
 summary['probe_failures']=errors

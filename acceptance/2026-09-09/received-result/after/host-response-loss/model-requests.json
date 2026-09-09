@@ -1,0 +1,62 @@
+[
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [],
+    "returned_tool_calls": [
+      "mcp__chio__write_file"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "mcp__chio__write_file"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "{\"state\":\"not_dispatched\",\"evidence\":\"unverified\",\"requestId\":\"93acae65-e8f5-4192-89f6-83061339921a:4d43bef7cc194e9d5e76498f041c783e8974243c2a7483b00f0c010cfdc184f8\",\"reason\":\"an unresolved operation fences this gateway; operator reconciliation required\"}",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": []
+  }
+]

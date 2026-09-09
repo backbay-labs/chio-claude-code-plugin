@@ -96,9 +96,9 @@ async function main() {
         try{outcome=JSON.parse(typeof content==="string"?content:Array.isArray(content)&&content.length===1&&content[0].type==="text"?content[0].text:"");}catch{continue;}
         if(outcome.state!=="completed"||outcome.evidence!=="verified"||!outcome.delivery)continue;
         acknowledgements=acknowledgements.then(async()=>{
-          const proof=JSON.stringify(outcome.delivery);
+          const proof=createHash("sha256").update(JSON.stringify(outcome)).digest("hex");
           if(confirmed.has(proof))return;
-          const receipt=await transport.acknowledgeDelivery(outcome.delivery);
+          const receipt=await transport.acknowledgeReceivedOutcome(outcome);
           if(!receipt.acknowledged){deliveryFailed=true;throw new Error("Host delivery remains unresolved");}
           confirmed.add(proof);delivered++;
         });
@@ -112,7 +112,7 @@ async function main() {
   try {
     const {startGatewayHttp}=await import(pathToFileURL(gateway).href);
     transport=await startGatewayHttp(config);
-    if(typeof transport.acknowledgeDelivery!=="function")throw new Error("Host delivery acknowledgement transport is required");
+    if(typeof transport.acknowledgeReceivedOutcome!=="function")throw new Error("Host delivery acknowledgement transport is required");
     writeFileSync(mcpPath,JSON.stringify({mcpServers:{chio:{type:"http",url:transport.url,headers:{Authorization:`Bearer ${transport.token}`}}}}),{mode:0o600,flag:"wx"});
     const policy=buildSandboxPolicy({host,node:process.execPath,gateway,config:configPath,profile,journal,workspace,temporary,controlFiles:[settingsPath,mcpPath],kernelPort:transport.port,modelPort:relay.port,operatorTransport:true});
     writeFileSync(sandboxPath,policy,{mode:0o600,flag:"wx"});
