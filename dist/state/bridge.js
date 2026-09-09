@@ -32,9 +32,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
-// ../chio-bridge/node_modules/yaml/dist/nodes/identity.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/nodes/identity.js
 var require_identity = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/nodes/identity.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/nodes/identity.js"(exports) {
     "use strict";
     var ALIAS = Symbol.for("yaml.alias");
     var DOC = Symbol.for("yaml.document");
@@ -89,9 +89,9 @@ var require_identity = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/visit.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/visit.js
 var require_visit = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/visit.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/visit.js"(exports) {
     "use strict";
     var identity = require_identity();
     var BREAK = Symbol("break visit");
@@ -247,9 +247,9 @@ var require_visit = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/doc/directives.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/doc/directives.js
 var require_directives = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/doc/directives.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/doc/directives.js"(exports) {
     "use strict";
     var identity = require_identity();
     var visit = require_visit();
@@ -418,9 +418,9 @@ var require_directives = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/doc/anchors.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/doc/anchors.js
 var require_anchors = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/doc/anchors.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/doc/anchors.js"(exports) {
     "use strict";
     var identity = require_identity();
     var visit = require_visit();
@@ -488,9 +488,9 @@ var require_anchors = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/doc/applyReviver.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/doc/applyReviver.js
 var require_applyReviver = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/doc/applyReviver.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/doc/applyReviver.js"(exports) {
     "use strict";
     function applyReviver(reviver, obj, key, val) {
       if (val && typeof val === "object") {
@@ -538,9 +538,9 @@ var require_applyReviver = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/nodes/toJS.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/nodes/toJS.js
 var require_toJS = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/nodes/toJS.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/nodes/toJS.js"(exports) {
     "use strict";
     var identity = require_identity();
     function toJS(value, arg, ctx) {
@@ -568,9 +568,9 @@ var require_toJS = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/nodes/Node.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/nodes/Node.js
 var require_Node = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/nodes/Node.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/nodes/Node.js"(exports) {
     "use strict";
     var applyReviver = require_applyReviver();
     var identity = require_identity();
@@ -609,9 +609,9 @@ var require_Node = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/nodes/Alias.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/nodes/Alias.js
 var require_Alias = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/nodes/Alias.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/nodes/Alias.js"(exports) {
     "use strict";
     var anchors = require_anchors();
     var visit = require_visit();
@@ -725,9 +725,9 @@ var require_Alias = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/nodes/Scalar.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/nodes/Scalar.js
 var require_Scalar = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/nodes/Scalar.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/nodes/Scalar.js"(exports) {
     "use strict";
     var identity = require_identity();
     var Node = require_Node();
@@ -755,9 +755,9 @@ var require_Scalar = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/doc/createNode.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/doc/createNode.js
 var require_createNode = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/doc/createNode.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/doc/createNode.js"(exports) {
     "use strict";
     var Alias = require_Alias();
     var identity = require_identity();
@@ -830,9 +830,9 @@ var require_createNode = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/nodes/Collection.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/nodes/Collection.js
 var require_Collection = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/nodes/Collection.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/nodes/Collection.js"(exports) {
     "use strict";
     var createNode = require_createNode();
     var identity = require_identity();
@@ -973,9 +973,9 @@ var require_Collection = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/stringify/stringifyComment.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/stringify/stringifyComment.js
 var require_stringifyComment = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/stringify/stringifyComment.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/stringify/stringifyComment.js"(exports) {
     "use strict";
     var stringifyComment = (str) => str.replace(/^(?!$)(?: $)?/gm, "#");
     function indentComment(comment, indent) {
@@ -990,9 +990,9 @@ var require_stringifyComment = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/stringify/foldFlowLines.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/stringify/foldFlowLines.js
 var require_foldFlowLines = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/stringify/foldFlowLines.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/stringify/foldFlowLines.js"(exports) {
     "use strict";
     var FOLD_FLOW = "flow";
     var FOLD_BLOCK = "block";
@@ -1126,9 +1126,9 @@ ${indent}${text.slice(fold + 1, end2)}`;
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/stringify/stringifyString.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/stringify/stringifyString.js
 var require_stringifyString = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/stringify/stringifyString.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/stringify/stringifyString.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     var foldFlowLines = require_foldFlowLines();
@@ -1409,9 +1409,9 @@ ${indent}`);
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/stringify/stringify.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/stringify/stringify.js
 var require_stringify = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/stringify/stringify.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/stringify/stringify.js"(exports) {
     "use strict";
     var anchors = require_anchors();
     var identity = require_identity();
@@ -1533,9 +1533,9 @@ ${ctx.indent}${str}`;
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/stringify/stringifyPair.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/stringify/stringifyPair.js
 var require_stringifyPair = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/stringify/stringifyPair.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/stringify/stringifyPair.js"(exports) {
     "use strict";
     var identity = require_identity();
     var Scalar = require_Scalar();
@@ -1666,9 +1666,9 @@ ${ctx.indent}`;
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/log.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/log.js
 var require_log = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/log.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/log.js"(exports) {
     "use strict";
     var node_process = __require("process");
     function debug(logLevel, ...messages) {
@@ -1688,9 +1688,9 @@ var require_log = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/merge.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/merge.js
 var require_merge = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/merge.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/merge.js"(exports) {
     "use strict";
     var identity = require_identity();
     var Scalar = require_Scalar();
@@ -1748,9 +1748,9 @@ var require_merge = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/nodes/addPairToJSMap.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/nodes/addPairToJSMap.js
 var require_addPairToJSMap = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/nodes/addPairToJSMap.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/nodes/addPairToJSMap.js"(exports) {
     "use strict";
     var log = require_log();
     var merge = require_merge();
@@ -1812,9 +1812,9 @@ var require_addPairToJSMap = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/nodes/Pair.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/nodes/Pair.js
 var require_Pair = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/nodes/Pair.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/nodes/Pair.js"(exports) {
     "use strict";
     var createNode = require_createNode();
     var stringifyPair = require_stringifyPair();
@@ -1852,9 +1852,9 @@ var require_Pair = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/stringify/stringifyCollection.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/stringify/stringifyCollection.js
 var require_stringifyCollection = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/stringify/stringifyCollection.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/stringify/stringifyCollection.js"(exports) {
     "use strict";
     var identity = require_identity();
     var stringify = require_stringify();
@@ -2003,9 +2003,9 @@ ${indent}${end}`;
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/nodes/YAMLMap.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/nodes/YAMLMap.js
 var require_YAMLMap = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/nodes/YAMLMap.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/nodes/YAMLMap.js"(exports) {
     "use strict";
     var stringifyCollection = require_stringifyCollection();
     var addPairToJSMap = require_addPairToJSMap();
@@ -2147,9 +2147,9 @@ var require_YAMLMap = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/common/map.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/common/map.js
 var require_map = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/common/map.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/common/map.js"(exports) {
     "use strict";
     var identity = require_identity();
     var YAMLMap = require_YAMLMap();
@@ -2169,9 +2169,9 @@ var require_map = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/nodes/YAMLSeq.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/nodes/YAMLSeq.js
 var require_YAMLSeq = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/nodes/YAMLSeq.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/nodes/YAMLSeq.js"(exports) {
     "use strict";
     var createNode = require_createNode();
     var stringifyCollection = require_stringifyCollection();
@@ -2285,9 +2285,9 @@ var require_YAMLSeq = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/common/seq.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/common/seq.js
 var require_seq = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/common/seq.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/common/seq.js"(exports) {
     "use strict";
     var identity = require_identity();
     var YAMLSeq = require_YAMLSeq();
@@ -2307,9 +2307,9 @@ var require_seq = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/common/string.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/common/string.js
 var require_string = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/common/string.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/common/string.js"(exports) {
     "use strict";
     var stringifyString = require_stringifyString();
     var string = {
@@ -2326,9 +2326,9 @@ var require_string = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/common/null.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/common/null.js
 var require_null = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/common/null.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/common/null.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     var nullTag = {
@@ -2344,9 +2344,9 @@ var require_null = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/core/bool.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/core/bool.js
 var require_bool = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/core/bool.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/core/bool.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     var boolTag = {
@@ -2368,9 +2368,9 @@ var require_bool = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/stringify/stringifyNumber.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/stringify/stringifyNumber.js
 var require_stringifyNumber = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/stringify/stringifyNumber.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/stringify/stringifyNumber.js"(exports) {
     "use strict";
     function stringifyNumber({ format, minFractionDigits, tag, value }) {
       if (typeof value === "bigint")
@@ -2395,9 +2395,9 @@ var require_stringifyNumber = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/core/float.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/core/float.js
 var require_float = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/core/float.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/core/float.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     var stringifyNumber = require_stringifyNumber();
@@ -2441,9 +2441,9 @@ var require_float = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/core/int.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/core/int.js
 var require_int = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/core/int.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/core/int.js"(exports) {
     "use strict";
     var stringifyNumber = require_stringifyNumber();
     var intIdentify = (value) => typeof value === "bigint" || Number.isInteger(value);
@@ -2486,9 +2486,9 @@ var require_int = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/core/schema.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/core/schema.js
 var require_schema = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/core/schema.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/core/schema.js"(exports) {
     "use strict";
     var map = require_map();
     var _null = require_null();
@@ -2514,9 +2514,9 @@ var require_schema = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/json/schema.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/json/schema.js
 var require_schema2 = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/json/schema.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/json/schema.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     var map = require_map();
@@ -2581,9 +2581,9 @@ var require_schema2 = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/binary.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/binary.js
 var require_binary = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/binary.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/binary.js"(exports) {
     "use strict";
     var node_buffer = __require("buffer");
     var Scalar = require_Scalar();
@@ -2647,9 +2647,9 @@ var require_binary = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/pairs.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/pairs.js
 var require_pairs = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/pairs.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/pairs.js"(exports) {
     "use strict";
     var identity = require_identity();
     var Pair = require_Pair();
@@ -2725,9 +2725,9 @@ ${cn.comment}` : item.comment;
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/omap.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/omap.js
 var require_omap = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/omap.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/omap.js"(exports) {
     "use strict";
     var identity = require_identity();
     var toJS = require_toJS();
@@ -2803,9 +2803,9 @@ var require_omap = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/bool.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/bool.js
 var require_bool2 = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/bool.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/bool.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     function boolStringify({ value, source }, ctx) {
@@ -2835,9 +2835,9 @@ var require_bool2 = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/float.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/float.js
 var require_float2 = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/float.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/float.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     var stringifyNumber = require_stringifyNumber();
@@ -2884,9 +2884,9 @@ var require_float2 = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/int.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/int.js
 var require_int2 = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/int.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/int.js"(exports) {
     "use strict";
     var stringifyNumber = require_stringifyNumber();
     var intIdentify = (value) => typeof value === "bigint" || Number.isInteger(value);
@@ -2963,9 +2963,9 @@ var require_int2 = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/set.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/set.js
 var require_set = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/set.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/set.js"(exports) {
     "use strict";
     var identity = require_identity();
     var Pair = require_Pair();
@@ -3052,9 +3052,9 @@ var require_set = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/timestamp.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/timestamp.js
 var require_timestamp = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/timestamp.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/timestamp.js"(exports) {
     "use strict";
     var stringifyNumber = require_stringifyNumber();
     function parseSexagesimal(str, asBigInt) {
@@ -3140,9 +3140,9 @@ var require_timestamp = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/schema.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/schema.js
 var require_schema3 = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/yaml-1.1/schema.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/yaml-1.1/schema.js"(exports) {
     "use strict";
     var map = require_map();
     var _null = require_null();
@@ -3184,9 +3184,9 @@ var require_schema3 = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/tags.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/tags.js
 var require_tags = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/tags.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/tags.js"(exports) {
     "use strict";
     var map = require_map();
     var _null = require_null();
@@ -3278,9 +3278,9 @@ var require_tags = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/schema/Schema.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/schema/Schema.js
 var require_Schema = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/schema/Schema.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/schema/Schema.js"(exports) {
     "use strict";
     var identity = require_identity();
     var map = require_map();
@@ -3310,9 +3310,9 @@ var require_Schema = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/stringify/stringifyDocument.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/stringify/stringifyDocument.js
 var require_stringifyDocument = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/stringify/stringifyDocument.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/stringify/stringifyDocument.js"(exports) {
     "use strict";
     var identity = require_identity();
     var stringify = require_stringify();
@@ -3390,9 +3390,9 @@ var require_stringifyDocument = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/doc/Document.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/doc/Document.js
 var require_Document = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/doc/Document.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/doc/Document.js"(exports) {
     "use strict";
     var Alias = require_Alias();
     var Collection = require_Collection();
@@ -3699,9 +3699,9 @@ var require_Document = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/errors.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/errors.js
 var require_errors = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/errors.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/errors.js"(exports) {
     "use strict";
     var YAMLError = class extends Error {
       constructor(name, pos, code, message) {
@@ -3764,9 +3764,9 @@ ${pointer}
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/compose/resolve-props.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/compose/resolve-props.js
 var require_resolve_props = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/compose/resolve-props.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/compose/resolve-props.js"(exports) {
     "use strict";
     function resolveProps(tokens, { flow, indicator, next, offset, onError, parentIndent, startOnNewline }) {
       let spaceBefore = false;
@@ -3898,9 +3898,9 @@ var require_resolve_props = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/compose/util-contains-newline.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/compose/util-contains-newline.js
 var require_util_contains_newline = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/compose/util-contains-newline.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/compose/util-contains-newline.js"(exports) {
     "use strict";
     function containsNewline(key) {
       if (!key)
@@ -3940,9 +3940,9 @@ var require_util_contains_newline = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/compose/util-flow-indent-check.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/compose/util-flow-indent-check.js
 var require_util_flow_indent_check = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/compose/util-flow-indent-check.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/compose/util-flow-indent-check.js"(exports) {
     "use strict";
     var utilContainsNewline = require_util_contains_newline();
     function flowIndentCheck(indent, fc, onError) {
@@ -3958,9 +3958,9 @@ var require_util_flow_indent_check = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/compose/util-map-includes.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/compose/util-map-includes.js
 var require_util_map_includes = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/compose/util-map-includes.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/compose/util-map-includes.js"(exports) {
     "use strict";
     var identity = require_identity();
     function mapIncludes(ctx, items, search) {
@@ -3974,9 +3974,9 @@ var require_util_map_includes = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/compose/resolve-block-map.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/compose/resolve-block-map.js
 var require_resolve_block_map = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/compose/resolve-block-map.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/compose/resolve-block-map.js"(exports) {
     "use strict";
     var Pair = require_Pair();
     var YAMLMap = require_YAMLMap();
@@ -4082,9 +4082,9 @@ var require_resolve_block_map = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/compose/resolve-block-seq.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/compose/resolve-block-seq.js
 var require_resolve_block_seq = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/compose/resolve-block-seq.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/compose/resolve-block-seq.js"(exports) {
     "use strict";
     var YAMLSeq = require_YAMLSeq();
     var resolveProps = require_resolve_props();
@@ -4133,9 +4133,9 @@ var require_resolve_block_seq = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/compose/resolve-end.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/compose/resolve-end.js
 var require_resolve_end = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/compose/resolve-end.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/compose/resolve-end.js"(exports) {
     "use strict";
     function resolveEnd(end, offset, reqSpace, onError) {
       let comment = "";
@@ -4176,9 +4176,9 @@ var require_resolve_end = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/compose/resolve-flow-collection.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/compose/resolve-flow-collection.js
 var require_resolve_flow_collection = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/compose/resolve-flow-collection.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/compose/resolve-flow-collection.js"(exports) {
     "use strict";
     var identity = require_identity();
     var Pair = require_Pair();
@@ -4370,9 +4370,9 @@ var require_resolve_flow_collection = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/compose/compose-collection.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/compose/compose-collection.js
 var require_compose_collection = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/compose/compose-collection.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/compose/compose-collection.js"(exports) {
     "use strict";
     var identity = require_identity();
     var Scalar = require_Scalar();
@@ -4435,9 +4435,9 @@ var require_compose_collection = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/compose/resolve-block-scalar.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/compose/resolve-block-scalar.js
 var require_resolve_block_scalar = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/compose/resolve-block-scalar.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/compose/resolve-block-scalar.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     function resolveBlockScalar(ctx, scalar, onError) {
@@ -4618,9 +4618,9 @@ var require_resolve_block_scalar = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/compose/resolve-flow-scalar.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/compose/resolve-flow-scalar.js
 var require_resolve_flow_scalar = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/compose/resolve-flow-scalar.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/compose/resolve-flow-scalar.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
     var resolveEnd = require_resolve_end();
@@ -4838,9 +4838,9 @@ var require_resolve_flow_scalar = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/compose/compose-scalar.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/compose/compose-scalar.js
 var require_compose_scalar = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/compose/compose-scalar.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/compose/compose-scalar.js"(exports) {
     "use strict";
     var identity = require_identity();
     var Scalar = require_Scalar();
@@ -4919,9 +4919,9 @@ var require_compose_scalar = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/compose/util-empty-scalar-position.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/compose/util-empty-scalar-position.js
 var require_util_empty_scalar_position = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/compose/util-empty-scalar-position.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/compose/util-empty-scalar-position.js"(exports) {
     "use strict";
     function emptyScalarPosition(offset, before, pos) {
       if (before) {
@@ -4949,9 +4949,9 @@ var require_util_empty_scalar_position = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/compose/compose-node.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/compose/compose-node.js
 var require_compose_node = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/compose/compose-node.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/compose/compose-node.js"(exports) {
     "use strict";
     var Alias = require_Alias();
     var identity = require_identity();
@@ -5055,9 +5055,9 @@ var require_compose_node = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/compose/compose-doc.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/compose/compose-doc.js
 var require_compose_doc = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/compose/compose-doc.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/compose/compose-doc.js"(exports) {
     "use strict";
     var Document = require_Document();
     var composeNode = require_compose_node();
@@ -5098,9 +5098,9 @@ var require_compose_doc = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/compose/composer.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/compose/composer.js
 var require_composer = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/compose/composer.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/compose/composer.js"(exports) {
     "use strict";
     var node_process = __require("process");
     var directives = require_directives();
@@ -5306,9 +5306,9 @@ ${end.comment}` : end.comment;
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/parse/cst-scalar.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/parse/cst-scalar.js
 var require_cst_scalar = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/parse/cst-scalar.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/parse/cst-scalar.js"(exports) {
     "use strict";
     var resolveBlockScalar = require_resolve_block_scalar();
     var resolveFlowScalar = require_resolve_flow_scalar();
@@ -5491,9 +5491,9 @@ var require_cst_scalar = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/parse/cst-stringify.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/parse/cst-stringify.js
 var require_cst_stringify = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/parse/cst-stringify.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/parse/cst-stringify.js"(exports) {
     "use strict";
     var stringify = (cst) => "type" in cst ? stringifyToken(cst) : stringifyItem(cst);
     function stringifyToken(token) {
@@ -5552,9 +5552,9 @@ var require_cst_stringify = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/parse/cst-visit.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/parse/cst-visit.js
 var require_cst_visit = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/parse/cst-visit.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/parse/cst-visit.js"(exports) {
     "use strict";
     var BREAK = Symbol("break visit");
     var SKIP = Symbol("skip children");
@@ -5614,9 +5614,9 @@ var require_cst_visit = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/parse/cst.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/parse/cst.js
 var require_cst = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/parse/cst.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/parse/cst.js"(exports) {
     "use strict";
     var cstScalar = require_cst_scalar();
     var cstStringify = require_cst_stringify();
@@ -5716,9 +5716,9 @@ var require_cst = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/parse/lexer.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/parse/lexer.js
 var require_lexer = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/parse/lexer.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/parse/lexer.js"(exports) {
     "use strict";
     var cst = require_cst();
     function isEmpty(ch) {
@@ -6305,9 +6305,9 @@ var require_lexer = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/parse/line-counter.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/parse/line-counter.js
 var require_line_counter = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/parse/line-counter.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/parse/line-counter.js"(exports) {
     "use strict";
     var LineCounter = class {
       constructor() {
@@ -6336,9 +6336,9 @@ var require_line_counter = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/parse/parser.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/parse/parser.js
 var require_parser = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/parse/parser.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/parse/parser.js"(exports) {
     "use strict";
     var node_process = __require("process");
     var cst = require_cst();
@@ -7210,9 +7210,9 @@ var require_parser = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/public-api.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/public-api.js
 var require_public_api = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/public-api.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/public-api.js"(exports) {
     "use strict";
     var composer = require_composer();
     var Document = require_Document();
@@ -7307,9 +7307,9 @@ var require_public_api = __commonJS({
   }
 });
 
-// ../chio-bridge/node_modules/yaml/dist/index.js
+// node_modules/@chio/bridge/node_modules/yaml/dist/index.js
 var require_dist = __commonJS({
-  "../chio-bridge/node_modules/yaml/dist/index.js"(exports) {
+  "node_modules/@chio/bridge/node_modules/yaml/dist/index.js"(exports) {
     "use strict";
     var composer = require_composer();
     var Document = require_Document();
@@ -7359,11 +7359,11 @@ var require_dist = __commonJS({
   }
 });
 
-// ../chio-bridge/dist/client/cli.js
+// node_modules/@chio/bridge/dist/client/cli.js
 import { spawn, spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 
-// ../chio-bridge/dist/errors.js
+// node_modules/@chio/bridge/dist/errors.js
 var ChioBridgeError = class extends Error {
   code;
   detail;
@@ -7415,7 +7415,7 @@ var CliError = class extends ChioBridgeError {
   }
 };
 
-// ../chio-bridge/dist/client/cli.js
+// node_modules/@chio/bridge/dist/client/cli.js
 function resolveChioBinary(explicit) {
   if (explicit && explicit.length > 0) {
     return explicit;
@@ -7458,7 +7458,7 @@ var ChioCli = class {
   async runJson(args, options = {}) {
     const withJsonFlag = args.includes("--format") || args.includes("--json") ? args : [...args, "--format", "json"];
     const result = await this.run(withJsonFlag, options);
-    if (result.exitCode !== 0 && result.stdout.trim().length === 0) {
+    if (result.exitCode !== 0) {
       throw new CliError(`chio ${args.join(" ")} exited ${result.exitCode}`, result.exitCode, result.stderr);
     }
     const text = result.stdout.trim();
@@ -7527,7 +7527,10 @@ function extractLastJson(text) {
   return trimmed.slice(lastOpen + 1);
 }
 
-// ../chio-bridge/node_modules/@chio-protocol/sdk/dist/transport/messages.js
+// node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/transport/messages.js
+function rpcIdsEqual(left, right) {
+  return left === right;
+}
 function parseJsonRpcMessage(input) {
   return JSON.parse(input);
 }
@@ -7536,8 +7539,9 @@ function parseRpcMessages(rawBody) {
   if (!trimmed) {
     return [];
   }
-  if (trimmed.startsWith("{")) {
-    return [parseJsonRpcMessage(trimmed)];
+  if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+    const parsed = JSON.parse(trimmed);
+    return Array.isArray(parsed) ? parsed : [parsed];
   }
   const messages = [];
   let buffer = [];
@@ -7558,11 +7562,19 @@ function parseRpcMessages(rawBody) {
   }
   return messages;
 }
+function isTerminalMessage(message, expectedId) {
+  return expectedId !== void 0 && rpcIdsEqual(message.id, expectedId) && !message.method;
+}
 async function readRpcMessagesUntilTerminal(response, expectedId, onMessage = async () => {
 }) {
   if (!response.body) {
-    const messages2 = parseRpcMessages(await response.text());
-    for (const message of messages2) {
+    const parsedMessages = parseRpcMessages(await response.text());
+    const messages2 = [];
+    for (const message of parsedMessages) {
+      messages2.push(message);
+      if (isTerminalMessage(message, expectedId)) {
+        break;
+      }
       await onMessage(message);
     }
     return messages2;
@@ -7589,7 +7601,7 @@ async function readRpcMessagesUntilTerminal(response, expectedId, onMessage = as
         if (eventData.length > 0) {
           const message = parseJsonRpcMessage(eventData.join("\n"));
           messages.push(message);
-          if (expectedId !== void 0 && message.id === expectedId && !message.method) {
+          if (isTerminalMessage(message, expectedId)) {
             await reader.cancel();
             return messages;
           }
@@ -7603,18 +7615,32 @@ async function readRpcMessagesUntilTerminal(response, expectedId, onMessage = as
       }
     }
   }
+  if (buffer.trim()) {
+    if (buffer.startsWith("data:")) {
+      eventData.push(buffer.slice(5).trimStart());
+    }
+  }
   if (eventData.length > 0) {
     const message = parseJsonRpcMessage(eventData.join("\n"));
     messages.push(message);
-    await onMessage(message);
+    if (!isTerminalMessage(message, expectedId)) {
+      await onMessage(message);
+    }
   }
   if (messages.length === 0) {
-    messages.push(...parseRpcMessages(rawBody));
+    const parsedMessages = parseRpcMessages(rawBody);
+    for (const message of parsedMessages) {
+      messages.push(message);
+      if (isTerminalMessage(message, expectedId)) {
+        return messages;
+      }
+      await onMessage(message);
+    }
   }
   return messages;
 }
 function terminalMessage(messages, expectedId) {
-  const match = messages.find((message) => message.id === expectedId && !message.method);
+  const match = messages.find((message) => rpcIdsEqual(message.id, expectedId) && !message.method);
   if (!match) {
     throw new Error(`no terminal response for JSON-RPC id ${expectedId}`);
   }
@@ -7626,7 +7652,7 @@ function terminalMessage(messages, expectedId) {
   return match;
 }
 
-// ../chio-bridge/node_modules/@chio-protocol/sdk/dist/transport/session.js
+// node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/transport/session.js
 function responseHeaders(response) {
   return Object.fromEntries(response.headers.entries());
 }
@@ -7689,12 +7715,12 @@ async function deleteSession(baseUrl, authToken, sessionId, fetchImpl = fetch) {
   };
 }
 
-// ../chio-bridge/node_modules/@chio-protocol/sdk/dist/types.js
+// node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/types.js
 function isJsonRpcFailure(message) {
   return "error" in message;
 }
 
-// ../chio-bridge/node_modules/@chio-protocol/sdk/dist/session/session.js
+// node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/session/session.js
 var ChioSession = class {
   authToken;
   baseUrl;
@@ -7815,12 +7841,12 @@ var ChioSession = class {
   }
 };
 
-// ../chio-bridge/node_modules/@chio-protocol/sdk/dist/auth/static.js
+// node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/auth/static.js
 function staticBearerAuth(authToken) {
   return { authToken };
 }
 
-// ../chio-bridge/node_modules/@chio-protocol/sdk/dist/client/client.js
+// node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/client/client.js
 var ChioClient = class _ChioClient {
   authToken;
   baseUrl;
@@ -7850,7 +7876,7 @@ var ChioClient = class _ChioClient {
         capabilities: options.capabilities ?? {},
         clientInfo: options.clientInfo ?? {
           name: "@chio-protocol/sdk",
-          version: "1.0.0"
+          version: "0.1.1-rc.1"
         }
       }
     };
@@ -7898,7 +7924,7 @@ var ChioClient = class _ChioClient {
   }
 };
 
-// ../chio-bridge/node_modules/@chio-protocol/sdk/dist/invariants/errors.js
+// node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/invariants/errors.js
 var ChioInvariantError = class extends Error {
   code;
   constructor(code, message, options) {
@@ -7915,7 +7941,7 @@ function parseJsonText(input) {
   }
 }
 
-// ../chio-bridge/node_modules/@chio-protocol/sdk/dist/invariants/json.js
+// node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/invariants/json.js
 function compareUtf16(a, b) {
   if (a < b) {
     return -1;
@@ -7924,6 +7950,9 @@ function compareUtf16(a, b) {
     return 1;
   }
   return 0;
+}
+function canonicalizeString(value) {
+  return JSON.stringify(value);
 }
 function canonicalizeJson(value) {
   if (value === null) {
@@ -7938,24 +7967,31 @@ function canonicalizeJson(value) {
       }
       return JSON.stringify(value);
     case "string":
-      return JSON.stringify(value);
+      return canonicalizeString(value);
     case "object":
       if (Array.isArray(value)) {
         return `[${value.map((item) => canonicalizeJson(item)).join(",")}]`;
       }
-      return `{${Object.entries(value).sort(([left], [right]) => compareUtf16(left, right)).map(([key, entryValue]) => `${JSON.stringify(key)}:${canonicalizeJson(entryValue)}`).join(",")}}`;
+      const entries = Object.entries(value);
+      for (const [, entryValue] of entries) {
+        if (entryValue === void 0) {
+          throw new ChioInvariantError("canonical_json", "canonical JSON does not support undefined object fields");
+        }
+      }
+      return `{${entries.sort(([left], [right]) => compareUtf16(left, right)).map(([key, entryValue]) => `${canonicalizeString(key)}:${canonicalizeJson(entryValue)}`).join(",")}}`;
     default:
       throw new ChioInvariantError("canonical_json", `canonical JSON does not support values of type ${typeof value}`);
   }
 }
-function canonicalizeJsonString(input) {
-  return canonicalizeJson(parseJsonText(input));
-}
 
-// ../chio-bridge/node_modules/@chio-protocol/sdk/dist/invariants/crypto.js
+// node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/invariants/crypto.js
 import { createHash, createPrivateKey, createPublicKey, sign as signMessage, verify as verifySignature } from "node:crypto";
 var ED25519_PKCS8_PREFIX = Buffer.from("302e020100300506032b657004220420", "hex");
 var ED25519_SPKI_PREFIX = Buffer.from("302a300506032b6570032100", "hex");
+var P256_SPKI_PREFIX = Buffer.from("3059301306072a8648ce3d020106082a8648ce3d030107034200", "hex");
+var P384_SPKI_PREFIX = Buffer.from("3076301006072a8648ce3d020106052b81040022036200", "hex");
+var P256_RAW_POINT_BYTES = 65;
+var P384_RAW_POINT_BYTES = 97;
 function normalizeHex(hex) {
   return hex.startsWith("0x") ? hex.slice(2).toLowerCase() : hex.toLowerCase();
 }
@@ -7968,20 +8004,6 @@ function hexToBuffer(hex, expectedBytes, code) {
     throw new ChioInvariantError(code, `expected ${expectedBytes} bytes of hex, got ${normalized.length / 2}`);
   }
   return Buffer.from(normalized, "hex");
-}
-function createEd25519PrivateKey(seedHex) {
-  try {
-    return createPrivateKey({
-      key: Buffer.concat([ED25519_PKCS8_PREFIX, hexToBuffer(seedHex, 32, "invalid_hex")]),
-      format: "der",
-      type: "pkcs8"
-    });
-  } catch (cause) {
-    if (cause instanceof ChioInvariantError) {
-      throw cause;
-    }
-    throw new ChioInvariantError("invalid_hex", "value is not a valid Ed25519 seed", { cause });
-  }
 }
 function createEd25519PublicKey(publicKeyHex) {
   try {
@@ -8000,58 +8022,214 @@ function createEd25519PublicKey(publicKeyHex) {
 function sha256Hex(input) {
   return createHash("sha256").update(input).digest("hex");
 }
-function publicKeyHexFromSeedHex(seedHex) {
-  const privateKey = createEd25519PrivateKey(seedHex);
-  const publicKeyDer = createPublicKey(privateKey).export({
-    format: "der",
-    type: "spki"
-  });
-  return Buffer.from(publicKeyDer).subarray(ED25519_SPKI_PREFIX.length).toString("hex");
-}
-function signEd25519Message(message, seedHex) {
-  const privateKey = createEd25519PrivateKey(seedHex);
-  const messageBuffer = Buffer.isBuffer(message) ? message : Buffer.from(message, "utf8");
-  return {
-    public_key_hex: publicKeyHexFromSeedHex(seedHex),
-    signature_hex: Buffer.from(signMessage(null, messageBuffer, privateKey)).toString("hex")
-  };
+function publicKeyHexMatches(left, right) {
+  return normalizeHex(left) === normalizeHex(right);
 }
 function verifyEd25519Signature(message, publicKeyHex, signatureHex) {
   const signatureBytes = hexToBuffer(signatureHex, 64, "invalid_signature");
   const key = createEd25519PublicKey(publicKeyHex);
   return verifySignature(null, Buffer.isBuffer(message) ? message : Buffer.from(message, "utf8"), key, signatureBytes);
 }
+function hexBodyToBuffer(hexBody) {
+  if (hexBody.length === 0 || hexBody.length % 2 !== 0) {
+    throw new ChioInvariantError("invalid_signature", "signature hex body must be a non-empty even-length string");
+  }
+  if (!/^[0-9a-f]+$/i.test(hexBody)) {
+    throw new ChioInvariantError("invalid_signature", "signature hex body is not valid hexadecimal");
+  }
+  return Buffer.from(hexBody, "hex");
+}
+function createEcdsaPublicKey(publicKeyHex, curve) {
+  const rawHex = normalizeHex(publicKeyHex);
+  if (!/^[0-9a-f]+$/i.test(rawHex)) {
+    throw new ChioInvariantError("invalid_public_key", "public key is not valid hexadecimal");
+  }
+  const rawBytes = Buffer.from(rawHex, "hex");
+  const expectedRawLen = curve === "P-256" ? P256_RAW_POINT_BYTES : P384_RAW_POINT_BYTES;
+  const prefix = curve === "P-256" ? P256_SPKI_PREFIX : P384_SPKI_PREFIX;
+  let spki;
+  if (rawBytes.length === expectedRawLen && rawBytes[0] === 4) {
+    spki = Buffer.concat([prefix, rawBytes]);
+  } else if (rawBytes.length > expectedRawLen) {
+    spki = rawBytes;
+  } else {
+    throw new ChioInvariantError("invalid_public_key", `value is not a valid ${curve} public key (expected ${expectedRawLen} raw bytes or SPKI DER)`);
+  }
+  try {
+    return createPublicKey({
+      key: spki,
+      format: "der",
+      type: "spki"
+    });
+  } catch (cause) {
+    throw new ChioInvariantError("invalid_public_key", `value is not a valid ${curve} public key`, { cause });
+  }
+}
+function verifyEcdsaSignature(message, publicKeyHex, signatureHexBody, curve) {
+  const hashAlgorithm = curve === "P-256" ? "sha256" : "sha384";
+  const signatureDer = hexBodyToBuffer(signatureHexBody);
+  const key = createEcdsaPublicKey(publicKeyHex, curve);
+  try {
+    return verifySignature(hashAlgorithm, message, { key, dsaEncoding: "der" }, signatureDer);
+  } catch (cause) {
+    throw new ChioInvariantError("invalid_signature", `value is not a valid ${curve} signature`, { cause });
+  }
+}
+function verifyChioSignature(signedBytes, signature, publicKey) {
+  const message = Buffer.isBuffer(signedBytes) ? signedBytes : Buffer.from(signedBytes, "utf8");
+  if (signature.startsWith("p256:")) {
+    return verifyEcdsaSignature(message, publicKey, signature.slice("p256:".length), "P-256");
+  }
+  if (signature.startsWith("p384:")) {
+    return verifyEcdsaSignature(message, publicKey, signature.slice("p384:".length), "P-384");
+  }
+  if (signature.startsWith("hybrid:")) {
+    throw new ChioInvariantError("invalid_signature", "hybrid post-quantum signatures are not supported by this SDK build");
+  }
+  return verifyEd25519Signature(message, publicKey, signature);
+}
 
-// ../chio-bridge/node_modules/@chio-protocol/sdk/dist/invariants/receipt.js
+// node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/invariants/receipt.js
+function safeVerifyReceiptSignature(signedBytes, signature, publicKey) {
+  try {
+    return verifyChioSignature(signedBytes, signature, publicKey);
+  } catch (error) {
+    if (error instanceof ChioInvariantError) {
+      return false;
+    }
+    throw error;
+  }
+}
 function parseReceiptJson(input) {
   return parseJsonText(input);
 }
-function receiptBody(receipt) {
-  const { signature: _signature, ...body } = receipt;
-  return body;
+function receiptIdInput(receipt) {
+  const input = {
+    action: receipt.action,
+    capability_id: receipt.capability_id,
+    content_hash: receipt.content_hash,
+    receipt_kind: receipt.receipt_kind,
+    boundary_class: receipt.boundary_class,
+    tool_origin: receipt.tool_origin,
+    redaction_mode: receipt.redaction_mode,
+    kernel_key: receipt.kernel_key,
+    policy_hash: receipt.policy_hash,
+    timestamp: receipt.timestamp,
+    tool_name: receipt.tool_name,
+    tool_server: receipt.tool_server
+  };
+  if (receipt.evidence !== void 0 && receipt.evidence.length > 0) {
+    input.evidence = receipt.evidence;
+  }
+  if (receipt.decision !== void 0) {
+    input.decision = receipt.decision;
+  }
+  if (receipt.observation_outcome !== void 0) {
+    input.observation_outcome = receipt.observation_outcome;
+  }
+  if (receipt.actor_chain !== void 0 && receipt.actor_chain.length > 0) {
+    input.actor_chain = receipt.actor_chain;
+  }
+  if (receipt.metadata !== void 0 && receipt.metadata !== null) {
+    input.metadata = receipt.metadata;
+  }
+  input.trust_level = receipt.trust_level;
+  if (receipt.tenant_id !== void 0) {
+    input.tenant_id = receipt.tenant_id;
+  }
+  return input;
 }
-function receiptBodyCanonicalJson(receipt) {
-  return canonicalizeJson(receiptBody(receipt));
+function contentAddressedReceiptId(receipt) {
+  return sha256Hex(canonicalizeJson(receiptIdInput(receipt)));
 }
-function verifyReceipt(receipt) {
-  const bodyCanonicalJson = receiptBodyCanonicalJson(receipt);
+function receiptSigningBodyCanonicalJson(receipt) {
+  return canonicalizeJson({
+    id: receipt.id,
+    body: receiptIdInput(receipt)
+  });
+}
+function receiptSemantics(receipt) {
+  return { receipt_kind: receipt.receipt_kind, boundary_class: receipt.boundary_class };
+}
+function resultLabel(receiptKind, boundaryClass, decision) {
+  if (receiptKind === "mediated_decision" && boundaryClass === "prevent" && decision === "allow") {
+    return "Authorized";
+  }
+  if (receiptKind === "trace_observation") {
+    return "Observed";
+  }
+  if (receiptKind === "advisory_evaluation") {
+    return "Advisory";
+  }
+  switch (decision) {
+    case "allow":
+      return "Allowed";
+    case "deny":
+      return "Denied";
+    case "cancelled":
+      return "Cancelled";
+    case "incomplete":
+      return "Incomplete";
+    case "none":
+      return "Invalid";
+  }
+}
+function validObservationOutcome(value) {
+  return value === "observed" || value === "evaluated" || value === "dropped";
+}
+function semanticallySignable(receipt, decision) {
+  if (receipt.receipt_kind === "mediated_decision") {
+    return receipt.boundary_class === "prevent" && receipt.trust_level === "mediated" && decision !== "none" && receipt.observation_outcome === void 0;
+  }
+  if (receipt.receipt_kind === "trace_observation") {
+    return receipt.boundary_class === "detect_only" && receipt.trust_level === "verified" && decision === "none" && validObservationOutcome(receipt.observation_outcome);
+  }
+  if (receipt.receipt_kind === "advisory_evaluation") {
+    return receipt.boundary_class === "advisory_only" && receipt.trust_level === "advisory" && decision === "none" && validObservationOutcome(receipt.observation_outcome);
+  }
+  return false;
+}
+function verifyReceipt(receipt, trustedSigners = []) {
+  const signingBodyCanonicalJson = receiptSigningBodyCanonicalJson(receipt);
   const parameterCanonicalJson = canonicalizeJson(receipt.action.parameters);
+  const decision = receipt.decision?.verdict ?? "none";
+  const semantics = receiptSemantics(receipt);
+  const semanticAuthorized = semantics.receipt_kind === "mediated_decision" && semantics.boundary_class === "prevent" && decision === "allow";
+  const signerTrusted = trustedSigners.length > 0 && trustedSigners.some((signer) => publicKeyHexMatches(signer, receipt.kernel_key));
+  const receiptIdValid = receipt.id === contentAddressedReceiptId(receipt);
+  const signatureValid = receiptIdValid && semanticallySignable(receipt, decision) && safeVerifyReceiptSignature(signingBodyCanonicalJson, receipt.signature, receipt.kernel_key);
+  const parameterHashValid = receipt.action.parameter_hash === sha256Hex(parameterCanonicalJson);
+  const authorized = semanticAuthorized && signatureValid && parameterHashValid && receiptIdValid && signerTrusted;
   return {
-    signature_valid: verifyEd25519Signature(bodyCanonicalJson, receipt.kernel_key, receipt.signature),
-    parameter_hash_valid: receipt.action.parameter_hash === sha256Hex(parameterCanonicalJson),
-    decision: receipt.decision.verdict
+    signature_valid: signatureValid,
+    parameter_hash_valid: parameterHashValid,
+    receipt_id_valid: receiptIdValid,
+    decision,
+    receipt_kind: semantics.receipt_kind,
+    boundary_class: semantics.boundary_class,
+    trust_level: receipt.trust_level,
+    result: resultLabel(semantics.receipt_kind, semantics.boundary_class, decision),
+    authorized,
+    signer_key_hex: receipt.kernel_key,
+    signer_trusted: signerTrusted,
+    ok: signatureValid && parameterHashValid && receiptIdValid && signerTrusted
   };
 }
 function verifyReceiptJson(input) {
   return verifyReceipt(parseReceiptJson(input));
 }
 
-// ../chio-bridge/node_modules/@chio-protocol/sdk/dist/invariants/signing.js
-function signUtf8MessageEd25519(input, seedHex) {
-  return signEd25519Message(input, seedHex);
-}
+// node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/invariants/manifest.js
+var REQUIRED_PERMISSION_FIELDS = [
+  "read_paths",
+  "write_paths",
+  "network_hosts",
+  "environment_variables"
+];
+var REQUIRED_PERMISSION_FIELD_SET = new Set(REQUIRED_PERMISSION_FIELDS);
+var U64_MAX_EXCLUSIVE = 2 ** 64;
 
-// ../chio-bridge/node_modules/@chio-protocol/sdk/dist/errors.js
+// node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/errors.js
 var ChioError = class extends Error {
   code;
   constructor(code, message, options) {
@@ -8075,7 +8253,7 @@ var TransportError = class extends ChioError {
   }
 };
 
-// ../chio-bridge/node_modules/@chio-protocol/sdk/dist/receipt_query_client.js
+// node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/receipt_query_client.js
 var ReceiptQueryClient = class {
   baseUrl;
   authToken;
@@ -8110,6 +8288,9 @@ var ReceiptQueryClient = class {
     let cursor = params.cursor;
     while (true) {
       const response = cursor === void 0 ? await this.query(params) : await this.query({ ...params, cursor });
+      if (cursor !== void 0 && response.nextCursor !== void 0 && response.nextCursor !== null && response.nextCursor <= cursor) {
+        throw new QueryError("receipt query pagination cursor did not advance");
+      }
       if (response.receipts.length > 0) {
         yield response.receipts;
       }
@@ -8121,7 +8302,19 @@ var ReceiptQueryClient = class {
   }
 };
 
-// ../chio-bridge/dist/types.js
+// node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/finding.js
+var BPS = 10000n;
+var BPS_DENOMINATOR = BPS * BPS * BPS;
+
+// node_modules/@chio/bridge/node_modules/@chio-protocol/sdk/dist/cognition_market.js
+var PURCHASE_DOMAIN = Buffer.from("chio.finding.public-purchase-request.v1\0", "utf8");
+var VERIFIED_FIX_SUBMISSION_DOMAIN = Buffer.from("chio.finding.verified-fix-submission-id.v1\0", "utf8");
+var VOLUNTARY_RETRACTION_DOMAIN = Buffer.from("chio.finding.voluntary-retraction-request-id.v1\0", "utf8");
+var PROOF_RESPONSE_MAX_BYTES = 24 * 1024 * 1024;
+var PURCHASE_RESULT_MAX_BYTES = 16 * 1024 * 1024;
+var JSON_RESPONSE_MAX_BYTES = 2 * 1024 * 1024;
+
+// node_modules/@chio/bridge/dist/types.js
 var DEFAULT_MCP_EDGE_URL = "http://127.0.0.1:8931";
 var DEFAULT_TRUST_URL = "http://127.0.0.1:8940";
 var HUSHSPEC_SUPPORTED_VERSION = "0.1.0";
@@ -8167,7 +8360,7 @@ var EXTENSION_KEYS = [
   "chio"
 ];
 
-// ../chio-bridge/dist/client/daemon.js
+// node_modules/@chio/bridge/dist/client/daemon.js
 var DaemonClient = class {
   mcpEdgeUrl;
   trustUrl;
@@ -8214,7 +8407,7 @@ var DaemonClient = class {
   }
 };
 
-// ../chio-bridge/dist/capabilities.js
+// node_modules/@chio/bridge/dist/capabilities.js
 import { generateKeyPairSync } from "node:crypto";
 var DEFAULT_TTL_SECONDS = 3600;
 async function issueCapability(daemon, input) {
@@ -8261,21 +8454,7 @@ async function attenuateCapability(daemon, capabilityId, delta) {
   if (!daemon) {
     throw new NotInitializedError("attenuate() requires daemon mode; construct via ChioBridge.fromDaemon({...})");
   }
-  const scope = delta.scope ?? {};
-  const issueInput = {
-    scope
-  };
-  if (delta.subjectPublicKey)
-    issueInput.subjectPublicKey = delta.subjectPublicKey;
-  if (delta.ttlSeconds !== void 0)
-    issueInput.ttlSeconds = delta.ttlSeconds;
-  const newToken = await issueCapability(daemon, issueInput);
-  const revokeRes = await daemon.trust("POST", "/v1/revocations", { capabilityId });
-  if (!revokeRes.ok) {
-    const err = revokeRes.data?.error ?? revokeRes.raw.slice(0, 300);
-    throw new ChioBridgeError("attenuation_partial", `attenuation issued new capability ${newToken.id ?? "<unknown>"} but failed to revoke old ${capabilityId}: HTTP ${revokeRes.status}: ${err}`, { newToken, oldCapabilityId: capabilityId });
-  }
-  return newToken;
+  throw new ChioBridgeError("unsupported_authority_operation", "attenuation requires a verified parent-bound kernel endpoint; administrative issue-then-revoke does not prove narrowing or preserve budget lineage");
 }
 function resolveTtlSeconds(ttl, ttlSeconds) {
   if (typeof ttlSeconds === "number" && ttlSeconds > 0)
@@ -8358,240 +8537,68 @@ async function issueCapabilityViaHttp(trustUrl, token, input) {
     issued.subjectPrivateKeyHex = subjectPrivateKeyHex;
   return issued;
 }
-async function attenuateCapabilityViaHttp(trustUrl, token, capabilityId, delta) {
-  const scope = delta.scope ?? {};
-  const issueInput = { scope };
-  if (delta.subjectPublicKey)
-    issueInput.subjectPublicKey = delta.subjectPublicKey;
-  if (delta.ttlSeconds !== void 0)
-    issueInput.ttlSeconds = delta.ttlSeconds;
-  const newToken = await issueCapabilityViaHttp(trustUrl, token, issueInput);
-  const revokeUrl = `${trustUrl.replace(/\/$/, "")}/v1/revocations`;
-  try {
-    await fetch(revokeUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ capabilityId })
-    });
-  } catch {
-  }
-  return newToken;
-}
 
-// ../chio-bridge/dist/check.js
-import { generateKeyPairSync as generateKeyPairSync2, randomBytes } from "node:crypto";
+// node_modules/@chio/bridge/dist/check.js
 async function checkCall(daemon, cli, call, options = {}) {
-  let mediationVerdict;
-  if (typeof options.capabilityId === "string" && options.capabilityId.length > 0 && typeof options.costUsd === "number" && options.costUsd > 0) {
-    if (process.env.CHIO_BRIDGE_DEBUG) {
-      process.stderr.write(`[chio-bridge] mediate: capabilityId=${options.capabilityId} costUsd=${options.costUsd}
-`);
-    }
-    mediationVerdict = await mediateBudget(options.capabilityId, options.costUsd, options);
-    if (process.env.CHIO_BRIDGE_DEBUG) {
-      process.stderr.write(`[chio-bridge] mediate result: ${JSON.stringify(mediationVerdict)}
-`);
-    }
-    if (mediationVerdict && mediationVerdict.decision !== "allow") {
-      return mediationVerdict;
-    }
+  if (!cli || !call.policyPath) {
+    throw new ChioBridgeError("missing_policy", "check() requires a CLI and policyPath; MCP tools/call executes effects and cannot be used as a precheck");
   }
-  if (cli && call.policyPath) {
-    const out = await checkViaCli(cli, call, options);
-    return mergeMediationReason(out, mediationVerdict);
+  const timeoutMs = options.timeoutMs ?? 1e4;
+  if (!Number.isSafeInteger(timeoutMs) || timeoutMs <= 0) {
+    throw new ChioBridgeError("invalid_arg", "timeoutMs must be a positive safe integer");
   }
-  if (daemon) {
-    const out = await checkViaDaemon(daemon, call);
-    return mergeMediationReason(out, mediationVerdict);
+  if (options.costUsd !== void 0 && (!Number.isFinite(options.costUsd) || options.costUsd < 0)) {
+    return { decision: "deny", reason: "invalid costUsd", guard: "budget" };
   }
-  if (cli) {
-    throw new ChioBridgeError("missing_policy", "CLI-mode check() requires a policyPath (chio check --policy is required)");
+  if ((options.costUsd ?? 0) > 0) {
+    const budget = await mediateBudget(daemon, options, timeoutMs);
+    if (budget.decision !== "allow")
+      return budget;
   }
-  throw new NotInitializedError("check() requires daemon or CLI client");
-}
-function mergeMediationReason(v, mediation) {
-  if (!mediation)
-    return v;
-  if (v.decision !== "allow")
-    return v;
-  return v;
-}
-async function checkViaCli(cli, call, _options) {
   const args = [];
-  const receiptDb = process.env.CHIO_RECEIPT_DB ?? (process.env.CHIO_HARNESS_DIR ? `${process.env.CHIO_HARNESS_DIR}/var/receipts.sqlite` : void 0);
+  const receiptDb = process.env.CHIO_RECEIPT_DB;
   if (receiptDb)
     args.push("--receipt-db", receiptDb);
   args.push("check", "--policy", call.policyPath, "--tool", call.tool, "--params", JSON.stringify(call.params ?? {}));
   if (call.serverId)
     args.push("--server", call.serverId);
-  const out = await cli.runJson(args);
+  const out = await cli.runJson(args, { timeoutMs });
+  if (!out || typeof out !== "object" || Array.isArray(out)) {
+    return { decision: "deny", reason: "chio check returned malformed output" };
+  }
   return normalizeVerdict(out);
 }
-async function checkViaDaemon(daemon, call) {
-  const client = daemon.mcpClient();
-  let session;
-  try {
-    session = await client.initialize();
-  } catch (cause) {
-    throw new ChioBridgeError("mcp_handshake_failed", `MCP handshake against ${daemon.mcpEdgeUrl} failed: ${cause.message}`, cause);
-  }
-  try {
-    const params = call.params ?? {};
-    const callResult = await session.callTool(call.tool, params);
-    const result = callResult;
-    const receipt = result._meta?.receipt;
-    const decision = result.isError ? "deny" : "allow";
-    const verdict = { decision };
-    if (receipt)
-      verdict.receipt = receipt;
-    if (result.isError && typeof result.content === "string") {
-      verdict.reason = result.content;
-    }
-    return verdict;
-  } finally {
-    try {
-      await session.close();
-    } catch {
-    }
-  }
-}
-async function mediateBudget(capabilityId, costUsd, options) {
-  const token = options.trustToken ?? process.env.CHIO_SERVICE_TOKEN ?? process.env.CHIO_TOKEN;
-  const trustUrl = (options.trustUrl ?? process.env.CHIO_TRUST_URL ?? DEFAULT_TRUST_URL).replace(/\/$/, "");
-  if (!token)
-    return void 0;
-  const exposureUnits = Math.max(0, Math.floor(costUsd * 100));
-  if (exposureUnits === 0)
-    return void 0;
-  const envCapUsd = Number.parseFloat(process.env.CHIO_CAPABILITY_BUDGET_USD ?? "");
-  const maxTotalExposureUnits = Number.isFinite(envCapUsd) && envCapUsd > 0 ? Math.floor(envCapUsd * 100) : void 0;
-  const body = {
-    capabilityId,
-    grantIndex: 0,
-    exposureUnits
-  };
-  if (maxTotalExposureUnits !== void 0) {
-    body.maxTotalExposureUnits = maxTotalExposureUnits;
-  }
+async function mediateBudget(daemon, options, timeoutMs) {
+  const deny = (reason) => ({ decision: "deny", guard: "budget", reason });
+  const capabilityId = options.capabilityId;
+  const token = options.trustToken ?? daemon?.token ?? process.env.CHIO_SERVICE_TOKEN ?? process.env.CHIO_TOKEN;
+  if (!capabilityId || !token)
+    return deny("budget authorization requires capabilityId and trust token");
+  const exposureUnits = Math.ceil(options.costUsd * 100);
+  if (!Number.isSafeInteger(exposureUnits))
+    return deny("costUsd exceeds supported precision");
+  const trustUrl = (options.trustUrl ?? daemon?.trustUrl ?? process.env.CHIO_TRUST_URL ?? DEFAULT_TRUST_URL).replace(/\/$/, "");
   const url = `${trustUrl}/v1/budgets/authorize-exposure`;
-  let response;
   try {
-    response = await fetch(url, {
+    const response = await (daemon?.fetchImpl ?? fetch)(url, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(body)
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ capabilityId, grantIndex: 0, exposureUnits }),
+      signal: AbortSignal.timeout(timeoutMs),
+      redirect: "error"
     });
-  } catch {
-    return void 0;
-  }
-  if (!response.ok) {
-    return void 0;
-  }
-  const raw = await response.text();
-  let parsed = {};
-  try {
-    parsed = JSON.parse(raw);
-  } catch {
-    return void 0;
-  }
-  if (parsed.allowed === false) {
-    const totalExposed = parsed.totalCostExposed ?? parsed.total_cost_exposed ?? void 0;
-    const reason = maxTotalExposureUnits !== void 0 ? `velocity guard: $${(exposureUnits / 100).toFixed(2)} would exceed capability budget cap of $${(maxTotalExposureUnits / 100).toFixed(2)}` + (typeof totalExposed === "number" ? ` (exposed so far: $${(totalExposed / 100).toFixed(2)})` : "") : `velocity guard: trust plane denied spend authorization for capability ${capabilityId}`;
-    const verdict = {
-      decision: "cancelled",
-      guard: "velocity",
-      reason
-    };
-    const receipt = await submitVelocityCancelReceipt(trustUrl, token, capabilityId, exposureUnits, maxTotalExposureUnits, reason);
-    if (receipt)
-      verdict.receipt = receipt;
-    return verdict;
-  }
-  return { decision: "allow" };
-}
-async function submitVelocityCancelReceipt(trustUrl, token, capabilityId, exposureUnits, maxTotalExposureUnits, reason) {
-  try {
-    const { publicKey, privateKey } = generateKeyPairSync2("ed25519");
-    const privDer = privateKey.export({ type: "pkcs8", format: "der" });
-    const pubDer = publicKey.export({ type: "spki", format: "der" });
-    const seedHex = Buffer.from(privDer).subarray(-32).toString("hex");
-    const kernelKeyHex = Buffer.from(pubDer).subarray(-32).toString("hex");
-    const params = {
-      capability_id: capabilityId,
-      exposure_cents: exposureUnits,
-      max_total_cents: maxTotalExposureUnits ?? null
-    };
-    const parameterCanonical = canonicalizeJsonString(JSON.stringify(params));
-    const parameterHash = sha256Hex(parameterCanonical);
-    const idSeed = randomBytes(8).toString("hex");
-    const contentHash = sha256Hex(canonicalizeJsonString(JSON.stringify("chio-bridge:velocity-cancel:no-content")));
-    const policyHash = sha256Hex("chio-bridge-mediation");
-    const body = {
-      id: `rcpt-velocity-${Date.now().toString(16)}-${idSeed}`,
-      timestamp: Math.floor(Date.now() / 1e3),
-      capability_id: capabilityId,
-      tool_server: "chio-bridge",
-      tool_name: "velocity_guard",
-      action: {
-        parameters: params,
-        parameter_hash: parameterHash
-      },
-      // Decision is tagged-enum: {verdict: "cancelled", reason} for Cancelled.
-      // Mirrors `Decision::Cancelled { reason }` in chio-core-types/receipt.rs:677.
-      // `guard` is NOT a field on the Cancelled variant; the guard name is
-      // surfaced through the `evidence[].guard_name` channel instead.
-      decision: {
-        verdict: "cancelled",
-        reason
-      },
-      content_hash: contentHash,
-      policy_hash: policyHash,
-      evidence: [
-        {
-          guard_name: "velocity",
-          verdict: false,
-          details: reason
-        }
-      ],
-      metadata: {
-        source: "chio-bridge.mediate",
-        attribution: {
-          delegation_depth: 0,
-          grant_index: 0,
-          issuer_key: kernelKeyHex,
-          subject_key: kernelKeyHex
-        }
-      },
-      kernel_key: kernelKeyHex
-    };
-    const bodyCanonical = canonicalizeJsonString(JSON.stringify(body));
-    const sig = signUtf8MessageEd25519(bodyCanonical, seedHex);
-    const receipt = {
-      ...body,
-      signature: sig.signature_hex
-    };
-    const res = await fetch(`${trustUrl}/v1/receipts/tools`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(receipt)
-    });
-    if (!res.ok && process.env.CHIO_BRIDGE_DEBUG) {
-      const raw = await res.text().catch(() => "");
-      process.stderr.write(`[chio-bridge] cancel-receipt submit failed: HTTP ${res.status}: ${raw.slice(0, 200)}
-`);
+    if (!response.ok)
+      return deny(`budget authorization failed: HTTP ${response.status}`);
+    const parsed = await response.json();
+    if (!parsed || typeof parsed !== "object" || typeof parsed.allowed !== "boolean") {
+      return deny("budget authorization returned malformed response");
     }
-    return receipt;
+    if (!parsed.allowed) {
+      return { decision: "cancelled", guard: "velocity", reason: "trust plane denied spend authorization" };
+    }
+    return { decision: "allow" };
   } catch {
-    return void 0;
+    return deny("budget authorization unavailable or outcome unknown; no automatic retry");
   }
 }
 function normalizeVerdict(out) {
@@ -8646,9 +8653,9 @@ function normalizeVerdict(out) {
   return verdict;
 }
 
-// ../chio-bridge/dist/mcp.js
+// node_modules/@chio/bridge/dist/mcp.js
 import { spawn as spawn2 } from "node:child_process";
-import { createHash as createHash2, randomBytes as randomBytes2 } from "node:crypto";
+import { createHash as createHash2, randomBytes } from "node:crypto";
 async function discoverMcpServers(daemon) {
   if (!daemon) {
     throw new NotInitializedError("discoverMcpServers() requires daemon mode (hits /admin/sessions on the MCP edge)");
@@ -8690,7 +8697,7 @@ async function wrapMcp(cli, cmd, options = {}) {
     throw new ChioBridgeError("invalid_arg", "wrapMcp requires options.policy (chio mcp serve-http --policy is required)");
   }
   const listen = options.listen ?? "127.0.0.1:0";
-  const authToken = options.authToken ?? randomBytes2(32).toString("hex");
+  const authToken = options.authToken ?? randomBytes(32).toString("hex");
   const serverId = options.serverId ?? deriveServerId(cmd[0]);
   const args = [
     "mcp",
@@ -8802,8 +8809,8 @@ async function waitForReady(child, timeoutMs) {
   });
 }
 
-// ../chio-bridge/dist/passport.js
-import { generateKeyPairSync as generateKeyPairSync3, createPrivateKey as createPrivateKey2, createPublicKey as createPublicKey2 } from "node:crypto";
+// node_modules/@chio/bridge/dist/passport.js
+import { generateKeyPairSync as generateKeyPairSync2, createPrivateKey as createPrivateKey2, createPublicKey as createPublicKey2 } from "node:crypto";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -8822,12 +8829,6 @@ async function createPassport(daemon, cli, opts = {}) {
   try {
     const { subjectPublicKeyHex } = await writeFreshSigningSeed(seedPath);
     let subjectPublicKey = await resolveSubjectPublicKey(cli, receiptDbPath, subjectPublicKeyHex);
-    if (subjectPublicKey === subjectPublicKeyHex && daemon) {
-      const seeded = await seedBootstrapReceipt(daemon, receiptDbPath);
-      if (seeded) {
-        subjectPublicKey = await resolveSubjectPublicKey(cli, receiptDbPath, subjectPublicKeyHex);
-      }
-    }
     const createArgs = [
       "--receipt-db",
       receiptDbPath,
@@ -8941,20 +8942,8 @@ function deriveHarnessReceiptDb() {
     return void 0;
   return join(harness, "var", "receipts.sqlite");
 }
-async function seedBootstrapReceipt(daemon, receiptDbPath) {
-  void receiptDbPath;
-  try {
-    await checkCall(daemon, void 0, {
-      tool: "echo",
-      params: { msg: "chio-bridge:bond:bootstrap" }
-    });
-    return true;
-  } catch {
-    return false;
-  }
-}
 async function writeFreshSigningSeed(seedPath) {
-  const { privateKey, publicKey } = generateKeyPairSync3("ed25519");
+  const { privateKey, publicKey } = generateKeyPairSync2("ed25519");
   const privDer = privateKey.export({ type: "pkcs8", format: "der" });
   const pubDer = publicKey.export({ type: "spki", format: "der" });
   const seed = Buffer.from(privDer).subarray(-32);
@@ -8991,7 +8980,7 @@ async function resolveSubjectPublicKey(cli, receiptDbPath, preferredHex) {
   return preferredHex;
 }
 
-// ../chio-bridge/dist/policy.js
+// node_modules/@chio/bridge/dist/policy.js
 var import_yaml = __toESM(require_dist(), 1);
 import { readFile as readFile2 } from "node:fs/promises";
 var RULE_KEY_SET = new Set(RULE_KEYS);
@@ -9187,7 +9176,7 @@ function checkDeadCapability(rules, warnings) {
   }
 }
 
-// ../chio-bridge/dist/receipts.js
+// node_modules/@chio/bridge/dist/receipts.js
 import { writeFile as writeFile2 } from "node:fs/promises";
 async function listReceipts(daemon, opts = {}) {
   if (!daemon) {
@@ -9268,7 +9257,7 @@ function sleep(ms, signal) {
   });
 }
 
-// ../chio-bridge/dist/index.js
+// node_modules/@chio/bridge/dist/index.js
 var ChioBridge = class _ChioBridge {
   daemon;
   cli;
@@ -9296,72 +9285,31 @@ var ChioBridge = class _ChioBridge {
     if (this.receiptDbPath)
       createOpts.receiptDbPath = this.receiptDbPath;
     const passport = await createPassport(this.daemon, this.cli, createOpts);
+    if (opts.capabilityId) {
+      throw new ChioBridgeError("unsupported_authority_operation", "bond cannot attenuate an existing capability without a verified parent-bound kernel endpoint");
+    }
+    if (opts.budgetUsd !== void 0 && (!Number.isFinite(opts.budgetUsd) || opts.budgetUsd <= 0)) {
+      throw new ChioBridgeError("invalid_arg", "budgetUsd must be finite and positive");
+    }
     const scope = deriveCapabilityScopeFromPolicy(policy, opts.budgetUsd);
-    const subjectPublicKey = passport.subjectPublicKey;
-    const ttlSeconds = parseTtlSeconds(opts.ttl);
+    const input = {
+      scope,
+      subjectPublicKey: passport.subjectPublicKey,
+      ttlSeconds: parseTtlSeconds(opts.ttl)
+    };
+    let issued;
     if (this.daemon) {
-      let issued;
-      let issueError;
-      try {
-        const input = { scope, ttlSeconds };
-        if (subjectPublicKey)
-          input.subjectPublicKey = subjectPublicKey;
-        issued = await issueCapability(this.daemon, input);
-      } catch (err) {
-        issueError = err;
-        issued = void 0;
-      }
-      if (!issued && issueError && process.env.CHIO_BRIDGE_DEBUG) {
-        process.stderr.write(`[chio-bridge] bond(): issueCapability failed: ${issueError.message}
-`);
-      }
-      let currentCapabilityId = issued?.id;
-      if (opts.capabilityId) {
-        const delta = {};
-        if (opts.budgetUsd !== void 0)
-          delta.budget = { maxUsd: opts.budgetUsd };
-        if (Object.keys(delta).length > 0) {
-          try {
-            const token2 = await attenuateCapability(this.daemon, opts.capabilityId, delta);
-            const reissued = token2.id ?? token2.capability_id;
-            currentCapabilityId = typeof reissued === "string" && reissued.length > 0 ? reissued : opts.capabilityId;
-          } catch {
-            currentCapabilityId = opts.capabilityId;
-          }
-        } else {
-          currentCapabilityId = opts.capabilityId;
-        }
-      }
-      if (typeof currentCapabilityId === "string" && currentCapabilityId.length > 0) {
-        passport.capabilityId = currentCapabilityId;
-      }
-      return passport;
+      issued = await issueCapability(this.daemon, input);
+    } else {
+      const token = process.env.CHIO_SERVICE_TOKEN ?? process.env.CHIO_TOKEN;
+      if (!token)
+        throw new ChioBridgeError("bond_failed", "bond requires a trust-plane token for capability issuance");
+      issued = await issueCapabilityViaHttp(process.env.CHIO_TRUST_URL ?? DEFAULT_TRUST_URL, token, input);
     }
-    const token = process.env.CHIO_SERVICE_TOKEN ?? process.env.CHIO_TOKEN ?? void 0;
-    const trustUrl = process.env.CHIO_TRUST_URL ?? DEFAULT_TRUST_URL;
-    if (!token) {
-      return passport;
+    if (typeof issued.id !== "string" || !issued.id) {
+      throw new ChioBridgeError("bond_failed", "trust plane did not return a capability id");
     }
-    try {
-      const issued = await issueCapabilityViaHttp(trustUrl, token, {
-        subjectPublicKey,
-        scope,
-        ttlSeconds
-      });
-      let finalId = issued.id;
-      if (finalId && opts.budgetUsd !== void 0) {
-        const narrower = await attenuateCapabilityViaHttp(trustUrl, token, finalId, {
-          scope: narrowerScopeWithBudget(scope, opts.budgetUsd),
-          ...subjectPublicKey ? { subjectPublicKey } : {},
-          ttlSeconds
-        });
-        finalId = narrower.id ?? finalId;
-      }
-      if (typeof finalId === "string" && finalId.length > 0) {
-        passport.capabilityId = finalId;
-      }
-    } catch {
-    }
+    passport.capabilityId = issued.id;
     return passport;
   }
   /**
@@ -9602,17 +9550,6 @@ function deriveCapabilityScopeFromPolicy(policy, budgetUsd) {
     grants.push(grant);
   }
   return { grants };
-}
-function narrowerScopeWithBudget(scope, budgetUsd) {
-  const budgetAmount = {
-    units: Math.max(0, Math.floor(budgetUsd * 100)),
-    currency: "USD"
-  };
-  const grants = (scope.grants ?? []).map((g) => ({
-    ...g,
-    max_total_cost: budgetAmount
-  }));
-  return { ...scope, grants };
 }
 function parseTtlSeconds(ttl) {
   if (!ttl)

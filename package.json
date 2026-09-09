@@ -1,7 +1,7 @@
 {
   "name": "@chio/claude-code-plugin",
-  "version": "0.2.0",
-  "description": "Claude Code plugin: bond any session to a Chio policy. Mediate every tool call through chio; stream signed receipts.",
+  "version": "0.3.0",
+  "description": "Chio diagnostics and a restricted kernel MCP launch mode for Claude Code; integration acceptance pending.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -19,16 +19,20 @@
     "scripts",
     "examples",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "vendor",
+    "docs/RESTRICTED-MODE.md",
+    "acceptance/2026-09-09/REPORT.md",
+    "acceptance/2026-09-09/ACCEPTANCE.json"
   ],
   "scripts": {
-    "build": "bun run build:types && bun run bundle",
+    "build": "npm run build:types && npm run bundle",
     "build:types": "tsc --emitDeclarationOnly",
     "bundle": "node ./scripts/bundle.mjs",
     "typecheck": "tsc --noEmit",
     "test": "node --test ./test/*.test.mjs",
-    "prepack": "node ./scripts/prep-publish.mjs && npm run build",
-    "postpack": "node ./scripts/restore-publish.mjs"
+    "prepack": "node -e \"throw new Error('Use npm run pack:release for a self-contained staged artifact')\"",
+    "pack:release": "node scripts/pack-release.mjs"
   },
   "keywords": [
     "chio",
@@ -43,8 +47,8 @@
     "node": ">=22"
   },
   "dependencies": {
-    "@chio-protocol/sdk": "^0.1.0",
-    "@chio/bridge": "file:../chio-bridge"
+    "@chio-protocol/sdk": "file:vendor/chio-protocol-sdk-0.1.1-rc.1-ea8639364db1.tgz",
+    "@chio/bridge": "file:vendor/chio-bridge-0.3.0-68b5c4663844.tgz"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
