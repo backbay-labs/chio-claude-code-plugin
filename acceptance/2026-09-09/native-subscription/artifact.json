@@ -23,7 +23,8 @@
     "current-r5/native-cutpoints",
     "current-r5/aggregate-budget",
     "current-r5/native-lifecycle",
-    "current-r5/shared-matrix"
+    "current-r5/shared-matrix",
+    "current-r5/kernel-storage"
   ],
   "supplementalEvidence": [
     "current-r5/supplemental-boundary",
@@ -41,18 +42,25 @@
     "separateExpirySuites": 1,
     "supplementalBoundaryAssertions": 27,
     "supplementalParallelScenarios": 1,
-    "skipsReportedByCurrentIdentityRecords": 0
+    "skipsReportedByCurrentIdentityRecords": 0,
+    "kernelStorageCases": 3,
+    "kernelStorageSetupFailuresRetained": 3
   },
   "historicalEvidence": "All evidence outside current-r5, including current-r3-* and historical-r4, retains its original source/artifact identity and is not qualification of this archive.",
   "readinessR4Provenance": "readiness-r4-provenance retains exact included nonruntime driver bytes and documents the dirty-source delta; preserved-readiness-r4.json records unchanged hashes.",
   "remaining": [
-    "Reconcile all required I01-I08 observations, including separately owned kernel storage fault cases.",
+    "Reconcile all required I01-I08 observations across the retained native, boundary, recovery and kernel-storage evidence.",
     "Complete shared release gates and publish the compatible tested artifact combination."
   ],
   "limitations": [
     "Startup refusal cases intentionally produce no provider inference; expected nonzero host exits are successful prevention observations.",
     "Supplemental boundary and parallel fixtures do not establish actual-provider inference.",
-    "Bridge journal failures do not establish prevention under kernel storage faults.",
-    "Installation record was assembled after the successful tool invocation from installed immutable files; raw installation stdout was not retained in that record."
-  ]
+    "Installation record was assembled after the successful tool invocation from installed immutable files; raw installation stdout was not retained in that record.",
+    "The three SQLite lock cutpoints establish safe refusal and retained uncertainty; they do not prove arbitrary disk fault behavior or administrative recovery of unresolved work.",
+    "Recorded native intervals include resource and gateway/kernel processing; no matched direct-resource baseline is included in this storage/timing archive and no incremental Chio overhead is claimed."
+  ],
+  "kernelStorageHarnessCommit": "608104118b7cb3a4e7605129dbfb0c0bfb92c5e5",
+  "kernelStorageManifest": "current-r5/kernel-storage/archive-manifest.json",
+  "operationalTiming": "current-r5/kernel-storage/operational-timing.json",
+  "operationalNote": "current-r5/kernel-storage/OPERATIONAL-NOTE.md"
 }

@@ -483,6 +483,86 @@
     "separateExpirySuites": 1,
     "supplementalBoundaryAssertions": 27,
     "supplementalParallelScenarios": 1,
-    "skipsReportedByCurrentIdentityRecords": 0
+    "skipsReportedByCurrentIdentityRecords": 0,
+    "kernelStorageCases": 3,
+    "kernelStorageSetupFailuresRetained": 3
+  },
+  "kernelStorage": {
+    "handoff": "current-r5/kernel-storage/handoff.json",
+    "cases": [
+      {
+        "case": "after-receipt",
+        "path": "current-r5/kernel-storage/after-receipt-r2/result.json",
+        "passed": true,
+        "positiveDispatches": 1,
+        "faultDispatches": 1,
+        "dispatchesAfterRetriesAndRestart": 2,
+        "admissionState": "completed",
+        "retainedToolOutcomes": 1,
+        "unknownAcknowledged": false,
+        "originalAuthorityPreserved": true,
+        "ownerRestarted": true,
+        "recoveryClaim": "safe refusal with retained uncertainty; no new authority or automatic reconciliation"
+      },
+      {
+        "case": "before-admission",
+        "path": "current-r5/kernel-storage/before-admission-r2/result.json",
+        "passed": true,
+        "positiveDispatches": 1,
+        "faultDispatches": 0,
+        "dispatchesAfterRetriesAndRestart": 1,
+        "admissionState": null,
+        "retainedToolOutcomes": 0,
+        "unknownAcknowledged": false,
+        "originalAuthorityPreserved": true,
+        "ownerRestarted": true,
+        "recoveryClaim": "safe refusal with retained uncertainty; no new authority or automatic reconciliation"
+      },
+      {
+        "case": "after-admission",
+        "path": "current-r5/kernel-storage/after-admission-r2/result.json",
+        "passed": true,
+        "positiveDispatches": 1,
+        "faultDispatches": 1,
+        "dispatchesAfterRetriesAndRestart": 2,
+        "admissionState": "outcome_unknown_after_dispatch",
+        "retainedToolOutcomes": 0,
+        "unknownAcknowledged": false,
+        "originalAuthorityPreserved": true,
+        "ownerRestarted": true,
+        "recoveryClaim": "safe refusal with retained uncertainty; no new authority or automatic reconciliation"
+      }
+    ],
+    "rejectedSetup": [
+      {
+        "case": "after-receipt",
+        "path": "current-r5/kernel-storage/after-receipt/result.json",
+        "status": "failed_setup_no_fault_exercised",
+        "passed": false,
+        "resourceDispatches": 0,
+        "resourceFilesUnchanged": true,
+        "reason": "Shared helper used a non-UUID host session; native launcher rejected before tools, faults, or effects. Preserved old states; fresh UUID r2 owners created."
+      },
+      {
+        "case": "before-admission",
+        "path": "current-r5/kernel-storage/before-admission/result.json",
+        "status": "failed_setup_no_fault_exercised",
+        "passed": false,
+        "resourceDispatches": 0,
+        "resourceFilesUnchanged": true,
+        "reason": "Shared helper used a non-UUID host session; native launcher rejected before tools, faults, or effects. Preserved old states; fresh UUID r2 owners created."
+      },
+      {
+        "case": "after-admission",
+        "path": "current-r5/kernel-storage/after-admission/result.json",
+        "status": "failed_setup_no_fault_exercised",
+        "passed": false,
+        "resourceDispatches": 0,
+        "resourceFilesUnchanged": true,
+        "reason": "Shared helper used a non-UUID host session; native launcher rejected before tools, faults, or effects. Preserved old states; fresh UUID r2 owners created."
+      }
+    ],
+    "accepted": false,
+    "claim": "Three bounded kernel SQLite failure cutpoints, retained authority and retry/restart fencing; not general storage fault or recovery completion acceptance"
   }
 }

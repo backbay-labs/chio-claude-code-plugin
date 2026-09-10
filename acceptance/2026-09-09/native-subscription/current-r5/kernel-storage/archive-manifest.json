@@ -1,0 +1,1731 @@
+{
+  "schema": "chio.acceptance.archive.v1",
+  "files": [
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/OPERATIONAL-NOTE.md",
+      "path": "OPERATIONAL-NOTE.md",
+      "sha256": "01d53f43e32974aeafa064d4b4d5f35da6220642519203e6cf620fce6f348b7b",
+      "bytes": 4430
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission/driver-source.py",
+      "path": "after-admission/driver-source.py",
+      "sha256": "081f4ebb5b62a3884a3a9c7dde6b9845b9e7a2706136602b0346284aa1fac17d",
+      "bytes": 19919
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission/identity.json",
+      "path": "after-admission/identity.json",
+      "sha256": "8791e0060abbcb7bb33c654752061c1f1ef03755385a079f5a12d661cbdcfcb3",
+      "bytes": 2852
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission/initial-journal.json",
+      "path": "after-admission/initial-journal.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission/native-initial.json",
+      "path": "after-admission/native-initial.json",
+      "sha256": "4dbfaf90b23960bcf3d947bf6dd2e13e826fbb8f3380c15831aa3f3014fe1969",
+      "bytes": 539
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission/native-positive-after.json",
+      "path": "after-admission/native-positive-after.json",
+      "sha256": "625188fe12e39816fc8197f66ee6439c01a7a00b85960b29e29e90a2488878d2",
+      "bytes": 539
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission/native-positive-before.json",
+      "path": "after-admission/native-positive-before.json",
+      "sha256": "20fbb338db725f72c1afb1d29f0405ffc58f22c5ad3d77557f4e90af25ad2138",
+      "bytes": 540
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission/positive/command.json",
+      "path": "after-admission/positive/command.json",
+      "sha256": "d2a86332501c73b1334fb1dd8f371a74c66447e472242ff916914972c5c1a67b",
+      "bytes": 789
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission/positive/host.stderr.txt",
+      "path": "after-admission/positive/host.stderr.txt",
+      "sha256": "dd3f400b450eac6a3624b9925ccef512201dff9160ca7c14d2a0bc60c85f2915",
+      "bytes": 84
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission/positive/host.stdout.jsonl",
+      "path": "after-admission/positive/host.stdout.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission/positive/prompt.txt",
+      "path": "after-admission/positive/prompt.txt",
+      "sha256": "ddcb4bc9133ae6745aa88db1d6cfcf8c0bf8b2770f78d44f8a258de0a9732643",
+      "bytes": 478
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission/positive/run.json",
+      "path": "after-admission/positive/run.json",
+      "sha256": "14b273eef4b0fa849b32ab7f5d3c32b3b8cd5306d1a52ff12a209fc04f9cbd5b",
+      "bytes": 163
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission/result.json",
+      "path": "after-admission/result.json",
+      "sha256": "9759de396e90d570f1ac8f50e2e359aca870ba87954af7bbaaf1e6d23ded6210",
+      "bytes": 112
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission/storage-helper.py",
+      "path": "after-admission/storage-helper.py",
+      "sha256": "5da5e9d5743a3da8f045b4fd35f7597ac9890691f8f17dd6815ebaa6e8e6dcd7",
+      "bytes": 10808
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/driver-source.py",
+      "path": "after-admission-r2/driver-source.py",
+      "sha256": "04957d902deb12b40fda451623de4af8c68900d27a55f72c81d433e20e2798a9",
+      "bytes": 20278
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/effect-before-fault.json",
+      "path": "after-admission-r2/effect-before-fault.json",
+      "sha256": "65fa61376f578a001d7998bf1e67446060d1e5151fc8487f78991c233e2ae8b5",
+      "bytes": 1236
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/fault/command.json",
+      "path": "after-admission-r2/fault/command.json",
+      "sha256": "ef33813c142a1ae0cdf25a94536ba3b60f329897d408cd5595f9ee55ca840254",
+      "bytes": 792
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/fault/exit.json",
+      "path": "after-admission-r2/fault/exit.json",
+      "sha256": "f3bc8161f2514d1da92b27682e7d6b5d9090c3894abb794eb789f8f4db0643fe",
+      "bytes": 191
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/fault/host.stderr.txt",
+      "path": "after-admission-r2/fault/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/fault/host.stdout.jsonl",
+      "path": "after-admission-r2/fault/host.stdout.jsonl",
+      "sha256": "7cc63c83dcd437d7e4aabe6451173f9aa5aaff71aa06ce6a7d7d66398b16f583",
+      "bytes": 5176
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/fault/launch.json",
+      "path": "after-admission-r2/fault/launch.json",
+      "sha256": "606714ad7acd4318dc28b4dfbaaad508774a52b9630c2c286e5bec63253610e6",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/fault/model-relay.json",
+      "path": "after-admission-r2/fault/model-relay.json",
+      "sha256": "b278954f161340fdc2f2f702518e0349d8e1c6cca80debbd50cf3f27aebe04fc",
+      "bytes": 735
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/fault/prompt.txt",
+      "path": "after-admission-r2/fault/prompt.txt",
+      "sha256": "84a171c8413bbffec3b21a52b7253c8ee907996addb5ae12dac0f8b34b6cecdf",
+      "bytes": 473
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/fault/run.json",
+      "path": "after-admission-r2/fault/run.json",
+      "sha256": "5d33d9f5570cac5691c5bb41cad94ce037cf8d4389d9eb78c220284cbb2ac44f",
+      "bytes": 1049
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/fault-command.json",
+      "path": "after-admission-r2/fault-command.json",
+      "sha256": "d0937feb48f02f0fc0e1266699756f26da5a67351551c3c86ecf19cee15ffef1",
+      "bytes": 496
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/fault-journal.json",
+      "path": "after-admission-r2/fault-journal.json",
+      "sha256": "2e01f4d116233ff3111719734605608238ec6c8d4d51e225fe78d50fca250f31",
+      "bytes": 6524
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/fault-locked.json",
+      "path": "after-admission-r2/fault-locked.json",
+      "sha256": "8b9d0811763be32370293dfb4c1716476e0a91fcf66c4cfd3510a91a95195df8",
+      "bytes": 324
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/fault-process.stderr.txt",
+      "path": "after-admission-r2/fault-process.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/fault-process.stdout.txt",
+      "path": "after-admission-r2/fault-process.stdout.txt",
+      "sha256": "a199560d338367118d15d6a4df34fd9bd5d840210477a07bb776796353fb1890",
+      "bytes": 152
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/fault-released.json",
+      "path": "after-admission-r2/fault-released.json",
+      "sha256": "bae484264e36c574b40861f2679f2378a0b170b3a2fb3096f9cd1609e650e609",
+      "bytes": 75
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/fence-verification.json",
+      "path": "after-admission-r2/fence-verification.json",
+      "sha256": "edf4f7de335503f19428b5d618017bbd820edaa2dd593921b839384ba4a6b789",
+      "bytes": 920
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/final-journal.json",
+      "path": "after-admission-r2/final-journal.json",
+      "sha256": "2e01f4d116233ff3111719734605608238ec6c8d4d51e225fe78d50fca250f31",
+      "bytes": 6524
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/identity.json",
+      "path": "after-admission-r2/identity.json",
+      "sha256": "59b0f2928eb19c2527c4864a73623a9f23c8263da368821f5bfcfd492786cd18",
+      "bytes": 2928
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/initial-journal.json",
+      "path": "after-admission-r2/initial-journal.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/native-after-owner-restart.json",
+      "path": "after-admission-r2/native-after-owner-restart.json",
+      "sha256": "859f1f073a497de78a3b96b74d31739176f71684dafd5e52ab76b1064de319f5",
+      "bytes": 47393
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/native-after-unlock.json",
+      "path": "after-admission-r2/native-after-unlock.json",
+      "sha256": "ef807608a46db1d0e67d52d1fe4293c4905ffb04ec177c3ea1ea1fa03d639eb8",
+      "bytes": 41621
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/native-fault-after.json",
+      "path": "after-admission-r2/native-fault-after.json",
+      "sha256": "26ed51a36839fc50585546b643bcf34e0f541b41d094fb6be04fa82a03c73550",
+      "bytes": 41622
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/native-fault-before.json",
+      "path": "after-admission-r2/native-fault-before.json",
+      "sha256": "6de97abe1a69db197ff3616740f336a26fdb91e54f19a2760307ca76f12d471d",
+      "bytes": 38650
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/native-final.json",
+      "path": "after-admission-r2/native-final.json",
+      "sha256": "da91fa71742b211d9519ecb23a3da6a6f97eeb04c5befc239a18d54f7e488b4a",
+      "bytes": 47392
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/native-initial.json",
+      "path": "after-admission-r2/native-initial.json",
+      "sha256": "95c9b1fa3b1495ab5b814cdc4ad01524a644071f43db79c2032323553d801d12",
+      "bytes": 539
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/native-new-action-after-restart-after.json",
+      "path": "after-admission-r2/native-new-action-after-restart-after.json",
+      "sha256": "c328717b947a71cd9f1d0436645acc91284de0812531e1527ae57bdbfde41679",
+      "bytes": 47391
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/native-new-action-after-restart-before.json",
+      "path": "after-admission-r2/native-new-action-after-restart-before.json",
+      "sha256": "43bfcffe16fbc420f05c7a4d8bb275e185014a29e926a1c63bbfd0155b57c7b4",
+      "bytes": 47393
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/native-new-action-after-unlock-after.json",
+      "path": "after-admission-r2/native-new-action-after-unlock-after.json",
+      "sha256": "2d331e686220e1fd5aa0d6413416d1dadea890bc941a3d9fe6beb069d29ce683",
+      "bytes": 41621
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/native-new-action-after-unlock-before.json",
+      "path": "after-admission-r2/native-new-action-after-unlock-before.json",
+      "sha256": "9a5016eeccd3e1e291285029d2bd307ce85cb3630368300646e2a361581283ed",
+      "bytes": 41621
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/native-positive-after.json",
+      "path": "after-admission-r2/native-positive-after.json",
+      "sha256": "853e5ee8a13e56c6c67cc039d410d6cb94989a36e85c9abe83b583cface08e28",
+      "bytes": 38649
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/native-positive-before.json",
+      "path": "after-admission-r2/native-positive-before.json",
+      "sha256": "a1991dce804477b6744ebf9daa26369d9031fc80ba6355f5ade6f4ab182807c9",
+      "bytes": 540
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/native-same-action-after-restart-after.json",
+      "path": "after-admission-r2/native-same-action-after-restart-after.json",
+      "sha256": "d4bc2f6a23577df5ed01e699ce2e35e1be32b85b39cce1aa5fe49a639a05b617",
+      "bytes": 47392
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/native-same-action-after-restart-before.json",
+      "path": "after-admission-r2/native-same-action-after-restart-before.json",
+      "sha256": "c0cbcc6cd777a0d74663e3f0a0163eb9cecb40585b7b31962fed7e6a076d6b4e",
+      "bytes": 47393
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/native-same-action-after-unlock-after.json",
+      "path": "after-admission-r2/native-same-action-after-unlock-after.json",
+      "sha256": "88e2aae49db9bacbf0ab5b7168020b19beb99d771426dac488e62d5494b598bb",
+      "bytes": 41622
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/native-same-action-after-unlock-before.json",
+      "path": "after-admission-r2/native-same-action-after-unlock-before.json",
+      "sha256": "4d4ef77819ab246bd3497a9d7fb81e5d6a9cd600bda7bdcef30168aa1603d748",
+      "bytes": 41621
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/new-action-after-restart/command.json",
+      "path": "after-admission-r2/new-action-after-restart/command.json",
+      "sha256": "5be3646fd54117f53f490b6c199ab482254ded0bd8e425413af250d9d6f77b66",
+      "bytes": 792
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/new-action-after-restart/exit.json",
+      "path": "after-admission-r2/new-action-after-restart/exit.json",
+      "sha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "bytes": 192
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/new-action-after-restart/host.stderr.txt",
+      "path": "after-admission-r2/new-action-after-restart/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/new-action-after-restart/host.stdout.jsonl",
+      "path": "after-admission-r2/new-action-after-restart/host.stdout.jsonl",
+      "sha256": "07c07db33fd3f521c3a78c530132ec993b9d50f6c53e9cb1b1fa62b79e9e97c1",
+      "bytes": 6584
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/new-action-after-restart/launch.json",
+      "path": "after-admission-r2/new-action-after-restart/launch.json",
+      "sha256": "93f0b60d41a5867386beca71db6707ed6d337548e87407981453f92d9cc00f58",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/new-action-after-restart/model-relay.json",
+      "path": "after-admission-r2/new-action-after-restart/model-relay.json",
+      "sha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "bytes": 1027
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/new-action-after-restart/prompt.txt",
+      "path": "after-admission-r2/new-action-after-restart/prompt.txt",
+      "sha256": "7551aed85a0904c1533241f36541063ab6c5a387661e46ef836e906317cf1f0d",
+      "bytes": 450
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/new-action-after-restart/run.json",
+      "path": "after-admission-r2/new-action-after-restart/run.json",
+      "sha256": "47375a5398d33371dcb6718ac9252307cfef592b2577a56611efbd21be966b3c",
+      "bytes": 1089
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/new-action-after-unlock/command.json",
+      "path": "after-admission-r2/new-action-after-unlock/command.json",
+      "sha256": "fd682efc7c62bc37ec6069f5c432045350734194d4c6358e03e7e8c696c37886",
+      "bytes": 792
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/new-action-after-unlock/exit.json",
+      "path": "after-admission-r2/new-action-after-unlock/exit.json",
+      "sha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "bytes": 192
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/new-action-after-unlock/host.stderr.txt",
+      "path": "after-admission-r2/new-action-after-unlock/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/new-action-after-unlock/host.stdout.jsonl",
+      "path": "after-admission-r2/new-action-after-unlock/host.stdout.jsonl",
+      "sha256": "fd67f242bcf7f1c60133d4491f8cbad4adf7a0faa8f735d360af35f6d435b86c",
+      "bytes": 6390
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/new-action-after-unlock/launch.json",
+      "path": "after-admission-r2/new-action-after-unlock/launch.json",
+      "sha256": "5246f153b99f2c5a1564d4691e59067d1263a777a9ab5a713172173b9e44482c",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/new-action-after-unlock/model-relay.json",
+      "path": "after-admission-r2/new-action-after-unlock/model-relay.json",
+      "sha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "bytes": 1027
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/new-action-after-unlock/prompt.txt",
+      "path": "after-admission-r2/new-action-after-unlock/prompt.txt",
+      "sha256": "7551aed85a0904c1533241f36541063ab6c5a387661e46ef836e906317cf1f0d",
+      "bytes": 450
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/new-action-after-unlock/run.json",
+      "path": "after-admission-r2/new-action-after-unlock/run.json",
+      "sha256": "afb2fb262ffad2a8efa25acd6e0d8516d1a27b1c619f827c27712e502a0846b6",
+      "bytes": 1088
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/positive/command.json",
+      "path": "after-admission-r2/positive/command.json",
+      "sha256": "487745a0ca4f4a1552578e5f21447f7392fc5fa1ca1a48da803ec694ab8d5aca",
+      "bytes": 792
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/positive/exit.json",
+      "path": "after-admission-r2/positive/exit.json",
+      "sha256": "e2a5db79a4a63e50c6750e25b722e84603f4e58d14b6ddfe523a105a06670b2d",
+      "bytes": 191
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/positive/host.stderr.txt",
+      "path": "after-admission-r2/positive/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/positive/host.stdout.jsonl",
+      "path": "after-admission-r2/positive/host.stdout.jsonl",
+      "sha256": "b8a6f7a43aeb736af16b8c03aff241a125c35f1ea0078ad10e94e79d80d08917",
+      "bytes": 14409
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/positive/launch.json",
+      "path": "after-admission-r2/positive/launch.json",
+      "sha256": "b0111bec69bf1799d5dc68f0e367e5912f0975114e7e8b952e53f3b414971f1a",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/positive/model-relay.json",
+      "path": "after-admission-r2/positive/model-relay.json",
+      "sha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "bytes": 1027
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/positive/prompt.txt",
+      "path": "after-admission-r2/positive/prompt.txt",
+      "sha256": "ddcb4bc9133ae6745aa88db1d6cfcf8c0bf8b2770f78d44f8a258de0a9732643",
+      "bytes": 478
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/positive/run.json",
+      "path": "after-admission-r2/positive/run.json",
+      "sha256": "4b76adb56a2f830278850b5dab34a7bef976ee348dcdbfdce2ab0685e1b57a8c",
+      "bytes": 5763
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/positive-journal.json",
+      "path": "after-admission-r2/positive-journal.json",
+      "sha256": "231f39b2a535a58ef98ac787b4369875f275d6d7300c7f58711e33b1ed53095b",
+      "bytes": 5637
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/resource-replied.json",
+      "path": "after-admission-r2/resource-replied.json",
+      "sha256": "de5eb82b51fe7a433b14f7e5696bc6b81757e7b111251d1aa9c4bc47846e9782",
+      "bytes": 443
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/restart.json",
+      "path": "after-admission-r2/restart.json",
+      "sha256": "c3eff4c7820ec66ffd209fcb25e3ef57ce598190588fa9f005fcf2c4cd8e88c5",
+      "bytes": 467
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/result.json",
+      "path": "after-admission-r2/result.json",
+      "sha256": "746ae3d769b8291b2a760049737c036cdbc2ef56da851345e74e598e93a20112",
+      "bytes": 1391
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/same-action-after-restart/command.json",
+      "path": "after-admission-r2/same-action-after-restart/command.json",
+      "sha256": "e28119fc3cc3fa4e42e5a7e05b326f57ff75172cde520925d8cb5c8b359ebd81",
+      "bytes": 792
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/same-action-after-restart/exit.json",
+      "path": "after-admission-r2/same-action-after-restart/exit.json",
+      "sha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "bytes": 192
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/same-action-after-restart/host.stderr.txt",
+      "path": "after-admission-r2/same-action-after-restart/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/same-action-after-restart/host.stdout.jsonl",
+      "path": "after-admission-r2/same-action-after-restart/host.stdout.jsonl",
+      "sha256": "c37da84a2b5da51564e9e59f6f10e14322e2c57aa9e17f31e6c896a92a2b6bef",
+      "bytes": 6707
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/same-action-after-restart/launch.json",
+      "path": "after-admission-r2/same-action-after-restart/launch.json",
+      "sha256": "ee39e76babcdd11c58358c0375cf8ad383c9d5d40fa6c39043ab32cc86dda9e8",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/same-action-after-restart/model-relay.json",
+      "path": "after-admission-r2/same-action-after-restart/model-relay.json",
+      "sha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "bytes": 1027
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/same-action-after-restart/prompt.txt",
+      "path": "after-admission-r2/same-action-after-restart/prompt.txt",
+      "sha256": "84a171c8413bbffec3b21a52b7253c8ee907996addb5ae12dac0f8b34b6cecdf",
+      "bytes": 473
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/same-action-after-restart/run.json",
+      "path": "after-admission-r2/same-action-after-restart/run.json",
+      "sha256": "19201479b6c5e68f6f75a7e023501354fc914fbdae53a8738882e07997b57be1",
+      "bytes": 1113
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/same-action-after-unlock/command.json",
+      "path": "after-admission-r2/same-action-after-unlock/command.json",
+      "sha256": "d81366d3656275862f2b899ac58a0822e49d302beb0d25d360d98078894314ff",
+      "bytes": 792
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/same-action-after-unlock/exit.json",
+      "path": "after-admission-r2/same-action-after-unlock/exit.json",
+      "sha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "bytes": 192
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/same-action-after-unlock/host.stderr.txt",
+      "path": "after-admission-r2/same-action-after-unlock/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/same-action-after-unlock/host.stdout.jsonl",
+      "path": "after-admission-r2/same-action-after-unlock/host.stdout.jsonl",
+      "sha256": "e967b7db112e3216bc86ba2e7adde351ee17d77d38b9234565091d8b9f3ecb45",
+      "bytes": 6337
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/same-action-after-unlock/launch.json",
+      "path": "after-admission-r2/same-action-after-unlock/launch.json",
+      "sha256": "efda49602b62dd43b02b400aa38bb8a74c3b794e9b855953a2cc0db59ff69e9d",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/same-action-after-unlock/model-relay.json",
+      "path": "after-admission-r2/same-action-after-unlock/model-relay.json",
+      "sha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "bytes": 1027
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/same-action-after-unlock/prompt.txt",
+      "path": "after-admission-r2/same-action-after-unlock/prompt.txt",
+      "sha256": "84a171c8413bbffec3b21a52b7253c8ee907996addb5ae12dac0f8b34b6cecdf",
+      "bytes": 473
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/same-action-after-unlock/run.json",
+      "path": "after-admission-r2/same-action-after-unlock/run.json",
+      "sha256": "ff4c9ce94cc8b5d400402505f7886792acfe06792ae06f3030c07394d0047480",
+      "bytes": 1112
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/storage-helper.py",
+      "path": "after-admission-r2/storage-helper.py",
+      "sha256": "7de25889696ee9c1cca324130c6f10e34a41bdce555495a118673ad1336dd8d5",
+      "bytes": 10863
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/verify-fences.mjs",
+      "path": "after-admission-r2/verify-fences.mjs",
+      "sha256": "93e929d539b3c59b9db09b8c781113b9ce92c8e799287c6f565b7e1782d5f496",
+      "bytes": 1779
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt/driver-source.py",
+      "path": "after-receipt/driver-source.py",
+      "sha256": "081f4ebb5b62a3884a3a9c7dde6b9845b9e7a2706136602b0346284aa1fac17d",
+      "bytes": 19919
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt/identity.json",
+      "path": "after-receipt/identity.json",
+      "sha256": "cef93c39dd7ec32e1a8a17d2822d2551c9acd3ce0e19166698b46a6124c6382c",
+      "bytes": 2839
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt/initial-journal.json",
+      "path": "after-receipt/initial-journal.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt/native-initial.json",
+      "path": "after-receipt/native-initial.json",
+      "sha256": "45a6eff4e5859dfc305392c929d5a0451eaed8d027ee96187531f7deff9fd50d",
+      "bytes": 539
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt/native-positive-after.json",
+      "path": "after-receipt/native-positive-after.json",
+      "sha256": "63742711a71d119b34b495e76f4c3e6978817bb80134dce1856b77b6b696c2a4",
+      "bytes": 540
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt/native-positive-before.json",
+      "path": "after-receipt/native-positive-before.json",
+      "sha256": "dc258cd4f16e6cb7ba754846bb051f70f9517a625a417634a463d1345a316746",
+      "bytes": 539
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt/positive/command.json",
+      "path": "after-receipt/positive/command.json",
+      "sha256": "73abfef9364a8cfd4660e0e912b0d4f77c5ac49c2bf435bdb5a26f7a815c7fbd",
+      "bytes": 787
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt/positive/host.stderr.txt",
+      "path": "after-receipt/positive/host.stderr.txt",
+      "sha256": "dd3f400b450eac6a3624b9925ccef512201dff9160ca7c14d2a0bc60c85f2915",
+      "bytes": 84
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt/positive/host.stdout.jsonl",
+      "path": "after-receipt/positive/host.stdout.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt/positive/prompt.txt",
+      "path": "after-receipt/positive/prompt.txt",
+      "sha256": "edeefd3e2ec0a8cd116d82d9bc9cea74e91e6dcf841eb482e88ae4d0f3874798",
+      "bytes": 476
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt/positive/run.json",
+      "path": "after-receipt/positive/run.json",
+      "sha256": "2c44f4f7ed6d3126a6759486091439380764206bb6b6c16e92cc6bd2de0dd294",
+      "bytes": 163
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt/result.json",
+      "path": "after-receipt/result.json",
+      "sha256": "e7e018d21fbed20ec68514b78bff1fb5750ed6458a88a15038d889874f882c45",
+      "bytes": 110
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt/storage-helper.py",
+      "path": "after-receipt/storage-helper.py",
+      "sha256": "5da5e9d5743a3da8f045b4fd35f7597ac9890691f8f17dd6815ebaa6e8e6dcd7",
+      "bytes": 10808
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/driver-source.py",
+      "path": "after-receipt-r2/driver-source.py",
+      "sha256": "04957d902deb12b40fda451623de4af8c68900d27a55f72c81d433e20e2798a9",
+      "bytes": 20278
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/effect-before-fault.json",
+      "path": "after-receipt-r2/effect-before-fault.json",
+      "sha256": "a9061595dbd448deefd19057dccedd71ba2ea33179ab5c992f83127df1e3f185",
+      "bytes": 1234
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/fault/command.json",
+      "path": "after-receipt-r2/fault/command.json",
+      "sha256": "8f921e7ed6bd97e04402a731ba38404b54f64a0303a866f8b4f81e2aa786abfa",
+      "bytes": 790
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/fault/exit.json",
+      "path": "after-receipt-r2/fault/exit.json",
+      "sha256": "f3bc8161f2514d1da92b27682e7d6b5d9090c3894abb794eb789f8f4db0643fe",
+      "bytes": 191
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/fault/host.stderr.txt",
+      "path": "after-receipt-r2/fault/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/fault/host.stdout.jsonl",
+      "path": "after-receipt-r2/fault/host.stdout.jsonl",
+      "sha256": "899fb1f3cb8bace80ddb551c0c384ca4d13a9c6839708ff539c7f30fd030695d",
+      "bytes": 5172
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/fault/launch.json",
+      "path": "after-receipt-r2/fault/launch.json",
+      "sha256": "477ff4d0843e2fd1742deb0b3c829f5a6512ac521df6a762d555c4eeb35f2517",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/fault/model-relay.json",
+      "path": "after-receipt-r2/fault/model-relay.json",
+      "sha256": "b278954f161340fdc2f2f702518e0349d8e1c6cca80debbd50cf3f27aebe04fc",
+      "bytes": 735
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/fault/prompt.txt",
+      "path": "after-receipt-r2/fault/prompt.txt",
+      "sha256": "46c5ac984cd5b4e2cb83bdd0e360cde2b3835c98e1f40a65bc62ffe07e5516b3",
+      "bytes": 471
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/fault/run.json",
+      "path": "after-receipt-r2/fault/run.json",
+      "sha256": "f1ad0a0f0cd27d9405cc34c6b6e8e6f0b67713d314dabca154227df7d2d33fb5",
+      "bytes": 1047
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/fault-command.json",
+      "path": "after-receipt-r2/fault-command.json",
+      "sha256": "c35a4d6e3734389a3899a70622a578217ebbadd1b6130ccb30889abca3c9051c",
+      "bytes": 492
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/fault-journal.json",
+      "path": "after-receipt-r2/fault-journal.json",
+      "sha256": "578e045711fff384f8ebc458bb8cb6961b7f44eb38694de9c154f1bda766813d",
+      "bytes": 6518
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/fault-locked.json",
+      "path": "after-receipt-r2/fault-locked.json",
+      "sha256": "748a9033d760495374262068f78f8b9ca625caeca8b3e92b94d5dcbfdca9810a",
+      "bytes": 310
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/fault-process.stderr.txt",
+      "path": "after-receipt-r2/fault-process.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/fault-process.stdout.txt",
+      "path": "after-receipt-r2/fault-process.stdout.txt",
+      "sha256": "bfab63b4729ea02a0aa1241ccc28cadb0affd7c8558e25af9f05a6b885333299",
+      "bytes": 140
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/fault-released.json",
+      "path": "after-receipt-r2/fault-released.json",
+      "sha256": "bf19fd58952ff9c931645c0c6b0f2d5a414d9a1de1fc18ea5972c5bcdb29791f",
+      "bytes": 75
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/fence-verification.json",
+      "path": "after-receipt-r2/fence-verification.json",
+      "sha256": "a5880684e0bed34a7c333fa4956a1408108c1dcb0614f79aac2ded5c92a85dd1",
+      "bytes": 920
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/final-journal.json",
+      "path": "after-receipt-r2/final-journal.json",
+      "sha256": "578e045711fff384f8ebc458bb8cb6961b7f44eb38694de9c154f1bda766813d",
+      "bytes": 6518
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/identity.json",
+      "path": "after-receipt-r2/identity.json",
+      "sha256": "eb497b9c2cd503a589752d5c6bc24c776956b04d5173388bce7eec75d21f3a84",
+      "bytes": 2916
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/initial-journal.json",
+      "path": "after-receipt-r2/initial-journal.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/native-after-owner-restart.json",
+      "path": "after-receipt-r2/native-after-owner-restart.json",
+      "sha256": "d005df9ce6209dd232011838bc876fd506380f2be456532adbf7bc75d976c597",
+      "bytes": 61319
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/native-after-unlock.json",
+      "path": "after-receipt-r2/native-after-unlock.json",
+      "sha256": "835aec11b09dd028d9d91fdac93b3415da111c32dd192338ddeb3fec0a27d9b8",
+      "bytes": 61318
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/native-fault-after.json",
+      "path": "after-receipt-r2/native-fault-after.json",
+      "sha256": "8c06f194bd075ed005d9bf32bca19f751bc662b8b0a031a7087f675415e021f4",
+      "bytes": 61318
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/native-fault-before.json",
+      "path": "after-receipt-r2/native-fault-before.json",
+      "sha256": "44cc5e3a5d95b18ff229149160ba44546aa1aba934f15ee8b5a16b5921d17635",
+      "bytes": 38640
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/native-final.json",
+      "path": "after-receipt-r2/native-final.json",
+      "sha256": "d85d1c657bf65f38ae15c017821d2cd04fa074215744e91ad4754818771eb0a8",
+      "bytes": 61319
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/native-initial.json",
+      "path": "after-receipt-r2/native-initial.json",
+      "sha256": "52ca8decefd7447a1208531f25bc3eaf92b26f30e594915f665444978efbf81e",
+      "bytes": 539
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/native-new-action-after-restart-after.json",
+      "path": "after-receipt-r2/native-new-action-after-restart-after.json",
+      "sha256": "5cdf2c5c02c8cfadcf0e0ab0f01e6d694a403c4c2794bfd5302a7ae8816d9b8b",
+      "bytes": 61318
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/native-new-action-after-restart-before.json",
+      "path": "after-receipt-r2/native-new-action-after-restart-before.json",
+      "sha256": "0a7257906e6bb5f26463b26fae54ca9abd92c65eae7615cb3ebc66b46f1aa68f",
+      "bytes": 61318
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/native-new-action-after-unlock-after.json",
+      "path": "after-receipt-r2/native-new-action-after-unlock-after.json",
+      "sha256": "2f65d93cb5c57e5dacd7b36a3b273ff35a6679070309e4c677fb965089290b19",
+      "bytes": 61318
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/native-new-action-after-unlock-before.json",
+      "path": "after-receipt-r2/native-new-action-after-unlock-before.json",
+      "sha256": "e821dcd74bb0c7f5496b65783ac46f73f1aa407881e3b671b8bf611ad80b14b8",
+      "bytes": 61318
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/native-positive-after.json",
+      "path": "after-receipt-r2/native-positive-after.json",
+      "sha256": "66f455504b1da9c54718bdc2e27978f001973fdf4f023f1062b030915ffc5349",
+      "bytes": 38641
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/native-positive-before.json",
+      "path": "after-receipt-r2/native-positive-before.json",
+      "sha256": "0b831bf8c9b7736d0ad4b2fbd19b56d50c86e674cbe2ab9081c0c065af2b8d2d",
+      "bytes": 538
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/native-same-action-after-restart-after.json",
+      "path": "after-receipt-r2/native-same-action-after-restart-after.json",
+      "sha256": "8cae032cb1ce7ec98559dbcbacda909c02274cd8b0a34f59b2147fdaabb029db",
+      "bytes": 61318
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/native-same-action-after-restart-before.json",
+      "path": "after-receipt-r2/native-same-action-after-restart-before.json",
+      "sha256": "460b6cf3bcc9672ab95654e795366eed2feb21d6c8b667edac757f13144a8c42",
+      "bytes": 61318
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/native-same-action-after-unlock-after.json",
+      "path": "after-receipt-r2/native-same-action-after-unlock-after.json",
+      "sha256": "56bf389ecf49f81c11ed7a794e2f9f073137ef791c26a17357f399b62b404126",
+      "bytes": 61318
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/native-same-action-after-unlock-before.json",
+      "path": "after-receipt-r2/native-same-action-after-unlock-before.json",
+      "sha256": "3ea0ba1f55adc7a876b08c393b12e9455155c5ad48d52cc3d476c9cee20ecf43",
+      "bytes": 61319
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/new-action-after-restart/command.json",
+      "path": "after-receipt-r2/new-action-after-restart/command.json",
+      "sha256": "859310e0686911519e2f2ed510cec79df757efbf979e840f69ce7fb25577ba3b",
+      "bytes": 790
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/new-action-after-restart/exit.json",
+      "path": "after-receipt-r2/new-action-after-restart/exit.json",
+      "sha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "bytes": 192
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/new-action-after-restart/host.stderr.txt",
+      "path": "after-receipt-r2/new-action-after-restart/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/new-action-after-restart/host.stdout.jsonl",
+      "path": "after-receipt-r2/new-action-after-restart/host.stdout.jsonl",
+      "sha256": "4623012939f64ecb9a52d8de0f7573f0d5fa7ba0abffe6790b2677724ab56a13",
+      "bytes": 6604
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/new-action-after-restart/launch.json",
+      "path": "after-receipt-r2/new-action-after-restart/launch.json",
+      "sha256": "487479138aef00898a6c575231112a61825b97f10396481c44c7bb9fd817ff3b",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/new-action-after-restart/model-relay.json",
+      "path": "after-receipt-r2/new-action-after-restart/model-relay.json",
+      "sha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "bytes": 1027
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/new-action-after-restart/prompt.txt",
+      "path": "after-receipt-r2/new-action-after-restart/prompt.txt",
+      "sha256": "7551aed85a0904c1533241f36541063ab6c5a387661e46ef836e906317cf1f0d",
+      "bytes": 450
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/new-action-after-restart/run.json",
+      "path": "after-receipt-r2/new-action-after-restart/run.json",
+      "sha256": "0c320e3110533e1f681df4eb96e45590eb78b24b292058c9d65a85c814a5be8c",
+      "bytes": 1089
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/new-action-after-unlock/command.json",
+      "path": "after-receipt-r2/new-action-after-unlock/command.json",
+      "sha256": "8a378d0851122b24650aac2d35309fbfe23f03820405dce413c04810e5ca190f",
+      "bytes": 790
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/new-action-after-unlock/exit.json",
+      "path": "after-receipt-r2/new-action-after-unlock/exit.json",
+      "sha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "bytes": 192
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/new-action-after-unlock/host.stderr.txt",
+      "path": "after-receipt-r2/new-action-after-unlock/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/new-action-after-unlock/host.stdout.jsonl",
+      "path": "after-receipt-r2/new-action-after-unlock/host.stdout.jsonl",
+      "sha256": "d47f6f4cea69f7455260a11ba01e9e88546633a328cdaf36a11f31454a0338fd",
+      "bytes": 5892
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/new-action-after-unlock/launch.json",
+      "path": "after-receipt-r2/new-action-after-unlock/launch.json",
+      "sha256": "76b9257ccf90c114480a8ff0b3a6554cfa3343e253045ee98e013d55e350b58b",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/new-action-after-unlock/model-relay.json",
+      "path": "after-receipt-r2/new-action-after-unlock/model-relay.json",
+      "sha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "bytes": 1027
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/new-action-after-unlock/prompt.txt",
+      "path": "after-receipt-r2/new-action-after-unlock/prompt.txt",
+      "sha256": "7551aed85a0904c1533241f36541063ab6c5a387661e46ef836e906317cf1f0d",
+      "bytes": 450
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/new-action-after-unlock/run.json",
+      "path": "after-receipt-r2/new-action-after-unlock/run.json",
+      "sha256": "36f3335595bcf67718277d36cc69cb6ec46894d15a2d5dbe72922b5107de9378",
+      "bytes": 1088
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/positive/command.json",
+      "path": "after-receipt-r2/positive/command.json",
+      "sha256": "dfc82f6feccf50a55b25ecdff2477cf347b390e53fb88681c14dc02729ccba92",
+      "bytes": 790
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/positive/exit.json",
+      "path": "after-receipt-r2/positive/exit.json",
+      "sha256": "e2a5db79a4a63e50c6750e25b722e84603f4e58d14b6ddfe523a105a06670b2d",
+      "bytes": 191
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/positive/host.stderr.txt",
+      "path": "after-receipt-r2/positive/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/positive/host.stdout.jsonl",
+      "path": "after-receipt-r2/positive/host.stdout.jsonl",
+      "sha256": "5455a66a7dc87da4d9646b9b3c2dbe50add08a6532da8612e4f65b4e013f9faa",
+      "bytes": 14389
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/positive/launch.json",
+      "path": "after-receipt-r2/positive/launch.json",
+      "sha256": "b0dc5dcf5d3929d291d95932605627ecdcae96d9ed73573e3cba8b12a6db37fb",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/positive/model-relay.json",
+      "path": "after-receipt-r2/positive/model-relay.json",
+      "sha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "bytes": 1027
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/positive/prompt.txt",
+      "path": "after-receipt-r2/positive/prompt.txt",
+      "sha256": "edeefd3e2ec0a8cd116d82d9bc9cea74e91e6dcf841eb482e88ae4d0f3874798",
+      "bytes": 476
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/positive/run.json",
+      "path": "after-receipt-r2/positive/run.json",
+      "sha256": "20a256d420bef0aa271de6378048dd364e2a9d8a3fd0b3481be112b532dda988",
+      "bytes": 5759
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/positive-journal.json",
+      "path": "after-receipt-r2/positive-journal.json",
+      "sha256": "f7e6fcfd7a375c102a113e8b35bfeb13537c291e43ea4edfcb389b91bd053a6d",
+      "bytes": 5633
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/resource-replied.json",
+      "path": "after-receipt-r2/resource-replied.json",
+      "sha256": "f30c118857fb04a1380e41735f6b803a0d21d3777d7167e08e974a20aaad702b",
+      "bytes": 441
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/restart.json",
+      "path": "after-receipt-r2/restart.json",
+      "sha256": "a742aa1ddbf249d831d7f638e2dc1e9f83286be0a087f2ceb42611716a15b522",
+      "bytes": 465
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/result.json",
+      "path": "after-receipt-r2/result.json",
+      "sha256": "7d591f7deadf6e54cb666cef123e3b7f5db60aea57730b7c1328cadbded006a4",
+      "bytes": 1368
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/same-action-after-restart/command.json",
+      "path": "after-receipt-r2/same-action-after-restart/command.json",
+      "sha256": "075305028ac7da51b86eb7d94687c4ee750636d291bb2d6ac1fbb404fcb55746",
+      "bytes": 790
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/same-action-after-restart/exit.json",
+      "path": "after-receipt-r2/same-action-after-restart/exit.json",
+      "sha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "bytes": 192
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/same-action-after-restart/host.stderr.txt",
+      "path": "after-receipt-r2/same-action-after-restart/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/same-action-after-restart/host.stdout.jsonl",
+      "path": "after-receipt-r2/same-action-after-restart/host.stdout.jsonl",
+      "sha256": "2879c1b656074ab7a172c749a9d12d2a9e4e2004e6dbc3ea7b7c9a3ba09563b5",
+      "bytes": 6135
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/same-action-after-restart/launch.json",
+      "path": "after-receipt-r2/same-action-after-restart/launch.json",
+      "sha256": "366120c85d4951b1563a1ba48e007abb59e17d3c5e11839b574422687b4da243",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/same-action-after-restart/model-relay.json",
+      "path": "after-receipt-r2/same-action-after-restart/model-relay.json",
+      "sha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "bytes": 1027
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/same-action-after-restart/prompt.txt",
+      "path": "after-receipt-r2/same-action-after-restart/prompt.txt",
+      "sha256": "46c5ac984cd5b4e2cb83bdd0e360cde2b3835c98e1f40a65bc62ffe07e5516b3",
+      "bytes": 471
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/same-action-after-restart/run.json",
+      "path": "after-receipt-r2/same-action-after-restart/run.json",
+      "sha256": "a2654ff797d32aa61d823c2b35d923d7a919331400969a9abebe65fe8cacf7fd",
+      "bytes": 1111
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/same-action-after-unlock/command.json",
+      "path": "after-receipt-r2/same-action-after-unlock/command.json",
+      "sha256": "1904fe3a5d5a187ad06527d78de0684c62bb350e056acc821669d7a426e63981",
+      "bytes": 790
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/same-action-after-unlock/exit.json",
+      "path": "after-receipt-r2/same-action-after-unlock/exit.json",
+      "sha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "bytes": 192
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/same-action-after-unlock/host.stderr.txt",
+      "path": "after-receipt-r2/same-action-after-unlock/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/same-action-after-unlock/host.stdout.jsonl",
+      "path": "after-receipt-r2/same-action-after-unlock/host.stdout.jsonl",
+      "sha256": "c17d993a999ae1c9242454df53b917b63482fa521fa905d1ef7115d2be9f9bbd",
+      "bytes": 6867
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/same-action-after-unlock/launch.json",
+      "path": "after-receipt-r2/same-action-after-unlock/launch.json",
+      "sha256": "44cdfcf1107b53adb09a53c3a699755602d10992932eba8989a769022da8c96c",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/same-action-after-unlock/model-relay.json",
+      "path": "after-receipt-r2/same-action-after-unlock/model-relay.json",
+      "sha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "bytes": 1027
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/same-action-after-unlock/prompt.txt",
+      "path": "after-receipt-r2/same-action-after-unlock/prompt.txt",
+      "sha256": "46c5ac984cd5b4e2cb83bdd0e360cde2b3835c98e1f40a65bc62ffe07e5516b3",
+      "bytes": 471
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/same-action-after-unlock/run.json",
+      "path": "after-receipt-r2/same-action-after-unlock/run.json",
+      "sha256": "62c5a2b0dfa737f3823bb5b88c85b4e414f4a31df58fdb8cb593c85e91694374",
+      "bytes": 1109
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/storage-helper.py",
+      "path": "after-receipt-r2/storage-helper.py",
+      "sha256": "7de25889696ee9c1cca324130c6f10e34a41bdce555495a118673ad1336dd8d5",
+      "bytes": 10863
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/verify-fences.mjs",
+      "path": "after-receipt-r2/verify-fences.mjs",
+      "sha256": "93e929d539b3c59b9db09b8c781113b9ce92c8e799287c6f565b7e1782d5f496",
+      "bytes": 1779
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission/driver-source.py",
+      "path": "before-admission/driver-source.py",
+      "sha256": "081f4ebb5b62a3884a3a9c7dde6b9845b9e7a2706136602b0346284aa1fac17d",
+      "bytes": 19919
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission/identity.json",
+      "path": "before-admission/identity.json",
+      "sha256": "69225f7a9be30f6dff173bcdbd9a4c3bc00c82107cc51ea875ba5fc78e28cb4d",
+      "bytes": 2858
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission/initial-journal.json",
+      "path": "before-admission/initial-journal.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission/native-initial.json",
+      "path": "before-admission/native-initial.json",
+      "sha256": "1389866cef774b7f82301767109c1118e6973a088535bfbe2d8374ee9f41bdb9",
+      "bytes": 539
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission/native-positive-after.json",
+      "path": "before-admission/native-positive-after.json",
+      "sha256": "d06a035d6c05496759e3e7faece21f1938365577cebb49889ff286f0d6c37b9d",
+      "bytes": 539
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission/native-positive-before.json",
+      "path": "before-admission/native-positive-before.json",
+      "sha256": "e8d56fe0b0b56f8a3442e268c9dd5afd3e0b9befe05e7cd8bd7f95738f25130c",
+      "bytes": 539
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission/positive/command.json",
+      "path": "before-admission/positive/command.json",
+      "sha256": "d2cbac546a94c505b60701032887ea85d73c410f8d2507b10a75305f0e528ec8",
+      "bytes": 790
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission/positive/host.stderr.txt",
+      "path": "before-admission/positive/host.stderr.txt",
+      "sha256": "dd3f400b450eac6a3624b9925ccef512201dff9160ca7c14d2a0bc60c85f2915",
+      "bytes": 84
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission/positive/host.stdout.jsonl",
+      "path": "before-admission/positive/host.stdout.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission/positive/prompt.txt",
+      "path": "before-admission/positive/prompt.txt",
+      "sha256": "db35a070e01772edfb9976aad55219d71055ea7cda143c22bf31dbf492f6cc85",
+      "bytes": 479
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission/positive/run.json",
+      "path": "before-admission/positive/run.json",
+      "sha256": "df7af12a95100046388a03766eddc45a94c6847f9ac5d43bcffc111730e7cc27",
+      "bytes": 163
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission/result.json",
+      "path": "before-admission/result.json",
+      "sha256": "7126befd16c2b35656ecb95904463db4fdf34e992d88025a448d0ff9b4676b95",
+      "bytes": 113
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission/storage-helper.py",
+      "path": "before-admission/storage-helper.py",
+      "sha256": "5da5e9d5743a3da8f045b4fd35f7597ac9890691f8f17dd6815ebaa6e8e6dcd7",
+      "bytes": 10808
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/driver-source.py",
+      "path": "before-admission-r2/driver-source.py",
+      "sha256": "04957d902deb12b40fda451623de4af8c68900d27a55f72c81d433e20e2798a9",
+      "bytes": 20278
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/fault/command.json",
+      "path": "before-admission-r2/fault/command.json",
+      "sha256": "b0c1e4fbb5f6e30cc1a09da45f1899af01cfca586adfe88f0d2e096e30bc24ad",
+      "bytes": 793
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/fault/exit.json",
+      "path": "before-admission-r2/fault/exit.json",
+      "sha256": "f3bc8161f2514d1da92b27682e7d6b5d9090c3894abb794eb789f8f4db0643fe",
+      "bytes": 191
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/fault/host.stderr.txt",
+      "path": "before-admission-r2/fault/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/fault/host.stdout.jsonl",
+      "path": "before-admission-r2/fault/host.stdout.jsonl",
+      "sha256": "6cfcccca85e3e9a3a6b8bb6fc67293db49b7341659cde1d7c3f890d850f529fe",
+      "bytes": 8550
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/fault/launch.json",
+      "path": "before-admission-r2/fault/launch.json",
+      "sha256": "567ea64a2d93e523fc148e654bc9851a3356ff9f719a1487ae220d1227bf9143",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/fault/model-relay.json",
+      "path": "before-admission-r2/fault/model-relay.json",
+      "sha256": "b278954f161340fdc2f2f702518e0349d8e1c6cca80debbd50cf3f27aebe04fc",
+      "bytes": 735
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/fault/prompt.txt",
+      "path": "before-admission-r2/fault/prompt.txt",
+      "sha256": "ae85b5d0b0907dfe21eb33911d0855c9b4169552cbdcb3d285305d77e7dd3bfe",
+      "bytes": 477
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/fault/run.json",
+      "path": "before-admission-r2/fault/run.json",
+      "sha256": "be4f2998c227846111aa9f605b878a7dff066d91707cc862471ad42d08c9d87c",
+      "bytes": 3041
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/fault-command.json",
+      "path": "before-admission-r2/fault-command.json",
+      "sha256": "fde4614aac082a0c9034d2e465fa197a45d446880bcf0135b8571fb2122738e5",
+      "bytes": 498
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/fault-journal.json",
+      "path": "before-admission-r2/fault-journal.json",
+      "sha256": "1abbd7343b727da4d57083fe53668d6b8bb7ee6bcde0a48f59627ab0c72ce9da",
+      "bytes": 8518
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/fault-locked.json",
+      "path": "before-admission-r2/fault-locked.json",
+      "sha256": "85f6778943b2042d545b9433f1589630cc593c670fab289a3452440e9c609ffd",
+      "bytes": 326
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/fault-process.stderr.txt",
+      "path": "before-admission-r2/fault-process.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/fault-process.stdout.txt",
+      "path": "before-admission-r2/fault-process.stdout.txt",
+      "sha256": "f850373893f6419e93b7b2d86e65936852704a30f9b716bb30a25ae7b6190a3a",
+      "bytes": 153
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/fault-released.json",
+      "path": "before-admission-r2/fault-released.json",
+      "sha256": "131657a2b0a9f679d27e8f32bede8172f0944996db008a4801bab795e317b3d7",
+      "bytes": 76
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/fence-verification.json",
+      "path": "before-admission-r2/fence-verification.json",
+      "sha256": "b4dd6c0abeeadccf7334b230a141b8f01574fb008ef077570846bff85cf8a7c7",
+      "bytes": 920
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/final-journal.json",
+      "path": "before-admission-r2/final-journal.json",
+      "sha256": "1abbd7343b727da4d57083fe53668d6b8bb7ee6bcde0a48f59627ab0c72ce9da",
+      "bytes": 8518
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/identity.json",
+      "path": "before-admission-r2/identity.json",
+      "sha256": "8ee4186f8d21c06cbd7be5a8cc198f9963e7663276e3a4618d8c41d6cccd022f",
+      "bytes": 2935
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/initial-journal.json",
+      "path": "before-admission-r2/initial-journal.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/native-after-owner-restart.json",
+      "path": "before-admission-r2/native-after-owner-restart.json",
+      "sha256": "25063d995c374c2cf90aa664303cdd4243a4dad1fa3f6509a7f11bd3ebc77535",
+      "bytes": 39070
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/native-after-unlock.json",
+      "path": "before-admission-r2/native-after-unlock.json",
+      "sha256": "e84455209fdb73e0461964744f07301fb4ac3c435a580989ef17a0cf293b544e",
+      "bytes": 39071
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/native-fault-after.json",
+      "path": "before-admission-r2/native-fault-after.json",
+      "sha256": "1880c8fc19ce63d7c5e5da88cdad3df448d358c29fa540bf2f1be15f025dad3a",
+      "bytes": 39070
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/native-fault-before.json",
+      "path": "before-admission-r2/native-fault-before.json",
+      "sha256": "ae7ffeaa8049ceae984491a74ac97e96ee23f65a26ebef51a7f80817783fd963",
+      "bytes": 38656
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/native-final.json",
+      "path": "before-admission-r2/native-final.json",
+      "sha256": "612a2fef6141737ddac4c3603d9ff80c97dfc790df7a9518e9b495c32e5ba287",
+      "bytes": 39070
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/native-initial.json",
+      "path": "before-admission-r2/native-initial.json",
+      "sha256": "ccfc9c470149293de2dbe8da53f098dd7b0944ee29d38d17af0840be0baa4174",
+      "bytes": 539
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/native-new-action-after-restart-after.json",
+      "path": "before-admission-r2/native-new-action-after-restart-after.json",
+      "sha256": "d1ec3f38969e0975fd14e381a72c233530cf1708ace58e1051cb13af75214058",
+      "bytes": 39070
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/native-new-action-after-restart-before.json",
+      "path": "before-admission-r2/native-new-action-after-restart-before.json",
+      "sha256": "fc98bcd97f4a5af35a09b24be960009c6038c614e1cff2c401b715129e52042b",
+      "bytes": 39071
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/native-new-action-after-unlock-after.json",
+      "path": "before-admission-r2/native-new-action-after-unlock-after.json",
+      "sha256": "3fa96e12ef5210b3bd3d6e906835374cda832e0d004e24acb50c5257070b6864",
+      "bytes": 39070
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/native-new-action-after-unlock-before.json",
+      "path": "before-admission-r2/native-new-action-after-unlock-before.json",
+      "sha256": "a3c833a6ed88367f92c9c59c208f0bc1daeeccd5e8b2bbe91a6c9535bd63bff4",
+      "bytes": 39069
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/native-positive-after.json",
+      "path": "before-admission-r2/native-positive-after.json",
+      "sha256": "298f87bf7b7f33f51abcdd9f5feef3e4ffc76fe8ede85345d1016554217accc4",
+      "bytes": 38656
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/native-positive-before.json",
+      "path": "before-admission-r2/native-positive-before.json",
+      "sha256": "786586b6fa6debdc9eb4485a920cd5b56b77727dcde31e3c3119cefaf4146af0",
+      "bytes": 539
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/native-same-action-after-restart-after.json",
+      "path": "before-admission-r2/native-same-action-after-restart-after.json",
+      "sha256": "47185f7b5b74a14438af305f8bf9a84fbc14fbe3af1c44c109f22378943ba757",
+      "bytes": 39070
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/native-same-action-after-restart-before.json",
+      "path": "before-admission-r2/native-same-action-after-restart-before.json",
+      "sha256": "b6e7c00d5bec60c32e6d830e3110f8132f4fdfb99008058806214235fbec203d",
+      "bytes": 39070
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/native-same-action-after-unlock-after.json",
+      "path": "before-admission-r2/native-same-action-after-unlock-after.json",
+      "sha256": "3840f933746eb1ded131f83f10e8b99cdb5eb4b8cc4c0e7b7a3ad25390a47722",
+      "bytes": 39070
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/native-same-action-after-unlock-before.json",
+      "path": "before-admission-r2/native-same-action-after-unlock-before.json",
+      "sha256": "501a81effa21566bbb1efbd575237aaf5a0e62eafb8fceb21ffa27afd9df6d59",
+      "bytes": 39070
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/new-action-after-restart/command.json",
+      "path": "before-admission-r2/new-action-after-restart/command.json",
+      "sha256": "d93b5d1db6801d52e00f8b39637e83ea69688e07a9e22327a1b62c7cb8d0d6d6",
+      "bytes": 793
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/new-action-after-restart/exit.json",
+      "path": "before-admission-r2/new-action-after-restart/exit.json",
+      "sha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "bytes": 192
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/new-action-after-restart/host.stderr.txt",
+      "path": "before-admission-r2/new-action-after-restart/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/new-action-after-restart/host.stdout.jsonl",
+      "path": "before-admission-r2/new-action-after-restart/host.stdout.jsonl",
+      "sha256": "3a6e8784d3720edb29e844c9b9ad3e7b92b0304e40363f62dc328ce11393dd19",
+      "bytes": 6590
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/new-action-after-restart/launch.json",
+      "path": "before-admission-r2/new-action-after-restart/launch.json",
+      "sha256": "380a6bc9e62292b9f2e0e0521ab5800b50efdbf4740257c88f148571bff61146",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/new-action-after-restart/model-relay.json",
+      "path": "before-admission-r2/new-action-after-restart/model-relay.json",
+      "sha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "bytes": 1027
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/new-action-after-restart/prompt.txt",
+      "path": "before-admission-r2/new-action-after-restart/prompt.txt",
+      "sha256": "7551aed85a0904c1533241f36541063ab6c5a387661e46ef836e906317cf1f0d",
+      "bytes": 450
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/new-action-after-restart/run.json",
+      "path": "before-admission-r2/new-action-after-restart/run.json",
+      "sha256": "ac8fe2125886f0a374b3790e0b2fa1af3a900e379b85d12893ad003a92fdcca4",
+      "bytes": 1089
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/new-action-after-unlock/command.json",
+      "path": "before-admission-r2/new-action-after-unlock/command.json",
+      "sha256": "1a1971d5beaf011dabe609a9a26c1a60626955132bfc2b81fead40d54db1c7a6",
+      "bytes": 793
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/new-action-after-unlock/exit.json",
+      "path": "before-admission-r2/new-action-after-unlock/exit.json",
+      "sha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "bytes": 192
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/new-action-after-unlock/host.stderr.txt",
+      "path": "before-admission-r2/new-action-after-unlock/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/new-action-after-unlock/host.stdout.jsonl",
+      "path": "before-admission-r2/new-action-after-unlock/host.stdout.jsonl",
+      "sha256": "d4735da6fcd39a1770129b3c12ec1d91edbfda664327e95a525ef6cc5b662b94",
+      "bytes": 6664
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/new-action-after-unlock/launch.json",
+      "path": "before-admission-r2/new-action-after-unlock/launch.json",
+      "sha256": "c885fe24007e43b49b710139426f5a370f483f22c253c7cb3d3a7531d37c9ca8",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/new-action-after-unlock/model-relay.json",
+      "path": "before-admission-r2/new-action-after-unlock/model-relay.json",
+      "sha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "bytes": 1027
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/new-action-after-unlock/prompt.txt",
+      "path": "before-admission-r2/new-action-after-unlock/prompt.txt",
+      "sha256": "7551aed85a0904c1533241f36541063ab6c5a387661e46ef836e906317cf1f0d",
+      "bytes": 450
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/new-action-after-unlock/run.json",
+      "path": "before-admission-r2/new-action-after-unlock/run.json",
+      "sha256": "0c288576371aea42373357c7a799b4843f2d01a56d98e608765dbe1421ca5584",
+      "bytes": 1088
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/positive/command.json",
+      "path": "before-admission-r2/positive/command.json",
+      "sha256": "105ac2c7140b9e78b342cb0d0b35a7ab7862ecdc71eb9e1123061befaaf7cfe2",
+      "bytes": 793
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/positive/exit.json",
+      "path": "before-admission-r2/positive/exit.json",
+      "sha256": "e2a5db79a4a63e50c6750e25b722e84603f4e58d14b6ddfe523a105a06670b2d",
+      "bytes": 191
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/positive/host.stderr.txt",
+      "path": "before-admission-r2/positive/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/positive/host.stdout.jsonl",
+      "path": "before-admission-r2/positive/host.stdout.jsonl",
+      "sha256": "9a2125de46856f315d7d72fff0274f51e6c93eed4a02967fbdcb920042e85794",
+      "bytes": 13856
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/positive/launch.json",
+      "path": "before-admission-r2/positive/launch.json",
+      "sha256": "4807f323d112fb8a88225b54dae37f1aab3a2ff1d411a1f5e0d2c4d0f13c0661",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/positive/model-relay.json",
+      "path": "before-admission-r2/positive/model-relay.json",
+      "sha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "bytes": 1027
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/positive/prompt.txt",
+      "path": "before-admission-r2/positive/prompt.txt",
+      "sha256": "db35a070e01772edfb9976aad55219d71055ea7cda143c22bf31dbf492f6cc85",
+      "bytes": 479
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/positive/run.json",
+      "path": "before-admission-r2/positive/run.json",
+      "sha256": "b1e1fea4440ea601dbbe6d1f0091d36a461d225ae0dee2d563312dd8e3e198d9",
+      "bytes": 5765
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/positive-journal.json",
+      "path": "before-admission-r2/positive-journal.json",
+      "sha256": "f80cdd3b103b1e6ad3d52fa7bbd9a8e195850752965c7d2755f5eae0486e8148",
+      "bytes": 5639
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/restart.json",
+      "path": "before-admission-r2/restart.json",
+      "sha256": "879afc7a80bf72232b2344da50471a7ebe4383de0894bcaec70a2732f6c69a5a",
+      "bytes": 468
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/result.json",
+      "path": "before-admission-r2/result.json",
+      "sha256": "f3c11b3254e14b6de1fa65471f4f5ac9a95d6163d4474799ae615cc772e9930d",
+      "bytes": 1364
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/same-action-after-restart/command.json",
+      "path": "before-admission-r2/same-action-after-restart/command.json",
+      "sha256": "e54f39d666b5e8628f2cdc60a91fbd44d73575e1b05ae1e7f9edd0a2d4150ddc",
+      "bytes": 793
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/same-action-after-restart/exit.json",
+      "path": "before-admission-r2/same-action-after-restart/exit.json",
+      "sha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "bytes": 192
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/same-action-after-restart/host.stderr.txt",
+      "path": "before-admission-r2/same-action-after-restart/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/same-action-after-restart/host.stdout.jsonl",
+      "path": "before-admission-r2/same-action-after-restart/host.stdout.jsonl",
+      "sha256": "aed2b3167d91bdf65cf702b0e9d3ee760ecaf1bd7b2aac7dfdbe77d5aa1cea8f",
+      "bytes": 6633
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/same-action-after-restart/launch.json",
+      "path": "before-admission-r2/same-action-after-restart/launch.json",
+      "sha256": "dcfa5b906c7525bcf6c836e40569d56ea24a16536845342e523bec875d3e958e",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/same-action-after-restart/model-relay.json",
+      "path": "before-admission-r2/same-action-after-restart/model-relay.json",
+      "sha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "bytes": 1027
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/same-action-after-restart/prompt.txt",
+      "path": "before-admission-r2/same-action-after-restart/prompt.txt",
+      "sha256": "ae85b5d0b0907dfe21eb33911d0855c9b4169552cbdcb3d285305d77e7dd3bfe",
+      "bytes": 477
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/same-action-after-restart/run.json",
+      "path": "before-admission-r2/same-action-after-restart/run.json",
+      "sha256": "8524681ab6bad4a137ffbd433bd642f3e98959ccf5edc59a0627f6fafb43100c",
+      "bytes": 1117
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/same-action-after-unlock/command.json",
+      "path": "before-admission-r2/same-action-after-unlock/command.json",
+      "sha256": "e1084a864095204c03f4f6bab2d613c501d3fb646f5a34f54b887f9f22733e9b",
+      "bytes": 793
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/same-action-after-unlock/exit.json",
+      "path": "before-admission-r2/same-action-after-unlock/exit.json",
+      "sha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "bytes": 192
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/same-action-after-unlock/host.stderr.txt",
+      "path": "before-admission-r2/same-action-after-unlock/host.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/same-action-after-unlock/host.stdout.jsonl",
+      "path": "before-admission-r2/same-action-after-unlock/host.stdout.jsonl",
+      "sha256": "519240fe905daf7111ae6793ce915034d0b88c645e7dad95957a25f187d58767",
+      "bytes": 6763
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/same-action-after-unlock/launch.json",
+      "path": "before-admission-r2/same-action-after-unlock/launch.json",
+      "sha256": "7608c6afc516ecf1643da1a9f2e3a79aa353be06e4a3d2fcc04dd4fc0e6a2d69",
+      "bytes": 926
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/same-action-after-unlock/model-relay.json",
+      "path": "before-admission-r2/same-action-after-unlock/model-relay.json",
+      "sha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "bytes": 1027
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/same-action-after-unlock/prompt.txt",
+      "path": "before-admission-r2/same-action-after-unlock/prompt.txt",
+      "sha256": "ae85b5d0b0907dfe21eb33911d0855c9b4169552cbdcb3d285305d77e7dd3bfe",
+      "bytes": 477
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/same-action-after-unlock/run.json",
+      "path": "before-admission-r2/same-action-after-unlock/run.json",
+      "sha256": "049cfaa981c5af70d465ecee4fe07f72604edafc26495f8410e44391035ac85d",
+      "bytes": 1116
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/storage-helper.py",
+      "path": "before-admission-r2/storage-helper.py",
+      "sha256": "7de25889696ee9c1cca324130c6f10e34a41bdce555495a118673ad1336dd8d5",
+      "bytes": 10863
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/verify-fences.mjs",
+      "path": "before-admission-r2/verify-fences.mjs",
+      "sha256": "93e929d539b3c59b9db09b8c781113b9ce92c8e799287c6f565b7e1782d5f496",
+      "bytes": 1779
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/handoff.json",
+      "path": "handoff.json",
+      "sha256": "f52abbe2941aad21686b2344da8b652e6323b7321646643b0bfb1d5b51eb82de",
+      "bytes": 14515
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/operational-timing.json",
+      "path": "operational-timing.json",
+      "sha256": "3a075c3409b8d2aa73605064dbefd7b62c1334db71a15def3ae10e9d90edf451",
+      "bytes": 17729
+    },
+    {
+      "source": "/tmp/chio-claude-kernel-storage-r5-20260909/secret-scan.json",
+      "path": "secret-scan.json",
+      "sha256": "29d27c66de0517a50604a441718fa23069a1320f82390738093b43800c34468f",
+      "bytes": 116
+    }
+  ],
+  "exclusions": [],
+  "sourceSnapshotVerifiedAgainstCommit": "608104118b7cb3a4e7605129dbfb0c0bfb92c5e5",
+  "driverSha256": "04957d902deb12b40fda451623de4af8c68900d27a55f72c81d433e20e2798a9",
+  "scope": "All regular files copied byte-for-byte. Setup failures and final r2 cases kept separately. No private authority directory was copied."
+}

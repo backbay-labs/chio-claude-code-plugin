@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "cutpoint": "after-admission",
+  "originalRequestId": "0bd2cfab-f0b0-4d3a-b07b-93fa747bd613:3fa531e02d59a567557eeb2bceb51d29908340fa6c0e011cf6c75a960188692c",
+  "positiveDispatches": 1,
+  "faultDispatches": 1,
+  "dispatchesAfterRetriesAndRestart": 2,
+  "unknownAcknowledged": false,
+  "originalAuthorityPreserved": true,
+  "ownerRestarted": true,
+  "admissionState": "outcome_unknown_after_dispatch",
+  "retainedToolOutcomes": 0,
+  "ownerFences": [
+    {
+      "table": "remote_session_credential_calls",
+      "requestId": "0bd2cfab-f0b0-4d3a-b07b-93fa747bd613:3fa531e02d59a567557eeb2bceb51d29908340fa6c0e011cf6c75a960188692c",
+      "state": "fenced",
+      "signatureVerifiedAgainstPinnedKernel": true,
+      "tamperedRequestRejected": true,
+      "canonicalPreimageSha256": "48364dff6e2509dbad043d4fe1dbe0647c3508afd2796e09d0f26c9fcb897801"
+    },
+    {
+      "table": "remote_session_credential_latches",
+      "requestId": "0bd2cfab-f0b0-4d3a-b07b-93fa747bd613:3fa531e02d59a567557eeb2bceb51d29908340fa6c0e011cf6c75a960188692c",
+      "state": "fenced",
+      "signatureVerifiedAgainstPinnedKernel": true,
+      "tamperedRequestRejected": true,
+      "canonicalPreimageSha256": "48364dff6e2509dbad043d4fe1dbe0647c3508afd2796e09d0f26c9fcb897801"
+    }
+  ],
+  "recoveryClaim": "safe refusal with retained uncertainty; no new authority or automatic reconciliation"
+}

@@ -36,7 +36,8 @@
       "bounded_evidence": [
         "native-subscription/current-r5/shared-matrix",
         "native-subscription/current-r5/native-cutpoints",
-        "native-subscription/current-r5/native-lifecycle"
+        "native-subscription/current-r5/native-lifecycle",
+        "native-subscription/current-r5/kernel-storage"
       ]
     },
     "I05": {
@@ -52,7 +53,8 @@
       "required": true,
       "bounded_evidence": [
         "native-subscription/current-r5/shared-matrix",
-        "native-subscription/current-r5/native-lifecycle/result-substitution"
+        "native-subscription/current-r5/native-lifecycle/result-substitution",
+        "native-subscription/current-r5/kernel-storage"
       ]
     },
     "I07": {
@@ -62,7 +64,8 @@
         "native-subscription/current-r5/native-cutpoints",
         "native-subscription/current-r5/native-lifecycle",
         "native-subscription/current-r5/shared-matrix",
-        "native-subscription/current-r5/supplemental-parallel"
+        "native-subscription/current-r5/supplemental-parallel",
+        "native-subscription/current-r5/kernel-storage"
       ]
     },
     "I08": {
@@ -70,7 +73,8 @@
       "required": true,
       "bounded_evidence": [
         "native-subscription/current-r5/provenance/installation.json",
-        "native-subscription/current-r5/native-lifecycle/upgrade-removal"
+        "native-subscription/current-r5/native-lifecycle/upgrade-removal",
+        "native-subscription/current-r5/kernel-storage/OPERATIONAL-NOTE.md"
       ]
     }
   },
@@ -89,7 +93,7 @@
   "initial_host_sha256": "553d1b9e9e7068b275c0a783c7e139ff6503096f286e674c8c919379fb0eca62",
   "current_artifact": "0dd0d906fc34b3ac7d09e3b7f6cdee9f13f511731b25ec761feca7172c9b1158",
   "current_record": "native-subscription/README.md",
-  "remaining_internal_work": "Reconcile I01-I08 including separately owned kernel storage fault evidence; complete release gates and publish the compatible tested artifact combination",
+  "remaining_internal_work": "Reconcile I01-I08 across all retained exact-artifact evidence; complete release gates and publish the compatible tested artifact combination",
   "runtime_source_revision": "c91cd8163ea8b13c66214397bd132bc4f4cd17bf",
   "current_case_index": "native-subscription/current-r5/CASE-INDEX.json",
   "kernel_sha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
@@ -101,8 +105,26 @@
     "separateExpirySuites": 1,
     "supplementalBoundaryAssertions": 27,
     "supplementalParallelScenarios": 1,
-    "skipsReportedByCurrentIdentityRecords": 0
+    "skipsReportedByCurrentIdentityRecords": 0,
+    "kernelStorageCases": 3,
+    "kernelStorageSetupFailuresRetained": 3
   },
   "historical_evidence_policy": "Older source/artifact observations, including r4 failures and successes, remain historical and do not qualify the current archive",
-  "gate_reconciliation_note": "Gate status remains unresolved pending the full program review. Current bounded observations are indexed without promoting suites or fixtures into full acceptance."
+  "gate_reconciliation_note": "Gate status remains unresolved pending the full program review. Current bounded observations are indexed without promoting suites or fixtures into full acceptance.",
+  "kernel_storage_record": "native-subscription/current-r5/kernel-storage/handoff.json",
+  "operational_observations": {
+    "record": "native-subscription/current-r5/kernel-storage/OPERATIONAL-NOTE.md",
+    "timing": "native-subscription/current-r5/kernel-storage/operational-timing.json",
+    "usefulNativeToolIntervalsMs": [
+      1772,
+      705,
+      674,
+      777
+    ],
+    "usefulNativeMcpConnectionMs": 6,
+    "incrementalChioOverhead": null,
+    "matchedDirectBaselineRetained": false,
+    "providerSpendMeasured": false,
+    "limits": "Native intervals include resource/gateway/kernel work. Harness elapsed time also includes inference and independent observers. The separate paired timing task is not claimed here."
+  }
 }

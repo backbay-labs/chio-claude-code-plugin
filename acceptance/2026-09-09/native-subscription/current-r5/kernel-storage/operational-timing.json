@@ -1,0 +1,310 @@
+{
+  "claim": "bounded retained operational observations, not an incremental latency benchmark",
+  "runs": [
+    {
+      "runDirectory": "/tmp/chio-claude-subscription-r5-final-cutpoints-20260909/useful/workflow",
+      "archiveBoundLaunch": {
+        "schema": "chio.claude.restricted-launch.v2",
+        "host": "/Users/connor/.local/share/claude/versions/2.1.267",
+        "hostSha256": "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+        "gatewaySha256": "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+        "workspace": "/private/tmp/chio-claude-native-runtime-bb7105c9bf354943a6d6b517f2bc39ce/workspace",
+        "temporary": "/private/tmp/cc-IGn3n4",
+        "sessionId": "6a7ff5f6-7fd6-4af5-9125-6092c617d1d4",
+        "sandboxPath": "/private/tmp/chio-claude-native-runtime-bb7105c9bf354943a6d6b517f2bc39ce/.chio-claude-control-yfTXuX/host.sb",
+        "sandboxSha256": "c1bfc858cd657a3f1aaff7ee5ba5c515544b8a408aa40766cc118cc414311669",
+        "control": "/private/tmp/chio-claude-native-runtime-bb7105c9bf354943a6d6b517f2bc39ce/.chio-claude-control-yfTXuX",
+        "modelAuth": "claude-login",
+        "modelTransport": "operator-messages-relay",
+        "acceptance": "unverified"
+      },
+      "originalDebugLog": "/private/tmp/chio-claude-native-runtime-bb7105c9bf354943a6d6b517f2bc39ce/profile/host-debug.log",
+      "originalDebugSha256": "c1228fd80fe05dc32a4a7a4bc84fd52945cb30c8d0739e5b4fee5d9a2059408e",
+      "nativeTimingHeaders": [
+        "2026-09-10T02:54:52.663Z [DEBUG] MCP server \"chio\": Starting connection with timeout of 30000ms",
+        "2026-09-10T02:54:52.669Z [DEBUG] MCP server \"chio\": Connection established with capabilities: {\"hasTools\":true,\"hasPrompts\":false,\"hasResources\":false,\"hasResourceSubscribe\":false,\"serverVersion\":{\"name\":\"chio-protected-gateway\",\"version\":\"0.3.0\"}}",
+        "2026-09-10T02:54:54.377Z [DEBUG] MCP server \"chio\": Calling MCP tool: write_file",
+        "2026-09-10T02:54:56.149Z [DEBUG] MCP server \"chio\": Tool 'write_file' completed successfully in 1s",
+        "2026-09-10T02:54:57.728Z [DEBUG] MCP server \"chio\": Calling MCP tool: edit_file",
+        "2026-09-10T02:54:58.433Z [DEBUG] MCP server \"chio\": Tool 'edit_file' completed successfully in 705ms",
+        "2026-09-10T02:54:59.798Z [DEBUG] MCP server \"chio\": Calling MCP tool: read_text_file",
+        "2026-09-10T02:55:00.472Z [DEBUG] MCP server \"chio\": Tool 'read_text_file' completed successfully in 674ms",
+        "2026-09-10T02:55:01.748Z [DEBUG] MCP server \"chio\": Calling MCP tool: list_directory",
+        "2026-09-10T02:55:02.525Z [DEBUG] MCP server \"chio\": Tool 'list_directory' completed successfully in 777ms"
+      ],
+      "nativeToolIntervals": [
+        {
+          "tool": "write_file",
+          "startedAt": "2026-09-10T02:54:54.377000+00:00",
+          "finishedAt": "2026-09-10T02:54:56.149000+00:00",
+          "milliseconds": 1772.0,
+          "nativeTransportStatus": "completed successfully in",
+          "nativeRoundedDuration": "1s"
+        },
+        {
+          "tool": "edit_file",
+          "startedAt": "2026-09-10T02:54:57.728000+00:00",
+          "finishedAt": "2026-09-10T02:54:58.433000+00:00",
+          "milliseconds": 705.0,
+          "nativeTransportStatus": "completed successfully in",
+          "nativeRoundedDuration": "705ms"
+        },
+        {
+          "tool": "read_text_file",
+          "startedAt": "2026-09-10T02:54:59.798000+00:00",
+          "finishedAt": "2026-09-10T02:55:00.472000+00:00",
+          "milliseconds": 674.0,
+          "nativeTransportStatus": "completed successfully in",
+          "nativeRoundedDuration": "674ms"
+        },
+        {
+          "tool": "list_directory",
+          "startedAt": "2026-09-10T02:55:01.748000+00:00",
+          "finishedAt": "2026-09-10T02:55:02.525000+00:00",
+          "milliseconds": 777.0,
+          "nativeTransportStatus": "completed successfully in",
+          "nativeRoundedDuration": "777ms"
+        }
+      ],
+      "mcpConnectionMilliseconds": 6.0,
+      "harnessElapsedSeconds": 23.047,
+      "terminal": {
+        "code": 0,
+        "signal": null,
+        "exitCode": 0,
+        "hostInitialization": {
+          "ready": true,
+          "failed": false
+        },
+        "hostDelivery": {
+          "confirmed": 4,
+          "failed": false
+        },
+        "executionOutcome": "completed",
+        "retry": "never-automatic"
+      },
+      "elapsedBoundary": "Starts before launcher subprocess; ends after independent post-run observer/snapshot. Includes subscription helper, model inference, native host, and verification overhead. It is not precise launcher-only duration."
+    },
+    {
+      "runDirectory": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/positive",
+      "archiveBoundLaunch": {
+        "schema": "chio.claude.restricted-launch.v2",
+        "host": "/Users/connor/.local/share/claude/versions/2.1.267",
+        "hostSha256": "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+        "gatewaySha256": "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+        "workspace": "/private/tmp/chio-claude-storage-runtime-743383afca9f48868e1321a22ffce66c/workspace",
+        "temporary": "/private/tmp/cc-HwE0wy",
+        "sessionId": "51456abf-63e8-40fe-a42c-8ef4521a0f38",
+        "sandboxPath": "/private/tmp/chio-claude-storage-runtime-743383afca9f48868e1321a22ffce66c/.chio-claude-control-lSlFhh/host.sb",
+        "sandboxSha256": "617eb1945b8624264cb2216273ffc599fb60e92b99fd1f950c5e16779d46d811",
+        "control": "/private/tmp/chio-claude-storage-runtime-743383afca9f48868e1321a22ffce66c/.chio-claude-control-lSlFhh",
+        "modelAuth": "claude-login",
+        "modelTransport": "operator-messages-relay",
+        "acceptance": "unverified"
+      },
+      "originalDebugLog": "/private/tmp/chio-claude-storage-runtime-743383afca9f48868e1321a22ffce66c/profile/host-debug.log",
+      "originalDebugSha256": "ad22cb63ee22e6cdd3af537db0b0273a558fe5fda93dcf9cf2df166624359d32",
+      "nativeTimingHeaders": [
+        "2026-09-10T03:19:26.424Z [DEBUG] MCP server \"chio\": Starting connection with timeout of 30000ms",
+        "2026-09-10T03:19:26.429Z [DEBUG] MCP server \"chio\": Connection established with capabilities: {\"hasTools\":true,\"hasPrompts\":false,\"hasResources\":false,\"hasResourceSubscribe\":false,\"serverVersion\":{\"name\":\"chio-protected-gateway\",\"version\":\"0.3.0\"}}",
+        "2026-09-10T03:19:28.518Z [DEBUG] MCP server \"chio\": Calling MCP tool: write_file",
+        "2026-09-10T03:19:29.165Z [DEBUG] MCP server \"chio\": Tool 'write_file' completed successfully in 647ms"
+      ],
+      "nativeToolIntervals": [
+        {
+          "tool": "write_file",
+          "startedAt": "2026-09-10T03:19:28.518000+00:00",
+          "finishedAt": "2026-09-10T03:19:29.165000+00:00",
+          "milliseconds": 647.0,
+          "nativeTransportStatus": "completed successfully in",
+          "nativeRoundedDuration": "647ms"
+        }
+      ],
+      "mcpConnectionMilliseconds": 5.0,
+      "harnessElapsedSeconds": 8.954,
+      "terminal": {
+        "code": 0,
+        "signal": null,
+        "exitCode": 0,
+        "hostInitialization": {
+          "ready": true,
+          "failed": false
+        },
+        "hostDelivery": {
+          "confirmed": 1,
+          "failed": false
+        },
+        "executionOutcome": "completed",
+        "retry": "never-automatic"
+      },
+      "elapsedBoundary": "Starts before launcher subprocess; ends after independent post-run observer/snapshot. Includes subscription helper, model inference, native host, and verification overhead. It is not precise launcher-only duration."
+    },
+    {
+      "runDirectory": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2/fault",
+      "archiveBoundLaunch": {
+        "schema": "chio.claude.restricted-launch.v2",
+        "host": "/Users/connor/.local/share/claude/versions/2.1.267",
+        "hostSha256": "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+        "gatewaySha256": "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+        "workspace": "/private/tmp/chio-claude-storage-runtime-34e0adb682394a4194fa2b3a0744c8bf/workspace",
+        "temporary": "/private/tmp/cc-e6o3YB",
+        "sessionId": "51456abf-63e8-40fe-a42c-8ef4521a0f38",
+        "sandboxPath": "/private/tmp/chio-claude-storage-runtime-34e0adb682394a4194fa2b3a0744c8bf/.chio-claude-control-TqZcpr/host.sb",
+        "sandboxSha256": "ff2baf1a65eb033e69a260a755f41cdf6391177e626b8fb4312c6795425683d9",
+        "control": "/private/tmp/chio-claude-storage-runtime-34e0adb682394a4194fa2b3a0744c8bf/.chio-claude-control-TqZcpr",
+        "modelAuth": "claude-login",
+        "modelTransport": "operator-messages-relay",
+        "acceptance": "unverified"
+      },
+      "originalDebugLog": "/private/tmp/chio-claude-storage-runtime-34e0adb682394a4194fa2b3a0744c8bf/profile/host-debug.log",
+      "originalDebugSha256": "2bdeb5745f992bdc91e4194ac0dd5ca8ba12e31243fcacf3387df64072f40c41",
+      "nativeTimingHeaders": [
+        "2026-09-10T03:19:35.619Z [DEBUG] MCP server \"chio\": Starting connection with timeout of 30000ms",
+        "2026-09-10T03:19:35.624Z [DEBUG] MCP server \"chio\": Connection established with capabilities: {\"hasTools\":true,\"hasPrompts\":false,\"hasResources\":false,\"hasResourceSubscribe\":false,\"serverVersion\":{\"name\":\"chio-protected-gateway\",\"version\":\"0.3.0\"}}",
+        "2026-09-10T03:19:38.434Z [DEBUG] MCP server \"chio\": Calling MCP tool: write_file",
+        "2026-09-10T03:19:44.192Z [DEBUG] MCP server \"chio\": Tool 'write_file' failed after 5s"
+      ],
+      "nativeToolIntervals": [
+        {
+          "tool": "write_file",
+          "startedAt": "2026-09-10T03:19:38.434000+00:00",
+          "finishedAt": "2026-09-10T03:19:44.192000+00:00",
+          "milliseconds": 5758.0,
+          "nativeTransportStatus": "failed after",
+          "nativeRoundedDuration": "5s"
+        }
+      ],
+      "mcpConnectionMilliseconds": 5.0,
+      "harnessElapsedSeconds": 9.962,
+      "terminal": {
+        "code": 1,
+        "signal": null,
+        "exitCode": 2,
+        "hostInitialization": {
+          "ready": true,
+          "failed": false
+        },
+        "hostDelivery": {
+          "confirmed": 0,
+          "failed": true
+        },
+        "executionOutcome": "unresolved",
+        "retry": "never-automatic"
+      },
+      "elapsedBoundary": "Starts before launcher subprocess; ends after independent post-run observer/snapshot. Includes subscription helper, model inference, native host, and verification overhead. It is not precise launcher-only duration."
+    },
+    {
+      "runDirectory": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2/fault",
+      "archiveBoundLaunch": {
+        "schema": "chio.claude.restricted-launch.v2",
+        "host": "/Users/connor/.local/share/claude/versions/2.1.267",
+        "hostSha256": "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+        "gatewaySha256": "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+        "workspace": "/private/tmp/chio-claude-storage-runtime-d6cdc9f8b4174887b4e8e68d97420c32/workspace",
+        "temporary": "/private/tmp/cc-0xLRQe",
+        "sessionId": "260e53db-7801-4337-ab89-2f4d83dec6c2",
+        "sandboxPath": "/private/tmp/chio-claude-storage-runtime-d6cdc9f8b4174887b4e8e68d97420c32/.chio-claude-control-tZ28AI/host.sb",
+        "sandboxSha256": "79a8ea1598a0de4a802406b971e3f9062ea55f37cc9dcb1f100b7c603204eaff",
+        "control": "/private/tmp/chio-claude-storage-runtime-d6cdc9f8b4174887b4e8e68d97420c32/.chio-claude-control-tZ28AI",
+        "modelAuth": "claude-login",
+        "modelTransport": "operator-messages-relay",
+        "acceptance": "unverified"
+      },
+      "originalDebugLog": "/private/tmp/chio-claude-storage-runtime-d6cdc9f8b4174887b4e8e68d97420c32/profile/host-debug.log",
+      "originalDebugSha256": "049d30089f2986369284fb395972ecfaba14a74b839f8bf77e317a980de34662",
+      "nativeTimingHeaders": [
+        "2026-09-10T03:19:36.069Z [DEBUG] MCP server \"chio\": Starting connection with timeout of 30000ms",
+        "2026-09-10T03:19:36.073Z [DEBUG] MCP server \"chio\": Connection established with capabilities: {\"hasTools\":true,\"hasPrompts\":false,\"hasResources\":false,\"hasResourceSubscribe\":false,\"serverVersion\":{\"name\":\"chio-protected-gateway\",\"version\":\"0.3.0\"}}",
+        "2026-09-10T03:19:38.468Z [DEBUG] MCP server \"chio\": Calling MCP tool: write_file",
+        "2026-09-10T03:19:43.728Z [DEBUG] MCP server \"chio\": Tool 'write_file' failed after 5s"
+      ],
+      "nativeToolIntervals": [
+        {
+          "tool": "write_file",
+          "startedAt": "2026-09-10T03:19:38.468000+00:00",
+          "finishedAt": "2026-09-10T03:19:43.728000+00:00",
+          "milliseconds": 5260.0,
+          "nativeTransportStatus": "failed after",
+          "nativeRoundedDuration": "5s"
+        }
+      ],
+      "mcpConnectionMilliseconds": 4.0,
+      "harnessElapsedSeconds": 9.009,
+      "terminal": {
+        "code": 1,
+        "signal": null,
+        "exitCode": 2,
+        "hostInitialization": {
+          "ready": true,
+          "failed": false
+        },
+        "hostDelivery": {
+          "confirmed": 0,
+          "failed": true
+        },
+        "executionOutcome": "unresolved",
+        "retry": "never-automatic"
+      },
+      "elapsedBoundary": "Starts before launcher subprocess; ends after independent post-run observer/snapshot. Includes subscription helper, model inference, native host, and verification overhead. It is not precise launcher-only duration."
+    },
+    {
+      "runDirectory": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2/fault",
+      "archiveBoundLaunch": {
+        "schema": "chio.claude.restricted-launch.v2",
+        "host": "/Users/connor/.local/share/claude/versions/2.1.267",
+        "hostSha256": "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+        "gatewaySha256": "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+        "workspace": "/private/tmp/chio-claude-storage-runtime-375a523c129341d794195722f2d57b92/workspace",
+        "temporary": "/private/tmp/cc-FV9i0X",
+        "sessionId": "0bd2cfab-f0b0-4d3a-b07b-93fa747bd613",
+        "sandboxPath": "/private/tmp/chio-claude-storage-runtime-375a523c129341d794195722f2d57b92/.chio-claude-control-IPboUn/host.sb",
+        "sandboxSha256": "809d9bf75206215e15ed03cc3a36639cca4326311fc14c17fa0051cd19accda4",
+        "control": "/private/tmp/chio-claude-storage-runtime-375a523c129341d794195722f2d57b92/.chio-claude-control-IPboUn",
+        "modelAuth": "claude-login",
+        "modelTransport": "operator-messages-relay",
+        "acceptance": "unverified"
+      },
+      "originalDebugLog": "/private/tmp/chio-claude-storage-runtime-375a523c129341d794195722f2d57b92/profile/host-debug.log",
+      "originalDebugSha256": "d2aa9856f229ca6c45ab31236239e1c235f4311a97f157092ac854d7dd63c703",
+      "nativeTimingHeaders": [
+        "2026-09-10T03:19:36.807Z [DEBUG] MCP server \"chio\": Starting connection with timeout of 30000ms",
+        "2026-09-10T03:19:36.811Z [DEBUG] MCP server \"chio\": Connection established with capabilities: {\"hasTools\":true,\"hasPrompts\":false,\"hasResources\":false,\"hasResourceSubscribe\":false,\"serverVersion\":{\"name\":\"chio-protected-gateway\",\"version\":\"0.3.0\"}}",
+        "2026-09-10T03:19:39.147Z [DEBUG] MCP server \"chio\": Calling MCP tool: write_file",
+        "2026-09-10T03:19:44.887Z [DEBUG] MCP server \"chio\": Tool 'write_file' failed after 5s"
+      ],
+      "nativeToolIntervals": [
+        {
+          "tool": "write_file",
+          "startedAt": "2026-09-10T03:19:39.147000+00:00",
+          "finishedAt": "2026-09-10T03:19:44.887000+00:00",
+          "milliseconds": 5740.0,
+          "nativeTransportStatus": "failed after",
+          "nativeRoundedDuration": "5s"
+        }
+      ],
+      "mcpConnectionMilliseconds": 4.0,
+      "harnessElapsedSeconds": 9.403,
+      "terminal": {
+        "code": 1,
+        "signal": null,
+        "exitCode": 2,
+        "hostInitialization": {
+          "ready": true,
+          "failed": false
+        },
+        "hostDelivery": {
+          "confirmed": 0,
+          "failed": true
+        },
+        "executionOutcome": "unresolved",
+        "retry": "never-automatic"
+      },
+      "elapsedBoundary": "Starts before launcher subprocess; ends after independent post-run observer/snapshot. Includes subscription helper, model inference, native host, and verification overhead. It is not precise launcher-only duration."
+    }
+  ],
+  "incrementalChioOverhead": null,
+  "missingComparison": "No matched direct-resource native MCP timing was retained. Tool intervals include the resource server and complete gateway/kernel route. Model and observer time must not be attributed to Chio.",
+  "smallestPairedObservation": "One matched read_text_file request for the same immutable local file through the current native Chio MCP route and through a separately isolated read-only direct MCP baseline, capturing native call/result timestamps in both. Keep host, resource image, content, warm state, and model tool arguments fixed. Report the two raw intervals and their difference without generalizing a single pair.",
+  "startupBoundary": "Native MCP connection time is separately visible. Parent authentication-helper startup and complete launcher startup were not separately timestamped.",
+  "providerSpend": "Not measured; subscription inference and whole-model duration are not incremental Chio cost."
+}

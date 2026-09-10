@@ -1,0 +1,21 @@
+{
+  "canonicalizerSha256": "af45965e0cc8dc1848b6b105696fa4a8e8734becac8d86ccd481d8f954440208",
+  "rows": [
+    {
+      "table": "remote_session_credential_calls",
+      "requestId": "260e53db-7801-4337-ab89-2f4d83dec6c2:e8c898bfe1fe39e55fb692c83d1f3f023ef4fa8f4f556d5e661451d1cf0c4973",
+      "state": "fenced",
+      "signatureVerifiedAgainstPinnedKernel": true,
+      "tamperedRequestRejected": true,
+      "canonicalPreimageSha256": "cd6f3bd75b05f204e49b580b073b5f287f9673c9f85037ba04aaed80a2a44693"
+    },
+    {
+      "table": "remote_session_credential_latches",
+      "requestId": "260e53db-7801-4337-ab89-2f4d83dec6c2:e8c898bfe1fe39e55fb692c83d1f3f023ef4fa8f4f556d5e661451d1cf0c4973",
+      "state": "fenced",
+      "signatureVerifiedAgainstPinnedKernel": true,
+      "tamperedRequestRejected": true,
+      "canonicalPreimageSha256": "cd6f3bd75b05f204e49b580b073b5f287f9673c9f85037ba04aaed80a2a44693"
+    }
+  ]
+}

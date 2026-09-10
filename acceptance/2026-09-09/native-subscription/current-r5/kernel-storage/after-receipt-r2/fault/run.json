@@ -1,0 +1,44 @@
+{
+  "label": "fault",
+  "exitCode": 2,
+  "timeout": false,
+  "elapsedSeconds": 9.962,
+  "newDispatches": 1,
+  "terminal": {
+    "code": 1,
+    "signal": null,
+    "exitCode": 2,
+    "hostInitialization": {
+      "ready": true,
+      "failed": false
+    },
+    "hostDelivery": {
+      "confirmed": 0,
+      "failed": true
+    },
+    "executionOutcome": "unresolved",
+    "retry": "never-automatic"
+  },
+  "calls": [
+    {
+      "type": "tool_use",
+      "id": "toolu_013hMNi3XbCT6H4zuQdGHjV3",
+      "name": "mcp__chio__write_file",
+      "input": {
+        "path": "/workspace/uncertain.txt",
+        "content": "retain original native storage effect after-receipt"
+      },
+      "caller": {
+        "type": "direct"
+      }
+    }
+  ],
+  "outcomes": {
+    "toolu_013hMNi3XbCT6H4zuQdGHjV3": {
+      "state": "unknown",
+      "evidence": "unverified",
+      "requestId": "51456abf-63e8-40fe-a42c-8ef4521a0f38:3d4e5f9d31c9944045ffe8c6de772918854d4be429c077ba0c952821827ed397",
+      "reason": "missing or substituted execution evidence"
+    }
+  }
+}
