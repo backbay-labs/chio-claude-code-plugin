@@ -1,0 +1,10 @@
+{
+  "claim": "supplemental actual-native-host OS/dispatcher fixture probes, not real-model or kernel acceptance",
+  "sourceLaunch": "/tmp/chio-claude-subscription-r5-budget-20260909/aggregate-budget/step-1/launch.json",
+  "sourceLaunchSha256": "abf897d19b1936fe983a23a1e4cd330ba4fa426eaeb28c8d5b5cc85972f0c517",
+  "policySha256": "c6bffee42739256ed26d4fd22ae0ad41183aae3f9a610f7eeef446db5ce7c428",
+  "hostSha256": "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+  "artifactSha256": "0dd0d906fc34b3ac7d09e3b7f6cdee9f13f511731b25ec761feca7172c9b1158",
+  "policyRebuiltExactly": true,
+  "providerCredentialUsed": false
+}

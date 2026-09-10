@@ -1,0 +1,216 @@
+{
+  "claim": "Bounded Claude lane rerun complete; full I01-I08 conclusion belongs to parent gate reconciliation, including separate kernel storage fault work.",
+  "runtimeSourceCommit": "c91cd81",
+  "archiveSha256": "0dd0d906fc34b3ac7d09e3b7f6cdee9f13f511731b25ec761feca7172c9b1158",
+  "harnessCommit": "a353c3aa1fd63b9586678b2f42fe65be6a8395e8",
+  "hostVersion": "2.1.267",
+  "model": "claude-sonnet-5",
+  "providerAuthentication": "native claude-login; parent-held subscription OAuth",
+  "nativeScenarios": 18,
+  "groups": [
+    {
+      "path": "/tmp/chio-claude-subscription-r5-final-cutpoints-20260909",
+      "cases": 5,
+      "passed": true,
+      "results": [
+        {
+          "case": "useful",
+          "passed": true,
+          "newDispatchRows": 4,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-useful-9f03c58d982c4f89940f29d90222992e",
+          "sameAuthorityRecovery": false,
+          "sameAuthorityRestartFenced": false
+        },
+        {
+          "case": "journal-before-dispatch",
+          "passed": true,
+          "newDispatchRows": 0,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-journal-before-dispatch-47164e85b61347fc92bbab7d2b5e03ea",
+          "sameAuthorityRecovery": false,
+          "sameAuthorityRestartFenced": false
+        },
+        {
+          "case": "cancel-before-dispatch",
+          "passed": true,
+          "newDispatchRows": 0,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-cancel-before-dispatch-c2714335e8aa425c83e549780a1f6f23",
+          "sameAuthorityRecovery": false,
+          "sameAuthorityRestartFenced": true
+        },
+        {
+          "case": "kernel-network-refused",
+          "passed": true,
+          "newDispatchRows": 1,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-kernel-network-refused-6603d28619234ea3a227f9de5454229d",
+          "sameAuthorityRecovery": false,
+          "sameAuthorityRestartFenced": true
+        },
+        {
+          "case": "journal-after-effect",
+          "passed": true,
+          "newDispatchRows": 1,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-journal-after-effect-591fa4c357f344e79797cc9484f90f98",
+          "sameAuthorityRecovery": false,
+          "sameAuthorityRestartFenced": true
+        }
+      ],
+      "driverSha256": "697741bd678f20c9722ab1e25606c178b1e2ee77d5a24cbdd2f82e3822187216",
+      "matchesCommittedDriver": true
+    },
+    {
+      "path": "/tmp/chio-claude-subscription-r5-budget-20260909",
+      "cases": 1,
+      "passed": true,
+      "results": [
+        {
+          "case": "aggregate-budget",
+          "passed": true,
+          "newDispatchRows": 3,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/budget3-hosts-20260909/claude-native-aggregate-budget-ff0352aa49d74df9bcd0d476e9103e90",
+          "sameAuthorityRecovery": false,
+          "sameAuthorityRestartFenced": false
+        }
+      ],
+      "driverSha256": "697741bd678f20c9722ab1e25606c178b1e2ee77d5a24cbdd2f82e3822187216",
+      "matchesCommittedDriver": true
+    },
+    {
+      "path": "/tmp/chio-claude-subscription-r5-lifecycle-20260909",
+      "cases": 12,
+      "passed": true,
+      "results": [
+        {
+          "case": "result-substitution",
+          "passed": true,
+          "newDispatchRows": 3,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-result-substitution-ae4de49e41a24ef3b429ce931b6e8108",
+          "sameAuthorityRecovery": true,
+          "sameAuthorityRestartFenced": false
+        },
+        {
+          "case": "host-response-loss",
+          "passed": true,
+          "newDispatchRows": 2,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-host-response-loss-ea00af733c8244c4bcbd5e7fc811953f",
+          "sameAuthorityRecovery": true,
+          "sameAuthorityRestartFenced": false
+        },
+        {
+          "case": "gateway-crash",
+          "passed": true,
+          "newDispatchRows": 2,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-gateway-crash-d043e0a816b943e19da826dafc5c8984",
+          "sameAuthorityRecovery": true,
+          "sameAuthorityRestartFenced": false
+        },
+        {
+          "case": "sigterm-recovery",
+          "passed": true,
+          "newDispatchRows": 2,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-sigterm-recovery-0d3b1349e70c4a7ea6f9e70d0bbcef31",
+          "sameAuthorityRecovery": true,
+          "sameAuthorityRestartFenced": false
+        },
+        {
+          "case": "plugin-omitted",
+          "passed": true,
+          "newDispatchRows": 0,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-plugin-omitted-1311ad7da6c340a9adedc047aaca9b63",
+          "sameAuthorityRecovery": false,
+          "sameAuthorityRestartFenced": false
+        },
+        {
+          "case": "gateway-missing",
+          "passed": true,
+          "newDispatchRows": 0,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-gateway-missing-3ac0af62cf8c40b99e994035fc7fd609",
+          "sameAuthorityRecovery": false,
+          "sameAuthorityRestartFenced": false
+        },
+        {
+          "case": "host-missing",
+          "passed": true,
+          "newDispatchRows": 0,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-host-missing-66e28234adfc412189c1afa51e027883",
+          "sameAuthorityRecovery": false,
+          "sameAuthorityRestartFenced": false
+        },
+        {
+          "case": "mcp-silent-omission",
+          "passed": true,
+          "newDispatchRows": 0,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-mcp-silent-omission-a79c7b41d47645f2afddb40b3cf70c6e",
+          "sameAuthorityRecovery": false,
+          "sameAuthorityRestartFenced": false
+        },
+        {
+          "case": "init-malformed",
+          "passed": true,
+          "newDispatchRows": 0,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-init-malformed-bfe2d943a60a47ee9f6f01051f3073f5",
+          "sameAuthorityRecovery": false,
+          "sameAuthorityRestartFenced": false
+        },
+        {
+          "case": "init-timeout",
+          "passed": true,
+          "newDispatchRows": 0,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-init-timeout-7530e163d1554362884142d305750f6a",
+          "sameAuthorityRecovery": false,
+          "sameAuthorityRestartFenced": false
+        },
+        {
+          "case": "init-crash",
+          "passed": true,
+          "newDispatchRows": 0,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-init-crash-70e4da928c874cacb54f04511158167b",
+          "sameAuthorityRecovery": false,
+          "sameAuthorityRestartFenced": false
+        },
+        {
+          "case": "upgrade-removal",
+          "passed": true,
+          "newDispatchRows": 2,
+          "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-upgrade-removal-be7b09194fd04e5eaf01c54f9ea57632",
+          "sameAuthorityRecovery": true,
+          "sameAuthorityRestartFenced": false
+        }
+      ],
+      "driverSha256": "697741bd678f20c9722ab1e25606c178b1e2ee77d5a24cbdd2f82e3822187216",
+      "matchesCommittedDriver": true
+    }
+  ],
+  "supplementalBoundary": {
+    "path": "/tmp/chio-claude-subscription-r5-boundary-20260909",
+    "assertions": 27,
+    "passed": true,
+    "providerInference": false,
+    "driverSha256": "697741bd678f20c9722ab1e25606c178b1e2ee77d5a24cbdd2f82e3822187216"
+  },
+  "supplementalParallel": {
+    "path": "/tmp/chio-claude-parallel-r5-final-20260909",
+    "passed": true,
+    "providerInference": false,
+    "states": [
+      "completed",
+      "not_dispatched"
+    ],
+    "exitCode": 3,
+    "dispatches": 1,
+    "driverSha256": "968360a3c2df2e04caa68537e95c7218f0250925086b56aa6d069395c979bdcf",
+    "matchesCommittedDriver": true
+  },
+  "kernelSha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
+  "installationRecord": "/tmp/chio-claude-cutpoints-r5-artifact-20260909/installation.json",
+  "secretScan": "/tmp/chio-claude-subscription-r5-secret-scan-20260909.json",
+  "releasedOwnerPorts": [
+    58494,
+    58500
+  ],
+  "exclusions": [
+    "Do not claim bridge journal EIO covers kernel storage faults.",
+    "Boundary and parallel fixtures do not qualify real-provider inference.",
+    "Historical r3/r4 failure evidence remains preserved and superseded only by corresponding final r5 cases."
+  ],
+  "copyGuidance": "Consumer installation/node_modules and npm caches inside lifecycle omission cases are disposable test artifacts; preserve case reports, command/install logs, source snapshots and resource observations."
+}

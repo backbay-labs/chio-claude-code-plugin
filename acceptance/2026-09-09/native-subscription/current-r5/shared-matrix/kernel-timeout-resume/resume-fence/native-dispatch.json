@@ -1,0 +1,18 @@
+{
+  "launchPreflightRefused": false,
+  "calls": [
+    {
+      "id": "toolu_01C8bRsrY6GthKEk88NWnpx4",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/claude-must-stay-fenced.txt",
+        "content": "must never dispatch after unknown outcome"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_01C8bRsrY6GthKEk88NWnpx4"
+  ],
+  "expectedAttemptObserved": true,
+  "attemptCount": 1
+}

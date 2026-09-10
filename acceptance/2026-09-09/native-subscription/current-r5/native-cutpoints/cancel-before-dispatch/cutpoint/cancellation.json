@@ -1,0 +1,5 @@
+{
+  "launcherPid": 38069,
+  "signal": "SIGTERM",
+  "cutpoint": "held-before-kernel-fetch"
+}

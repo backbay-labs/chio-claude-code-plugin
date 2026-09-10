@@ -1,0 +1,15 @@
+{
+  "calls": [
+    {
+      "id": "toolu_016hML9422ewG75cpQjQCWRS",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/claude-qualified-ec5ff268c53248a1.txt",
+        "content": "original retained effect"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_016hML9422ewG75cpQjQCWRS"
+  ]
+}

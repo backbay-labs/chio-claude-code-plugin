@@ -1,0 +1,9 @@
+{
+  "label": "startup",
+  "exitCode": 1,
+  "timeout": false,
+  "elapsedSeconds": 0.299,
+  "runtime": "/tmp/chio-claude-native-runtime-e87ee339e06b4cfea4e0d5b7a8edf20a",
+  "newDispatchRows": 0,
+  "terminal": {}
+}

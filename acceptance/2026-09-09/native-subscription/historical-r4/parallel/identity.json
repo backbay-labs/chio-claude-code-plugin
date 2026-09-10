@@ -1,0 +1,34 @@
+{
+  "claim": "supplemental local model fixture with actual native Claude, real kernel, and independent effects; not provider inference acceptance",
+  "archiveSha256": "ee69944dc92941ab20fed41d0ae5bc6d83dc3c31f9c8717f5c46765aa820a6ab",
+  "hostSha256": "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+  "gatewaySha256": "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+  "launcherSha256": "4ce66cef3f5e6bc9fe4b6c78a3e3eef551efe69c3dbaa8d49c7f16be0918c9fc",
+  "kernelSha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
+  "image": "sha256:188cb84d5d0bb4063d4ce5a3b9c3832445a5acda5604911cda80a9136d1850a0",
+  "volume": "chio-required-claude-host-delivery-20260909",
+  "auditVolume": "chio-required-claude-host-delivery-20260909-audit",
+  "harnessSha256": "d2184277e1a37c314eeec316bbc8031886c3ae01e9da918338a9803d9d4bed83",
+  "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-parallel-ce3b3c8fbd7e43f781dc94c610f0dce1",
+  "calls": [
+    {
+      "type": "tool_use",
+      "id": "toolu_parallel_a",
+      "name": "mcp__chio__write_file",
+      "input": {
+        "path": "/workspace/claude-parallel-aa7ba3782bc74dcbbf151468d369fc06.txt",
+        "content": "parallel native fixture a"
+      }
+    },
+    {
+      "type": "tool_use",
+      "id": "toolu_parallel_b",
+      "name": "mcp__chio__write_file",
+      "input": {
+        "path": "/workspace/claude-parallel-9879bcaf9e0942708bbd637cb02fe14a.txt",
+        "content": "parallel native fixture b"
+      }
+    }
+  ],
+  "operatorIntervention": "Two declared tool calls in one fixed model response; kernel transport bytes unchanged"
+}

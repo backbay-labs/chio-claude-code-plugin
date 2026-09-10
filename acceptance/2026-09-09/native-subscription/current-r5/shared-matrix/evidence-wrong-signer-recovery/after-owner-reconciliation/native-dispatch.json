@@ -1,0 +1,17 @@
+{
+  "launchPreflightRefused": false,
+  "calls": [
+    {
+      "id": "toolu_01DXzL7ya6KTbZUZCb5TjvnC",
+      "name": "mcp__chio__read_text_file",
+      "arguments": {
+        "path": "/workspace/claude-inflight-cdb1de4d5a47.txt"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_01DXzL7ya6KTbZUZCb5TjvnC"
+  ],
+  "expectedAttemptObserved": true,
+  "attemptCount": 1
+}

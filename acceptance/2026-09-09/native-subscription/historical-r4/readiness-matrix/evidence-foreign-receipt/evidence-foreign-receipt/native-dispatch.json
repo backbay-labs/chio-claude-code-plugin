@@ -1,0 +1,27 @@
+{
+  "launchPreflightRefused": false,
+  "calls": [
+    {
+      "id": "toolu_01RvHMAtZevZ39jDvS99wnmv",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/claude-inflight-1ba8531133cf.txt",
+        "content": "authorized before in-flight revocation"
+      }
+    },
+    {
+      "id": "toolu_01UyPMSSiYW9Wt6fjHyi7Hpz",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/claude-inflight-1ba8531133cf.txt",
+        "content": "second legitimate effect requiring its own evidence"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_01RvHMAtZevZ39jDvS99wnmv",
+    "toolu_01UyPMSSiYW9Wt6fjHyi7Hpz"
+  ],
+  "expectedAttemptObserved": true,
+  "attemptCount": 2
+}

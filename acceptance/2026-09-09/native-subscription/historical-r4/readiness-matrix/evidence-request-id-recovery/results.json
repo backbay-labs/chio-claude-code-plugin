@@ -1,0 +1,27 @@
+[
+  {
+    "case": "after-owner-reconciliation",
+    "exitCode": 0,
+    "command": [
+      "node",
+      "/tmp/chio-claude-readiness-cold-r4-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+      "--host",
+      "/Users/connor/.local/share/claude/versions/2.1.267",
+      "--host-sha256",
+      "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+      "--profile",
+      "/tmp/chio-claude-approval-runtime-bc18e4d9509b4a79ac07a24978971fef/profile",
+      "--workspace",
+      "/tmp/chio-claude-approval-runtime-bc18e4d9509b4a79ac07a24978971fef/workspace",
+      "--gateway-config",
+      "/Users/connor/.local/share/chio-required-operators/claude-readiness-matrix-20260909/claude-approvals-2037231b5fb14339a5c10936a6d263f3/gateway.json",
+      "--gateway-sha256",
+      "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+      "--model",
+      "claude-sonnet-5",
+      "--model-auth",
+      "claude-login"
+    ],
+    "newDispatchRows": 1
+  }
+]

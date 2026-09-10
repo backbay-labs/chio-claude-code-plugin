@@ -1,0 +1,4 @@
+# Preserve captured evidence and source snapshots byte-for-byte.
+current-r5/** -text -whitespace
+historical-r4/** -text -whitespace
+readiness-r4-provenance/** -text -whitespace

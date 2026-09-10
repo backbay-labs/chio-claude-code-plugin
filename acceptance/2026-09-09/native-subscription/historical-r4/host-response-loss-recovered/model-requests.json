@@ -1,0 +1,38 @@
+[
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [],
+    "returned_tool_calls": [
+      "mcp__chio__read_text_file"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "tool_use_id": "toolu_chio_kernel_000",
+        "type": "tool_result",
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"state\":\"completed\",\"evidence\":\"verified\",\"requestId\":\"9c04f4d8-7658-4917-9f68-4f12cd0d7315:4a659e8ae688ec764bb893860b61c9c09bdc3fd303629dfb462bb5fc5eda7bdf\",\"receipt\":{\"action\":{\"parameter_hash\":\"7cb97c2bd68bbe9e0e6b8824a5e91d069f699c383a29f6cbb226836b4447a025\",\"parameters\":{\"path\":\"/workspace/claude-v70p3_gk.txt\"}},\"boundary_class\":\"prevent\",\"capability_id\":\"cap-01a087c9-eb29-7bc2-b38c-f3efd146a9a9\",\"content_hash\":\"07fcf2aced62731b2f903033ca1b920913053ce1d3ea9476602d192f0e307bc2\",\"decision\":{\"verdict\":\"allow\"},\"id\":\"4ea00ccba0cef78c6fda70737f8f6ee376e813b564953d6da5b1425a81de29ac\",\"kernel_key\":\"1e5677d422400a3f2db017bb2b7864906a126285e1850556e0777c58d5ce1917\",\"metadata\":{\"admission_operation\":{\"compensation_status\":\"not_compensated\",\"coordinator_lease_epoch\":1,\"coordinator_lease_id\":\"01a087b4-83ff-73e1-93f7-19a17181f9a2\",\"operation_id\":\"d93b0aa1da003765d532539e8682c2ab5cade757a633e762cf2d98b31b71420c\",\"projected_dispatch_state\":\"terminal\",\"projected_operation_version\":8,\"projected_state\":\"completed\",\"request_binding_hash\":\"e4c14df6c02304522b06dc500c9a6c07502a210ac2ac4d77a974ba126e62f216\",\"request_id\":\"9c04f4d8-7658-4917-9f68-4f12cd0d7315:4a659e8ae688ec764bb893860b61c9c09bdc3fd303629dfb462bb5fc5eda7bdf\",\"request_namespace_digest\":\"1aaedbe2f5ee601eb08b78ce2bcd0c710638ece5bfca950551a34900d293fe77\",\"retained_dispatch_commit\":{\"committed_version\":6,\"coordinator_lease_epoch\":1,\"coordinator_lease_id\":\"01a087b4-83ff-73e1-93f7-19a17181f9a2\",\"provider_attempt\":{\"attempt_id\":\"attempt:d93b0aa1da003765d532539e8682c2ab5cade757a633e762cf2d98b31b71420c\",\"operation_id\":\"d93b0aa1da003765d532539e8682c2ab5cade757a633e762cf2d98b31b71420c\",\"transport_id\":\"kernel-tool-server:fs\",\"transport_key_epoch\":1},\"store_fence\":{\"lease_id\":\"01a087b4-83ff-73e1-93f7-19a17181f9a2\",\"owner_epoch\":1,\"store_uuid\":\"01a087b4-82fc-7ea3-8268-cda098970e9e\"}},\"schema\":\"chio.admission-receipt.v1\",\"store_fence\":{\"lease_id\":\"01a087b4-83ff-73e1-93f7-19a17181f9a2\",\"owner_epoch\":1,\"store_uuid\":\"01a087b4-82fc-7ea3-8268-cda098970e9e\"},\"tool_outcome_id\":\"537a869a15e1dd8934df3a28107ffbf45be59d2339f594c0ff3221ddef984420\",\"tool_outcome_version\":2,\"trusted_time_unix_ms\":1788984557821},\"attribution\":{\"delegation_depth\":0,\"grant_index\":0,\"issuer_key\":\"9b6890451ef646de65d88b26fdc1503c204947a1e743481bd036f9d4b0b2cee1\",\"subject_key\":\"d637ecf531fe1f179f7fff20b32cfb627444a515cd740af0b68035a804afaae2\"},\"chio_receipt_signing_nonce\":\"rcpt-01a087ca-017d-7be1-88e4-046c546bdb83\",\"receipt_context\":{\"request_id\":\"9c04f4d8-7658-4917-9f68-4f12cd0d7315:4a659e8ae688ec764bb893860b61c9c09bdc3fd303629dfb462bb5fc5eda7bdf\"}},\"policy_hash\":\"057b9a8160375e7d90841325639bdd66050a454f393dae23e8c813b8df74b84e\",\"receipt_kind\":\"mediated_decision\",\"redaction_mode\":\"none\",\"signature\":\"1aaa640250371f635af82f99f5fd485765621251c3a9ffbd43e05299739655581a19e0f83669700043292b27ae3d5e9cfaa85be45bcfb1129b40f2e4a36de10f\",\"timestamp\":1788984557,\"tool_name\":\"read_text_file\",\"tool_origin\":\"caller_executed\",\"tool_server\":\"fs\",\"trust_level\":\"mediated\"},\"result\":{\"content\":[{\"text\":\"UNKNOWN_FIRST_COMMIT\",\"type\":\"text\"}],\"isError\":false,\"structuredContent\":{\"content\":\"UNKNOWN_FIRST_COMMIT\"}},\"delivery\":{\"acknowledgement\":\"xQAj-DLZQZ5zE0CBttahBIJMdSEGkY5I7jrHbqJ7DaU\",\"receiptId\":\"4ea00ccba0cef78c6fda70737f8f6ee376e813b564953d6da5b1425a81de29ac\",\"requestHash\":\"e4f3d2493a0ae44d2248b9550e63677c4e4e08cab6d41f6e2dd53ae85c436d6c\",\"requestId\":\"9c04f4d8-7658-4917-9f68-4f12cd0d7315:4a659e8ae688ec764bb893860b61c9c09bdc3fd303629dfb462bb5fc5eda7bdf\",\"resultHash\":\"07fcf2aced62731b2f903033ca1b920913053ce1d3ea9476602d192f0e307bc2\",\"schema\":\"chio.mcp.delivery-ack.v1\"}}"
+          }
+        ],
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": []
+  }
+]

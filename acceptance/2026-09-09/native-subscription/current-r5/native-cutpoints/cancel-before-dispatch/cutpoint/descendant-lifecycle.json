@@ -1,0 +1,19 @@
+{
+  "launcherPid": 38069,
+  "observedDescendants": {
+    "38082": "(2.1.267)",
+    "38086": "(security)",
+    "38087": "(security)",
+    "38112": "<defunct>",
+    "38114": "<defunct>",
+    "38117": "(bash)",
+    "38124": "(llvm-otool)",
+    "38126": "(otool-classic)",
+    "38127": "/opt/homebrew/Cellar/node/25.5.0/bin/node",
+    "38128": "/Users/connor/.local/share/claude/versions/2.1.267"
+  },
+  "nativeHostPids": [
+    38128
+  ],
+  "liveAfterLauncherExit": []
+}

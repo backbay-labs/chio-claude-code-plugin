@@ -1,0 +1,139 @@
+[
+  {
+    "requestId": "91dd3785-2399-4aa6-beea-7ce277fc5987:5556ef835fc468c038fc816078b49b13c6e23d0fd1e76632ccd52957e2e663e6",
+    "digest": "bade4855b482b9409ae0ce0811ddbd1d1579d82f15db4dc1d26cc3c474086590",
+    "state": "completed",
+    "outcome": {
+      "state": "completed",
+      "evidence": "verified",
+      "requestId": "91dd3785-2399-4aa6-beea-7ce277fc5987:5556ef835fc468c038fc816078b49b13c6e23d0fd1e76632ccd52957e2e663e6",
+      "receipt": {
+        "action": {
+          "parameter_hash": "0ca5eff36bc75113a19656bf19475f1728b68da5a86ebe9aebcb52398949c44d",
+          "parameters": {
+            "content": "retained original cutpoint effect",
+            "path": "/workspace/claude-qualified-b03cdb3f29034fd0.txt"
+          }
+        },
+        "boundary_class": "prevent",
+        "capability_id": "cap-01a08932-df10-76b2-916f-0b66254303f7",
+        "content_hash": "8641f214f612002e9b5a65a938d7ba5cdb994d41eaaeaadab473c43a5168f373",
+        "decision": {
+          "verdict": "allow"
+        },
+        "id": "1f087e18733f8371b5fbf91ab6f160e35e56dba1ae9f427f30e2a7c57909a401",
+        "kernel_key": "1e5677d422400a3f2db017bb2b7864906a126285e1850556e0777c58d5ce1917",
+        "metadata": {
+          "admission_operation": {
+            "compensation_status": "not_compensated",
+            "coordinator_lease_epoch": 5,
+            "coordinator_lease_id": "01a08905-775c-7a51-8a58-264295ae47e6",
+            "operation_id": "0f07fe5343ee4412a2b24ce4dd50b535fd53863bccb5212ed8de817787eb9b2f",
+            "projected_dispatch_state": "terminal",
+            "projected_operation_version": 8,
+            "projected_state": "completed",
+            "request_binding_hash": "bb3dcb1fc1844277fd8c5e1440fe8f6e32cee99a65bf0a9a848c82d964d18faf",
+            "request_id": "91dd3785-2399-4aa6-beea-7ce277fc5987:5556ef835fc468c038fc816078b49b13c6e23d0fd1e76632ccd52957e2e663e6",
+            "request_namespace_digest": "1aaedbe2f5ee601eb08b78ce2bcd0c710638ece5bfca950551a34900d293fe77",
+            "retained_dispatch_commit": {
+              "committed_version": 6,
+              "coordinator_lease_epoch": 5,
+              "coordinator_lease_id": "01a08905-775c-7a51-8a58-264295ae47e6",
+              "provider_attempt": {
+                "attempt_id": "attempt:0f07fe5343ee4412a2b24ce4dd50b535fd53863bccb5212ed8de817787eb9b2f",
+                "operation_id": "0f07fe5343ee4412a2b24ce4dd50b535fd53863bccb5212ed8de817787eb9b2f",
+                "transport_id": "kernel-tool-server:fs",
+                "transport_key_epoch": 5
+              },
+              "store_fence": {
+                "lease_id": "01a08905-775c-7a51-8a58-264295ae47e6",
+                "owner_epoch": 5,
+                "store_uuid": "01a087b4-82fc-7ea3-8268-cda098970e9e"
+              }
+            },
+            "schema": "chio.admission-receipt.v1",
+            "store_fence": {
+              "lease_id": "01a08905-775c-7a51-8a58-264295ae47e6",
+              "owner_epoch": 5,
+              "store_uuid": "01a087b4-82fc-7ea3-8268-cda098970e9e"
+            },
+            "tool_outcome_id": "2816bf8decc222f27dfd9767ee3d7c5a4f4cced05c398b9908c286722b0d837a",
+            "tool_outcome_version": 2,
+            "trusted_time_unix_ms": 1789008211986
+          },
+          "attribution": {
+            "delegation_depth": 0,
+            "grant_index": 0,
+            "issuer_key": "9b6890451ef646de65d88b26fdc1503c204947a1e743481bd036f9d4b0b2cee1",
+            "subject_key": "b212a9532a9b1271b20e598ee0db27ac9c162cd8635f9d18d6dd84aa608d3d89"
+          },
+          "chio_receipt_signing_nonce": "rcpt-01a08932-f0aa-7212-9eb6-e2aa7beb0256",
+          "receipt_context": {
+            "request_id": "91dd3785-2399-4aa6-beea-7ce277fc5987:5556ef835fc468c038fc816078b49b13c6e23d0fd1e76632ccd52957e2e663e6"
+          }
+        },
+        "policy_hash": "057b9a8160375e7d90841325639bdd66050a454f393dae23e8c813b8df74b84e",
+        "receipt_kind": "mediated_decision",
+        "redaction_mode": "none",
+        "signature": "f35c4dc7d99f825c454969ebce10b4e14760a1c3a6a47af8c978fa3f87039de69c71840188f4b3c2ac90238664083861b73bcf0d333273cdbf98a10cf35a5c08",
+        "timestamp": 1789008211,
+        "tool_name": "write_file",
+        "tool_origin": "caller_executed",
+        "tool_server": "fs",
+        "trust_level": "mediated"
+      },
+      "result": {
+        "content": [
+          {
+            "text": "Successfully wrote to /workspace/claude-qualified-b03cdb3f29034fd0.txt",
+            "type": "text"
+          }
+        ],
+        "isError": false,
+        "structuredContent": {
+          "content": "Successfully wrote to /workspace/claude-qualified-b03cdb3f29034fd0.txt"
+        }
+      },
+      "delivery": {
+        "acknowledgement": "YzgHSdPqrO-bjhNuDN98XAjFu356An8SRSaERMuf1-k",
+        "receiptId": "1f087e18733f8371b5fbf91ab6f160e35e56dba1ae9f427f30e2a7c57909a401",
+        "requestHash": "59a3ccc2abe0a5e72065dbefafb7a054372368e65ad7e385957b01314a9633ec",
+        "requestId": "91dd3785-2399-4aa6-beea-7ce277fc5987:5556ef835fc468c038fc816078b49b13c6e23d0fd1e76632ccd52957e2e663e6",
+        "resultHash": "8641f214f612002e9b5a65a938d7ba5cdb994d41eaaeaadab473c43a5168f373",
+        "schema": "chio.mcp.delivery-ack.v1"
+      }
+    },
+    "acknowledged": true,
+    "hostDeliveryRequired": true,
+    "request": {
+      "tool": "write_file",
+      "arguments": {
+        "path": "/workspace/claude-qualified-b03cdb3f29034fd0.txt",
+        "content": "retained original cutpoint effect"
+      },
+      "requestId": "91dd3785-2399-4aa6-beea-7ce277fc5987:5556ef835fc468c038fc816078b49b13c6e23d0fd1e76632ccd52957e2e663e6"
+    },
+    "hostDeliveryConfirmed": true
+  },
+  {
+    "requestId": "91dd3785-2399-4aa6-beea-7ce277fc5987:b31c0a938583b70369e2a5877766d3cf0a235edf860daf32055dd4679c4e7ad3",
+    "digest": "8fb4f15ea23ca75f9da43a5e24d0474a917a3c3eafd3c4ba4279865fe1bfeb8f",
+    "state": "unknown",
+    "outcome": {
+      "state": "unknown",
+      "evidence": "unverified",
+      "requestId": "91dd3785-2399-4aa6-beea-7ce277fc5987:b31c0a938583b70369e2a5877766d3cf0a235edf860daf32055dd4679c4e7ad3",
+      "reason": "execution outcome unknown; no automatic retry"
+    },
+    "acknowledged": false,
+    "hostDeliveryRequired": true,
+    "request": {
+      "tool": "write_file",
+      "arguments": {
+        "path": "/workspace/claude-qualified-b03cdb3f29034fd0.txt",
+        "content": "must not dispatch after network interruption"
+      },
+      "requestId": "91dd3785-2399-4aa6-beea-7ce277fc5987:b31c0a938583b70369e2a5877766d3cf0a235edf860daf32055dd4679c4e7ad3"
+    }
+  }
+]

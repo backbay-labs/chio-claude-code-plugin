@@ -1,0 +1,15 @@
+[
+  {
+    "requestId": "21105bac-0c28-4dd6-8037-b08a9ad1eb1b:f00ae0b8550390d39c57aaefe1b56eac7ea79add0cc615f8458ad10354711839",
+    "digest": "c5af34e96f2aa590a308a4c38d09fd7d0b9189c25ffe7bbfb6ea8017ca2f5390",
+    "state": "pending",
+    "request": {
+      "tool": "write_file",
+      "arguments": {
+        "path": "/workspace/claude-qualified-77444faca00c40b0.txt",
+        "content": "retained original cutpoint effect"
+      },
+      "requestId": "21105bac-0c28-4dd6-8037-b08a9ad1eb1b:f00ae0b8550390d39c57aaefe1b56eac7ea79add0cc615f8458ad10354711839"
+    }
+  }
+]

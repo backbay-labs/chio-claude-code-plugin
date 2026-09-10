@@ -1,0 +1,23 @@
+{
+  "label": "startup",
+  "exitCode": 1,
+  "timeout": false,
+  "elapsedSeconds": 1.37,
+  "runtime": "/tmp/chio-claude-native-runtime-09fd85b22e2342f6a4278c68b69e2cab",
+  "newDispatchRows": 0,
+  "terminal": {
+    "code": 143,
+    "signal": null,
+    "exitCode": 1,
+    "hostInitialization": {
+      "ready": false,
+      "failed": true
+    },
+    "hostDelivery": {
+      "confirmed": 0,
+      "failed": false
+    },
+    "executionOutcome": "host-initialization-failed",
+    "retry": "never-automatic"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "calls": [
+    {
+      "id": "toolu_014P3U11ZpPk2EF3B4ZGfh5J",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/claude-qualified-8256650ba5484cfa.txt",
+        "content": "retained original cutpoint effect"
+      }
+    },
+    {
+      "id": "toolu_01XVz2F7xh3SbPL6kf3DhjFf",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/claude-qualified-8256650ba5484cfa.txt",
+        "content": "must not dispatch after network interruption"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_014P3U11ZpPk2EF3B4ZGfh5J",
+    "toolu_01XVz2F7xh3SbPL6kf3DhjFf"
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "host": "Claude Code",
   "accepted": false,
-  "confidence": "high for recorded observations; complete acceptance unknown",
+  "confidence": "high for retained case observations and archive identities; full gate acceptance unresolved",
   "date": "2026-09-09",
   "controlling_requirement": "Chio strategy document 19 I01-I08",
   "host_version": "2.1.267",
@@ -9,35 +9,69 @@
   "gates": {
     "I01": {
       "status": "unresolved",
-      "required": true
+      "required": true,
+      "bounded_evidence": [
+        "native-subscription/current-r5/provenance/installation.json",
+        "native-subscription/artifact.json"
+      ]
     },
     "I02": {
       "status": "unresolved",
-      "required": true
+      "required": true,
+      "bounded_evidence": [
+        "native-subscription/current-r5/native-cutpoints/useful"
+      ]
     },
     "I03": {
       "status": "unresolved",
-      "required": true
+      "required": true,
+      "bounded_evidence": [
+        "native-subscription/current-r5/shared-matrix",
+        "native-subscription/current-r5/supplemental-boundary"
+      ]
     },
     "I04": {
       "status": "unresolved",
-      "required": true
+      "required": true,
+      "bounded_evidence": [
+        "native-subscription/current-r5/shared-matrix",
+        "native-subscription/current-r5/native-cutpoints",
+        "native-subscription/current-r5/native-lifecycle"
+      ]
     },
     "I05": {
       "status": "unresolved",
-      "required": true
+      "required": true,
+      "bounded_evidence": [
+        "native-subscription/current-r5/aggregate-budget",
+        "native-subscription/current-r5/shared-matrix"
+      ]
     },
     "I06": {
       "status": "unresolved",
-      "required": true
+      "required": true,
+      "bounded_evidence": [
+        "native-subscription/current-r5/shared-matrix",
+        "native-subscription/current-r5/native-lifecycle/result-substitution"
+      ]
     },
     "I07": {
       "status": "unresolved",
-      "required": true
+      "required": true,
+      "bounded_evidence": [
+        "native-subscription/current-r5/native-cutpoints",
+        "native-subscription/current-r5/native-lifecycle",
+        "native-subscription/current-r5/shared-matrix",
+        "native-subscription/current-r5/supplemental-parallel"
+      ]
     },
     "I08": {
       "status": "unresolved",
-      "required": true
+      "required": true,
+      "bounded_evidence": [
+        "native-subscription/current-r5/provenance/installation.json",
+        "native-subscription/current-r5/native-lifecycle/upgrade-removal"
+      ]
     }
   },
   "external_blockers": [
@@ -53,7 +87,22 @@
   "report": "REPORT.md",
   "initial_host_version": "2.1.266",
   "initial_host_sha256": "553d1b9e9e7068b275c0a783c7e139ff6503096f286e674c8c919379fb0eca62",
-  "current_artifact": "8bf565bf5d704b01b0847cda64c4244fc1f15a19bc707f8e3a90aa3798064a23",
+  "current_artifact": "0dd0d906fc34b3ac7d09e3b7f6cdee9f13f511731b25ec761feca7172c9b1158",
   "current_record": "native-subscription/README.md",
-  "remaining_internal_work": "Complete exact-artifact native boundary/lifecycle qualification; see current record"
+  "remaining_internal_work": "Reconcile I01-I08 including separately owned kernel storage fault evidence; complete release gates and publish the compatible tested artifact combination",
+  "runtime_source_revision": "c91cd8163ea8b13c66214397bd132bc4f4cd17bf",
+  "current_case_index": "native-subscription/current-r5/CASE-INDEX.json",
+  "kernel_sha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
+  "bounded_current_results": {
+    "nativeLifecycleCases": 18,
+    "sharedMatrixSuites": 34,
+    "sharedMatrixCases": 44,
+    "sharedDriverSuites": 33,
+    "separateExpirySuites": 1,
+    "supplementalBoundaryAssertions": 27,
+    "supplementalParallelScenarios": 1,
+    "skipsReportedByCurrentIdentityRecords": 0
+  },
+  "historical_evidence_policy": "Older source/artifact observations, including r4 failures and successes, remain historical and do not qualify the current archive",
+  "gate_reconciliation_note": "Gate status remains unresolved pending the full program review. Current bounded observations are indexed without promoting suites or fixtures into full acceptance."
 }

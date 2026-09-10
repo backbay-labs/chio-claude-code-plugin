@@ -1,0 +1,62 @@
+[
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [],
+    "returned_tool_calls": [
+      "mcp__chio__write_file"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "{\"state\":\"not_dispatched\",\"evidence\":\"unverified\",\"requestId\":\"9c04f4d8-7658-4917-9f68-4f12cd0d7315:b6c088261c170978fe33f00b6ed25c3f2f48575edbff975ac7bc7317af9044bf\",\"reason\":\"an unresolved operation fences this gateway; operator reconciliation required\"}",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": [
+      "mcp__chio__write_file"
+    ]
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "{\"state\":\"not_dispatched\",\"evidence\":\"unverified\",\"requestId\":\"9c04f4d8-7658-4917-9f68-4f12cd0d7315:b6c088261c170978fe33f00b6ed25c3f2f48575edbff975ac7bc7317af9044bf\",\"reason\":\"an unresolved operation fences this gateway; operator reconciliation required\"}",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000"
+      },
+      {
+        "type": "tool_result",
+        "content": "{\"state\":\"not_dispatched\",\"evidence\":\"unverified\",\"requestId\":\"9c04f4d8-7658-4917-9f68-4f12cd0d7315:f3672c43990eb5967c92daff109777a02823a93854df0877d07f87bbfe35ab80\",\"reason\":\"an unresolved operation fences this gateway; operator reconciliation required\"}",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_001",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "returned_tool_calls": []
+  }
+]

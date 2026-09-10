@@ -1,0 +1,15 @@
+{
+  "launcherPid": 53776,
+  "observedDescendants": {
+    "53786": "/Users/connor/.local/share/claude/versions/2.1.267",
+    "53862": "(git)",
+    "53894": "(otool)",
+    "53901": "/opt/homebrew/Cellar/node/25.5.0/bin/node",
+    "53922": "/Users/connor/.local/share/claude/versions/2.1.267"
+  },
+  "nativeHostPids": [
+    53786,
+    53922
+  ],
+  "liveAfterLauncherExit": []
+}

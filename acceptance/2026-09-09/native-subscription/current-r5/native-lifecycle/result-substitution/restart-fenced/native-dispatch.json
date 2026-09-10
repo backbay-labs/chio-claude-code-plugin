@@ -1,0 +1,15 @@
+{
+  "calls": [
+    {
+      "id": "toolu_011goQUhYMwsDta5oPBBPTSg",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/claude-qualified-037f4976f2aa4411.txt",
+        "content": "replacement must remain fenced"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_011goQUhYMwsDta5oPBBPTSg"
+  ]
+}

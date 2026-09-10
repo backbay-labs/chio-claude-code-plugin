@@ -1,0 +1,25 @@
+{
+  "archive": "/tmp/chio-claude-cutpoints-r5-artifact-20260909/chio-claude-code-plugin-0.3.0.tgz",
+  "archiveSha256": "0dd0d906fc34b3ac7d09e3b7f6cdee9f13f511731b25ec761feca7172c9b1158",
+  "packageDirectory": "/tmp/chio-claude-cutpoints-cold-r5-20260909/node_modules/@chio/claude-code-plugin",
+  "runtimeSourceCommit": "c91cd81",
+  "installCommand": [
+    "npm",
+    "install",
+    "--prefix",
+    "/tmp/chio-claude-cutpoints-cold-r5-20260909",
+    "--cache",
+    "/tmp/chio-claude-cutpoints-empty-cache-r5-20260909",
+    "--offline",
+    "--ignore-scripts",
+    "--no-audit",
+    "--no-fund",
+    "/tmp/chio-claude-cutpoints-r5-artifact-20260909/chio-claude-code-plugin-0.3.0.tgz"
+  ],
+  "installObservedExitCode": 0,
+  "cacheInitiallyEmpty": true,
+  "launcherSha256": "b4a5126d02d2f573606147cb59e4a63277824d08c2b82981e6bce16deaf17105",
+  "gatewaySha256": "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+  "qualificationDriversExcluded": true,
+  "note": "Installation output observed in tool transcript; record assembled afterward from immutable installed files."
+}

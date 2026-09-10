@@ -1,0 +1,11 @@
+{
+  "unchanged": true,
+  "privateFileDigests": {
+    "gateway.json": "f7160d7bf0c98699e41605779b11b189a24f9956dbeea865ca83ce4e5ed72104",
+    "prepare.json": "15e5e9f8569dfd6f9aabf10b42b0ede184c99fa42c5cceba30a6c301127d1dcc",
+    "journal/d9277fa90e3bc8a0b00a7f58f21b10f97a3ff71f1a3fad1e81acb1cb80a74079.json": "c03eb8824c5591469cc3e62a665c4fac16d34571b0ae3bd1c3d4ed1fdc40809d",
+    "journal/authority.binding": "bc6be7ea2aeb6ba8888f78b6824985b51b977b255065926b3b2331de1484e200"
+  },
+  "fromArchiveSha256": "8bf565bf5d704b01b0847cda64c4244fc1f15a19bc707f8e3a90aa3798064a23",
+  "toArchiveSha256": "0dd0d906fc34b3ac7d09e3b7f6cdee9f13f511731b25ec761feca7172c9b1158"
+}

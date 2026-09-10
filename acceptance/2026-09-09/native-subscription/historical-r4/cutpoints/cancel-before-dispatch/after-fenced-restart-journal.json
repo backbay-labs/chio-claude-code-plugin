@@ -1,0 +1,23 @@
+[
+  {
+    "requestId": "5551e4fa-2080-49be-93b6-a3a0158b4d0d:6f5b277ea48e950177137fd139405cb3025e013765183740b3c092420b6a0cb0",
+    "digest": "d8d07e4eb22c7b2326ecd3a2ba2efa5d46557ac57399fcbf05dd55b70db8160f",
+    "state": "unknown",
+    "outcome": {
+      "state": "unknown",
+      "evidence": "unverified",
+      "requestId": "5551e4fa-2080-49be-93b6-a3a0158b4d0d:6f5b277ea48e950177137fd139405cb3025e013765183740b3c092420b6a0cb0",
+      "reason": "execution outcome unknown; no automatic retry"
+    },
+    "acknowledged": false,
+    "hostDeliveryRequired": true,
+    "request": {
+      "tool": "write_file",
+      "arguments": {
+        "path": "/workspace/claude-qualified-688f5bbb49e545c9.txt",
+        "content": "retained original cutpoint effect"
+      },
+      "requestId": "5551e4fa-2080-49be-93b6-a3a0158b4d0d:6f5b277ea48e950177137fd139405cb3025e013765183740b3c092420b6a0cb0"
+    }
+  }
+]

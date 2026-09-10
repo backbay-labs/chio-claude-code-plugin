@@ -1,0 +1,42 @@
+[
+  {
+    "case": "useful",
+    "passed": true,
+    "newDispatchRows": 4,
+    "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-useful-9f03c58d982c4f89940f29d90222992e",
+    "sameAuthorityRecovery": false,
+    "sameAuthorityRestartFenced": false
+  },
+  {
+    "case": "journal-before-dispatch",
+    "passed": true,
+    "newDispatchRows": 0,
+    "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-journal-before-dispatch-47164e85b61347fc92bbab7d2b5e03ea",
+    "sameAuthorityRecovery": false,
+    "sameAuthorityRestartFenced": false
+  },
+  {
+    "case": "cancel-before-dispatch",
+    "passed": true,
+    "newDispatchRows": 0,
+    "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-cancel-before-dispatch-c2714335e8aa425c83e549780a1f6f23",
+    "sameAuthorityRecovery": false,
+    "sameAuthorityRestartFenced": true
+  },
+  {
+    "case": "kernel-network-refused",
+    "passed": true,
+    "newDispatchRows": 1,
+    "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-kernel-network-refused-6603d28619234ea3a227f9de5454229d",
+    "sameAuthorityRecovery": false,
+    "sameAuthorityRestartFenced": true
+  },
+  {
+    "case": "journal-after-effect",
+    "passed": true,
+    "newDispatchRows": 1,
+    "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-journal-after-effect-591fa4c357f344e79797cc9484f90f98",
+    "sameAuthorityRecovery": false,
+    "sameAuthorityRestartFenced": true
+  }
+]

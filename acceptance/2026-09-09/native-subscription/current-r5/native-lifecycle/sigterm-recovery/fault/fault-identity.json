@@ -1,0 +1,5 @@
+{
+  "file": "/Users/connor/Medica/backbay/standalone/arc/.worktrees/required-agent-integrations-20260909/scripts/acceptance/cancel-host-response.mjs",
+  "sha256": "f3fe77d8ffe39815b5b478590b2e25a1cb9ab057faed94d7a6f8e43ea08a891b",
+  "kind": "sigterm-recovery"
+}

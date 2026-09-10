@@ -1,0 +1,22 @@
+{
+  "accepted": false,
+  "sourceRevision": "c23dff6",
+  "archiveSha256": "8bf565bf5d704b01b0847cda64c4244fc1f15a19bc707f8e3a90aa3798064a23",
+  "archive": "/tmp/chio-claude-subscription-package-r3-20260909/chio-claude-code-plugin-0.3.0.tgz",
+  "hostVersion": "2.1.267",
+  "hostSha256": "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+  "model": "claude-sonnet-5",
+  "provider": "actual Anthropic native Claude Max subscription",
+  "kernelSha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
+  "currentArchiveEvidence": [
+    "current-r3-matrix",
+    "current-r3-declared-tool-cases",
+    "current-r3-owner-recovery"
+  ],
+  "historicalEvidence": "pre-final-* directories retain earlier successes and failed test attempts; never promote into current artifact matrix",
+  "failedAttempts": [
+    "ordinary forbidden-write and substituted-approval-resume model refusal without tool dispatch",
+    "expired-credential harness initially failed to recognize actual launcher refusal"
+  ],
+  "remaining": "Current-artifact useful, budget and final delivery/crash/cancellation checks are running independently; complete gate and publication remain open"
+}

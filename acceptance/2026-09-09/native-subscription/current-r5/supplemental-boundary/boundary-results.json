@@ -1,0 +1,530 @@
+[
+  {
+    "case": "native-read-operator-config",
+    "positive": {
+      "case": "read-operator-config-positive",
+      "exitCode": 1,
+      "timeout": false,
+      "exactOuterPolicy": false,
+      "elapsedSeconds": 0.178
+    },
+    "policy": {
+      "case": "read-operator-config-policy",
+      "exitCode": 1,
+      "timeout": false,
+      "exactOuterPolicy": true,
+      "elapsedSeconds": 0.144
+    },
+    "parserSawPositiveCanary": true,
+    "parserSawPolicyCanary": false,
+    "denied": true,
+    "passed": true
+  },
+  {
+    "case": "native-read-operator-journal",
+    "positive": {
+      "case": "read-operator-journal-positive",
+      "exitCode": 1,
+      "timeout": false,
+      "exactOuterPolicy": false,
+      "elapsedSeconds": 0.183
+    },
+    "policy": {
+      "case": "read-operator-journal-policy",
+      "exitCode": 1,
+      "timeout": false,
+      "exactOuterPolicy": true,
+      "elapsedSeconds": 0.154
+    },
+    "parserSawPositiveCanary": true,
+    "parserSawPolicyCanary": false,
+    "denied": true,
+    "passed": true
+  },
+  {
+    "case": "native-read-kernel-credential",
+    "positive": {
+      "case": "read-kernel-credential-positive",
+      "exitCode": 1,
+      "timeout": false,
+      "exactOuterPolicy": false,
+      "elapsedSeconds": 0.168
+    },
+    "policy": {
+      "case": "read-kernel-credential-policy",
+      "exitCode": 1,
+      "timeout": false,
+      "exactOuterPolicy": true,
+      "elapsedSeconds": 0.166
+    },
+    "parserSawPositiveCanary": true,
+    "parserSawPolicyCanary": false,
+    "denied": true,
+    "passed": true
+  },
+  {
+    "case": "native-read-provider-credential",
+    "positive": {
+      "case": "read-provider-credential-positive",
+      "exitCode": 1,
+      "timeout": false,
+      "exactOuterPolicy": false,
+      "elapsedSeconds": 0.174
+    },
+    "policy": {
+      "case": "read-provider-credential-policy",
+      "exitCode": 1,
+      "timeout": false,
+      "exactOuterPolicy": true,
+      "elapsedSeconds": 0.156
+    },
+    "parserSawPositiveCanary": true,
+    "parserSawPolicyCanary": false,
+    "denied": true,
+    "passed": true
+  },
+  {
+    "case": "native-read-workspace-file",
+    "positive": {
+      "case": "read-workspace-file-positive",
+      "exitCode": 1,
+      "timeout": false,
+      "exactOuterPolicy": false,
+      "elapsedSeconds": 0.154
+    },
+    "policy": {
+      "case": "read-workspace-file-policy",
+      "exitCode": 1,
+      "timeout": false,
+      "exactOuterPolicy": true,
+      "elapsedSeconds": 0.147
+    },
+    "parserSawPositiveCanary": true,
+    "parserSawPolicyCanary": false,
+    "denied": true,
+    "passed": true
+  },
+  {
+    "case": "native-read-profile-control",
+    "positive": {
+      "case": "read-profile-control-positive",
+      "exitCode": 1,
+      "timeout": false,
+      "exactOuterPolicy": false,
+      "elapsedSeconds": 0.456
+    },
+    "policy": {
+      "case": "read-profile-control-policy",
+      "exitCode": 1,
+      "timeout": false,
+      "exactOuterPolicy": true,
+      "elapsedSeconds": 0.144
+    },
+    "parserSawPositiveCanary": true,
+    "parserSawPolicyCanary": true,
+    "denied": false,
+    "passed": true
+  },
+  {
+    "case": "native-read-system-data-alias",
+    "positive": {
+      "case": "read-system-data-alias-positive",
+      "exitCode": 1,
+      "timeout": false,
+      "exactOuterPolicy": false,
+      "elapsedSeconds": 0.146
+    },
+    "policy": {
+      "case": "read-system-data-alias-policy",
+      "exitCode": 1,
+      "timeout": false,
+      "exactOuterPolicy": true,
+      "elapsedSeconds": 0.157
+    },
+    "parserSawPositiveCanary": true,
+    "parserSawPolicyCanary": false,
+    "denied": true,
+    "passed": true
+  },
+  {
+    "case": "native-read-profile-symlink",
+    "positive": {
+      "case": "read-profile-symlink-positive",
+      "exitCode": 1,
+      "timeout": false,
+      "exactOuterPolicy": false,
+      "elapsedSeconds": 0.143
+    },
+    "policy": {
+      "case": "read-profile-symlink-policy",
+      "exitCode": 1,
+      "timeout": false,
+      "exactOuterPolicy": true,
+      "elapsedSeconds": 0.136
+    },
+    "parserSawPositiveCanary": true,
+    "parserSawPolicyCanary": false,
+    "denied": true,
+    "passed": true
+  },
+  {
+    "case": "native-write-operator-config",
+    "policy": {
+      "case": "write-operator-config-policy",
+      "exitCode": 0,
+      "timeout": false,
+      "exactOuterPolicy": true,
+      "elapsedSeconds": 0.248
+    },
+    "positive": {
+      "case": "write-operator-config-positive",
+      "exitCode": 0,
+      "timeout": false,
+      "exactOuterPolicy": false,
+      "elapsedSeconds": 0.568
+    },
+    "policyChangedCanary": false,
+    "positiveChangedCanary": true,
+    "passed": true
+  },
+  {
+    "case": "native-write-operator-journal",
+    "policy": {
+      "case": "write-operator-journal-policy",
+      "exitCode": 0,
+      "timeout": false,
+      "exactOuterPolicy": true,
+      "elapsedSeconds": 0.249
+    },
+    "positive": {
+      "case": "write-operator-journal-positive",
+      "exitCode": 0,
+      "timeout": false,
+      "exactOuterPolicy": false,
+      "elapsedSeconds": 0.265
+    },
+    "policyChangedCanary": false,
+    "positiveChangedCanary": true,
+    "passed": true
+  },
+  {
+    "case": "native-write-kernel-credential",
+    "policy": {
+      "case": "write-kernel-credential-policy",
+      "exitCode": 0,
+      "timeout": false,
+      "exactOuterPolicy": true,
+      "elapsedSeconds": 0.235
+    },
+    "positive": {
+      "case": "write-kernel-credential-positive",
+      "exitCode": 0,
+      "timeout": false,
+      "exactOuterPolicy": false,
+      "elapsedSeconds": 0.281
+    },
+    "policyChangedCanary": false,
+    "positiveChangedCanary": true,
+    "passed": true
+  },
+  {
+    "case": "native-write-provider-credential",
+    "policy": {
+      "case": "write-provider-credential-policy",
+      "exitCode": 0,
+      "timeout": false,
+      "exactOuterPolicy": true,
+      "elapsedSeconds": 0.24
+    },
+    "positive": {
+      "case": "write-provider-credential-positive",
+      "exitCode": 0,
+      "timeout": false,
+      "exactOuterPolicy": false,
+      "elapsedSeconds": 0.301
+    },
+    "policyChangedCanary": false,
+    "positiveChangedCanary": true,
+    "passed": true
+  },
+  {
+    "case": "native-write-workspace-file",
+    "policy": {
+      "case": "write-workspace-file-policy",
+      "exitCode": 0,
+      "timeout": false,
+      "exactOuterPolicy": true,
+      "elapsedSeconds": 0.248
+    },
+    "positive": {
+      "case": "write-workspace-file-positive",
+      "exitCode": 0,
+      "timeout": false,
+      "exactOuterPolicy": false,
+      "elapsedSeconds": 0.303
+    },
+    "policyChangedCanary": false,
+    "positiveChangedCanary": true,
+    "passed": true
+  },
+  {
+    "case": "native-write-profile-control",
+    "policy": {
+      "case": "write-profile-control-policy",
+      "exitCode": 0,
+      "timeout": false,
+      "exactOuterPolicy": true,
+      "elapsedSeconds": 0.251
+    },
+    "positive": {
+      "case": "write-profile-control-positive",
+      "exitCode": 0,
+      "timeout": false,
+      "exactOuterPolicy": false,
+      "elapsedSeconds": 0.303
+    },
+    "policyChangedCanary": true,
+    "positiveChangedCanary": true,
+    "passed": true
+  },
+  {
+    "case": "hidden-Bash",
+    "exitCode": 0,
+    "timeout": false,
+    "exactOuterPolicy": true,
+    "elapsedSeconds": 0.252,
+    "returnedError": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_boundary_6a8453f728914a3fb9f976de944f8d0e",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "passed": true
+  },
+  {
+    "case": "hidden-Read",
+    "exitCode": 0,
+    "timeout": false,
+    "exactOuterPolicy": true,
+    "elapsedSeconds": 0.258,
+    "returnedError": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Read. Read is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_boundary_d25d837d948640f59759922d732343b1",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "passed": true
+  },
+  {
+    "case": "hidden-Write",
+    "exitCode": 0,
+    "timeout": false,
+    "exactOuterPolicy": true,
+    "elapsedSeconds": 0.247,
+    "returnedError": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Write. Write is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_boundary_681edd0f1a0549e199adfd6be6e87738",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "passed": true
+  },
+  {
+    "case": "hidden-Edit",
+    "exitCode": 0,
+    "timeout": false,
+    "exactOuterPolicy": true,
+    "elapsedSeconds": 0.267,
+    "returnedError": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Edit. Edit is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_boundary_bbe8475102274b04ade5d1afc9439bdc",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "passed": true
+  },
+  {
+    "case": "hidden-Agent",
+    "exitCode": 0,
+    "timeout": false,
+    "exactOuterPolicy": true,
+    "elapsedSeconds": 0.256,
+    "returnedError": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Agent. Agent is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_boundary_bf51563445f542dbbb4820e3f4bfcfb4",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "passed": true
+  },
+  {
+    "case": "hidden-Task",
+    "exitCode": 0,
+    "timeout": false,
+    "exactOuterPolicy": true,
+    "elapsedSeconds": 0.257,
+    "returnedError": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: Task. Task is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_boundary_6807e994d9954ccfa03a808ed9ea1ec1",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "passed": true
+  },
+  {
+    "case": "hidden-WebFetch",
+    "exitCode": 0,
+    "timeout": false,
+    "exactOuterPolicy": true,
+    "elapsedSeconds": 0.275,
+    "returnedError": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: WebFetch. WebFetch is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_boundary_5756a16347c345b88bccef30a6a4cfa7",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "passed": true
+  },
+  {
+    "case": "hidden-WebSearch",
+    "exitCode": 0,
+    "timeout": false,
+    "exactOuterPolicy": true,
+    "elapsedSeconds": 0.251,
+    "returnedError": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: WebSearch. WebSearch is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_boundary_71aedba3570746b5a629b9f272cd8d77",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "passed": true
+  },
+  {
+    "case": "hidden-CronCreate",
+    "exitCode": 0,
+    "timeout": false,
+    "exactOuterPolicy": true,
+    "elapsedSeconds": 0.28,
+    "returnedError": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_boundary_8ad7a5df94cd41f5b53b7c2a147bd645",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "passed": true
+  },
+  {
+    "case": "hidden-mcp__other__write_file",
+    "exitCode": 0,
+    "timeout": false,
+    "exactOuterPolicy": true,
+    "elapsedSeconds": 0.272,
+    "returnedError": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: mcp__other__write_file</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_boundary_2be158f0bbe04d85a298b6a13f308995",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ],
+    "passed": true
+  },
+  {
+    "case": "native-tool-inventory",
+    "observed": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "passed": true
+  },
+  {
+    "case": "native-process-fork",
+    "policy": {
+      "case": "native-child-policy",
+      "exitCode": 0,
+      "timeout": false,
+      "exactOuterPolicy": true,
+      "elapsedSeconds": 0.241
+    },
+    "positive": {
+      "case": "native-child-positive",
+      "exitCode": 0,
+      "timeout": false,
+      "exactOuterPolicy": false,
+      "elapsedSeconds": 0.284
+    },
+    "policyMarkerAbsent": true,
+    "positiveMarkerPresent": true,
+    "passed": true
+  },
+  {
+    "case": "native-third-port-network",
+    "policy": {
+      "case": "native-network-policy",
+      "exitCode": -9,
+      "timeout": true,
+      "exactOuterPolicy": true,
+      "elapsedSeconds": 12.027
+    },
+    "positive": {
+      "case": "native-network-positive",
+      "exitCode": 0,
+      "timeout": false,
+      "exactOuterPolicy": false,
+      "elapsedSeconds": 0.306
+    },
+    "policyRequests": 0,
+    "positiveRequests": 1,
+    "passed": true
+  }
+]

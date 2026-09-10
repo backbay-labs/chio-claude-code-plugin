@@ -1,0 +1,488 @@
+{
+  "accepted": false,
+  "scope": "Exact r5 evidence inventory; acceptance gate reconciliation and publication remain open",
+  "nativeGroups": [
+    {
+      "path": "current-r5/native-cutpoints/results.json",
+      "cases": 5,
+      "passed": 5,
+      "failed": 0,
+      "skips": 0,
+      "caseNames": [
+        "useful",
+        "journal-before-dispatch",
+        "cancel-before-dispatch",
+        "kernel-network-refused",
+        "journal-after-effect"
+      ]
+    },
+    {
+      "path": "current-r5/aggregate-budget/results.json",
+      "cases": 1,
+      "passed": 1,
+      "failed": 0,
+      "skips": 0,
+      "caseNames": [
+        "aggregate-budget"
+      ]
+    },
+    {
+      "path": "current-r5/native-lifecycle/results.json",
+      "cases": 12,
+      "passed": 12,
+      "failed": 0,
+      "skips": 0,
+      "caseNames": [
+        "result-substitution",
+        "host-response-loss",
+        "gateway-crash",
+        "sigterm-recovery",
+        "plugin-omitted",
+        "gateway-missing",
+        "host-missing",
+        "mcp-silent-omission",
+        "init-malformed",
+        "init-timeout",
+        "init-crash",
+        "upgrade-removal"
+      ]
+    }
+  ],
+  "sharedMatrix": [
+    {
+      "suite": "forbidden-edit",
+      "label": "forbidden-edit",
+      "path": "current-r5/shared-matrix/forbidden-edit/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "forbidden-edit"
+      ]
+    },
+    {
+      "suite": "secret-dry-run",
+      "label": "secret-dry-run",
+      "path": "current-r5/shared-matrix/secret-dry-run/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "secret-dry-run"
+      ]
+    },
+    {
+      "suite": "secret-list",
+      "label": "secret-list",
+      "path": "current-r5/shared-matrix/secret-list/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "secret-list"
+      ]
+    },
+    {
+      "suite": "secret-path-alias",
+      "label": "secret-path-alias",
+      "path": "current-r5/shared-matrix/secret-path-alias/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "secret-path-alias"
+      ]
+    },
+    {
+      "suite": "forbidden-write-alias",
+      "label": "forbidden-write-alias",
+      "path": "current-r5/shared-matrix/forbidden-write-alias/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "forbidden-write-alias"
+      ]
+    },
+    {
+      "suite": "forbidden-read",
+      "label": "forbidden-read",
+      "path": "current-r5/shared-matrix/forbidden-read/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "forbidden-read"
+      ]
+    },
+    {
+      "suite": "forbidden-write",
+      "label": "forbidden-write",
+      "path": "current-r5/shared-matrix/forbidden-write/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "forbidden-write"
+      ]
+    },
+    {
+      "suite": "approvals",
+      "label": "approvals",
+      "path": "current-r5/shared-matrix/approvals/results.json",
+      "driverExitCode": 0,
+      "cases": 7,
+      "skips": 0,
+      "caseNames": [
+        "pending",
+        "missing-decision",
+        "substituted-arguments",
+        "approved-resume",
+        "completed-replay",
+        "pending-rejection",
+        "rejected-resume"
+      ]
+    },
+    {
+      "suite": "revocation",
+      "label": "revocation",
+      "path": "current-r5/shared-matrix/revocation/results.json",
+      "driverExitCode": 0,
+      "cases": 3,
+      "skips": 0,
+      "caseNames": [
+        "before-revocation",
+        "revoked-capability",
+        "revoked-credential"
+      ]
+    },
+    {
+      "suite": "in-flight-capability",
+      "label": "in-flight-capability",
+      "path": "current-r5/shared-matrix/in-flight-capability/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "in-flight-capability"
+      ]
+    },
+    {
+      "suite": "in-flight-credential",
+      "label": "in-flight-credential",
+      "path": "current-r5/shared-matrix/in-flight-credential/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "in-flight-credential"
+      ]
+    },
+    {
+      "suite": "kernel-killed",
+      "label": "kernel-killed",
+      "path": "current-r5/shared-matrix/kernel-killed/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "kernel-killed"
+      ]
+    },
+    {
+      "suite": "resume-fence",
+      "label": "kernel-killed-resume",
+      "path": "current-r5/shared-matrix/kernel-killed-resume/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "resume-fence"
+      ]
+    },
+    {
+      "suite": "kernel-malformed",
+      "label": "kernel-malformed",
+      "path": "current-r5/shared-matrix/kernel-malformed/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "kernel-malformed"
+      ]
+    },
+    {
+      "suite": "resume-fence",
+      "label": "kernel-malformed-resume",
+      "path": "current-r5/shared-matrix/kernel-malformed-resume/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "resume-fence"
+      ]
+    },
+    {
+      "suite": "kernel-timeout",
+      "label": "kernel-timeout",
+      "path": "current-r5/shared-matrix/kernel-timeout/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "kernel-timeout"
+      ]
+    },
+    {
+      "suite": "resume-fence",
+      "label": "kernel-timeout-resume",
+      "path": "current-r5/shared-matrix/kernel-timeout-resume/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "resume-fence"
+      ]
+    },
+    {
+      "suite": "kernel-absent",
+      "label": "kernel-absent",
+      "path": "current-r5/shared-matrix/kernel-absent/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "kernel-absent"
+      ]
+    },
+    {
+      "suite": "expired-credential",
+      "label": "expired-credential",
+      "path": "current-r5/shared-matrix/expired-credential/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "expired-credential"
+      ]
+    },
+    {
+      "suite": "wrong-principal",
+      "label": "wrong-principal",
+      "path": "current-r5/shared-matrix/wrong-principal/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "wrong-principal"
+      ]
+    },
+    {
+      "suite": "wrong-session",
+      "label": "wrong-session",
+      "path": "current-r5/shared-matrix/wrong-session/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "wrong-session"
+      ]
+    },
+    {
+      "suite": "wrong-resource",
+      "label": "wrong-resource",
+      "path": "current-r5/shared-matrix/wrong-resource/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "wrong-resource"
+      ]
+    },
+    {
+      "suite": "scope-escalation",
+      "label": "scope-escalation",
+      "path": "current-r5/shared-matrix/scope-escalation/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "scope-escalation"
+      ]
+    },
+    {
+      "suite": "evidence-foreign-receipt",
+      "label": "evidence-foreign-receipt",
+      "path": "current-r5/shared-matrix/evidence-foreign-receipt/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "evidence-foreign-receipt"
+      ]
+    },
+    {
+      "suite": "resume-fence",
+      "label": "evidence-foreign-receipt-resume",
+      "path": "current-r5/shared-matrix/evidence-foreign-receipt-resume/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "resume-fence"
+      ]
+    },
+    {
+      "suite": "recover-owner-result",
+      "label": "evidence-foreign-receipt-recovery",
+      "path": "current-r5/shared-matrix/evidence-foreign-receipt-recovery/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "after-owner-reconciliation"
+      ]
+    },
+    {
+      "suite": "evidence-wrong-signer",
+      "label": "evidence-wrong-signer",
+      "path": "current-r5/shared-matrix/evidence-wrong-signer/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "evidence-wrong-signer"
+      ]
+    },
+    {
+      "suite": "resume-fence",
+      "label": "evidence-wrong-signer-resume",
+      "path": "current-r5/shared-matrix/evidence-wrong-signer-resume/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "resume-fence"
+      ]
+    },
+    {
+      "suite": "recover-owner-result",
+      "label": "evidence-wrong-signer-recovery",
+      "path": "current-r5/shared-matrix/evidence-wrong-signer-recovery/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "after-owner-reconciliation"
+      ]
+    },
+    {
+      "suite": "evidence-request-id",
+      "label": "evidence-request-id",
+      "path": "current-r5/shared-matrix/evidence-request-id/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "evidence-request-id"
+      ]
+    },
+    {
+      "suite": "resume-fence",
+      "label": "evidence-request-id-resume",
+      "path": "current-r5/shared-matrix/evidence-request-id-resume/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "resume-fence"
+      ]
+    },
+    {
+      "suite": "recover-owner-result",
+      "label": "evidence-request-id-recovery",
+      "path": "current-r5/shared-matrix/evidence-request-id-recovery/results.json",
+      "driverExitCode": 0,
+      "cases": 1,
+      "skips": 0,
+      "caseNames": [
+        "after-owner-reconciliation"
+      ]
+    },
+    {
+      "suite": "concurrent-owners",
+      "label": "concurrent-owners",
+      "path": "current-r5/shared-matrix/concurrent-owners/results.json",
+      "driverExitCode": 0,
+      "cases": 3,
+      "skips": 0,
+      "caseNames": [
+        "concurrent-owner-refused",
+        "first-owner",
+        "read-after-exclusive-owner"
+      ]
+    },
+    {
+      "suite": "expired-capability",
+      "label": "actual-capability-expiry",
+      "path": "current-r5/shared-matrix/actual-capability-expiry/results.json",
+      "cases": 1,
+      "skips": 0,
+      "expectedHostExitCode": 1,
+      "observedHostExitCode": 1,
+      "observedNewDispatchRows": 0,
+      "driverCompletion": "Retained parent tool observation (session 93680), not a raw shell log; separate case after the 33-suite driver",
+      "caseNames": [
+        "expired-capability"
+      ],
+      "driverExitCode": 0,
+      "driverObservation": "current-r5/shared-matrix/actual-capability-expiry/driver-observation.json"
+    }
+  ],
+  "supplemental": [
+    {
+      "path": "current-r5/supplemental-boundary/boundary-results.json",
+      "assertions": 27,
+      "passed": 27,
+      "failed": 0,
+      "providerInference": false
+    },
+    {
+      "path": "current-r5/supplemental-parallel/summary.json",
+      "passed": true,
+      "providerInference": false,
+      "expectedHostExitCode": 3,
+      "observedHostExitCode": 3,
+      "states": [
+        "completed",
+        "not_dispatched"
+      ],
+      "newDispatchRows": 1
+    }
+  ],
+  "historicalFailures": [
+    {
+      "path": "historical-r4/cutpoints/results.json",
+      "case": "journal-before-dispatch",
+      "passed": false,
+      "failure": "Cutpoint returned success or unexpected resource dispatch",
+      "correspondingCurrentEvidence": "current-r5/native-cutpoints/results.json"
+    },
+    {
+      "path": "historical-r4/parallel/summary.json",
+      "passed": false,
+      "failure": "Overall exit 0/completed while the second parallel call was not_dispatched",
+      "correspondingCurrentEvidence": "current-r5/supplemental-parallel/summary.json"
+    }
+  ],
+  "counts": {
+    "nativeLifecycleCases": 18,
+    "sharedMatrixSuites": 34,
+    "sharedMatrixCases": 44,
+    "sharedDriverSuites": 33,
+    "separateExpirySuites": 1,
+    "supplementalBoundaryAssertions": 27,
+    "supplementalParallelScenarios": 1,
+    "skipsReportedByCurrentIdentityRecords": 0
+  }
+}

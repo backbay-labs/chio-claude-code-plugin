@@ -1,0 +1,8 @@
+{
+  "observedBy": "parent executor tool completion",
+  "toolSessionId": 93680,
+  "driverExitCode": 0,
+  "reportedStdout": "{\"case\": \"expired-capability\", \"exitCode\": 1, \"newDispatchRows\": 0}\n",
+  "recordedAt": "2026-09-10T03:20:09.927865+00:00",
+  "distinction": "exitCode 1 in stdout belongs to expected launcher refusal; driver completed with exit 0. This is a retained parent tool observation, not a separately captured shell log."
+}

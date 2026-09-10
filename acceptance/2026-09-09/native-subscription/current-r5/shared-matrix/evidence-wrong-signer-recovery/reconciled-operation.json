@@ -1,0 +1,127 @@
+{
+  "requestId": "b18cd3ae-7326-4423-8fb1-633311f8f531:fec3e99a32ceaa4cfd59c1cd5bce750475f03e9bdbd56f5a491da3d91600652e",
+  "digest": "f29bc413b3b06c9685a1f46e58e0c69d8eebd0b9357711044cb47147c1d42977",
+  "state": "completed",
+  "outcome": {
+    "state": "completed",
+    "evidence": "verified",
+    "requestId": "b18cd3ae-7326-4423-8fb1-633311f8f531:fec3e99a32ceaa4cfd59c1cd5bce750475f03e9bdbd56f5a491da3d91600652e",
+    "receipt": {
+      "action": {
+        "parameter_hash": "ed4c8c5883ae70ac322b8fc3ae3219bab097b7afcf58fad15a226900d31bcb76",
+        "parameters": {
+          "content": "second legitimate effect requiring its own evidence",
+          "path": "/workspace/claude-inflight-cdb1de4d5a47.txt"
+        }
+      },
+      "boundary_class": "prevent",
+      "capability_id": "cap-01a08941-b2d2-7da0-aa51-d95c2b8073ce",
+      "content_hash": "b923f449fd8d355702b2d2cd6cb76d6ca74f90da09b2e4bd91ab7ea4b0928129",
+      "decision": {
+        "verdict": "allow"
+      },
+      "id": "ff201b047287bcf9bd5469e18cf38f5f13d6b0a67e7904a8caf4da64d8572fdf",
+      "kernel_key": "8e3e6686de6037af93226c38c9faae701f8b2a857330b0bb335eff9756fc91e2",
+      "metadata": {
+        "admission_operation": {
+          "compensation_status": "not_compensated",
+          "coordinator_lease_epoch": 5,
+          "coordinator_lease_id": "01a08940-d622-7f32-98f8-471b877ab7f6",
+          "operation_id": "662e1bb2479ddff9bc11ef8a2ba30768cd96d31f869f49dc2b9b7ecbf8ccb817",
+          "projected_dispatch_state": "terminal",
+          "projected_operation_version": 8,
+          "projected_state": "completed",
+          "request_binding_hash": "f772f9ec79785b6af8af78877333fffa1a814627afb5fa7429d3e941df7c3780",
+          "request_id": "b18cd3ae-7326-4423-8fb1-633311f8f531:fec3e99a32ceaa4cfd59c1cd5bce750475f03e9bdbd56f5a491da3d91600652e",
+          "request_namespace_digest": "55ecef0096470aefeeef60a51d5fd5ef09345e77a1fd0883b0e96b74b74f8234",
+          "retained_dispatch_commit": {
+            "committed_version": 6,
+            "coordinator_lease_epoch": 5,
+            "coordinator_lease_id": "01a08940-d622-7f32-98f8-471b877ab7f6",
+            "provider_attempt": {
+              "attempt_id": "attempt:662e1bb2479ddff9bc11ef8a2ba30768cd96d31f869f49dc2b9b7ecbf8ccb817",
+              "operation_id": "662e1bb2479ddff9bc11ef8a2ba30768cd96d31f869f49dc2b9b7ecbf8ccb817",
+              "transport_id": "kernel-tool-server:fs",
+              "transport_key_epoch": 5
+            },
+            "store_fence": {
+              "lease_id": "01a08940-d622-7f32-98f8-471b877ab7f6",
+              "owner_epoch": 5,
+              "store_uuid": "01a08927-563d-7e91-a354-55a15768ec3d"
+            }
+          },
+          "schema": "chio.admission-receipt.v1",
+          "store_fence": {
+            "lease_id": "01a08940-d622-7f32-98f8-471b877ab7f6",
+            "owner_epoch": 5,
+            "store_uuid": "01a08927-563d-7e91-a354-55a15768ec3d"
+          },
+          "tool_outcome_id": "d51830027692bb59087f0fba35984a247e5fdc752a3b78a3af9de2674d43f87f",
+          "tool_outcome_version": 2,
+          "trusted_time_unix_ms": 1789009192103
+        },
+        "attribution": {
+          "delegation_depth": 0,
+          "grant_index": 0,
+          "issuer_key": "78e40b2a7ad0e93143364d8ca9415e07ec47963e36aec13d60eece1b3cdd374a",
+          "subject_key": "545fa977666cb8adecfe92f5654611be0048eeb60382c38e4a422a02446911c4"
+        },
+        "chio_receipt_signing_nonce": "rcpt-01a08941-e61c-7182-b4e6-ae50d2dd48e6",
+        "receipt_context": {
+          "request_id": "b18cd3ae-7326-4423-8fb1-633311f8f531:fec3e99a32ceaa4cfd59c1cd5bce750475f03e9bdbd56f5a491da3d91600652e"
+        }
+      },
+      "policy_hash": "057b9a8160375e7d90841325639bdd66050a454f393dae23e8c813b8df74b84e",
+      "receipt_kind": "mediated_decision",
+      "redaction_mode": "none",
+      "signature": "cebde796b85e5e7251752d69a9a58b903f37ec5c55d8f36360f0cc702ec97692c56e119125dd6c799839c900826db268541493b50ca117cc3d6aa80b1e66800e",
+      "timestamp": 1789009192,
+      "tool_name": "write_file",
+      "tool_origin": "caller_executed",
+      "tool_server": "fs",
+      "trust_level": "mediated"
+    },
+    "result": {
+      "content": [
+        {
+          "text": "Successfully wrote to /workspace/claude-inflight-cdb1de4d5a47.txt",
+          "type": "text"
+        }
+      ],
+      "isError": false,
+      "structuredContent": {
+        "content": "Successfully wrote to /workspace/claude-inflight-cdb1de4d5a47.txt"
+      }
+    },
+    "delivery": {
+      "acknowledgement": "ZG4bsTt1WU5ZXqPs3gIScDKLX4miPh3_1uSEzzPsP84",
+      "receiptId": "ff201b047287bcf9bd5469e18cf38f5f13d6b0a67e7904a8caf4da64d8572fdf",
+      "requestHash": "878557f888e4df2d16310d15d153da725f56491872ed67aa75c05bc228a6927d",
+      "requestId": "b18cd3ae-7326-4423-8fb1-633311f8f531:fec3e99a32ceaa4cfd59c1cd5bce750475f03e9bdbd56f5a491da3d91600652e",
+      "resultHash": "b923f449fd8d355702b2d2cd6cb76d6ca74f90da09b2e4bd91ab7ea4b0928129",
+      "schema": "chio.mcp.delivery-ack.v1"
+    }
+  },
+  "acknowledged": true,
+  "hostDeliveryRequired": true,
+  "request": {
+    "tool": "write_file",
+    "arguments": {
+      "path": "/workspace/claude-inflight-cdb1de4d5a47.txt",
+      "content": "second legitimate effect requiring its own evidence"
+    },
+    "requestId": "b18cd3ae-7326-4423-8fb1-633311f8f531:fec3e99a32ceaa4cfd59c1cd5bce750475f03e9bdbd56f5a491da3d91600652e"
+  },
+  "hostDeliveryConfirmed": true,
+  "operatorReconciliation": {
+    "previousState": "unknown",
+    "previousOutcome": {
+      "state": "unknown",
+      "evidence": "unverified",
+      "requestId": "b18cd3ae-7326-4423-8fb1-633311f8f531:fec3e99a32ceaa4cfd59c1cd5bce750475f03e9bdbd56f5a491da3d91600652e",
+      "reason": "execution receipt failed trusted request verification"
+    },
+    "ownerRecordSha256": "85ff9e826bb7d60bbbc3721acdf34e56d51f445f9b1442f79a2474eb6f1df9de",
+    "ownerSignature": "c4c87ab80265f47db80066c25883fd87edc0ab3980210bf1330075c83eb63d2460d8fbad652415872cc7b047c8b0366fa0627bb8aa77f3707130182c86f93c0b"
+  }
+}

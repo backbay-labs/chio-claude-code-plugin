@@ -1,0 +1,5 @@
+{
+  "exitCode": 1,
+  "stdout": "",
+  "stderr": "node:internal/modules/cjs/loader:1450\n  throw err;\n  ^\n\nError: Cannot find module '/tmp/chio-claude-subscription-r5-lifecycle-20260909/upgrade-removal/consumer/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs'\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1447:15)\n    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)\n    at Module._load (node:internal/modules/cjs/loader:1233:25)\n    at TracingChannel.traceSync (node:diagnostics_channel:328:14)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\n    at node:internal/main/run_main_module:33:47 {\n  code: 'MODULE_NOT_FOUND',\n  requireStack: []\n}\n\nNode.js v25.5.0\n"
+}

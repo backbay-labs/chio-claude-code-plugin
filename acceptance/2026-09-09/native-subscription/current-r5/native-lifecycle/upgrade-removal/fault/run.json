@@ -1,0 +1,22 @@
+{
+  "label": "fault",
+  "exitCode": 2,
+  "timeout": false,
+  "elapsedSeconds": 8.373,
+  "runtime": "/tmp/chio-claude-native-runtime-18770e6f700a48368792b5bfc8e7da4a",
+  "newDispatchRows": 1,
+  "terminal": {
+    "code": 0,
+    "signal": null,
+    "exitCode": 2,
+    "hostDelivery": {
+      "confirmed": 0,
+      "failed": false
+    },
+    "executionOutcome": "unresolved",
+    "retry": "never-automatic"
+  },
+  "packageDirectory": "/tmp/chio-claude-subscription-r5-lifecycle-20260909/upgrade-removal/consumer/node_modules/@chio/claude-code-plugin",
+  "launcherSha256": "dc13f8ea597ec41522fff2dc6101aad5e74a29aacf413540e017f83825479608",
+  "gatewaySha256": "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf"
+}

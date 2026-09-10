@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/v1/messages?beta=true",
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": []
+  },
+  {
+    "path": "/v1/messages?beta=true",
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: CronCreate. CronCreate is disabled for this session, in subagents as well as here.</tool_use_error>",
+        "is_error": true,
+        "tool_use_id": "toolu_boundary_8ad7a5df94cd41f5b53b7c2a147bd645",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ]
+  }
+]

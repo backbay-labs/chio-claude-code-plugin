@@ -1,0 +1,21 @@
+{
+  "launcherPid": 55250,
+  "observedDescendants": {
+    "55265": "(2.1.267)",
+    "55267": "(security)",
+    "55300": "<defunct>",
+    "55315": "<defunct>",
+    "55322": "<defunct>",
+    "55324": "<defunct>",
+    "55333": "(bash)",
+    "55336": "ps",
+    "55337": "grep",
+    "55338": "grep",
+    "55369": "/opt/homebrew/Cellar/node/25.5.0/bin/node",
+    "55379": "/Users/connor/.local/share/claude/versions/2.1.267"
+  },
+  "nativeHostPids": [
+    55379
+  ],
+  "liveAfterLauncherExit": []
+}

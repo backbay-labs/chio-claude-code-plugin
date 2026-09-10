@@ -1,0 +1,45 @@
+{
+  "calls": [
+    {
+      "id": "toolu_018942dBxkVMXkov8NuJgZbu",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/claude-qualified-d89c40105ea645e2.txt",
+        "content": "Claude native original\n"
+      }
+    },
+    {
+      "id": "toolu_01SuF2Anq6BvVrf6o6db1yvX",
+      "name": "mcp__chio__edit_file",
+      "arguments": {
+        "path": "/workspace/claude-qualified-d89c40105ea645e2.txt",
+        "edits": [
+          {
+            "oldText": "original",
+            "newText": "verified"
+          }
+        ]
+      }
+    },
+    {
+      "id": "toolu_01Kr1wGb9gEsFgq6ZZJxwUEd",
+      "name": "mcp__chio__read_text_file",
+      "arguments": {
+        "path": "/workspace/claude-qualified-d89c40105ea645e2.txt"
+      }
+    },
+    {
+      "id": "toolu_01WofAwnCNqpPKbBy49XeanD",
+      "name": "mcp__chio__list_directory",
+      "arguments": {
+        "path": "/workspace"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_018942dBxkVMXkov8NuJgZbu",
+    "toolu_01SuF2Anq6BvVrf6o6db1yvX",
+    "toolu_01Kr1wGb9gEsFgq6ZZJxwUEd",
+    "toolu_01WofAwnCNqpPKbBy49XeanD"
+  ]
+}

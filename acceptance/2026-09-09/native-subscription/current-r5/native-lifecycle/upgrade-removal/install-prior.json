@@ -1,0 +1,6 @@
+{
+  "exitCode": 0,
+  "archiveSha256": "8bf565bf5d704b01b0847cda64c4244fc1f15a19bc707f8e3a90aa3798064a23",
+  "stdout": "\nadded 1 package in 3s\n",
+  "stderr": "npm notice\nnpm notice New minor version of npm available! 11.8.0 -> 11.19.1\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v11.19.1\nnpm notice To update run: npm install -g npm@11.19.1\nnpm notice\n"
+}

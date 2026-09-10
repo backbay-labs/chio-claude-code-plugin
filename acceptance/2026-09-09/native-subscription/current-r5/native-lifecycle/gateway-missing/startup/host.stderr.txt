@@ -1,0 +1,1 @@
+[chio restricted] ENOENT: no such file or directory, lstat '/private/tmp/chio-claude-subscription-r5-lifecycle-20260909/gateway-missing/consumer/node_modules/@chio/claude-code-plugin/dist/gateway-http.js'
