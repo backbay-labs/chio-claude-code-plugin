@@ -1,0 +1,146 @@
+{
+  "claim": "Binary-independent125838 package lifecycle; native unresolved-operation upgrade still pending",
+  "originalRoot": "/tmp/chio-claude-package-lifecycle-125838-20260910",
+  "files": [
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/archive-validator-controls.json",
+      "path": "raw/archive-validator-controls.json.gz",
+      "originalSha256": "1db5dc66fc4cff8e60e52bd70c2d9aec3f508cace63c6a8f7d9bdc42b780996d",
+      "compressedSha256": "4559154290bab7ef78baa9816c8dc8af4c09f584d197c34a5b39fba83ddc85d6",
+      "bytes": 761
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/commands.json",
+      "path": "raw/commands.json.gz",
+      "originalSha256": "7de4a6c37034aac8910637c0f9c2d4184d52811835e30673807da7df521da660",
+      "compressedSha256": "17aa0aa2d908fdbc9ad1539fb3f7f4c975105230f1ccd0948acc9a96d33fa82e",
+      "bytes": 1789
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/driver-source.py",
+      "path": "raw/driver-source.py.gz",
+      "originalSha256": "8b8bf2babd742f9c7adb401719d362bb9d17be65e583adf8ea349d82fc925081",
+      "compressedSha256": "5500392857d1a3e2660bf6fd41b5c1346019d3deb5db1341aac467e487fffd53",
+      "bytes": 3496
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/empty.npmrc",
+      "path": "raw/empty.npmrc.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/environment.json",
+      "path": "raw/environment.json.gz",
+      "originalSha256": "c2830d86d7abc9d37e4450b025d06b79e17832842141457f106c7c5f5fa06b24",
+      "compressedSha256": "005f6b1727c2d99a697c66d09a4640ba69b14beece2384d59970a1651610a4c5",
+      "bytes": 660
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/install-prior-installed-files.json",
+      "path": "raw/install-prior-installed-files.json.gz",
+      "originalSha256": "8f727702ef812779f48f71e64e90861051606c63052e1fbb63f3e051aa281ce7",
+      "compressedSha256": "4528ed93a6d63987be3e5cb57fa4f6cd37320e90ee9e148e5b3bdc67fd8dcb1f",
+      "bytes": 207958
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/install-prior.stderr",
+      "path": "raw/install-prior.stderr.gz",
+      "originalSha256": "41dbe01d0aca81aba3b1a2e35261214ea4be6286c4a0f38509a81428e6e90264",
+      "compressedSha256": "54aef8a6a45bbee2a7627823cdd1f7706f13a8c124ce79fd1971c4c8dd12f4cc",
+      "bytes": 211
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/install-prior.stdout",
+      "path": "raw/install-prior.stdout.gz",
+      "originalSha256": "ed435fab73a9b746a43a14339ba74fe949add5a81a8c6f3c8b718d53164f5cfd",
+      "compressedSha256": "e5d0e7a4e735c372b907b197e90734e8ba6885fb943563b719d0ba25e8ed8965",
+      "bytes": 23
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/native-driver-source.py",
+      "path": "raw/native-driver-source.py.gz",
+      "originalSha256": "3466c1ca22b5661b23340b8b902c5a9c6fa9cbb0e8c852fc0cc0ff883f77520a",
+      "compressedSha256": "a5a9d91168f21b8ce658bfdc52e7e5ce122fcabadfe3407f5c3c06526472fd8a",
+      "bytes": 61783
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/operator-state-canary.txt",
+      "path": "raw/operator-state-canary.txt.gz",
+      "originalSha256": "7045413083f642e51dfa641974ce32ae2737709786236e60932d3c5a2db24138",
+      "compressedSha256": "bd7b153e1e32e57b283bf1f2380a32e51f1dc303c82690436f9cc2b3e300d9b9",
+      "bytes": 43
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/remove.stderr",
+      "path": "raw/remove.stderr.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/remove.stdout",
+      "path": "raw/remove.stdout.gz",
+      "originalSha256": "a6be356627ddc0010cf074982a84e14ec8dfff56a9bf42a18168410ac2037109",
+      "compressedSha256": "2aeede87556ca98da6feb0a12249b33f068b937d33852dbb2ba4e2a1912bb778",
+      "bytes": 29
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/removed-entrypoint.stderr",
+      "path": "raw/removed-entrypoint.stderr.gz",
+      "originalSha256": "4a9da81bc9748c94392e140c3dd6512702c1ba4a109b5055eebe56144fd85fd1",
+      "compressedSha256": "a053e205f923c0b3ad4d0e8397cefa07cb5f281b28ede514b0d92d2b9cf4d7ae",
+      "bytes": 818
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/removed-entrypoint.stdout",
+      "path": "raw/removed-entrypoint.stdout.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/result.json",
+      "path": "raw/result.json.gz",
+      "originalSha256": "007ccd2418c30365d46e135cca18f05d1709d41b77c3d6b8dbbc4b37e1a83581",
+      "compressedSha256": "e9730f2caa3ad953ecaa163fd78457daa4acfe7e98995e680278bd39d0c5d0ce",
+      "bytes": 537
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/upgrade-installed-files.json",
+      "path": "raw/upgrade-installed-files.json.gz",
+      "originalSha256": "343cbb2559223a0c863976807f1c85d602738f1be22b04f165d8dfb2a731163a",
+      "compressedSha256": "8b34a9b2612e7ba9f7e71c42a7b85339f0a1cbe612b7b99f52470c589c1dba09",
+      "bytes": 207958
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/upgrade.stderr",
+      "path": "raw/upgrade.stderr.gz",
+      "originalSha256": "41dbe01d0aca81aba3b1a2e35261214ea4be6286c4a0f38509a81428e6e90264",
+      "compressedSha256": "54aef8a6a45bbee2a7627823cdd1f7706f13a8c124ce79fd1971c4c8dd12f4cc",
+      "bytes": 211
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/upgrade.stdout",
+      "path": "raw/upgrade.stdout.gz",
+      "originalSha256": "611ae430372bd0ec92f5bc23723f8138b944cf21c13d97bc3bee06c54d8c04f8",
+      "compressedSha256": "7dd353230a7e272c6dd5182d3420232f13018435d35dbbeca61188a2997eed78",
+      "bytes": 26
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/consumer/package-lock.json",
+      "path": "raw/consumer/package-lock.json.gz",
+      "originalSha256": "3ac34a90d2c7a3800a722703d7bb5cc74db0c8d56c1ed39db237b483bb1f2e22",
+      "compressedSha256": "fa3b38c03d4530a2cfed352b6fcb2d0f2bf4df572af3ee8f59a48c3f63bd593d",
+      "bytes": 1654
+    },
+    {
+      "originalPath": "/tmp/chio-claude-package-lifecycle-125838-20260910/consumer/package.json",
+      "path": "raw/consumer/package.json.gz",
+      "originalSha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+      "compressedSha256": "8b0b8749aba12de93f3cf5d86f9fac9d6de7cac400a17473718f182a34ebb7e9",
+      "bytes": 3
+    }
+  ]
+}

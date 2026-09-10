@@ -21,6 +21,7 @@ import shutil
 import signal
 import socket
 import subprocess
+import tarfile
 import threading
 import time
 import uuid
@@ -38,6 +39,27 @@ def save(path, value):
 def require(condition, message):
     if not condition:
         raise RuntimeError(message)
+
+
+def verify_installed_archive(archive_path, expected_sha256, package_dir):
+    require(re.fullmatch(r"[0-9a-f]{64}", expected_sha256 or "") is not None, "Explicit archive SHA-256 required")
+    require(digest(archive_path) == expected_sha256, "Archive differs from selected identity")
+    package_dir = package_dir.resolve(strict=True)
+    identities = []
+    with tarfile.open(archive_path) as archive:
+        for member in archive.getmembers():
+            if not member.isfile():
+                continue
+            require(member.name.startswith("package/"), "Archive file outside package root")
+            relative = Path(member.name.removeprefix("package/"))
+            require(not relative.is_absolute() and ".." not in relative.parts, "Archive file escapes package root")
+            installed = (package_dir / relative).resolve(strict=True)
+            require(installed.is_relative_to(package_dir), "Installed file escapes package root")
+            expected = hashlib.sha256(archive.extractfile(member).read()).hexdigest()
+            require(digest(installed) == expected, "Installed file differs from archive: " + str(relative))
+            identities.append({"path": str(relative), "sha256": expected})
+    require(bool(identities), "Archive contains no regular package files")
+    return identities
 
 
 def parse_calls(output):
@@ -291,6 +313,7 @@ def main():
     parser.add_argument("--startup-fault", type=Path, help="Explicit parent-only initialization fault preload")
     parser.add_argument("--archive", type=Path, help="Cold release archive for disposable omission tests")
     parser.add_argument("--upgrade-from", type=Path, help="Explicit prior archive for isolated unresolved-operation upgrade/removal")
+    parser.add_argument("--upgrade-from-sha256", help="Explicit predecessor archive SHA-256 required for upgrade")
     parser.add_argument("--boundary-launch", type=Path, help="Completed real-provider launch whose exact policy is reused by supplemental native probes")
     parser.add_argument("--artifact-sha256")
     startup_cases = ["plugin-omitted", "gateway-missing", "host-missing", "mcp-silent-omission", "init-malformed", "init-timeout", "init-crash"]
@@ -302,6 +325,11 @@ def main():
     (args.output / "driver-source.py").chmod(0o600)
     args.package_dir = args.package_dir.resolve(strict=True)
     args.host = args.host.resolve(strict=True)
+    if args.archive is not None:
+        save(args.output / "installed-archive-files.json", verify_installed_archive(args.archive, args.artifact_sha256, args.package_dir))
+    if "upgrade-removal" in args.cases:
+        require(args.upgrade_from is not None and re.fullmatch(r"[0-9a-f]{64}", args.upgrade_from_sha256 or "") is not None, "Explicit predecessor archive and SHA-256 required")
+        require(digest(args.upgrade_from) == args.upgrade_from_sha256, "Predecessor archive differs from selected identity")
     operator = json.loads((args.operator_state / "operator.json").read_text())
     signer = (args.operator_state / "sessions.sqlite.admission.kernel.pub").read_text().strip()
     bridge = args.package_dir / "node_modules/@chio/bridge/dist"
@@ -372,11 +400,15 @@ const p='/audit/dispatch.jsonl';console.log(JSON.stringify({files,dispatch:f.exi
         startup_environment = {}
         refused_socket = None
         def install_consumer(archive, label):
+            expected = args.upgrade_from_sha256 if label == "install-prior" else args.artifact_sha256
+            require(digest(archive) == expected, "Cold archive changed before installation")
             consumer = evidence / "consumer"
             installed = subprocess.run(["npm", "install", "--prefix", str(consumer), "--cache", str(evidence / (label + "-empty-cache")), "--offline", "--ignore-scripts", "--no-audit", "--no-fund", str(archive.resolve())], capture_output=True, text=True, timeout=120)
             save(evidence / (label + ".json"), {"exitCode": installed.returncode, "archiveSha256": digest(archive), "stdout": installed.stdout, "stderr": installed.stderr})
             require(installed.returncode == 0, "Disposable archive installation failed")
-            return consumer / "node_modules/@chio/claude-code-plugin"
+            package = consumer / "node_modules/@chio/claude-code-plugin"
+            save(evidence / (label + "-installed-archive-files.json"), verify_installed_archive(archive, expected, package))
+            return package
         if case in ["plugin-omitted", "gateway-missing"]:
             require(args.archive is not None, "Cold archive required for omission cases")
             require(digest(args.archive) == args.artifact_sha256, "Archive differs from candidate identity")

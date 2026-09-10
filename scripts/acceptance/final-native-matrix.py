@@ -67,7 +67,7 @@ def main():
     for name in ["kernel", "archive", "package-dir", "upgrade-from", "kernel-repo",
                  "startup-fault", "owner-root", "output"]:
         parser.add_argument("--" + name, type=Path, required=True)
-    for name in ["kernel-sha256", "kernel-source", "artifact-sha256", "image"]:
+    for name in ["kernel-sha256", "kernel-source", "artifact-sha256", "upgrade-from-sha256", "image"]:
         parser.add_argument("--" + name, required=True)
     parser.add_argument("--base-port", type=int, default=59221)
     parser.add_argument("--volume-prefix", default="chio-required-final-claude-20260910")
@@ -75,13 +75,15 @@ def main():
     parser.add_argument("--groups", nargs="+", choices=["native", "budget", "expiry", "storage", "parallel"],
                         default=["native", "budget", "expiry", "storage", "parallel"])
     args = parser.parse_args()
-    for expected in [args.kernel_sha256, args.artifact_sha256]:
+    for expected in [args.kernel_sha256, args.artifact_sha256, args.upgrade_from_sha256]:
         if re.fullmatch(r"[a-f0-9]{64}", expected) is None:
             raise ValueError("explicit lowercase SHA-256 required")
     if re.fullmatch(r"[a-f0-9]{40}", args.kernel_source) is None:
         raise ValueError("explicit full kernel source revision required")
     if digest(args.kernel) != args.kernel_sha256 or digest(args.archive) != args.artifact_sha256:
         raise ValueError("selected artifact identity differs")
+    if digest(args.upgrade_from) != args.upgrade_from_sha256:
+        raise ValueError("selected predecessor archive identity differs")
     if re.fullmatch(r"sha256:[a-f0-9]{64}", args.image) is None:
         raise ValueError("immutable resource image required")
     if not re.fullmatch(r"chio-required-[a-z0-9-]+", args.volume_prefix):
@@ -183,7 +185,8 @@ def main():
                     ["--boundary-launch", str(launch)]))
                 run("native-cases", native(owner, folder / "cases", NATIVE_CASES[1:],
                     ["--fault-directory", str(args.kernel_repo / "scripts/acceptance"),
-                     "--startup-fault", str(args.startup_fault), "--upgrade-from", str(args.upgrade_from)]), timeout=14400)
+                     "--startup-fault", str(args.startup_fault), "--upgrade-from", str(args.upgrade_from),
+                     "--upgrade-from-sha256", args.upgrade_from_sha256]), timeout=14400)
             elif name == "budget":
                 owner = start_owner(name, 1, args.output / "budget-policy.yaml")
                 run("budget", native(owner, folder / "case", ["aggregate-budget"]))
