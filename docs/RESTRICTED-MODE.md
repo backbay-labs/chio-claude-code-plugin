@@ -92,7 +92,9 @@ sanitization. These fields can truthfully be `none` and `true` together.
 
 Later authorized actions retain original arguments already known from the user.
 The host must not copy a masked display into a path, reconstruct unknown redacted
-data, or retry an uncertain outcome. Tool errors, denials, approvals and unknown
+data, or retry an uncertain outcome. If a later action needs information available
+only through masked output, it must stop and report the missing information.
+Tool errors, denials, approvals and unknown
 outcomes retain their existing stop and recovery behavior. These instructions
 grant no authority and do not alter signed evidence, verification, delivery
 acknowledgements, journals or process isolation.
