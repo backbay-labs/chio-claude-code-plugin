@@ -159,7 +159,7 @@ jobs:
             if (!existsSync(resolve(root, entry))) throw new Error(`missing supported-mode artifact ${entry}`);
           }
           NODE
-          npm publish "${package_artifact}" --dry-run --ignore-scripts --access public
+          npm publish "${package_artifact}" --dry-run --ignore-scripts --access public --tag candidate
       - name: Record source and artifact identities
         id: subjects
         env:

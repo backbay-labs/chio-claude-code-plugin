@@ -86,7 +86,7 @@ jobs:
           if (!existsSync(resolve(root, entry))) throw new Error(`missing supported-mode artifact ${entry}`);
         }
         NODE
-        npm publish "${package_artifact}" --dry-run --ignore-scripts --access public
+        npm publish "${package_artifact}" --dry-run --ignore-scripts --access public --tag candidate
     - name: Retain qualified package
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
       with:
