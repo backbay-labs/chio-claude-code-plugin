@@ -95,6 +95,10 @@ async function main() {
   let transport,delivered=0,deliveryFailed=false;
   let acknowledgements=Promise.resolve();
   const confirmed=new Set();
+  function retainUnresolvedHostResult() {
+    deliveryFailed=true;
+    acknowledgements=acknowledgements.then(()=>{throw new Error("Unresolved host result prevents another model turn");});
+  }
   function receiveHostResults(messages) {
     for(const message of messages) {
       if(message.role!=="user"||!Array.isArray(message.content))continue;
@@ -102,7 +106,10 @@ async function main() {
         if(block.type!=="tool_result")continue;
         const content=block.content;
         let outcome;
-        try{outcome=JSON.parse(typeof content==="string"?content:Array.isArray(content)&&content.length===1&&content[0].type==="text"?content[0].text:"");}catch{continue;}
+        try{outcome=JSON.parse(typeof content==="string"?content:Array.isArray(content)&&content.length===1&&content[0].type==="text"?content[0].text:"");}catch{retainUnresolvedHostResult();continue;}
+        if(!outcome||typeof outcome!=="object"||!["completed","denied","not_dispatched","awaiting_approval"].includes(outcome.state)){
+          retainUnresolvedHostResult();continue;
+        }
         if(outcome.state!=="completed"||outcome.evidence!=="verified"||!outcome.delivery)continue;
         acknowledgements=acknowledgements.then(async()=>{
           const proof=createHash("sha256").update(JSON.stringify(outcome)).digest("hex");
