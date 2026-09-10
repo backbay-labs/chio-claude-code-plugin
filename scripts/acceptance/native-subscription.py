@@ -19,6 +19,7 @@ import re
 import shlex
 import shutil
 import signal
+import socket
 import subprocess
 import threading
 import time
@@ -293,7 +294,8 @@ def main():
     parser.add_argument("--boundary-launch", type=Path, help="Completed real-provider launch whose exact policy is reused by supplemental native probes")
     parser.add_argument("--artifact-sha256")
     startup_cases = ["plugin-omitted", "gateway-missing", "host-missing", "mcp-silent-omission", "init-malformed", "init-timeout", "init-crash"]
-    parser.add_argument("--cases", nargs="+", choices=["useful", "aggregate-budget", "result-substitution", "host-response-loss", "gateway-crash", "sigterm-recovery", "upgrade-removal", "native-boundary", *startup_cases], default=["useful"])
+    cutpoint_cases = ["cancel-before-dispatch", "kernel-network-refused", "journal-before-dispatch", "journal-after-effect"]
+    parser.add_argument("--cases", nargs="+", choices=["useful", "aggregate-budget", "result-substitution", "host-response-loss", "gateway-crash", "sigterm-recovery", "upgrade-removal", "native-boundary", *startup_cases, *cutpoint_cases], default=["useful"])
     args = parser.parse_args()
     args.output.mkdir(mode=0o700, parents=True, exist_ok=False)
     (args.output / "driver-source.py").write_bytes(Path(__file__).read_bytes())
@@ -364,6 +366,7 @@ const p='/audit/dispatch.jsonl';console.log(JSON.stringify({files,dispatch:f.exi
         launch_package = args.package_dir
         launch_host = args.host
         startup_environment = {}
+        refused_socket = None
         def install_consumer(archive, label):
             consumer = evidence / "consumer"
             installed = subprocess.run(["npm", "install", "--prefix", str(consumer), "--cache", str(evidence / (label + "-empty-cache")), "--offline", "--ignore-scripts", "--no-audit", "--no-fund", str(archive.resolve())], capture_output=True, text=True, timeout=120)
@@ -432,7 +435,19 @@ syncBuiltinESMExports();
             (folder / "prompt.txt").write_text(prompt + "\n")
             env = environment.copy()
             env.update(startup_environment)
-            if fault:
+            if fault in cutpoint_cases:
+                require(args.startup_fault is not None, "Explicit parent-only cutpoint preload required")
+                injector = folder / "cutpoint-injector.mjs"
+                injector.write_bytes(args.startup_fault.resolve(strict=True).read_bytes())
+                mode = "hold-before-dispatch" if fault == "cancel-before-dispatch" else fault
+                env.update(NODE_OPTIONS="--import=" + str(injector.resolve()), CHIO_SUBSCRIPTION_FAULT=mode,
+                           CHIO_SUBSCRIPTION_FAULT_LOG=str((folder / "fault.jsonl").resolve()),
+                           CHIO_SUBSCRIPTION_KERNEL_ENDPOINT=f"http://127.0.0.1:{operator['port']}/mcp",
+                           CHIO_SUBSCRIPTION_JOURNAL=str((private / "journal").resolve()))
+                if fault == "kernel-network-refused":
+                    env["CHIO_SUBSCRIPTION_REFUSED_ENDPOINT"] = f"http://127.0.0.1:{refused_socket.getsockname()[1]}/mcp"
+                save(folder / "fault-identity.json", {"file": str(injector), "sha256": digest(injector), "kind": fault})
+            elif fault:
                 require(args.fault_directory is not None, "An explicit fault-directory is required")
                 filename, variable = {"host-response-loss": ("drop-host-response.mjs", "CHIO_HOST_RESPONSE_FAULT_LOG"),
                     "gateway-crash": ("crash-host-gateway.mjs", "CHIO_GATEWAY_CRASH_FAULT_LOG"),
@@ -472,9 +487,26 @@ syncBuiltinESMExports();
                         pass
                     descendant_stop.wait(0.05)
             monitor = None
-            if fault in ["gateway-crash", "sigterm-recovery"]:
+            if fault in ["gateway-crash", "sigterm-recovery", "cancel-before-dispatch"]:
                 monitor = threading.Thread(target=monitor_descendants, daemon=True)
                 monitor.start()
+            cancellation, cancellation_errors = None, []
+            if fault == "cancel-before-dispatch":
+                def cancel_held_call():
+                    deadline = time.monotonic() + 145
+                    try:
+                        while not (folder / "fault.jsonl").exists() and child.poll() is None and time.monotonic() < deadline:
+                            time.sleep(0.05)
+                        require((folder / "fault.jsonl").exists(), "Native before-dispatch cancellation barrier was not reached")
+                        save(folder / "at-cancellation.json", observe())
+                        child.send_signal(signal.SIGTERM)
+                        save(folder / "cancellation.json", {"launcherPid": child.pid, "signal": "SIGTERM", "cutpoint": "held-before-kernel-fetch"})
+                    except Exception as error:
+                        cancellation_errors.append(str(error))
+                        if child.poll() is None:
+                            child.send_signal(signal.SIGTERM)
+                cancellation = threading.Thread(target=cancel_held_call, daemon=True)
+                cancellation.start()
             timed_out = False
             try:
                 stdout, stderr = child.communicate(prompt, timeout=220)
@@ -487,6 +519,8 @@ syncBuiltinESMExports();
                     os.killpg(child.pid, signal.SIGKILL)
                     stdout, stderr = child.communicate(timeout=10)
             descendant_stop.set()
+            if cancellation:
+                cancellation.join(timeout=6)
             if monitor:
                 monitor.join(timeout=6)
                 live = []
@@ -495,8 +529,8 @@ syncBuiltinESMExports();
                     if not live:
                         break
                     time.sleep(0.1)
-                native = [pid for pid, executable in descendants.items() if executable == str(args.host)]
-                save(folder / "descendant-lifecycle.json", {"launcherPid": child.pid, "observedDescendants": descendants, "nativeHostPids": native, "liveAfterLauncherExit": live})
+                native_pids = [pid for pid, executable in descendants.items() if executable == str(args.host)]
+                save(folder / "descendant-lifecycle.json", {"launcherPid": child.pid, "observedDescendants": descendants, "nativeHostPids": native_pids, "liveAfterLauncherExit": live})
             (folder / "host.stdout.jsonl").write_text(stdout)
             (folder / "host.stderr.txt").write_text(stderr)
             after = observe()
@@ -526,7 +560,8 @@ syncBuiltinESMExports();
             print(json.dumps(report), flush=True)
             require(not timed_out, "Native host exceeded timeout; case unresolved")
             if monitor:
-                require(native and not live, "Native child was not observed terminating with the trusted launcher")
+                require(native_pids and not live, "Native child was not observed terminating with the trusted launcher")
+            require(not cancellation_errors, "Native cancellation failed: " + str(cancellation_errors))
             if case in startup_cases:
                 require(digest(config) == config_digest, "Operator configuration changed")
                 report.update(before=before, after=after, calls=calls, returned=returned, stderr=stderr, launch=launch)
@@ -552,7 +587,51 @@ syncBuiltinESMExports();
             workflow = [("write_file", {"path": remote_path, "content": "Claude native original\n"}),
                         ("edit_file", {"path": remote_path, "edits": [{"oldText": "original", "newText": "verified"}]}),
                         ("read_text_file", {"path": remote_path}), ("list_directory", {"path": "/workspace"})]
-            if case in startup_cases:
+            if case in cutpoint_cases:
+                content = "retained original cutpoint effect"
+                steps = [("write_file", {"path": remote_path, "content": content})]
+                if case == "kernel-network-refused":
+                    refused_socket = socket.socket()
+                    refused_socket.bind(("127.0.0.1", 0))
+                    steps.append(("write_file", {"path": remote_path, "content": "must not dispatch after network interruption"}))
+                    with socket.create_connection(("127.0.0.1", operator["port"]), timeout=3):
+                        pass
+                    live_before = {"pid": int((args.operator_state / "kernel.pid").read_text()), "connectionSucceeded": True}
+                    save(evidence / "kernel-live-before.json", live_before)
+                report = run("cutpoint", steps, fault=case)
+                expected = 0 if case in ["cancel-before-dispatch", "journal-before-dispatch"] else 1
+                observed = [json.loads(line) for line in (evidence / "cutpoint/fault.jsonl").read_text().splitlines()]
+                require(len(observed) == 1, "Required operator cutpoint absent or repeated")
+                require(report["exitCode"] != 0 and report["newDispatchRows"] == expected, "Cutpoint returned success or unexpected resource dispatch")
+                require(report["terminal"].get("hostDelivery", {}).get("confirmed", 0) == (1 if case == "kernel-network-refused" else 0), "Wrong host delivery at failure cutpoint")
+                if expected:
+                    require(report["after"]["files"][name]["text"] == content, "Original effect was missing or silently replaced")
+                else:
+                    require(report["before"] == report["after"] and name not in report["after"]["files"], "Pre-dispatch failure produced an effect")
+                if case == "cancel-before-dispatch":
+                    require(json.loads((evidence / "cutpoint/at-cancellation.json").read_text()) == report["before"], "Cancellation barrier followed resource dispatch")
+                if case.startswith("journal-"):
+                    require(observed[0]["errorCode"] == "EIO", "Journal EIO cutpoint missing")
+                retained = record_snapshot("after-cutpoint")
+                if case == "kernel-network-refused":
+                    with socket.create_connection(("127.0.0.1", operator["port"]), timeout=3):
+                        pass
+                    live_after = {"pid": int((args.operator_state / "kernel.pid").read_text()), "connectionSucceeded": True}
+                    save(evidence / "kernel-live-after.json", live_after)
+                    require(live_before == live_after, "Network case changed kernel availability")
+                    refused_socket.close()
+                    refused_socket = None
+                if case != "journal-before-dispatch":
+                    uncertain = [record for record in retained if record.get("state") in ["pending", "unknown"]]
+                    require(len(uncertain) == 1 and uncertain[0]["requestId"] == observed[0]["requestId"], "Original uncertain request was not retained")
+                    require(not uncertain[0].get("acknowledged") and not uncertain[0].get("hostDeliveryConfirmed"), "Uncertain outcome was acknowledged")
+                    retried = run("restart-fenced", [("write_file", {"path": remote_path, "content": "must remain fenced"})])
+                    require(retried["exitCode"] != 0 and retried["before"] == retried["after"] == report["after"], "Same-authority uncertainty restart produced effects")
+                    require(len(retried["calls"]) == 1 and retried["calls"][0]["id"] in retried["returned"], "Fenced retry did not return through native host")
+                    record_snapshot("after-fenced-restart")
+                else:
+                    require(not retained, "Failed reservation left unexpected operation state")
+            elif case in startup_cases:
                 report = run("startup", [("write_file", {"path": remote_path, "content": "must not be dispatched"})])
                 require(report["before"] == report["after"] and not report["calls"] and not report["returned"], "Missing enforcement still admitted host tool work")
                 require(report["exitCode"] != 0, "Dependency failure returned successful process status")
@@ -648,8 +727,12 @@ syncBuiltinESMExports();
                     save(evidence / "removal-state-preservation.json", {"unchanged": True, "privateFileDigests": before_removal})
             final = observe()
             save(evidence / "final-observation.json", final)
-            result = {"case": case, "passed": True, "newDispatchRows": len(final["dispatch"]) - len(initial["dispatch"]), "privateState": str(private), "sameAuthorityRecovery": case not in ["useful", "aggregate-budget", *startup_cases]}
+            result = {"case": case, "passed": True, "newDispatchRows": len(final["dispatch"]) - len(initial["dispatch"]), "privateState": str(private),
+                      "sameAuthorityRecovery": case in ["result-substitution", "host-response-loss", "gateway-crash", "sigterm-recovery", "upgrade-removal"],
+                      "sameAuthorityRestartFenced": case in cutpoint_cases and case != "journal-before-dispatch"}
         except Exception as error:
+            if refused_socket is not None:
+                refused_socket.close()
             result = {"case": case, "passed": False, "error": str(error), "privateState": str(private)}
             results.append(result)
             save(args.output / "results.json", results)
