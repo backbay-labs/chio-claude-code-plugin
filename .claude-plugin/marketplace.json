@@ -1,6 +1,6 @@
 {
   "name": "chio",
-  "description": "Chio protocol plugins for Claude Code: policy mediation, capability bonding, and signed receipts.",
+  "description": "Chio diagnostics for Claude Code. Kernel MCP access requires the separate restricted launcher; integration acceptance pending.",
   "owner": {
     "name": "Backbay Industries"
   },
@@ -8,7 +8,7 @@
     {
       "name": "chio",
       "source": "./",
-      "description": "Bond any Claude Code session to a Chio policy. Mediate every tool call through the chio kernel; stream signed receipts."
+      "description": "Chio diagnostics for Claude Code. Kernel MCP access requires the separate restricted launcher; integration acceptance pending."
     }
   ]
 }

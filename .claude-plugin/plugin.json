@@ -1,7 +1,7 @@
 {
   "name": "chio",
   "version": "0.3.1-rc.1",
-  "description": "Bond Claude Code to a Chio policy. Mediate every tool call; stream signed receipts.",
+  "description": "Chio diagnostics for Claude Code. Kernel MCP access requires the separate restricted launcher; integration acceptance pending.",
   "author": {
     "name": "Backbay Industries",
     "url": "https://github.com/backbay-industries"
