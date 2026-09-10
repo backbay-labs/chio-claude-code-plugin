@@ -257,14 +257,31 @@ def main():
             retry, before, after = run(label, retry_path, retry_content)
             require(retry["exitCode"] == 2 and retry["newDispatches"] == 0 and effects(before) == effects(after) == effects(failed), "Owner restart reopened uncertain work")
             require(retry["terminal"]["hostDelivery"]["confirmed"] == 0, "Restart acknowledged unknown result")
+        # Admission recovery runs asynchronously after owner restart. Retain
+        # every observed state and require the expected terminal state without
+        # allowing the wait to change authority, journal truth, or effects.
+        expected_state = {"before-admission": None, "after-receipt": "completed", "after-admission": "outcome_unknown_after_dispatch"}[args.cutpoint]
+        reconciliation = []
+        deadline = time.monotonic() + 30
+        while True:
+            observed = snapshot("reconciliation-" + str(len(reconciliation)))
+            rows = observed["databases"]["sessions.sqlite.admission"]["admission_operations"]
+            states = [row["state"] for row in rows if row["request_id"] == fault_id]
+            reconciliation.append({"states": states, "observedAtEpoch": observed["observation"]["observedAtEpoch"]})
+            save(args.output / "admission-reconciliation.json", reconciliation)
+            require(effects(observed) == effects(failed), "Admission reconciliation changed resource effects")
+            if states == ([] if expected_state is None else [expected_state]):
+                break
+            require(args.cutpoint == "after-admission" and states == ["dispatch_committed"], "Unexpected durable admission state during reconciliation: " + str(states))
+            require(time.monotonic() < deadline, "Durable admission reconciliation did not finish within 30 seconds")
+            time.sleep(0.5)
         final = snapshot("final")
         final_records = records("final")
         require(any(record.get("requestId") == fault_id and record.get("state") == "unknown" and not record.get("acknowledged") for record in final_records), "Unknown original request was replaced")
         require(len(final_records) == 2 and effects(final) == effects(failed), "Retries created operation state or resource effects")
-        admission = restarted["databases"]["sessions.sqlite.admission"]
+        admission = final["databases"]["sessions.sqlite.admission"]
         fault_operations = [row for row in admission["admission_operations"] if row["request_id"] == fault_id]
         fault_outcomes = [row for row in admission["tool_outcomes"] if row["request_id"] == fault_id]
-        expected_state = {"before-admission": None, "after-receipt": "completed", "after-admission": "outcome_unknown_after_dispatch"}[args.cutpoint]
         require([row["state"] for row in fault_operations] == ([] if expected_state is None else [expected_state]), "Unexpected durable admission state after restart")
         require(len(fault_outcomes) == int(args.cutpoint == "after-receipt"), "Unexpected retained durable outcome count")
         verifier = args.output / "verify-fences.mjs"
