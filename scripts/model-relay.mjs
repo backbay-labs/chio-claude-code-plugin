@@ -29,6 +29,7 @@ export function validateModelRequest(body,model,toolNames) {
 }
 export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.com",apiKey,oauth,model,toolNames,onToolResults}) {
   const upstream=new URL(upstreamBaseUrl);
+  if (oauth && upstream.origin!=="https://api.anthropic.com") throw new Error("Native subscription authentication requires the fixed Anthropic origin");
   if ((!apiKey && !oauth) || (apiKey && oauth) || (oauth && (!oauth.authorization?.startsWith("Bearer ") || !oauth.beta)) || upstream.username || upstream.password || upstream.search || upstream.hash || upstream.pathname!=="/" || !(upstream.origin==="https://api.anthropic.com" || upstream.protocol==="http:"&&upstream.hostname==="127.0.0.1"&&upstream.port)) throw new Error("explicit API or native subscription credential and qualified provider or localhost fixture origin required");
   const token=randomBytes(32).toString("hex"),events=[];
   const server=createServer(async (request,response)=>{

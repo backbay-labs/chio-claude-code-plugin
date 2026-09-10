@@ -5,7 +5,6 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {nativeLogin} from '../scripts/native-login.mjs';
 import {startModelRelay} from '../scripts/model-relay.mjs';
-import {createServer} from 'node:http';
 
 test('native credential observation waits for the child and returns only provider headers',async t=>{
  const root=mkdtempSync(join(tmpdir(),'chio-auth-'));t.after(()=>rmSync(root,{recursive:true,force:true}));
@@ -17,10 +16,18 @@ test('native credential observation waits for the child and returns only provide
 
 test('subscription relay exchanges the guest credential and preserves beta query without exposing provider auth',async t=>{
  let observed;
- const upstream=createServer(async(req,res)=>{let body='';for await(const b of req)body+=b;observed={url:req.url,headers:req.headers,body:JSON.parse(body)};res.writeHead(200,{'content-type':'application/json'});res.end('{}');});
- await new Promise(resolve=>upstream.listen(0,'127.0.0.1',resolve));
- t.after(()=>{upstream.closeAllConnections();upstream.close();});
- const relay=await startModelRelay({upstreamBaseUrl:`http://127.0.0.1:${upstream.address().port}`,oauth:{authorization:'Bearer parent-only',beta:'oauth-required'},model:'test-model',toolNames:[]});
+ const originalFetch=globalThis.fetch;
+ globalThis.fetch=async (input,options)=>{
+  if (String(input).startsWith('https://api.anthropic.com/')) {
+   observed={url:new URL(input).pathname+new URL(input).search,headers:options.headers,body:JSON.parse(options.body)};
+   return new Response('{}',{headers:{'content-type':'application/json'}});
+  }
+  return originalFetch(input,options);
+ };
+ t.after(()=>{globalThis.fetch=originalFetch;});
+ const oauth={authorization:'Bearer parent-only',beta:'oauth-required'};
+ await assert.rejects(startModelRelay({upstreamBaseUrl:'http://127.0.0.1:12345',oauth,model:'test-model',toolNames:[]}),/fixed Anthropic origin/);
+ const relay=await startModelRelay({oauth,model:'test-model',toolNames:[]});
  t.after(()=>relay.close());
  const url=`http://127.0.0.1:${relay.port}/v1/messages?beta=true`;
  const request={method:'POST',headers:{'x-api-key':relay.token,'anthropic-beta':'client-feature'},body:JSON.stringify({model:'test-model',messages:[{role:'user',content:'inline'}],stream:true})};

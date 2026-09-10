@@ -109,6 +109,7 @@ async function main() {
   }
   const modelAuth=opts["--model-auth"]??"api-key";
   if (!["api-key","claude-login"].includes(modelAuth)) throw new Error("model auth must be api-key or claude-login");
+  if (modelAuth==="claude-login" && process.env.ANTHROPIC_BASE_URL && process.env.ANTHROPIC_BASE_URL!=="https://api.anthropic.com") throw new Error("Native subscription authentication cannot use an alternate upstream");
   const oauth=modelAuth==="claude-login" ? await (await import("./native-login.mjs")).nativeLogin(host,workspace) : undefined;
   // A Messages request is actual host delivery evidence. Confirm it before
   // returning the next model turn so fast providers cannot outrun kernel ACK.
