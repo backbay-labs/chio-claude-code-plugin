@@ -1,0 +1,57 @@
+{
+  "schema": "chio.claude.metadata-successor.v1",
+  "accepted": false,
+  "sourceRevision": "c725c628c8ad9465f6746908924e0dd14c56c33f",
+  "version": "0.3.1-rc.1",
+  "predecessorArchiveSha256": "28e8757429548e8fdcb1ffa3c3c665f8eafde426d7ba5f6807086123d6d07646",
+  "archiveSha256": "8e053ba313fff434106c7e86819abbfc7e526b0c6e6b3d975aa7e892595b4966",
+  "archive": "/Users/connor/.local/share/chio-required-candidates/claude-result-contract-metadata-20260910/chio-claude-code-plugin-0.3.1-rc.1.tgz",
+  "coldInstalledPackage": "/tmp/chio-claude-result-contract-metadata-20260910/consumer/node_modules/@chio/claude-code-plugin",
+  "installedFilesVerified": 1227,
+  "archiveChangedFiles": [
+    "package/.claude-plugin/marketplace.json",
+    "package/.claude-plugin/plugin.json"
+  ],
+  "unchangedRegularFiles": 1225,
+  "unchangedJavaScriptFiles": 431,
+  "nativeHostGateTestsRun": false,
+  "fullAcceptanceTransferred": false,
+  "claim": "metadata-only successor; previous native observations remain bound to their original archive; final kernel/host gates must select and test this exact successor",
+  "rawFiles": [
+    {
+      "path": "raw/archive-comparison.json.gz",
+      "decodedSha256": "28d974d54fb6645864870131c2df080809cf73ae94e51f965525eb1f3e7872ae",
+      "compressedSha256": "02276654106a9d46cc0b7b7f23f1759592a542325bec9a031d47910c08371bde"
+    },
+    {
+      "path": "raw/cold-install.json.gz",
+      "decodedSha256": "9f79add9514b8b5e93f92259199d0961bca7bca5b3582a158d5a4569f6325b0f",
+      "compressedSha256": "5a14a2d9d45552ae7af43c5179316396c1fb9256ebfc1dfaaddd0f2958120bf5"
+    },
+    {
+      "path": "raw/cold-install.stderr.gz",
+      "decodedSha256": "41dbe01d0aca81aba3b1a2e35261214ea4be6286c4a0f38509a81428e6e90264",
+      "compressedSha256": "547f89bad9a3cdfe9d4ce27463e8407d5149bc22d949f39f9b134896bf9147c8"
+    },
+    {
+      "path": "raw/cold-install.stdout.gz",
+      "decodedSha256": "84b3615a2b55669c4069410770606e7290261ae70a9db72789bff656c372ce48",
+      "compressedSha256": "3c0d0f62c6b70883d7ae460a68c9fd0d6e302b3feaf5dee4968398e672cbc5f9"
+    },
+    {
+      "path": "raw/package-source.json.gz",
+      "decodedSha256": "35b76f22955f81add4ad0dde0cee1a31e6499beb546dba6bf672bcc51751a35b",
+      "compressedSha256": "76b149b37417e1c8237a1e3f13c3d637352c884f02eb7f4e156ed2f768314a8f"
+    },
+    {
+      "path": "raw/package.stderr.gz",
+      "decodedSha256": "9308b4a4f9a66c6046fee2c66d967fef62afff2a3da22b72246aae62a48695b5",
+      "compressedSha256": "852c0e3657687d3bacbd1a07e4e7ed6a9e14198776fd6a39aaef9de3ebea93b6"
+    },
+    {
+      "path": "raw/package.stdout.gz",
+      "decodedSha256": "f2c89b0f13fd43d80ac05996893fc913d8f30d01f4471a74fba03ead7af23538",
+      "compressedSha256": "a8cd6d3b912431daed2ecf9c0572f7707423b96050291e73746cded6875c34c8"
+    }
+  ]
+}
