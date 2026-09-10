@@ -34,6 +34,14 @@ export function makeArguments({ settingsPath, mcpPath, model, sessionId }) {
     "--verbose", "--no-session-persistence", "--session-id", sessionId, "--model", model];
 }
 
+export function hasExactHostTools(event, expectedTools) {
+  return event.type === "system" && event.subtype === "init"
+    && Array.isArray(event.mcp_servers) && event.mcp_servers.length === 1
+    && event.mcp_servers[0]?.name === "chio" && event.mcp_servers[0]?.status === "connected"
+    && Array.isArray(event.tools) && event.tools.length === expectedTools.length
+    && [...event.tools].sort().every((name, index) => name === [...expectedTools].sort()[index]);
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const allowed = new Set(["--host", "--host-sha256", "--profile", "--workspace", "--gateway-config", "--gateway-sha256", "--model"]);
@@ -133,7 +141,7 @@ async function main() {
     const child=spawn(process.execPath,[supervisor,supervisorConfig],{cwd:workspace,
       env:{PATH:process.env.PATH,LANG:"en_US.UTF-8",OPENSSL_CONF:"/dev/null"},stdio:["inherit","pipe","inherit","pipe"]});
     const decoder=new StringDecoder("utf8");
-    let hostLines="";
+    let hostLines="",hostReady=false,hostInitializationFailed=false;
     child.stdout.on("data",data=>{
       process.stdout.write(data);hostLines+=decoder.write(data);
       if(Buffer.byteLength(hostLines)>16*1024*1024){deliveryFailed=true;child.kill("SIGTERM");return;}
@@ -142,6 +150,12 @@ async function main() {
         const line=hostLines.slice(0,end);hostLines=hostLines.slice(end+1);
         try{
           const event=JSON.parse(line);
+          if(event.type==="system"&&event.subtype==="init"){
+            if(hostReady||!hasExactHostTools(event,toolNames)){
+              hostInitializationFailed=true;child.kill("SIGTERM");
+              process.stderr.write("[chio restricted] native host did not activate the exact Chio MCP tools\n");
+            }else hostReady=true;
+          }
           if(event.type!=="user"||event.message?.role!=="user"||!Array.isArray(event.message.content))continue;
           void receiveHostResults([event.message]).catch(()=>{deliveryFailed=true;});
         }catch{/* Missing host proof leaves the operation fenced. */}
@@ -161,9 +175,10 @@ async function main() {
     const unresolved=deliveryFailed||records.some(record=>["pending","unknown"].includes(record.state)||record.state==="completed"&&(!record.acknowledged||!record.hostDeliveryConfirmed));
     const unsuccessful=records.some(record=>record.state==="denied"||record.state==="not_dispatched"||record.outcome?.result?.isError===true);
     const pending=records.some(record=>record.state==="awaiting_approval");
-    const executionOutcome=unresolved?"unresolved":pending?"awaiting-approval":unsuccessful?"protected-work-incomplete":state.code===0?"completed":"host-failed";
-    const exitCode=unresolved?2:pending?4:unsuccessful?3:state.code??1;
-    writeFileSync(join(profile,"exit.json"),JSON.stringify({...state,exitCode,hostDelivery:{confirmed:delivered,failed:deliveryFailed},executionOutcome,retry:"never-automatic"}),{mode:0o600});
+    const initializationFailed=hostInitializationFailed||!hostReady;
+    const executionOutcome=unresolved?"unresolved":initializationFailed?"host-initialization-failed":pending?"awaiting-approval":unsuccessful?"protected-work-incomplete":state.code===0?"completed":"host-failed";
+    const exitCode=unresolved?2:initializationFailed?1:pending?4:unsuccessful?3:state.code??1;
+    writeFileSync(join(profile,"exit.json"),JSON.stringify({...state,exitCode,hostInitialization:{ready:hostReady,failed:initializationFailed},hostDelivery:{confirmed:delivered,failed:deliveryFailed},executionOutcome,retry:"never-automatic"}),{mode:0o600});
     process.exitCode=exitCode;
   } finally {
     await transport?.close();

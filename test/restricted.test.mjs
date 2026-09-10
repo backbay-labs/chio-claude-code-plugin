@@ -5,7 +5,21 @@ import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
-import { canonicalLocation, isWithin } from "../scripts/restricted.mjs";
+import { canonicalLocation, isWithin, hasExactHostTools } from "../scripts/restricted.mjs";
+
+test("native initialization must activate exactly the protected MCP tool inventory",()=>{
+  const tools=["mcp__chio__read_text_file","mcp__chio__write_file"];
+  const ready={type:"system",subtype:"init",tools:[...tools].reverse(),mcp_servers:[{name:"chio",status:"connected"}]};
+  assert.equal(hasExactHostTools(ready,tools),true);
+  for(const event of [
+    {type:"result",subtype:"success"},
+    {...ready,tools:[],mcp_servers:[{name:"chio",status:"failed"}]},
+    {...ready,tools:[...tools,"Bash"]},
+    {...ready,tools:[tools[0],tools[0]]},
+    {...ready,mcp_servers:[{name:"other",status:"connected"}]},
+    {...ready,mcp_servers:[...ready.mcp_servers,{name:"extra",status:"connected"}]},
+  ]) assert.equal(hasExactHostTools(event,tools),false);
+});
 
 test("private paths cannot hide inside workspace using two-dot names or symlink ancestors", t=>{
   const root=mkdtempSync(join(tmpdir(),"chio-containment-"));
