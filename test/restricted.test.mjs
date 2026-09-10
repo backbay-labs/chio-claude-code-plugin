@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
-import { canonicalLocation, isWithin, hasExactHostTools } from "../scripts/restricted.mjs";
+import { canonicalLocation, isWithin, hasExactHostTools, makeArguments, CHIO_RESULT_INSTRUCTIONS } from "../scripts/restricted.mjs";
 
 test("native initialization must activate exactly the protected MCP tool inventory",()=>{
   const tools=["mcp__chio__read_text_file","mcp__chio__write_file"];
@@ -62,4 +62,20 @@ test("trusted host supervisor stops its process group when the parent lifeline c
   let deadline;
   const result=await Promise.race([closed,new Promise((_,reject)=>{deadline=setTimeout(()=>reject(new Error('orphan host remains: '+stderr)),8000)})]).finally(()=>clearTimeout(deadline));
   assert.equal(result.code,143,stderr);
+});
+
+// Exercise argument boundaries, including spaces and strings that resemble flags.
+// The native regression separately verifies actual model behavior and effects.
+test("fixed result instructions reach the native host without widening its tool contract", () => {
+  const args = makeArguments({settingsPath:"/private/a settings.json",mcpPath:"/private/a mcp.json",model:"claude-sonnet-5",sessionId:"session-with-spaces --tools Bash"});
+  assert.equal(args.filter(value=>value==="--append-system-prompt").length,1);
+  assert.equal(args[args.indexOf("--append-system-prompt")+1],CHIO_RESULT_INSTRUCTIONS);
+  assert.equal(args[args.indexOf("--tools")+1],"");
+  assert.equal(args[args.indexOf("--allowedTools")+1],"mcp__chio__*");
+  assert.equal(args[args.indexOf("--setting-sources")+1],"");
+  assert.equal(args[args.indexOf("--mcp-config")+1],"/private/a mcp.json");
+  assert.equal(args[args.indexOf("--settings")+1],"/private/a settings.json");
+  assert.equal(args[args.indexOf("--session-id")+1],"session-with-spaces --tools Bash");
+  assert.equal(args.filter(value=>value==="--tools").length,1);
+  assert.ok(args.includes("--strict-mcp-config") && args.includes("--restricted"));
 });

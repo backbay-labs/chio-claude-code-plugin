@@ -295,7 +295,7 @@ def main():
     parser.add_argument("--artifact-sha256")
     startup_cases = ["plugin-omitted", "gateway-missing", "host-missing", "mcp-silent-omission", "init-malformed", "init-timeout", "init-crash"]
     cutpoint_cases = ["cancel-before-dispatch", "kernel-network-refused", "journal-before-dispatch", "journal-after-effect"]
-    parser.add_argument("--cases", nargs="+", choices=["useful", "aggregate-budget", "result-substitution", "host-response-loss", "gateway-crash", "sigterm-recovery", "upgrade-removal", "native-boundary", *startup_cases, *cutpoint_cases], default=["useful"])
+    parser.add_argument("--cases", nargs="+", choices=["useful", "sanitized-path", "aggregate-budget", "result-substitution", "host-response-loss", "gateway-crash", "sigterm-recovery", "upgrade-removal", "native-boundary", *startup_cases, *cutpoint_cases], default=["useful"])
     args = parser.parse_args()
     args.output.mkdir(mode=0o700, parents=True, exist_ok=False)
     (args.output / "driver-source.py").write_bytes(Path(__file__).read_bytes())
@@ -362,6 +362,10 @@ const p='/audit/dispatch.jsonl';console.log(JSON.stringify({files,dispatch:f.exi
         save(evidence / "configuration.redacted.json", public_config)
         config_digest = digest(config)
         remote_path = "/workspace/claude-qualified-" + uuid.uuid4().hex[:16] + ".txt"
+        if case == "sanitized-path":
+            # Fixed reproduction of the benign compact-SSN-pattern filename from
+            # the real 2026-09-10 failure. The user prompt stays unchanged.
+            remote_path = "/workspace/claude-qualified-fd7fe194274242a6.txt"
         name = remote_path.rsplit("/", 1)[1]
         launch_package = args.package_dir
         launch_host = args.host
@@ -644,10 +648,31 @@ syncBuiltinESMExports();
                 else:
                     require(not report["launch"], "Missing executable/module did not fail before guest startup")
                     require("ENOENT" in report["stderr"] or "ERR_MODULE_NOT_FOUND" in report["stderr"], "Expected dependency failure absent")
-            elif case == "useful":
+            elif case in ["useful", "sanitized-path"]:
+                require(name not in initial["files"], "Useful-work target already exists; use a fresh resource owner")
                 report = run("workflow", workflow)
                 assert_success(report, workflow)
                 require(report["after"]["files"][name]["text"] == "Claude native verified\n", "Wrong useful-work content")
+                if case == "sanitized-path":
+                    journal = record_snapshot("sanitized-path-final")
+                    write = next(record for record in journal if record.get("outcome", {}).get("receipt", {}).get("tool_name") == "write_file")
+                    outcome = write["outcome"]
+                    receipt = outcome["receipt"]
+                    require(outcome["state"] == "completed" and outcome["evidence"] == "verified" and outcome["result"]["isError"] is False,
+                            "Sanitized write was not a verified successful result")
+                    require(receipt["metadata"]["post_invocation"]["sanitized"] is True and receipt["redaction_mode"] == "none",
+                            "Required independent output-sanitization and receipt-redaction metadata absent")
+                    returned_text = " ".join(block.get("text", "") for block in outcome["result"]["content"])
+                    require(remote_path not in returned_text and "***" in returned_text,
+                            "Deterministic path no longer produces masked output; regression stimulus unresolved")
+                    require(any("pii_ssn_compact" in item.get("details", "") for item in receipt["evidence"]),
+                            "Compact SSN output guard did not run")
+                    require(all(record.get("acknowledged") and record.get("hostDeliveryConfirmed") for record in journal),
+                            "Sanitized workflow did not acknowledge every exact received outcome")
+                    save(evidence / "result-contract.json", {"fixedOriginalPath": remote_path,
+                         "originalArgumentsPreserved": True, "outputRemainsMasked": True,
+                         "receiptRedactionMode": receipt["redaction_mode"], "outputSanitized": True,
+                         "verifiedAndAcknowledgedCalls": len(journal), "sourceOfEffectEvidence": "independent read-only Docker observer"})
             elif case == "aggregate-budget":
                 for index, step in enumerate(workflow):
                     report = run("step-" + str(index + 1), [step])

@@ -80,6 +80,23 @@ Observe the actual resource independently. A gateway result is evidence only
 after its signer, caller, request and output binding verify. A model's summary
 is not an observer.
 
+## Result semantics
+
+The launcher supplies the native host with fixed result-contract instructions
+using Claude's `--append-system-prompt` option. `state: completed` with verified
+evidence and `result.isError: false` records a successful tool result, including
+when the output sanitizer masks a path or identifier. It does not establish
+unredacted output bytes. `receipt.redaction_mode` describes receipt-detail
+redaction; `receipt.metadata.post_invocation.sanitized` describes output
+sanitization. These fields can truthfully be `none` and `true` together.
+
+Later authorized actions retain original arguments already known from the user.
+The host must not copy a masked display into a path, reconstruct unknown redacted
+data, or retry an uncertain outcome. Tool errors, denials, approvals and unknown
+outcomes retain their existing stop and recovery behavior. These instructions
+grant no authority and do not alter signed evidence, verification, delivery
+acknowledgements, journals or process isolation.
+
 ## Failure and recovery
 
 A missing or failed gateway exposes no working protected tools. Kernel loss,

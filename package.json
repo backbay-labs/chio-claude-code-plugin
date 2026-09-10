@@ -1,6 +1,6 @@
 {
   "name": "@chio/claude-code-plugin",
-  "version": "0.3.0",
+  "version": "0.3.1-rc.1",
   "description": "Chio diagnostics and a restricted kernel MCP launch mode for Claude Code; integration acceptance pending.",
   "type": "module",
   "main": "./dist/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "chio",
-  "version": "0.3.0",
+  "version": "0.3.1-rc.1",
   "description": "Bond Claude Code to a Chio policy. Mediate every tool call; stream signed receipts.",
   "author": {
     "name": "Backbay Industries",
