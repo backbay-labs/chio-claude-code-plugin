@@ -1,0 +1,10 @@
+{
+  "originalDebugLog": "/private/tmp/chio-claude-paired-native-f2ecbb9970bf4738b64c3311218005c7/profile/host-debug.log",
+  "originalDebugSha256": "eee701f53558e3cd4ed1bc9d88acb2767f4ca760c159318a2cfc7d882fbc6a98",
+  "rawTimingHeaders": [
+    "2026-09-10T03:30:59.468Z [DEBUG] MCP server \"chio\": Calling MCP tool: read_text_file",
+    "2026-09-10T03:31:00.188Z [DEBUG] MCP server \"chio\": Tool 'read_text_file' completed successfully in 721ms"
+  ],
+  "nativeMcpIntervalMs": 720.0,
+  "timestampPrecision": "native ISO timestamps at millisecond resolution"
+}

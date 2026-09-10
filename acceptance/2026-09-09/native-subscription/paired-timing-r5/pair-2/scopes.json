@@ -1,0 +1,34 @@
+{
+  "direct": {
+    "schema": "chio.mcp.session-credential.v1",
+    "sessionId": "1f71557f2b5ca6bd6580ae1ad14520ee287a6e1f9c674ecbcc56191a074ecdee",
+    "subjectKey": "8fcf2ffc73406b1316313654ac24f63c3f1d90beafe7945513299ce4211baa87",
+    "capabilityIds": [
+      "cap-01a0895e-11f7-7b31-8de7-a39a985d40b2"
+    ],
+    "serverId": "fs",
+    "endpointPath": "/mcp",
+    "allowedTools": [
+      "read_text_file"
+    ],
+    "issuedAt": 1789011039,
+    "expiresAt": 1789011939
+  },
+  "native": {
+    "schema": "chio.mcp.session-credential.v1",
+    "sessionId": "3c0b75a897a90f22ea9d09d8b9d34f8b13e5df410eb6c49c185b4a35caea9063",
+    "subjectKey": "8108713a23ea74d089a637771a75193e86a45122be8f13c28a237b85b67b0b87",
+    "capabilityIds": [
+      "cap-01a0895e-1e77-7700-8fbf-baba4dc92112"
+    ],
+    "serverId": "fs",
+    "endpointPath": "/mcp",
+    "allowedTools": [
+      "read_text_file"
+    ],
+    "issuedAt": 1789011042,
+    "expiresAt": 1789011942
+  },
+  "directConfigSha256": "20c19b8c3473f9f86d9db900d7fd74b3cec0681a9526e1d175aad6f4a01533af",
+  "nativeConfigSha256": "0e81662ab137d053afdb4c4149487f2157401c17103b3d814634fd7e5855d2e9"
+}

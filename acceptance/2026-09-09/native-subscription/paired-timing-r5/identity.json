@@ -1,0 +1,20 @@
+{
+  "claim": "three bounded paired healthy reads; direct calls are performance controls, not host acceptance",
+  "archiveSha256": "0dd0d906fc34b3ac7d09e3b7f6cdee9f13f511731b25ec761feca7172c9b1158",
+  "kernelSha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
+  "image": "sha256:188cb84d5d0bb4063d4ce5a3b9c3832445a5acda5604911cda80a9136d1850a0",
+  "volume": "chio-required-claude-host-delivery-20260909",
+  "auditVolume": "chio-required-claude-host-delivery-20260909-audit",
+  "policySha256": "8c2c732d9115799b13150f7924da0e68fc1f9b2d42a2618912511d407035cc66",
+  "launcherSha256": "b4a5126d02d2f573606147cb59e4a63277824d08c2b82981e6bce16deaf17105",
+  "gatewaySha256": "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+  "bridgeEntrySha256": "66324a93a5bdc9fd026c96898ec71317887a4882489f958e509aee36614183c7",
+  "hostSha256": "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+  "hostVersion": "2.1.267 (Claude Code)",
+  "harnessSha256": "2bd256b1c73821127225e07032cb0137c435a8e3106340d27491f17bc9e885f9",
+  "resource": "/workspace/claude-qualified-d89c40105ea645e2.txt",
+  "allowedTools": [
+    "read_text_file"
+  ],
+  "model": "claude-sonnet-5"
+}
