@@ -295,7 +295,7 @@ def main():
     parser.add_argument("--artifact-sha256")
     startup_cases = ["plugin-omitted", "gateway-missing", "host-missing", "mcp-silent-omission", "init-malformed", "init-timeout", "init-crash"]
     cutpoint_cases = ["cancel-before-dispatch", "kernel-network-refused", "journal-before-dispatch", "journal-after-effect"]
-    parser.add_argument("--cases", nargs="+", choices=["useful", "sanitized-path", "aggregate-budget", "result-substitution", "host-response-loss", "gateway-crash", "sigterm-recovery", "upgrade-removal", "native-boundary", *startup_cases, *cutpoint_cases], default=["useful"])
+    parser.add_argument("--cases", nargs="+", choices=["useful", "sanitized-path", "completed-tool-error", "aggregate-budget", "result-substitution", "host-response-loss", "gateway-crash", "sigterm-recovery", "upgrade-removal", "native-boundary", *startup_cases, *cutpoint_cases], default=["useful"])
     args = parser.parse_args()
     args.output.mkdir(mode=0o700, parents=True, exist_ok=False)
     (args.output / "driver-source.py").write_bytes(Path(__file__).read_bytes())
@@ -427,7 +427,7 @@ syncBuiltinESMExports();
             save(evidence / (label + "-journal.json"), value)
             return value
 
-        def run(label, steps, fault=None):
+        def run(label, steps, fault=None, required_steps=None):
             folder = evidence / label
             folder.mkdir(mode=0o700)
             runtime = Path("/tmp") / ("chio-claude-native-runtime-" + uuid.uuid4().hex)
@@ -572,7 +572,7 @@ syncBuiltinESMExports();
                 return report
             require(launch.get("modelAuth") == "claude-login" and launch.get("modelTransport") == "operator-messages-relay", "Expected actual native subscription inference")
             require(digest(config) == config_digest, "Operator configuration changed")
-            for tool, arguments in steps:
+            for tool, arguments in steps if required_steps is None else required_steps:
                 require(any(call["name"] == "mcp__chio__" + tool and call["arguments"] == arguments for call in calls), "Expected exact real native tool call absent: " + tool)
             report.update(before=before, after=after, calls=calls, returned=returned)
             return report
@@ -673,6 +673,23 @@ syncBuiltinESMExports();
                          "originalArgumentsPreserved": True, "outputRemainsMasked": True,
                          "receiptRedactionMode": receipt["redaction_mode"], "outputSanitized": True,
                          "verifiedAndAcknowledgedCalls": len(journal), "sourceOfEffectEvidence": "independent read-only Docker observer"})
+            elif case == "completed-tool-error":
+                seeded = run("seed-file", workflow[:1])
+                assert_success(seeded, workflow[:1])
+                steps = [("edit_file", {"path": remote_path, "edits": [{"oldText": "missing original text", "newText": "must not replace"}]}),
+                         ("read_text_file", {"path": remote_path})]
+                report = run("error-stops-following-step", steps, required_steps=steps[:1])
+                require(report["exitCode"] == 3 and report["terminal"].get("executionOutcome") == "protected-work-incomplete",
+                        "Completed tool error was reported as successful work")
+                require(len(report["calls"]) == len(report["returned"]) == report["newDispatchRows"] == 1,
+                        "Native host continued past an actual tool error or skipped the required error")
+                require(report["before"]["files"] == report["after"]["files"], "Rejected edit changed resource bytes")
+                journal = record_snapshot("completed-tool-error-final")
+                errors = [record for record in journal if record.get("outcome", {}).get("result", {}).get("isError") is True]
+                require(len(errors) == 1 and errors[0]["state"] == "completed" and errors[0]["outcome"]["evidence"] == "verified",
+                        "Required completed verified tool-error envelope absent")
+                require(errors[0].get("acknowledged") and errors[0].get("hostDeliveryConfirmed"),
+                        "Exact tool-error delivery was not acknowledged")
             elif case == "aggregate-budget":
                 for index, step in enumerate(workflow):
                     report = run("step-" + str(index + 1), [step])
