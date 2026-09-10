@@ -11,6 +11,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import platform
 import re
 import socket
 import sqlite3
@@ -77,6 +78,8 @@ def main():
     for expected in [args.kernel_sha256, args.artifact_sha256]:
         if re.fullmatch(r"[a-f0-9]{64}", expected) is None:
             raise ValueError("explicit lowercase SHA-256 required")
+    if re.fullmatch(r"[a-f0-9]{40}", args.kernel_source) is None:
+        raise ValueError("explicit full kernel source revision required")
     if digest(args.kernel) != args.kernel_sha256 or digest(args.archive) != args.artifact_sha256:
         raise ValueError("selected artifact identity differs")
     if re.fullmatch(r"sha256:[a-f0-9]{64}", args.image) is None:
@@ -120,6 +123,10 @@ def main():
                         "storageDriver": root / "native-storage.py", "parallelDriver": root / "native-parallel.py"}.items():
         sources[label] = {"path": str(path), "sha256": digest(path)}
     save(args.output / "identity.json", {"accepted": False, "kernel": str(args.kernel),
+         "operatingSystem": platform.platform(), "pythonVersion": platform.python_version(),
+         "nodeVersion": subprocess.check_output(["node", "--version"], text=True).strip(),
+         "qualificationSource": subprocess.check_output(["git", "-C", str(root.parents[1]), "rev-parse", "HEAD"], text=True).strip(),
+         "qualificationDirty": subprocess.check_output(["git", "-C", str(root.parents[1]), "status", "--porcelain"], text=True).splitlines(),
          "kernelSha256": args.kernel_sha256, "kernelSource": args.kernel_source,
          "kernelVersion": subprocess.check_output([str(args.kernel), "--version"], text=True).strip(),
          "artifact": str(args.archive), "artifactSha256": args.artifact_sha256,
