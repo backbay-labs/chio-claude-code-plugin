@@ -1,0 +1,26 @@
+{
+  "claim": "supplemental actual-native-host OS and dispatcher probes with local fixture; not real-provider acceptance",
+  "kernelSha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
+  "image": "sha256:188cb84d5d0bb4063d4ce5a3b9c3832445a5acda5604911cda80a9136d1850a0",
+  "volume": "chio-required-claude-host-delivery-20260909",
+  "auditVolume": "chio-required-claude-host-delivery-20260909-audit",
+  "packageDirectory": "/private/tmp/chio-claude-cutpoints-cold-r5-20260909/node_modules/@chio/claude-code-plugin",
+  "artifactSha256": "0dd0d906fc34b3ac7d09e3b7f6cdee9f13f511731b25ec761feca7172c9b1158",
+  "host": "/Users/connor/.local/share/claude/versions/2.1.267",
+  "hostSha256": "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+  "model": "claude-sonnet-5",
+  "hostVersion": "2.1.267 (Claude Code)",
+  "launcherSha256": "b4a5126d02d2f573606147cb59e4a63277824d08c2b82981e6bce16deaf17105",
+  "gatewaySha256": "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+  "bridgeVersion": "0.3.0",
+  "pluginVersion": "0.3.0",
+  "sdkVersion": "0.1.1-rc.1",
+  "os": "macOS-26.4-arm64-arm-64bit",
+  "node": "v25.5.0",
+  "harnessSha256": "697741bd678f20c9722ab1e25606c178b1e2ee77d5a24cbdd2f82e3822187216",
+  "modelAuth": "local fixture without provider credentials",
+  "casesRequested": [
+    "native-boundary"
+  ],
+  "skips": 0
+}

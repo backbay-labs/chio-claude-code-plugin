@@ -1,0 +1,12 @@
+{
+  "pluginSourceParent": "7962cc6",
+  "sourceChange": "scripts/acceptance/kernel-host.py includes required independent audit observer; exact runner retained",
+  "pluginTarballSha256": "9f5ced4f47f8174b0de7dd9b469f9da4a6acb6147486ceaac611ac66d64f747c",
+  "kernelSha256": "0e683f6f7cc8f21816b10641e3c18fba2dd1445fbcd28752cd3260d8ac5edb5a",
+  "image": "sha256:188cb84d5d0bb4063d4ce5a3b9c3832445a5acda5604911cda80a9136d1850a0",
+  "bridgeTarballSha256": "c22c8dd094e39249484b3f4631d9ee6728db76bfd9e6f1f767c22538ab18a0ff",
+  "model": "deterministic local Messages fixture",
+  "scenariosPassed": 4,
+  "skipped": 0,
+  "hostAcceptance": false
+}

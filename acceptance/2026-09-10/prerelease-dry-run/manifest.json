@@ -1,0 +1,65 @@
+{
+  "accepted": false,
+  "publicationPerformed": false,
+  "affectedHostedRun": 34446857258,
+  "affectedSource": "57e402f065d7bd6fe56fd89745de77218749d7d2",
+  "archiveSha256": "1258385647d228ebeed32662091ed721aeda3b60450cabae480ca0d4292fbe0a",
+  "claim": "nonpublishing prerelease package check correction; not host acceptance",
+  "rawFiles": [
+    {
+      "path": "raw/34446857258.json.gz",
+      "decodedSha256": "34798d665791a27f77052935987244a11315283c1e059b9f45ba766a1beef189",
+      "compressedSha256": "6ec1e3ecac5b1f7595e6bac7c4aebccfa3e95bbec1f5fbd4e799a8d16af58ef8"
+    },
+    {
+      "path": "raw/34446857258.log.gz",
+      "decodedSha256": "4d1c7d6020940e7b0a1261ebc5390f623a85a5057563227f70cc229b43e29a7f",
+      "compressedSha256": "3d9b2423829ebe14015ec73cbb8b9e5710b271c27b7f38c50bef38b1d776bbf1"
+    },
+    {
+      "path": "raw/actionlint.json.gz",
+      "decodedSha256": "bb39cc8dbbd1fd8776c7047ee22dc3503f6e12e67cf3e4999d88051f7cc6c32b",
+      "compressedSha256": "e9f4ac9a0bb41b8906db172b294c2da1de74de7f97b36d40a21f9f137279dcb7"
+    },
+    {
+      "path": "raw/after.stderr.gz",
+      "decodedSha256": "78986e2cf03ffc02589087d85973fb9ba0202cc77c744c0fc6b589b0295d3630",
+      "compressedSha256": "2781cb01c1e00d3b1c58a5b4e3f60679d0b23a02075914e58fcfc9fea3601895"
+    },
+    {
+      "path": "raw/after.stdout.gz",
+      "decodedSha256": "87ebcbf0cedecba23a1ea85d305d4e733ceb9d4d112f28ac540d78309d0e31d6",
+      "compressedSha256": "6d4591c23ffdec7a535fb3fcebc04807fd9671326ca47450dbb59863a10ac190"
+    },
+    {
+      "path": "raw/before.stderr.gz",
+      "decodedSha256": "0ffb170e152056e08a31337cc6c709ef60fb79c96638aee8d2fd2a95c6e0b707",
+      "compressedSha256": "8ed518c41d0f08cd9f39417658b47ab05813c2592c30ad51a2deb765d54d7c01"
+    },
+    {
+      "path": "raw/before.stdout.gz",
+      "decodedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "f1b651238a58fe290baec6c5e32f3bdb1943dd2bd582f02569231f7a757c7837"
+    },
+    {
+      "path": "raw/npm-install.json.gz",
+      "decodedSha256": "890a7f7b56f396e977f91a1dc9c4c926cf3051a4b9bb0627e02576a5a7bfcd89",
+      "compressedSha256": "dd3cfe87e242d972dc59c060d018e9c017f7bb12a284df5fa96c08060c585f8a"
+    },
+    {
+      "path": "raw/npm-install.stderr.gz",
+      "decodedSha256": "41dbe01d0aca81aba3b1a2e35261214ea4be6286c4a0f38509a81428e6e90264",
+      "compressedSha256": "547f89bad9a3cdfe9d4ce27463e8407d5149bc22d949f39f9b134896bf9147c8"
+    },
+    {
+      "path": "raw/npm-install.stdout.gz",
+      "decodedSha256": "84b3615a2b55669c4069410770606e7290261ae70a9db72789bff656c372ce48",
+      "compressedSha256": "3c0d0f62c6b70883d7ae460a68c9fd0d6e302b3feaf5dee4968398e672cbc5f9"
+    },
+    {
+      "path": "raw/validation.json.gz",
+      "decodedSha256": "e0b675ac81843b9a7117fe299d8bfa115ac6dcf72ae5828e3a329b62ba8f71d0",
+      "compressedSha256": "0f19368617ff0195ceb4a2058ad94ec6a9705513fc77d7b149989618b233b46d"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+[
+  "python3",
+  "/Users/connor/Medica/backbay/standalone/arc/.worktrees/mcp-execution-evidence-20260909/integrations/required-agents/qualification/storage_fault.py",
+  "--owner-root",
+  "/Users/connor/.local/share/chio-required-operators/kernel-storage-fault-20260909",
+  "--output-root",
+  "/private/tmp/chio-kernel-storage-fault-20260909",
+  "fault",
+  "--name",
+  "claude-r5-before-admission-r2",
+  "--cutpoint",
+  "before-admission",
+  "--wait-seconds",
+  "600",
+  "--hold-seconds",
+  "600"
+]

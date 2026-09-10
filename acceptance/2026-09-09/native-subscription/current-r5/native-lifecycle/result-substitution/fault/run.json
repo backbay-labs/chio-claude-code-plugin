@@ -1,0 +1,23 @@
+{
+  "label": "fault",
+  "exitCode": 2,
+  "timeout": false,
+  "elapsedSeconds": 8.336,
+  "runtime": "/tmp/chio-claude-native-runtime-4a466606cfb74a19832840c036ab9a52",
+  "newDispatchRows": 1,
+  "terminal": {
+    "code": 1,
+    "signal": null,
+    "exitCode": 2,
+    "hostInitialization": {
+      "ready": true,
+      "failed": false
+    },
+    "hostDelivery": {
+      "confirmed": 0,
+      "failed": true
+    },
+    "executionOutcome": "unresolved",
+    "retry": "never-automatic"
+  }
+}

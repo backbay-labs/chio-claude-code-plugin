@@ -1,0 +1,14 @@
+{
+  "calls": [
+    {
+      "id": "toolu_01Qk41cf6ztGLLC7LpHB6tg8",
+      "name": "mcp__chio__list_directory",
+      "arguments": {
+        "path": "/workspace"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_01Qk41cf6ztGLLC7LpHB6tg8"
+  ]
+}

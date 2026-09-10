@@ -1,0 +1,68 @@
+{
+  "accepted": false,
+  "sourceRevision": "c91cd8163ea8b13c66214397bd132bc4f4cd17bf",
+  "archiveSha256": "0dd0d906fc34b3ac7d09e3b7f6cdee9f13f511731b25ec761feca7172c9b1158",
+  "archive": "/tmp/chio-claude-cutpoints-r5-artifact-20260909/chio-claude-code-plugin-0.3.0.tgz",
+  "artifactStatus": "qualified local archive; publication and full I01-I08 acceptance remain open",
+  "hostVersion": "2.1.267",
+  "hostSha256": "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+  "model": "claude-sonnet-5",
+  "provider": "actual Anthropic native Claude Max subscription where startup reaches inference",
+  "kernelSha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
+  "pluginVersion": "0.3.0",
+  "bridgeVersion": "0.3.0",
+  "sdkVersion": "0.1.1-rc.1",
+  "os": "macOS-26.4-arm64-arm-64bit",
+  "node": "v25.5.0",
+  "launcherSha256": "b4a5126d02d2f573606147cb59e4a63277824d08c2b82981e6bce16deaf17105",
+  "gatewaySha256": "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+  "harnessCommit": "a353c3aa1fd63b9586678b2f42fe65be6a8395e8",
+  "harnessSha256": "697741bd678f20c9722ab1e25606c178b1e2ee77d5a24cbdd2f82e3822187216",
+  "sharedMatrixHarnessSha256": "8f0fe5ebb4c76c34107f313dd9062e70a24b088212a287ce4f666204d900cbd1",
+  "currentArchiveEvidence": [
+    "current-r5/native-cutpoints",
+    "current-r5/aggregate-budget",
+    "current-r5/native-lifecycle",
+    "current-r5/shared-matrix",
+    "current-r5/kernel-storage"
+  ],
+  "supplementalEvidence": [
+    "current-r5/supplemental-boundary",
+    "current-r5/supplemental-parallel"
+  ],
+  "caseIndex": "current-r5/CASE-INDEX.json",
+  "installationRecord": "current-r5/provenance/installation.json",
+  "archiveManifest": "current-r5/provenance/archive-manifest.json",
+  "secretScan": "current-r5/provenance/archive-secret-scan.json",
+  "observedCounts": {
+    "nativeLifecycleCases": 18,
+    "sharedMatrixSuites": 34,
+    "sharedMatrixCases": 44,
+    "sharedDriverSuites": 33,
+    "separateExpirySuites": 1,
+    "supplementalBoundaryAssertions": 27,
+    "supplementalParallelScenarios": 1,
+    "skipsReportedByCurrentIdentityRecords": 0,
+    "kernelStorageCases": 3,
+    "kernelStorageSetupFailuresRetained": 3
+  },
+  "historicalEvidence": "All evidence outside current-r5, including current-r3-* and historical-r4, retains its original source/artifact identity and is not qualification of this archive.",
+  "readinessR4Provenance": "readiness-r4-provenance retains exact included nonruntime driver bytes and documents the dirty-source delta; preserved-readiness-r4.json records unchanged hashes.",
+  "remaining": [
+    "Reconcile all required I01-I08 observations across the retained native, boundary, recovery and kernel-storage evidence.",
+    "Complete shared release gates and publish the compatible tested artifact combination."
+  ],
+  "limitations": [
+    "Startup refusal cases intentionally produce no provider inference; expected nonzero host exits are successful prevention observations.",
+    "Supplemental boundary and parallel fixtures do not establish actual-provider inference.",
+    "Installation record was assembled after the successful tool invocation from installed immutable files; raw installation stdout was not retained in that record.",
+    "The three SQLite lock cutpoints establish safe refusal and retained uncertainty; they do not prove arbitrary disk fault behavior or administrative recovery of unresolved work.",
+    "Recorded native intervals include resource and gateway/kernel processing; no matched direct-resource baseline is included in this storage/timing archive and no incremental Chio overhead is claimed."
+  ],
+  "kernelStorageHarnessCommit": "608104118b7cb3a4e7605129dbfb0c0bfb92c5e5",
+  "kernelStorageManifest": "current-r5/kernel-storage/archive-manifest.json",
+  "operationalTiming": "current-r5/kernel-storage/operational-timing.json",
+  "operationalNote": "current-r5/kernel-storage/OPERATIONAL-NOTE.md",
+  "pairedTiming": "paired-timing-r5/summary.json",
+  "pairedTimingLimit": "Three noisy native-MCP versus direct-bridge samples; both include kernel/resource verification. No total kernel overhead or general latency guarantee."
+}

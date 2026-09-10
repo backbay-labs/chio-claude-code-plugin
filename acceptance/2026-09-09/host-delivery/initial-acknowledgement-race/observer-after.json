@@ -1,0 +1,46 @@
+{
+  "/observe/claude-gl3rw68q.txt": {
+    "exists": true,
+    "sha256": "2fce80b9db80c81fa3057c5d0403070b210cf719c42d3609eb6f59f14db0cdb8",
+    "bytes": 34,
+    "content": "Claude kernel integration initial\n"
+  },
+  "/observe/claude-gl3rw68q.txt-second": {
+    "exists": false,
+    "error": "ENOENT"
+  },
+  "/observe/forbidden.txt": {
+    "exists": true,
+    "sha256": "fd972a6e8a36a028a82c74424e1db70e38fe068c342f3e3f319d1e865f680900",
+    "bytes": 31
+  },
+  "/observe/secret.txt": {
+    "exists": true,
+    "sha256": "1a1e1d8bd5d198dcce34023ef3af4a31a88586e9dcd958fa011d8f5fa32f520e",
+    "bytes": 19
+  },
+  "dispatch": [
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 1,
+      "observedAt": "2026-09-09T19:51:03.848Z",
+      "upstreamRequestId": 3,
+      "tool": "write_file",
+      "path": "/workspace/claude-gl3rw68q.txt",
+      "argumentsSha256": "76d8fc42cf294d99c1fb4722515111b656da91a6baf255d93088134594b0bdc6",
+      "frameSha256": "eca5b3726e619ff625e4e4288e6e2bd566e1db4f714d17320751cec824c6cd6b"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 2,
+      "observedAt": "2026-09-09T19:51:04.424Z",
+      "upstreamRequestId": 4,
+      "tool": "read_text_file",
+      "path": "/workspace/claude-gl3rw68q.txt",
+      "argumentsSha256": "991fad339e99583efe7076723a2fd1c21a1bc4921b1fb571e102f1b6ba24dd70",
+      "frameSha256": "6c36eaba87b125e643ca8acc67d60fab6b67f300513c4e6de24f16adf05c2597"
+    }
+  ]
+}

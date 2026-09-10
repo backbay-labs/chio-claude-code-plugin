@@ -1,0 +1,23 @@
+{
+  "label": "after-operator-recovery",
+  "exitCode": 0,
+  "timeout": false,
+  "elapsedSeconds": 13.967,
+  "runtime": "/tmp/chio-claude-native-runtime-1bf72868279a4969addfbb7f262fde5e",
+  "newDispatchRows": 1,
+  "terminal": {
+    "code": 0,
+    "signal": null,
+    "exitCode": 0,
+    "hostInitialization": {
+      "ready": true,
+      "failed": false
+    },
+    "hostDelivery": {
+      "confirmed": 1,
+      "failed": false
+    },
+    "executionOutcome": "completed",
+    "retry": "never-automatic"
+  }
+}

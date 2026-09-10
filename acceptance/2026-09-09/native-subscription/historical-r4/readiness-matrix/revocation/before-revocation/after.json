@@ -1,0 +1,32 @@
+{
+  "files": {
+    "claude-approved-8d80c2736793.txt": "exact operator-approved effect",
+    "claude-revoke-00e73d0c748d.txt": "authorized before revocation",
+    "forbidden.txt": "independent forbidden observer\n",
+    "secret.txt": "sensitive observer\n"
+  },
+  "dispatch": [
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 1,
+      "observedAt": "2026-09-10T02:31:59.561Z",
+      "upstreamRequestId": 3,
+      "tool": "write_file",
+      "path": "/workspace/claude-approved-8d80c2736793.txt",
+      "argumentsSha256": "f9165d46419c8dbf79e00b847b1001c35941d5ee7114c2d2d30c995e4bc3cd12",
+      "frameSha256": "6ed869ec2bede8b6185d728877a5be67f98e590f59a74fa894e154b36e372015"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 2,
+      "observedAt": "2026-09-10T02:32:28.372Z",
+      "upstreamRequestId": 4,
+      "tool": "write_file",
+      "path": "/workspace/claude-revoke-00e73d0c748d.txt",
+      "argumentsSha256": "e7478a3ccf2015aae9a5fbc26b1a712fb851ab1caa4b66b91231a5580c036d19",
+      "frameSha256": "2a2aec264ba06cf0e270e830d77275aa49d90527903ede00aaaf5d936e99cfe9"
+    }
+  ]
+}

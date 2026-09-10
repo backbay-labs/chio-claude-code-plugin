@@ -1,0 +1,7 @@
+{
+  "case": "write-workspace-file-policy",
+  "exitCode": 0,
+  "timeout": false,
+  "exactOuterPolicy": true,
+  "elapsedSeconds": 0.248
+}

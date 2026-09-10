@@ -1,0 +1,1 @@
+Call mcp__chio__read_text_file exactly once with arguments {"path": "/workspace/claude-qualified-d89c40105ea645e2.txt"}. Report the returned content. Do not use another tool, change arguments, or retry.

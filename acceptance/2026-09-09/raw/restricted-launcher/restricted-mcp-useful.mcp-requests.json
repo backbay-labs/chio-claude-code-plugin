@@ -1,0 +1,17 @@
+[
+  {
+    "method": "tools/call",
+    "params": {
+      "name": "write_marker",
+      "arguments": {
+        "value": "contract-effect"
+      },
+      "_meta": {
+        "claudecode/toolUseId": "toolu_local_contract_01",
+        "progressToken": 2
+      }
+    },
+    "jsonrpc": "2.0",
+    "id": 2
+  }
+]

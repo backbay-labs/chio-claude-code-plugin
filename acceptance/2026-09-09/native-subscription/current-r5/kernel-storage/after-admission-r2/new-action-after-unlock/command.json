@@ -1,0 +1,20 @@
+[
+  "node",
+  "/private/tmp/chio-claude-cutpoints-cold-r5-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+  "--host",
+  "/Users/connor/.local/share/claude/versions/2.1.267",
+  "--host-sha256",
+  "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+  "--profile",
+  "/tmp/chio-claude-storage-runtime-111724520dc943d89d2979a648b4f3ab/profile",
+  "--workspace",
+  "/tmp/chio-claude-storage-runtime-111724520dc943d89d2979a648b4f3ab/workspace",
+  "--gateway-config",
+  "/Users/connor/.local/share/chio-required-operators/kernel-storage-fault-20260909/claude-r5-after-admission-r2/gateway.json",
+  "--gateway-sha256",
+  "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+  "--model",
+  "claude-sonnet-5",
+  "--model-auth",
+  "claude-login"
+]

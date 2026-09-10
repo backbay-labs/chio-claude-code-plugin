@@ -1,0 +1,21 @@
+
+> @chio/claude-code-plugin@0.3.0 build
+> npm run build:types && npm run bundle
+
+
+> @chio/claude-code-plugin@0.3.0 build:types
+> tsc --emitDeclarationOnly
+
+
+> @chio/claude-code-plugin@0.3.0 bundle
+> node ./scripts/bundle.mjs
+
+
+  dist/index.js         391.8kb
+  dist/state/bridge.js  369.7kb
+  dist/gateway-http.js   60.5kb
+  dist/gateway.js        54.4kb
+  dist/state/store.js     1.9kb
+  dist/state/paths.js     636b 
+
+⚡ Done in 28ms

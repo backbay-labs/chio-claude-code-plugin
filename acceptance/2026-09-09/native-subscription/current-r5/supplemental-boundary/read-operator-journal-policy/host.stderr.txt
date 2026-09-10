@@ -1,0 +1,2 @@
+Error: Invalid MCP configuration:
+Failed to read file: Error: EPERM: operation not permitted, open '/tmp/chio-claude-subscription-r5-boundary-20260909/operator-journal.canary'

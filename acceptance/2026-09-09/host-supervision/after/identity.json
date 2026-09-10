@@ -1,0 +1,9 @@
+{
+  "claim": "actual Claude 2.1.267/kernel and local model fixture; no authenticated provider acceptance",
+  "retainedRequestId": "068570b5-440a-48a5-a1a0-d84887f8d6de:da56dffc9d657604f668363598f9afb894e4c654617aae7a3db974de7d141450",
+  "gatewayConfiguration": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-supervisor-crash-79527b3f5d5c40f584f42df699550bde/gateway.json",
+  "faultExit": -9,
+  "blockedExit": 2,
+  "recoveredExit": 0,
+  "cases": 7
+}

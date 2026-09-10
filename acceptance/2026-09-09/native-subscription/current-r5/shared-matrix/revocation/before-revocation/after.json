@@ -1,0 +1,241 @@
+{
+  "files": {
+    "claude-approved-478a44ef0e9c.txt": "exact operator-approved effect",
+    "claude-approved-8d80c2736793.txt": "exact operator-approved effect",
+    "claude-inflight-0936a6d263f3.txt": "second legitimate effect requiring its own evidence",
+    "claude-inflight-112f334a90d5.txt": "second legitimate effect requiring its own evidence",
+    "claude-inflight-1ba8531133cf.txt": "second legitimate effect requiring its own evidence",
+    "claude-inflight-5ddc4f99b7c0.txt": "authorized before in-flight revocation",
+    "claude-inflight-6f593b725111.txt": "authorized before in-flight revocation",
+    "claude-inflight-a190e6b7c573.txt": "authorized before in-flight revocation",
+    "claude-inflight-b52a7c52467f.txt": "authorized before in-flight revocation",
+    "claude-inflight-bb22739ec379.txt": "authorized before in-flight revocation",
+    "claude-parallel-34f6db0495ea.txt": "only the live owner may write",
+    "claude-revoke-00e73d0c748d.txt": "authorized before revocation",
+    "claude-revoke-4024461a7dad.txt": "authorized before revocation",
+    "forbidden.txt": "independent forbidden observer\n",
+    "secret.txt": "sensitive observer\n"
+  },
+  "dispatch": [
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 1,
+      "observedAt": "2026-09-10T02:31:59.561Z",
+      "upstreamRequestId": 3,
+      "tool": "write_file",
+      "path": "/workspace/claude-approved-8d80c2736793.txt",
+      "argumentsSha256": "f9165d46419c8dbf79e00b847b1001c35941d5ee7114c2d2d30c995e4bc3cd12",
+      "frameSha256": "6ed869ec2bede8b6185d728877a5be67f98e590f59a74fa894e154b36e372015"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 2,
+      "observedAt": "2026-09-10T02:32:28.372Z",
+      "upstreamRequestId": 4,
+      "tool": "write_file",
+      "path": "/workspace/claude-revoke-00e73d0c748d.txt",
+      "argumentsSha256": "e7478a3ccf2015aae9a5fbc26b1a712fb851ab1caa4b66b91231a5580c036d19",
+      "frameSha256": "2a2aec264ba06cf0e270e830d77275aa49d90527903ede00aaaf5d936e99cfe9"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 3,
+      "observedAt": "2026-09-10T02:32:43.579Z",
+      "upstreamRequestId": 5,
+      "tool": "write_file",
+      "path": "/workspace/claude-inflight-a190e6b7c573.txt",
+      "argumentsSha256": "38d54ff8c1f402b1d9bbf19ecac52ec42150510d2715b85f8938f1ab298ac29a",
+      "frameSha256": "699b1379612d60f8c59cd380484c5ad05a8563e92abe88ffb0e9765261630eb9"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 4,
+      "observedAt": "2026-09-10T02:32:56.798Z",
+      "upstreamRequestId": 6,
+      "tool": "write_file",
+      "path": "/workspace/claude-inflight-b52a7c52467f.txt",
+      "argumentsSha256": "fd3ec8c8c253a4ebfd586654cc0843c4c99c7471d9620f7bf65d7256f6a41ec2",
+      "frameSha256": "f767e35ea995f018315df4f4cda1294085a04cdf5bc96e262e58d16d5c3dfda0"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 5,
+      "observedAt": "2026-09-10T02:33:10.976Z",
+      "upstreamRequestId": 7,
+      "tool": "write_file",
+      "path": "/workspace/claude-inflight-6f593b725111.txt",
+      "argumentsSha256": "725258d8b46499db1cfceddaac78f0a57ad2905380e133b9161ba1bce569ec56",
+      "frameSha256": "099f2869322bdee225ea3497ec222d73fad96db456ba3dada24402cdebdcee1d"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 1,
+      "observedAt": "2026-09-10T02:33:41.704Z",
+      "upstreamRequestId": 3,
+      "tool": "write_file",
+      "path": "/workspace/claude-inflight-5ddc4f99b7c0.txt",
+      "argumentsSha256": "d82d9dee2b70882a69d64c96afaae6a2f77e8343e6c3495f2007dd5677b50f68",
+      "frameSha256": "78847243552a23bddfeeb01d153832babd9df0b287aefde64720af8175208ab1"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 2,
+      "observedAt": "2026-09-10T02:33:58.035Z",
+      "upstreamRequestId": 4,
+      "tool": "write_file",
+      "path": "/workspace/claude-inflight-bb22739ec379.txt",
+      "argumentsSha256": "3adde217ab4325a86c149a759b11d31bed1373917085a1b8708d8e08db1f631d",
+      "frameSha256": "5f3c3ea943bc48b73bfd83108a0d684190c7a363a00df327ebf4e9ac59cabd19"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 1,
+      "observedAt": "2026-09-10T02:35:09.736Z",
+      "upstreamRequestId": 3,
+      "tool": "write_file",
+      "path": "/workspace/claude-inflight-1ba8531133cf.txt",
+      "argumentsSha256": "091b3b2bbc3179b6e43af23204723851f6d9235a1e9abd5d2c1f8705d9776185",
+      "frameSha256": "48856fc307191c31cfc87decba78f6a4ef100e112c2e388db2b3cdec5369c54d"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 2,
+      "observedAt": "2026-09-10T02:35:12.728Z",
+      "upstreamRequestId": 4,
+      "tool": "write_file",
+      "path": "/workspace/claude-inflight-1ba8531133cf.txt",
+      "argumentsSha256": "c0375cb815c35e7029bf96635339f0a0fc58a5370b7d8030a5957479a58345db",
+      "frameSha256": "1ab9e4ccb44a6868c14243e439f46a8adcffe80fcd419bf952557716aa6ceb9a"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 3,
+      "observedAt": "2026-09-10T02:35:35.782Z",
+      "upstreamRequestId": 5,
+      "tool": "read_text_file",
+      "path": "/workspace/claude-inflight-1ba8531133cf.txt",
+      "argumentsSha256": "ebe114672ee569ae665ad7e720d4756ed11deb14436762e2eb70b04b281fcf63",
+      "frameSha256": "a999adca09893b31ef810a4db40c07a0bbcabff9e1b8d79db95a036b5b230888"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 4,
+      "observedAt": "2026-09-10T02:35:44.694Z",
+      "upstreamRequestId": 6,
+      "tool": "write_file",
+      "path": "/workspace/claude-inflight-112f334a90d5.txt",
+      "argumentsSha256": "ac7351f84ec254111dc7fa37b098f5b9e763bd04ebd38c427ff590453b1c2ef6",
+      "frameSha256": "cb0ea9717707b0fbd5f0fdea5a76b94c259d99c4b8ab6c5f781f981927ab63c9"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 5,
+      "observedAt": "2026-09-10T02:35:48.260Z",
+      "upstreamRequestId": 7,
+      "tool": "write_file",
+      "path": "/workspace/claude-inflight-112f334a90d5.txt",
+      "argumentsSha256": "2baf9bf9c417f539a12442ee78d5911a685c22033a7e35eabb08190f60c2816a",
+      "frameSha256": "03797832d40c82047b111dbfaf3ccf775f9eeadd9d2f251e5db8b307f6b176d8"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 6,
+      "observedAt": "2026-09-10T02:36:06.515Z",
+      "upstreamRequestId": 8,
+      "tool": "read_text_file",
+      "path": "/workspace/claude-inflight-112f334a90d5.txt",
+      "argumentsSha256": "cdc267945bea2346d081238a9ee575a031df7ffb56c85ab6d93a909bb7a2a814",
+      "frameSha256": "f9c0e6d980805827446192a03c8ca5e4bfd4d0b2437eafd9a6bf4f3ab14767c1"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 7,
+      "observedAt": "2026-09-10T02:36:17.658Z",
+      "upstreamRequestId": 9,
+      "tool": "write_file",
+      "path": "/workspace/claude-inflight-0936a6d263f3.txt",
+      "argumentsSha256": "9093946433ed1d38a70bdc973a284bb62bf5f47812e3085b6e193dd565ef1d22",
+      "frameSha256": "b14d7c7cc91a9a4d0f136ad7f4aa725d7453ce3bf924cc59ef24e816d74daec9"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 8,
+      "observedAt": "2026-09-10T02:36:20.747Z",
+      "upstreamRequestId": 10,
+      "tool": "write_file",
+      "path": "/workspace/claude-inflight-0936a6d263f3.txt",
+      "argumentsSha256": "bf5b8dbe83899cb92a6e193b5b072da5b77941c549c0295faeb78b957bddbdcf",
+      "frameSha256": "30b29ca163dbfdaefdb68fe56ae673787de5639251ed20657a00b8c80e3944a4"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 9,
+      "observedAt": "2026-09-10T02:36:40.251Z",
+      "upstreamRequestId": 11,
+      "tool": "read_text_file",
+      "path": "/workspace/claude-inflight-0936a6d263f3.txt",
+      "argumentsSha256": "b35e795bc4e1929fa0488fa963c4d8675576bbd073b113f12dbf86c4649d94bb",
+      "frameSha256": "1c461c01c6a1ebff1c8a20f2a6bfd204201d5189b19c62218083e37ae3b58137"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 10,
+      "observedAt": "2026-09-10T02:36:49.414Z",
+      "upstreamRequestId": 12,
+      "tool": "write_file",
+      "path": "/workspace/claude-parallel-34f6db0495ea.txt",
+      "argumentsSha256": "5afdc45d9d7097341f8eb0c36f0c3c20eb8589d384e1eca3ff043f399840bea8",
+      "frameSha256": "0564591e20e28dfdb2049a5075d4da5690bd3ff642272e307b983e22a4738f42"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 11,
+      "observedAt": "2026-09-10T02:36:54.892Z",
+      "upstreamRequestId": 13,
+      "tool": "read_text_file",
+      "path": "/workspace/claude-parallel-34f6db0495ea.txt",
+      "argumentsSha256": "c7b5175cb46b785c7480184e1169b850f6fba66f758a69215fbbcf64d3fdfcbb",
+      "frameSha256": "4cec621b430804f929aed1621d0c2d9d1c9c1ce630973d754976912ab331d3aa"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 12,
+      "observedAt": "2026-09-10T02:56:09.161Z",
+      "upstreamRequestId": 14,
+      "tool": "write_file",
+      "path": "/workspace/claude-approved-478a44ef0e9c.txt",
+      "argumentsSha256": "9cac4eb6d978e0d15abee6e81ef9479c7229522b8c9b29ac8ca69ce1f1132756",
+      "frameSha256": "ff75090f62c3922ab68a85d7db1f7c1c0bdd2fd091171c37ff4aa084adb4065a"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 13,
+      "observedAt": "2026-09-10T02:56:38.575Z",
+      "upstreamRequestId": 15,
+      "tool": "write_file",
+      "path": "/workspace/claude-revoke-4024461a7dad.txt",
+      "argumentsSha256": "c969b458bdc2ea3672fc08803b393507d25d20beb06f469d20060538ef41c236",
+      "frameSha256": "cf987760a584e7daeb0a5468e5c0574729f20f528653cccc427049d716f42c15"
+    }
+  ]
+}

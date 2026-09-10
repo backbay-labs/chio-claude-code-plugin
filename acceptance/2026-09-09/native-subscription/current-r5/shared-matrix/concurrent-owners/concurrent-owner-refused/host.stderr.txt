@@ -1,0 +1,1 @@
+[chio restricted] EEXIST: file already exists, open '/Users/connor/.local/share/chio-required-operators/claude-readiness-matrix-20260909/claude-approvals-e501c3726dd64c019f03270b6a2fe8c2/journal/gateway.lock'

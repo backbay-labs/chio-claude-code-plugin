@@ -1,0 +1,127 @@
+{
+  "requestId": "10ecec20-8d55-400a-80fc-e5bbcaa3eb2c:bdd2f054c454475a9e7000102ae7145d446eb0632938700f6864ddb746bb5b0d",
+  "digest": "ea7422ec231752fa1277893fd8196d598346b93062ca5d1b8513879d27516112",
+  "state": "completed",
+  "outcome": {
+    "state": "completed",
+    "evidence": "verified",
+    "requestId": "10ecec20-8d55-400a-80fc-e5bbcaa3eb2c:bdd2f054c454475a9e7000102ae7145d446eb0632938700f6864ddb746bb5b0d",
+    "receipt": {
+      "action": {
+        "parameter_hash": "c0375cb815c35e7029bf96635339f0a0fc58a5370b7d8030a5957479a58345db",
+        "parameters": {
+          "content": "second legitimate effect requiring its own evidence",
+          "path": "/workspace/claude-inflight-1ba8531133cf.txt"
+        }
+      },
+      "boundary_class": "prevent",
+      "capability_id": "cap-01a0892b-3241-7ae1-a663-b82e4c98f19d",
+      "content_hash": "71f2e5415b75591b3ec7f67bad586b778ed3c3d6a0703a094b349d1430c87509",
+      "decision": {
+        "verdict": "allow"
+      },
+      "id": "3c8000e47f21bca8ccddfee0a94328531a90f2e3b8732733de33518a1c69bd93",
+      "kernel_key": "8e3e6686de6037af93226c38c9faae701f8b2a857330b0bb335eff9756fc91e2",
+      "metadata": {
+        "admission_operation": {
+          "compensation_status": "not_compensated",
+          "coordinator_lease_epoch": 3,
+          "coordinator_lease_id": "01a0892a-f403-7d33-8306-645803640f0d",
+          "operation_id": "156342b56e674fc55bcf88f29760a8e02167931289772fb2fa1db30a4cbc6803",
+          "projected_dispatch_state": "terminal",
+          "projected_operation_version": 8,
+          "projected_state": "completed",
+          "request_binding_hash": "227a92147668d3df19786598f92ca0b94773c1c7c17aa4dce48fcdf6dc5c27fa",
+          "request_id": "10ecec20-8d55-400a-80fc-e5bbcaa3eb2c:bdd2f054c454475a9e7000102ae7145d446eb0632938700f6864ddb746bb5b0d",
+          "request_namespace_digest": "55ecef0096470aefeeef60a51d5fd5ef09345e77a1fd0883b0e96b74b74f8234",
+          "retained_dispatch_commit": {
+            "committed_version": 6,
+            "coordinator_lease_epoch": 3,
+            "coordinator_lease_id": "01a0892a-f403-7d33-8306-645803640f0d",
+            "provider_attempt": {
+              "attempt_id": "attempt:156342b56e674fc55bcf88f29760a8e02167931289772fb2fa1db30a4cbc6803",
+              "operation_id": "156342b56e674fc55bcf88f29760a8e02167931289772fb2fa1db30a4cbc6803",
+              "transport_id": "kernel-tool-server:fs",
+              "transport_key_epoch": 3
+            },
+            "store_fence": {
+              "lease_id": "01a0892a-f403-7d33-8306-645803640f0d",
+              "owner_epoch": 3,
+              "store_uuid": "01a08927-563d-7e91-a354-55a15768ec3d"
+            }
+          },
+          "schema": "chio.admission-receipt.v1",
+          "store_fence": {
+            "lease_id": "01a0892a-f403-7d33-8306-645803640f0d",
+            "owner_epoch": 3,
+            "store_uuid": "01a08927-563d-7e91-a354-55a15768ec3d"
+          },
+          "tool_outcome_id": "1e6806afe202a90dca2956135ed5fd172724f9752cff9efd902529038e15ac14",
+          "tool_outcome_version": 2,
+          "trusted_time_unix_ms": 1789007712725
+        },
+        "attribution": {
+          "delegation_depth": 0,
+          "grant_index": 0,
+          "issuer_key": "78e40b2a7ad0e93143364d8ca9415e07ec47963e36aec13d60eece1b3cdd374a",
+          "subject_key": "51cea58e7a9a0644c60a437919367a504d94765ba1dfa613a7d4bcc8fe8e1d58"
+        },
+        "chio_receipt_signing_nonce": "rcpt-01a0892b-526f-7630-8fbc-42ac3983a095",
+        "receipt_context": {
+          "request_id": "10ecec20-8d55-400a-80fc-e5bbcaa3eb2c:bdd2f054c454475a9e7000102ae7145d446eb0632938700f6864ddb746bb5b0d"
+        }
+      },
+      "policy_hash": "057b9a8160375e7d90841325639bdd66050a454f393dae23e8c813b8df74b84e",
+      "receipt_kind": "mediated_decision",
+      "redaction_mode": "none",
+      "signature": "acf03d34e87de0895f1989b4048836599ac3ea82ee246eca7a620ffca416c04e919383166c69b5f036549d2fe5389b3efb7bb2458e0c8da8868f092cd9e6170d",
+      "timestamp": 1789007712,
+      "tool_name": "write_file",
+      "tool_origin": "caller_executed",
+      "tool_server": "fs",
+      "trust_level": "mediated"
+    },
+    "result": {
+      "content": [
+        {
+          "text": "Successfully wrote to /workspace/claude-inflight-1ba8531133cf.txt",
+          "type": "text"
+        }
+      ],
+      "isError": false,
+      "structuredContent": {
+        "content": "Successfully wrote to /workspace/claude-inflight-1ba8531133cf.txt"
+      }
+    },
+    "delivery": {
+      "acknowledgement": "rGAYSm0KjqVFVY-BedbJ45mG_piWGj77C7C11O9rKj8",
+      "receiptId": "3c8000e47f21bca8ccddfee0a94328531a90f2e3b8732733de33518a1c69bd93",
+      "requestHash": "6415b3dcc47a63b3afd776d5053ea2a6a778a878d5eba49f245f575b1dc3ede3",
+      "requestId": "10ecec20-8d55-400a-80fc-e5bbcaa3eb2c:bdd2f054c454475a9e7000102ae7145d446eb0632938700f6864ddb746bb5b0d",
+      "resultHash": "71f2e5415b75591b3ec7f67bad586b778ed3c3d6a0703a094b349d1430c87509",
+      "schema": "chio.mcp.delivery-ack.v1"
+    }
+  },
+  "acknowledged": true,
+  "hostDeliveryRequired": true,
+  "request": {
+    "tool": "write_file",
+    "arguments": {
+      "path": "/workspace/claude-inflight-1ba8531133cf.txt",
+      "content": "second legitimate effect requiring its own evidence"
+    },
+    "requestId": "10ecec20-8d55-400a-80fc-e5bbcaa3eb2c:bdd2f054c454475a9e7000102ae7145d446eb0632938700f6864ddb746bb5b0d"
+  },
+  "hostDeliveryConfirmed": true,
+  "operatorReconciliation": {
+    "previousState": "unknown",
+    "previousOutcome": {
+      "state": "unknown",
+      "evidence": "unverified",
+      "requestId": "10ecec20-8d55-400a-80fc-e5bbcaa3eb2c:bdd2f054c454475a9e7000102ae7145d446eb0632938700f6864ddb746bb5b0d",
+      "reason": "execution receipt failed trusted request verification"
+    },
+    "ownerRecordSha256": "cedbe7a4da679350e7bbafe9b1a8a69dc16299c747b3af1e3600c7bd62081f22",
+    "ownerSignature": "a8e471f372373606e6cd91fa6fcb205cc894acebf745f8174fb03920854c32922a05388c305f281af048aa0e2078df01f191955c924502fbc567d93b3baea201"
+  }
+}

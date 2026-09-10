@@ -1,0 +1,22 @@
+[
+  {
+    "path": "/v1/messages?beta=true",
+    "tools": [],
+    "tool_results": []
+  },
+  {
+    "path": "/v1/messages?beta=true",
+    "tools": [],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "<tool_use_error>Error: No such tool available: mcp__chio__write_marker</tool_use_error>\n\n<system-reminder>\n<total_tokens>14999890 tokens left</total_tokens>\n</system-reminder>",
+        "is_error": true,
+        "tool_use_id": "toolu_local_contract_01",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ]
+  }
+]

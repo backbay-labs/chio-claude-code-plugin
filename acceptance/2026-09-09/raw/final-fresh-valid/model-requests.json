@@ -1,0 +1,31 @@
+[
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": []
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "tool_use_id": "toolu_chio_kernel_000",
+        "type": "tool_result",
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"state\":\"completed\",\"evidence\":\"verified\",\"requestId\":\"2967322d-b17b-4ca2-acac-00defd9019bf:9e7e65453739bbc64ba155eed18a37bd5fb1196c7f29ded1da660b94414d7ad8\",\"receipt\":{\"action\":{\"parameter_hash\":\"1e6d89ae89a8a5467f168f99cc63952bfdf8fb8b5946d0dcb17d476686dd1a37\",\"parameters\":{\"path\":\"/workspace/claude-37reakpd.txt\"}},\"boundary_class\":\"prevent\",\"capability_id\":\"cap-01a086d9-5bb9-7f13-8ff3-5946e592469e\",\"content_hash\":\"7801c11aada3c113fd04a2890cb88418c0ec5adf8c2a04b31bb900e4632401b2\",\"decision\":{\"verdict\":\"allow\"},\"id\":\"342bf34a16f2f634053da1a709c752cc25d852192fb61be739299d66d6ddafa7\",\"kernel_key\":\"3667760322694075a5e31f585dc7f7a3b7656151a338bce1869ec37003f6b0ae\",\"metadata\":{\"admission_operation\":{\"compensation_status\":\"not_compensated\",\"coordinator_lease_epoch\":2,\"coordinator_lease_id\":\"01a086d4-fd3c-7f30-bab7-e2fea35e483b\",\"operation_id\":\"e1eb242e3611217f8740b2b575411ab6c2d2269ef4f3df5c5ebd6acb2ceaf1ff\",\"projected_dispatch_state\":\"terminal\",\"projected_operation_version\":8,\"projected_state\":\"completed\",\"request_binding_hash\":\"6450b0b9c65f89d3486095e9b3f0d562dd20c411dcabe5bd3ef6161f9337e70e\",\"request_id\":\"2967322d-b17b-4ca2-acac-00defd9019bf:9e7e65453739bbc64ba155eed18a37bd5fb1196c7f29ded1da660b94414d7ad8\",\"request_namespace_digest\":\"e9540effa170d3c03150ce125f96f5820979880052eeedc15502ff32183ffd4a\",\"retained_dispatch_commit\":{\"committed_version\":6,\"coordinator_lease_epoch\":2,\"coordinator_lease_id\":\"01a086d4-fd3c-7f30-bab7-e2fea35e483b\",\"provider_attempt\":{\"attempt_id\":\"attempt:e1eb242e3611217f8740b2b575411ab6c2d2269ef4f3df5c5ebd6acb2ceaf1ff\",\"operation_id\":\"e1eb242e3611217f8740b2b575411ab6c2d2269ef4f3df5c5ebd6acb2ceaf1ff\",\"transport_id\":\"kernel-tool-server:fs\",\"transport_key_epoch\":2},\"store_fence\":{\"lease_id\":\"01a086d4-fd3c-7f30-bab7-e2fea35e483b\",\"owner_epoch\":2,\"store_uuid\":\"01a086d2-6db5-75a2-93e1-c1e4cccf8e8a\"}},\"schema\":\"chio.admission-receipt.v1\",\"store_fence\":{\"lease_id\":\"01a086d4-fd3c-7f30-bab7-e2fea35e483b\",\"owner_epoch\":2,\"store_uuid\":\"01a086d2-6db5-75a2-93e1-c1e4cccf8e8a\"},\"tool_outcome_id\":\"f4a4fe33a0bd0a8b20c0870e59ebb3623fa670d9d5b17f3388a7adf9e8e66a95\",\"tool_outcome_version\":2,\"trusted_time_unix_ms\":1788968820234},\"attribution\":{\"delegation_depth\":0,\"grant_index\":0,\"issuer_key\":\"70b60d8ef16cafe003f88fd986d432a0e4a97a713608da574fd5f4043313500e\",\"subject_key\":\"e9a990f632a16f6b6c19ac0a3300c00d2eafb110b273f1f804483693aae67786\"},\"chio_receipt_signing_nonce\":\"rcpt-01a086d9-decb-76d0-8e83-62d283accbca\",\"receipt_context\":{\"request_id\":\"2967322d-b17b-4ca2-acac-00defd9019bf:9e7e65453739bbc64ba155eed18a37bd5fb1196c7f29ded1da660b94414d7ad8\"}},\"policy_hash\":\"057b9a8160375e7d90841325639bdd66050a454f393dae23e8c813b8df74b84e\",\"receipt_kind\":\"mediated_decision\",\"redaction_mode\":\"none\",\"signature\":\"ce4ea0530fe9ae5992b705c3a540d1b9ebefbaad366e29312e0070c4d135652fc2305b3bf01f28a1cd6b86e24ceb0a435758798f6089e0a3d70ae794a497b90a\",\"timestamp\":1788968820,\"tool_name\":\"read_text_file\",\"tool_origin\":\"caller_executed\",\"tool_server\":\"fs\",\"trust_level\":\"mediated\"},\"result\":{\"content\":[{\"text\":\"Claude kernel integration verified\\n\",\"type\":\"text\"}],\"isError\":false,\"structuredContent\":{\"content\":\"Claude kernel integration verified\\n\"}}}"
+          }
+        ]
+      }
+    ]
+  }
+]

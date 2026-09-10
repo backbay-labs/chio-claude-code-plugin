@@ -1,0 +1,18 @@
+{
+  "launchPreflightRefused": false,
+  "calls": [
+    {
+      "id": "toolu_01AdBFeXdSJG3fQEMwNBKitL",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/claude-approved-885cc5965911.txt",
+        "content": "exact operator-approved effect"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_01AdBFeXdSJG3fQEMwNBKitL"
+  ],
+  "expectedAttemptObserved": true,
+  "attemptCount": 1
+}

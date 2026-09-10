@@ -1,0 +1,7 @@
+{
+  "case": "native-network-policy",
+  "exitCode": -9,
+  "timeout": true,
+  "exactOuterPolicy": true,
+  "elapsedSeconds": 12.027
+}

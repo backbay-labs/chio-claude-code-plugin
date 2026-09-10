@@ -1,0 +1,27 @@
+[
+  {
+    "path": "/v1/messages?beta=true",
+    "tools": [
+      "mcp__chio__write_marker"
+    ],
+    "tool_results": []
+  },
+  {
+    "path": "/v1/messages?beta=true",
+    "tools": [
+      "mcp__chio__write_marker"
+    ],
+    "tool_results": [
+      {
+        "tool_use_id": "toolu_local_contract_01",
+        "type": "tool_result",
+        "content": [
+          {
+            "type": "text",
+            "text": "local fixture marker written"
+          }
+        ]
+      }
+    ]
+  }
+]

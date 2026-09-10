@@ -1,0 +1,18 @@
+{
+  "launchPreflightRefused": false,
+  "calls": [
+    {
+      "id": "toolu_011Dpdwx9yXLyWru2k8JyVFg",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/claude-revoke-4024461a7dad.txt",
+        "content": "forbidden after capability revocation"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_011Dpdwx9yXLyWru2k8JyVFg"
+  ],
+  "expectedAttemptObserved": true,
+  "attemptCount": 1
+}

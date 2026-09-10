@@ -1,0 +1,47 @@
+{
+  "schema": "chio.packaging-qualification.v1",
+  "date": "2026-09-09",
+  "package": "@chio/claude-code-plugin",
+  "version": "0.3.0",
+  "sourceCommit": "9dabca036dd312fc395827c5e3334d88d0f88511",
+  "artifact": "chio-claude-code-plugin-0.3.0.tgz",
+  "sha256": "ceb271110be042c317128b94bbdc2fe7edb66757bc60a77cf404ed268105c7b5",
+  "localArtifact": "/Users/connor/Medica/backbay/standalone/chio-claude-code-plugin/.worktrees/required-agent-integrations-20260909/delivery/20260909/chio-claude-code-plugin-0.3.0.tgz",
+  "sdk": {
+    "version": "0.1.1-rc.1",
+    "sha256": "ea8639364db147ed0a9d590f58d532f93c84200a47c3245b1facdaf8f776eb90",
+    "registryPublished": false
+  },
+  "componentTests": {
+    "passed": 27,
+    "failed": 0,
+    "skipped": 0
+  },
+  "typecheck": "pass",
+  "build": "pass",
+  "consumer": {
+    "name": "@chio/claude-code-plugin",
+    "artifact": "/tmp/chio-staged-packaging/chio-claude-code-plugin-0.3.0.tgz",
+    "sha256": "ceb271110be042c317128b94bbdc2fe7edb66757bc60a77cf404ed268105c7b5",
+    "consumer": "/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-code-plugin-final-consumer-82u1evd7",
+    "installedPackage": "/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-code-plugin-final-consumer-82u1evd7/node_modules/@chio/claude-code-plugin",
+    "emptyCache": true,
+    "offline": true,
+    "registry": "http://127.0.0.1:9",
+    "result": "pass"
+  },
+  "commands": [
+    "npm ci (install-strategy=nested)",
+    "npm run typecheck",
+    "npm test",
+    "npm run pack:release -- /absolute/output",
+    "npm install --offline --ignore-scripts --no-audit --no-fund --cache EMPTY_CACHE --registry=http://127.0.0.1:9 ARTIFACT"
+  ],
+  "scope": "Component and package qualification only; real-host I01-I08 acceptance is recorded separately.",
+  "sourceInstall": {
+    "directory": "/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-code-plugin-final-source-ci-nrfnejrc",
+    "command": "npm ci --ignore-scripts --offline --no-audit --no-fund",
+    "result": "pass",
+    "privateSibling": false
+  }
+}

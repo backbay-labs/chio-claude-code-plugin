@@ -1,0 +1,47 @@
+[
+  {
+    "pair": 1,
+    "order": [
+      "direct-bridge",
+      "native-Claude"
+    ],
+    "directBridgeExecuteMs": 736.93775,
+    "nativeClaudeMcpIntervalMs": 862.0,
+    "pairedDifferenceMs": 125.06224999999995,
+    "directPrivateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-paired-timing-direct-1-b082d0244de14c7e8a5a7a5824a6ef76",
+    "nativePrivateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-paired-timing-native-1-9c97da33a08f47f6b50f8d1381e2c61b",
+    "arguments": {
+      "path": "/workspace/claude-qualified-d89c40105ea645e2.txt"
+    }
+  },
+  {
+    "pair": 2,
+    "order": [
+      "direct-bridge",
+      "native-Claude"
+    ],
+    "directBridgeExecuteMs": 819.711792,
+    "nativeClaudeMcpIntervalMs": 857.0,
+    "pairedDifferenceMs": 37.288208000000054,
+    "directPrivateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-paired-timing-direct-2-580e3f1d7c1948eb915071379e40fda3",
+    "nativePrivateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-paired-timing-native-2-8d4b965691b34ea5b525b853981a0b4e",
+    "arguments": {
+      "path": "/workspace/claude-qualified-d89c40105ea645e2.txt"
+    }
+  },
+  {
+    "pair": 3,
+    "order": [
+      "direct-bridge",
+      "native-Claude"
+    ],
+    "directBridgeExecuteMs": 850.47725,
+    "nativeClaudeMcpIntervalMs": 720.0,
+    "pairedDifferenceMs": -130.47725000000003,
+    "directPrivateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-paired-timing-direct-3-a9fd39e8d0604c73b01efb5c694bbd13",
+    "nativePrivateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-paired-timing-native-3-d1e4e7539c104e9abd7fa0ab7c27e16f",
+    "arguments": {
+      "path": "/workspace/claude-qualified-d89c40105ea645e2.txt"
+    }
+  }
+]

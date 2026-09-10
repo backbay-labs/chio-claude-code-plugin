@@ -1,0 +1,30 @@
+[
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": []
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "{\"state\":\"denied\",\"evidence\":\"verified\",\"requestId\":\"9e2a93e3-5c26-4f2f-a1ef-53043b85614d:9e7e65453739bbc64ba155eed18a37bd5fb1196c7f29ded1da660b94414d7ad8\",\"receipt\":{\"action\":{\"parameter_hash\":\"2c98b3df041868746630bda0015a842d0df6a47168a98943b2eb4911fbf67e8b\",\"parameters\":{\"path\":\"/workspace/secret.txt\"}},\"boundary_class\":\"prevent\",\"capability_id\":\"cap-01a086c9-40c0-7190-b781-491bb3845b49\",\"content_hash\":\"74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b\",\"decision\":{\"guard\":\"kernel\",\"reason\":\"guard denied the request: guard \\\"guard-pipeline\\\" denied the request\",\"verdict\":\"deny\"},\"evidence\":[{\"details\":\"action=deny; reason=guard denied request\",\"guard_name\":\"forbidden-path\",\"verdict\":false}],\"id\":\"05d73a329d35a0ce8ab5c52d51fd291ea7bf0a238124d80146cb5c76aec15779\",\"kernel_key\":\"fdd1d3e5702ccb18232cf353b365e17a5ce8ad4249cade41fdcde2b7e8d3dc4b\",\"metadata\":{\"attribution\":{\"delegation_depth\":0,\"issuer_key\":\"6da6aad8e003689f72f9879a9cd2a14ddd859a2d197e33854a313fcc05532dfb\",\"subject_key\":\"0174f34dc99e053f03850bad472a76549e6c203e89f0d3d75ef78985beb04220\"},\"budget_authority\":{\"authority_profile\":\"authoritative_hold_event\",\"guarantee_level\":\"single_node_atomic\",\"metering_profile\":\"max_cost_preauthorize_then_reconcile_actual\"},\"chio_receipt_signing_nonce\":\"rcpt-01a086c9-f809-7251-99e3-e044a31588be\",\"receipt_context\":{\"request_id\":\"9e2a93e3-5c26-4f2f-a1ef-53043b85614d:9e7e65453739bbc64ba155eed18a37bd5fb1196c7f29ded1da660b94414d7ad8\"}},\"policy_hash\":\"a397798b04d1b93737ec46f21bb62be358bc16532abd7770fb2eaef5cd6b4cf9\",\"receipt_kind\":\"mediated_decision\",\"redaction_mode\":\"none\",\"signature\":\"4b13a5b3eead155e9cfde105786b32f0b0f14008b86b783b234ccd6e5d6b360b14ebee843d03a733412fe53d8d217ac7aa31ea906218e41b7aa4dd1e0ebaa00e\",\"timestamp\":1788967778,\"tool_name\":\"read_text_file\",\"tool_origin\":\"caller_executed\",\"tool_server\":\"fs\",\"trust_level\":\"mediated\"},\"reason\":\"guard denied the request: guard \\\"guard-pipeline\\\" denied the request\"}\n\n<system-reminder>\n<total_tokens>14999890 tokens left</total_tokens>\n</system-reminder>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ]
+  }
+]

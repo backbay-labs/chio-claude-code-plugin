@@ -1,0 +1,44 @@
+{
+  "label": "same-action-after-unlock",
+  "exitCode": 2,
+  "timeout": false,
+  "elapsedSeconds": 8.929,
+  "newDispatches": 0,
+  "terminal": {
+    "code": 0,
+    "signal": null,
+    "exitCode": 2,
+    "hostInitialization": {
+      "ready": true,
+      "failed": false
+    },
+    "hostDelivery": {
+      "confirmed": 0,
+      "failed": false
+    },
+    "executionOutcome": "unresolved",
+    "retry": "never-automatic"
+  },
+  "calls": [
+    {
+      "type": "tool_use",
+      "id": "toolu_01USZZ5e9WNQvK1HqiEf9Lgh",
+      "name": "mcp__chio__write_file",
+      "input": {
+        "path": "/workspace/uncertain.txt",
+        "content": "retain original native storage effect after-admission"
+      },
+      "caller": {
+        "type": "direct"
+      }
+    }
+  ],
+  "outcomes": {
+    "toolu_01USZZ5e9WNQvK1HqiEf9Lgh": {
+      "state": "not_dispatched",
+      "evidence": "unverified",
+      "requestId": "0bd2cfab-f0b0-4d3a-b07b-93fa747bd613:06badfdb9cca76b18de625cb17941eb216d9ee59a05c8ae3cb89c314c21f8d94",
+      "reason": "an unresolved operation fences this gateway; operator reconciliation required"
+    }
+  }
+}

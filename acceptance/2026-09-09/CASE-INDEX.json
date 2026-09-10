@@ -1,0 +1,382 @@
+{
+  "accepted": false,
+  "cases": [
+    {
+      "path": "raw/config-tamper/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "config-tamper",
+      "gateway_sha256": "f623cf06663536bed7b947ec287e66d3217cabb21ac452e29bcea0dd83f14dd4",
+      "source_sha256": "dcccb97db82d086cae0504951f900777e83c00daf8dd5a2f6ea0975880f7f5ce",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/default-tool-inventory/summary.json",
+      "evidence_class": "REAL_HOST_LOCAL_MODEL_FIXTURE_NO_CHIO_KERNEL",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": null,
+      "gateway_sha256": null,
+      "source_sha256": "ea3ada3cab8fa691e0a2305f3759c05245f25d1263ddc58da320eb79c24868c3",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-budget/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "budget",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "9fdd398bfc9c51d8410daedf3c49c5ad17bd533acc15ce14d3671dea237d6cfc",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-config-tamper/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "config-tamper",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "dede2099b9fbaeb01b09235bf8ddfa486ba4594ad8ef34d5eb7861281e4eb6d0",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-forbidden-read/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "forbidden-read",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "dede2099b9fbaeb01b09235bf8ddfa486ba4594ad8ef34d5eb7861281e4eb6d0",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-forbidden-write/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "forbidden-write",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "dede2099b9fbaeb01b09235bf8ddfa486ba4594ad8ef34d5eb7861281e4eb6d0",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-forged-receipt/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "forged-receipt",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "fcb50d5433a79d02c20877e1c6835053b4b0f43eadbe9afebc091bd5a675b8ce",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-fresh-valid/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "fresh-valid",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "9fdd398bfc9c51d8410daedf3c49c5ad17bd533acc15ce14d3671dea237d6cfc",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-gateway-crash/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "gateway-crash",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "9fdd398bfc9c51d8410daedf3c49c5ad17bd533acc15ce14d3671dea237d6cfc",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-loss-between-calls/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "loss-between-calls",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "dede2099b9fbaeb01b09235bf8ddfa486ba4594ad8ef34d5eb7861281e4eb6d0",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-malformed-handshake/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "malformed-handshake",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "dede2099b9fbaeb01b09235bf8ddfa486ba4594ad8ef34d5eb7861281e4eb6d0",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-native-inventory/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "native-inventory",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "dede2099b9fbaeb01b09235bf8ddfa486ba4594ad8ef34d5eb7861281e4eb6d0",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-revoked/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "revoked",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "fcb50d5433a79d02c20877e1c6835053b4b0f43eadbe9afebc091bd5a675b8ce",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-substituted-request-rerun/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "FAIL",
+      "probe_failures": [
+        "kernel loss did not preserve the effect cutpoint",
+        "unknown outcome caused redispatch",
+        "evidence mutation did not run"
+      ],
+      "scenario": "substituted-request",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "fcb50d5433a79d02c20877e1c6835053b4b0f43eadbe9afebc091bd5a675b8ce",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-substituted-result-rerun/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "FAIL",
+      "probe_failures": [
+        "kernel loss did not preserve the effect cutpoint",
+        "unknown outcome caused redispatch",
+        "evidence mutation did not run"
+      ],
+      "scenario": "substituted-result",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "fcb50d5433a79d02c20877e1c6835053b4b0f43eadbe9afebc091bd5a675b8ce",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-timeout-handshake/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "timeout-handshake",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "dede2099b9fbaeb01b09235bf8ddfa486ba4594ad8ef34d5eb7861281e4eb6d0",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-unknown-outcome/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "unknown-outcome",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "64204f1a3c9fb2412a8c71dbf8aca4cd4ab5de98492a23c232122ceea4e728f4",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-unreachable/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "unreachable",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "dede2099b9fbaeb01b09235bf8ddfa486ba4594ad8ef34d5eb7861281e4eb6d0",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-workflow/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "workflow",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "dede2099b9fbaeb01b09235bf8ddfa486ba4594ad8ef34d5eb7861281e4eb6d0",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-wrong-capability/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "wrong-capability",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "9fdd398bfc9c51d8410daedf3c49c5ad17bd533acc15ce14d3671dea237d6cfc",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-wrong-kernel-session/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "wrong-kernel-session",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "9fdd398bfc9c51d8410daedf3c49c5ad17bd533acc15ce14d3671dea237d6cfc",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/final-wrong-subject/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "wrong-subject",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "9fdd398bfc9c51d8410daedf3c49c5ad17bd533acc15ce14d3671dea237d6cfc",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/forbidden-read/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "forbidden-read",
+      "gateway_sha256": "f623cf06663536bed7b947ec287e66d3217cabb21ac452e29bcea0dd83f14dd4",
+      "source_sha256": "dcccb97db82d086cae0504951f900777e83c00daf8dd5a2f6ea0975880f7f5ce",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/forbidden-write/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "forbidden-write",
+      "gateway_sha256": "f623cf06663536bed7b947ec287e66d3217cabb21ac452e29bcea0dd83f14dd4",
+      "source_sha256": "dcccb97db82d086cae0504951f900777e83c00daf8dd5a2f6ea0975880f7f5ce",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/historical-restart-fenced/summary.json",
+      "evidence_class": "REAL_HOST_RETAINED_JOURNAL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "FAIL",
+      "probe_failures": [
+        "call 1 did not produce expected unknown/unverified outcome",
+        "call 2 did not produce expected not_dispatched/unverified outcome (fences)"
+      ],
+      "scenario": "restart-fenced",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "0dbaac327d63bb20f4311f8e3a9c8211bef760cd3e1c7003569bde050e3cac01",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/host-contract-final/summary.json",
+      "evidence_class": "REAL_HOST_LOCAL_MODEL_FIXTURE_NO_CHIO_KERNEL",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": null,
+      "gateway_sha256": null,
+      "source_sha256": "18350f95cc48b6cef31593aa6c26e295baecea89c25da989313b75a146956fc1",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/host-contract/summary.json",
+      "evidence_class": "REAL_HOST_LOCAL_MODEL_FIXTURE_NO_CHIO_KERNEL",
+      "probe_integrity": "not asserted by preliminary script",
+      "probe_failures": [],
+      "scenario": null,
+      "gateway_sha256": null,
+      "source_sha256": null,
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/kernel-host/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "not asserted by preliminary script",
+      "probe_failures": [],
+      "scenario": null,
+      "gateway_sha256": "f623cf06663536bed7b947ec287e66d3217cabb21ac452e29bcea0dd83f14dd4",
+      "source_sha256": "890fb468e07c34e2f93cc7c35d67ebf6ee7494826247d97f92de936fab1efa24",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/loss-between-calls-rerun/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "FAIL",
+      "probe_failures": [
+        "kernel loss did not preserve the effect cutpoint"
+      ],
+      "scenario": "loss-between-calls",
+      "gateway_sha256": "f623cf06663536bed7b947ec287e66d3217cabb21ac452e29bcea0dd83f14dd4",
+      "source_sha256": "478115149cf86ea53324a878ffe291c1f100bf22d5edb1f52588c04644617951",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/loss-between-calls-rerun2/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "FAIL",
+      "probe_failures": [
+        "kernel loss did not preserve the effect cutpoint"
+      ],
+      "scenario": "loss-between-calls",
+      "gateway_sha256": "1af105d6ed8b3c03b17407ebec14e1ee746d9bfc1c935236c7e2f087e36c2e93",
+      "source_sha256": "f5a4e5e8a9cc729a320bca2f046a57a3ea3de42cc1c43ad86dcfd6a9f0f69cd3",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/loss-between-calls/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "FAIL",
+      "probe_failures": [
+        "kernel loss did not preserve the effect cutpoint"
+      ],
+      "scenario": "loss-between-calls",
+      "gateway_sha256": "f623cf06663536bed7b947ec287e66d3217cabb21ac452e29bcea0dd83f14dd4",
+      "source_sha256": "48ff025b464969e6b1be32c01b888270aeaf4d5a1e4cfb1b48e6a4f0bf8bd8fb",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/malformed-handshake/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "malformed-handshake",
+      "gateway_sha256": "f623cf06663536bed7b947ec287e66d3217cabb21ac452e29bcea0dd83f14dd4",
+      "source_sha256": "48ff025b464969e6b1be32c01b888270aeaf4d5a1e4cfb1b48e6a4f0bf8bd8fb",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/native-inventory/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "native-inventory",
+      "gateway_sha256": "f623cf06663536bed7b947ec287e66d3217cabb21ac452e29bcea0dd83f14dd4",
+      "source_sha256": "dcccb97db82d086cae0504951f900777e83c00daf8dd5a2f6ea0975880f7f5ce",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/restricted-launcher/summary.json",
+      "evidence_class": "REAL_HOST_LOCAL_MODEL_FIXTURE_NO_CHIO_KERNEL",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": null,
+      "gateway_sha256": null,
+      "source_sha256": null,
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/timeout-handshake/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "timeout-handshake",
+      "gateway_sha256": "f623cf06663536bed7b947ec287e66d3217cabb21ac452e29bcea0dd83f14dd4",
+      "source_sha256": "48ff025b464969e6b1be32c01b888270aeaf4d5a1e4cfb1b48e6a4f0bf8bd8fb",
+      "integration_acceptance": "unresolved"
+    },
+    {
+      "path": "raw/unreachable/summary.json",
+      "evidence_class": "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
+      "probe_integrity": "PASS",
+      "probe_failures": [],
+      "scenario": "unreachable",
+      "gateway_sha256": "f623cf06663536bed7b947ec287e66d3217cabb21ac452e29bcea0dd83f14dd4",
+      "source_sha256": "dcccb97db82d086cae0504951f900777e83c00daf8dd5a2f6ea0975880f7f5ce",
+      "integration_acceptance": "unresolved"
+    }
+  ]
+}

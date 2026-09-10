@@ -1,0 +1,13 @@
+{
+  "host": "claude",
+  "suite": "resume-fence",
+  "cases": 1,
+  "skips": 0,
+  "kernelSha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
+  "resourceImage": "sha256:188cb84d5d0bb4063d4ce5a3b9c3832445a5acda5604911cda80a9136d1850a0",
+  "hostImage": null,
+  "packageDirectory": "/tmp/chio-claude-readiness-cold-r4-20260909/node_modules/@chio/claude-code-plugin",
+  "privateConfiguration": "/Users/connor/.local/share/chio-required-operators/claude-readiness-matrix-20260909/claude-approvals-2037231b5fb14339a5c10936a6d263f3/gateway.json",
+  "configurationSha256": "eef619a4761c97c5b3b4d2d4f29303e4793006add2b00e4e1d535a8470bbda7c",
+  "claim": "bounded real-host authority and explicit launcher refusal cases; full acceptance remains open"
+}

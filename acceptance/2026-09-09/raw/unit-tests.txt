@@ -1,0 +1,34 @@
+✔ matching explicit allow persists authorization before native dispatch (204.391959ms)
+✔ non-allow verdict undefined denies (103.193709ms)
+✔ non-allow verdict pending denies (100.29625ms)
+✔ non-allow verdict ask denies (96.830208ms)
+✔ non-allow verdict incomplete denies (104.383833ms)
+✔ non-allow verdict cancelled denies (99.703084ms)
+✔ non-allow verdict deny denies (95.400083ms)
+✔ non-allow verdict true denies (93.918416ms)
+✔ failure denies: {"checkThrow":true} (95.642125ms)
+✔ failure denies: {"buildThrow":true} (93.357ms)
+✔ failure denies: {"bond":null} (93.157083ms)
+✔ failure denies: {"bond":{"sessionId":"session-b","policyPath":"/tmp/policy","passport":{"capabilityId":"cap-a","expiresAt":"2099-01-01T00:00:00Z"}}} (95.108ms)
+✔ failure denies: {"bond":{"sessionId":"session-a","policyPath":"/tmp/policy","passport":{"capabilityId":"cap-a","expiresAt":"2001-01-01T00:00:00Z"}}} (96.313583ms)
+✔ failure denies: {"verify":false} (94.234292ms)
+✔ failure denies: {"env":{"CHIO_TRUSTED_RECEIPT_KEY":""}} (95.663541ms)
+✔ failure denies: {"env":{"CHIO_SERVICE_TOKEN":"fixture"}} (93.4395ms)
+✔ substituted receipt rejected: kernel_key (111.16175ms)
+✔ substituted receipt rejected: capability_id (103.127166ms)
+✔ substituted receipt rejected: tool_server (95.185875ms)
+✔ substituted receipt rejected: tool_name (98.4925ms)
+✔ substituted receipt rejected: action (95.048625ms)
+✔ cost oracle failures never become zero spend (107.592917ms)
+✔ budgeted calls require an oracle (105.584583ms)
+✔ missing exact session is rejected even with sole bond (97.266333ms)
+✔ untrusted receipt is not archived after a post-tool event (207.970875ms)
+✔ post-tool observation stays unverified and request bound (220.507792ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3006.772292

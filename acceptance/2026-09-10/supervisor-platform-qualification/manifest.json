@@ -1,0 +1,68 @@
+{
+  "source": "00a0ad130cf13fbe434ab08616fe2f2483187c77",
+  "members": [
+    {
+      "path": "result.json.gz",
+      "originalPath": "/tmp/chio-claude-supervisor-local-20260910/result.json",
+      "originalBytes": 2531,
+      "originalSha256": "64b97a863744d4c2a38663294af745b05324cabedf902e8fb395c46b665835ec",
+      "compressedSha256": "7f655de78809d146bc294c21575708f36d82372178ec9752cc8d267a0f2e5132"
+    },
+    {
+      "path": "stdout.tap.gz",
+      "originalPath": "/tmp/chio-claude-supervisor-local-20260910/stdout.tap",
+      "originalBytes": 350,
+      "originalSha256": "37b1918fa94ec154d3840f5b69a2407ff807ed2ea7eaa9b2c206f2b921a3c8a2",
+      "compressedSha256": "a2947b6655cfee9ccfc3fe462300865c9fb3768fc12cfe4fe49dd6f644991700"
+    },
+    {
+      "path": "stderr.txt.gz",
+      "originalPath": "/tmp/chio-claude-supervisor-local-20260910/stderr.txt",
+      "originalBytes": 0,
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "f1b651238a58fe290baec6c5e32f3bdb1943dd2bd582f02569231f7a757c7837"
+    },
+    {
+      "path": "source/test/restricted.test.mjs.gz",
+      "originalPath": "/Users/connor/Medica/backbay/standalone/chio-claude-code-plugin/.worktrees/required-agent-integrations-20260909/test/restricted.test.mjs",
+      "originalBytes": 5258,
+      "originalSha256": "aa19f629248436a933ae5252cc5ebb94b5076d51dc0037e0e0eef2639df00181",
+      "compressedSha256": "af42bb62d757d96708b5491a82f6860114fe2c8ae927497b0cf69e709e06fa2b"
+    },
+    {
+      "path": "source/scripts/host-supervisor.mjs.gz",
+      "originalPath": "/Users/connor/Medica/backbay/standalone/chio-claude-code-plugin/.worktrees/required-agent-integrations-20260909/scripts/host-supervisor.mjs",
+      "originalBytes": 1563,
+      "originalSha256": "f46a2f635b810b68a5b6d79023ae2749ffb7d071715712432955741820c0053c",
+      "compressedSha256": "956cddaa90b55064bf6c252da76a183be5bd754767e8936c0ed666ab904cdeef"
+    },
+    {
+      "path": "driver.py.gz",
+      "originalPath": "/tmp/chio-claude-supervisor-local-20260910.py",
+      "originalBytes": 3728,
+      "originalSha256": "1c01455fbf5bee259efc4e870a80ef94860b4f0b0846461287510e7bf32b7d75",
+      "compressedSha256": "949cebac9c76174423c0593a767d78df002efcbc5a20bb0775aeee46b6aec532"
+    },
+    {
+      "path": "ci/chio-claude-code-plugin-executed-source.json.gz",
+      "originalPath": "/tmp/chio-static-public-source-ci-final-20260910/chio-claude-code-plugin-executed-source.json",
+      "originalBytes": 1563,
+      "originalSha256": "4c193ea3fb7b71b100ba0d30fd31c18ff2200f62424b11381585d725d17578bc",
+      "compressedSha256": "aa2617ede100b5348fde8b173db4952bc6b7186792089770b2469679c839f0fe"
+    },
+    {
+      "path": "ci/chio-claude-code-plugin-source-tree-binding.json.gz",
+      "originalPath": "/tmp/chio-static-public-source-ci-final-20260910/chio-claude-code-plugin-source-tree-binding.json",
+      "originalBytes": 1306,
+      "originalSha256": "82c032d64fda8129264bb97b3e2e6802eaf3c04e0fad7993a3969a1420f6b976",
+      "compressedSha256": "e728ee919db883d2348d3b9230d06bd1289161f24e07674d321d5c0f76a95507"
+    },
+    {
+      "path": "ci/chio-claude-code-plugin-job-102784660550.log.gz",
+      "originalPath": "/tmp/chio-static-public-source-ci-final-20260910/chio-claude-code-plugin-job-102784660550.log.gz",
+      "originalBytes": 47289,
+      "originalSha256": "75ac29499036915d91bccfd6fad0ffcc54e4c778482d0146e0cdda6b72639102",
+      "compressedSha256": "73c65310691da26b4b74de81f9c0748fdfbab01a2897744f0c7ee143f44101b8"
+    }
+  ]
+}

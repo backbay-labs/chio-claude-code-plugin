@@ -1,0 +1,77 @@
+[
+  {
+    "case": "before-revocation",
+    "exitCode": 0,
+    "command": [
+      "node",
+      "/tmp/chio-claude-readiness-cold-r4-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+      "--host",
+      "/Users/connor/.local/share/claude/versions/2.1.267",
+      "--host-sha256",
+      "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+      "--profile",
+      "/tmp/chio-claude-approval-runtime-09cc4b71eb7d45d0a31f8383753ccb87/profile",
+      "--workspace",
+      "/tmp/chio-claude-approval-runtime-09cc4b71eb7d45d0a31f8383753ccb87/workspace",
+      "--gateway-config",
+      "/Users/connor/.local/share/chio-required-operators/claude-readiness-matrix-20260909/claude-approvals-d1a7e012f7b84fcea8b900e73d0c748d/gateway.json",
+      "--gateway-sha256",
+      "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+      "--model",
+      "claude-sonnet-5",
+      "--model-auth",
+      "claude-login"
+    ],
+    "newDispatchRows": 1
+  },
+  {
+    "case": "revoked-capability",
+    "exitCode": 3,
+    "command": [
+      "node",
+      "/tmp/chio-claude-readiness-cold-r4-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+      "--host",
+      "/Users/connor/.local/share/claude/versions/2.1.267",
+      "--host-sha256",
+      "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+      "--profile",
+      "/tmp/chio-claude-approval-runtime-8a6e395cebb84a04830752cb80586ec7/profile",
+      "--workspace",
+      "/tmp/chio-claude-approval-runtime-8a6e395cebb84a04830752cb80586ec7/workspace",
+      "--gateway-config",
+      "/Users/connor/.local/share/chio-required-operators/claude-readiness-matrix-20260909/claude-approvals-d1a7e012f7b84fcea8b900e73d0c748d/gateway.json",
+      "--gateway-sha256",
+      "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+      "--model",
+      "claude-sonnet-5",
+      "--model-auth",
+      "claude-login"
+    ],
+    "newDispatchRows": 0
+  },
+  {
+    "case": "revoked-credential",
+    "exitCode": 1,
+    "command": [
+      "node",
+      "/tmp/chio-claude-readiness-cold-r4-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+      "--host",
+      "/Users/connor/.local/share/claude/versions/2.1.267",
+      "--host-sha256",
+      "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+      "--profile",
+      "/tmp/chio-claude-approval-runtime-066e3f5b820f46a9b723d3a06e7b52fc/profile",
+      "--workspace",
+      "/tmp/chio-claude-approval-runtime-066e3f5b820f46a9b723d3a06e7b52fc/workspace",
+      "--gateway-config",
+      "/Users/connor/.local/share/chio-required-operators/claude-readiness-matrix-20260909/claude-approvals-d1a7e012f7b84fcea8b900e73d0c748d/gateway.json",
+      "--gateway-sha256",
+      "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+      "--model",
+      "claude-sonnet-5",
+      "--model-auth",
+      "claude-login"
+    ],
+    "newDispatchRows": 0
+  }
+]

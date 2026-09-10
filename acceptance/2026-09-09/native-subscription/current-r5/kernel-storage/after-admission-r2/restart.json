@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "/Users/connor/Medica/backbay/standalone/arc/.worktrees/required-agent-integrations-20260909/integrations/required-agents/serve-filesystem.py",
+    "restart",
+    "--state-dir",
+    "/Users/connor/.local/share/chio-required-operators/kernel-storage-fault-20260909/claude-r5-after-admission-r2"
+  ],
+  "exitCode": 0,
+  "stdout": "Kernel process 30308 started. Complete authenticated MCP preparation before use.\n",
+  "stderr": ""
+}

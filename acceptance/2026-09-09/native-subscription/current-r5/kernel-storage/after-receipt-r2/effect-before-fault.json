@@ -1,0 +1,33 @@
+{
+  "observedAtEpoch": 1789010378.741651,
+  "files": {
+    "claude-storage-positive.txt": "acknowledged Claude positive after-receipt",
+    "forbidden.txt": "independent forbidden observer\n",
+    "secret.txt": "sensitive observer\n",
+    "uncertain.txt": "retain original native storage effect after-receipt"
+  },
+  "dispatch": [
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 1,
+      "observedAt": "2026-09-10T03:19:28.939Z",
+      "upstreamRequestId": 3,
+      "tool": "write_file",
+      "path": "/workspace/claude-storage-positive.txt",
+      "argumentsSha256": "c4a22e953e9a3d9d709a58cfe120ade857d04fc7809ab1899f517fa5fa4272c7",
+      "frameSha256": "9ec108f4a75e69b610eb56e88664e2696992fcc2928e6700d6362bebca3ba9bf"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 2,
+      "observedAt": "2026-09-10T03:19:38.710Z",
+      "upstreamRequestId": 4,
+      "tool": "write_file",
+      "path": "/workspace/uncertain.txt",
+      "argumentsSha256": "193f1997a647419a82283cc8b17775e2130fd7fc8fc1bfb5ea91bec73f1083a2",
+      "frameSha256": "f99f2474b456ca0cc47344dcd3ad2ac16eaa127acbb494203ae0c817db97edc7"
+    }
+  ]
+}

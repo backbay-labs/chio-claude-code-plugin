@@ -1,0 +1,66 @@
+{
+  "/observe/claude-ahfvd_ck.txt": {
+    "exists": false,
+    "error": "ENOENT"
+  },
+  "/observe/claude-ahfvd_ck.txt-second": {
+    "exists": false,
+    "error": "ENOENT"
+  },
+  "/observe/forbidden.txt": {
+    "exists": true,
+    "sha256": "fd972a6e8a36a028a82c74424e1db70e38fe068c342f3e3f319d1e865f680900",
+    "bytes": 31
+  },
+  "/observe/secret.txt": {
+    "exists": true,
+    "sha256": "1a1e1d8bd5d198dcce34023ef3af4a31a88586e9dcd958fa011d8f5fa32f520e",
+    "bytes": 19
+  },
+  "dispatch": [
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 1,
+      "observedAt": "2026-09-09T18:44:46.981Z",
+      "upstreamRequestId": 3,
+      "tool": "write_file",
+      "path": "/workspace/claude-zl55rgm0.txt",
+      "argumentsSha256": "e23bb51a068c7a0c4c654dad6dbc3037996994be2ed219d941ab6e758a2919fd",
+      "frameSha256": "be16ea37b54d19ecc0f7b3b601ecd372e31790085cea020d61024063d0d223e6"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 2,
+      "observedAt": "2026-09-09T18:44:47.516Z",
+      "upstreamRequestId": 4,
+      "tool": "edit_file",
+      "path": "/workspace/claude-zl55rgm0.txt",
+      "argumentsSha256": "bb8c777480512126653568852912f37da09e82e5a89b880a3e3b3093000f3397",
+      "frameSha256": "c0fa3fe48fe802c36776dd180ced3aa7bc1f49a9af4e9fcb29b892ea2d0c9c5b"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 3,
+      "observedAt": "2026-09-09T18:44:48.011Z",
+      "upstreamRequestId": 5,
+      "tool": "read_text_file",
+      "path": "/workspace/claude-zl55rgm0.txt",
+      "argumentsSha256": "c4b73b3f13d4c0947a112f9364969a82eadc827c5b5510f21757fa838270e232",
+      "frameSha256": "92f655c13c4ee560e0bf05b0ef5a9380b765100cf9052bc99f88c6dd55652e0e"
+    },
+    {
+      "schema": "chio.resource-dispatch-observation.v1",
+      "processId": 1,
+      "sequence": 4,
+      "observedAt": "2026-09-09T18:44:48.522Z",
+      "upstreamRequestId": 6,
+      "tool": "list_directory",
+      "path": "/workspace",
+      "argumentsSha256": "acda0d21aae64c6f16c860dce985a6a79157d631474d0be08aa42fc3efa55f9a",
+      "frameSha256": "60f38f5d6335a0f30839e219a880188fbd4ba7df01ecc6c143b58d81f1fdcde8"
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "execution": {
+    "endpoint": "http://127.0.0.1:58494",
+    "bearerToken": "[REDACTED]",
+    "trustedSigners": [
+      "1e5677d422400a3f2db017bb2b7864906a126285e1850556e0777c58d5ce1917"
+    ],
+    "serverId": "fs",
+    "subjectKey": "72d9e8aaaa1ef62aed0eba182f60a220ddf83a52d18bf514b5f08d653f2e6dff",
+    "capabilityId": "cap-01a08942-6457-7620-81d4-00ff8c7902f4",
+    "sessionId": "b61c2f15c5fa59de60bc2eef68215d1782bf0b673e0c2868facee92fce2bd676"
+  },
+  "sessionId": "9f79d7df-ca0e-4f28-92e6-9cfa9b5a89f9",
+  "journalDir": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-host-response-loss-ea00af733c8244c4bcbd5e7fc811953f/journal",
+  "tools": [
+    {
+      "name": "read_text_file",
+      "description": "Read Text File\n\nRead the complete contents of a file from the file system as text. Handles various text encodings and provides detailed error messages if the file cannot be read. Use this tool when you need to examine the contents of a single file. Use the 'head' parameter to read only the first N lines of a file, or the 'tail' parameter to read only the last N lines of a file. Operates on the file as text regardless of extension. Only works within allowed directories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "head": {
+            "description": "If provided, returns only the first N lines of the file",
+            "type": "number"
+          },
+          "path": {
+            "type": "string"
+          },
+          "tail": {
+            "description": "If provided, returns only the last N lines of the file",
+            "type": "number"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "write_file",
+      "description": "Write File\n\nCreate a new file or completely overwrite an existing file with new content. Use with caution as it will overwrite existing files without warning. Handles text content with proper encoding. Only works within allowed directories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "content"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "edit_file",
+      "description": "Edit File\n\nMake line-based edits to a text file. Each edit replaces exact line sequences with new content. Returns a git-style diff showing the changes made. Only works within allowed directories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "dryRun": {
+            "default": false,
+            "description": "Preview changes using git-style diff format",
+            "type": "boolean"
+          },
+          "edits": {
+            "items": {
+              "properties": {
+                "newText": {
+                  "description": "Text to replace with",
+                  "type": "string"
+                },
+                "oldText": {
+                  "description": "Text to search for - must match exactly",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "oldText",
+                "newText"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "edits"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "list_directory",
+      "description": "List Directory\n\nGet a detailed listing of all files and directories in a specified path. Results clearly distinguish between files and directories with [FILE] and [DIR] prefixes. This tool is essential for understanding directory structure and finding specific files within a directory. Only works within allowed directories.",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": {
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      }
+    }
+  ],
+  "sessionCredential": {
+    "schema": "chio.mcp.session-credential.v1",
+    "sessionId": "b61c2f15c5fa59de60bc2eef68215d1782bf0b673e0c2868facee92fce2bd676",
+    "subjectKey": "72d9e8aaaa1ef62aed0eba182f60a220ddf83a52d18bf514b5f08d653f2e6dff",
+    "capabilityIds": [
+      "cap-01a08942-6457-7620-81d4-00ff8c7902f4"
+    ],
+    "serverId": "fs",
+    "endpointPath": "/mcp",
+    "allowedTools": [
+      "edit_file",
+      "list_directory",
+      "read_text_file",
+      "write_file"
+    ],
+    "issuedAt": 1789009225,
+    "expiresAt": 1789010125
+  }
+}

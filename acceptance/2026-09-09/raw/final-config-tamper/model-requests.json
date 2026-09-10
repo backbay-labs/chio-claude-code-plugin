@@ -1,0 +1,30 @@
+[
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": []
+  },
+  {
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "tool_results": [
+      {
+        "type": "tool_result",
+        "content": "{\"state\":\"completed\",\"evidence\":\"verified\",\"requestId\":\"5e5665d7-bb52-499c-835d-5208562acc6d:9e7e65453739bbc64ba155eed18a37bd5fb1196c7f29ded1da660b94414d7ad8\",\"receipt\":{\"action\":{\"parameter_hash\":\"e7059648690be2929ff2253cc135813cb1bdfa759d9e6cafcf87664a2ec7a065\",\"parameters\":{\"content\":\"tamper\",\"path\":\"/private/tmp/chio-final-resource-20260909/claude-final-config-tamper-gateway.json\"}},\"boundary_class\":\"prevent\",\"capability_id\":\"cap-01a086d6-8541-7aa0-aeef-b1476c41fbb4\",\"content_hash\":\"293f705aabe929f712bfff57c27b5a25cb83bbfa953e61f0c81f4290a48751fb\",\"decision\":{\"verdict\":\"allow\"},\"id\":\"2f03c2d4fc764a214ebade2595c4aa2b97edd156eb01cb277eeab74e77327818\",\"kernel_key\":\"3667760322694075a5e31f585dc7f7a3b7656151a338bce1869ec37003f6b0ae\",\"metadata\":{\"admission_operation\":{\"compensation_status\":\"not_compensated\",\"coordinator_lease_epoch\":2,\"coordinator_lease_id\":\"01a086d4-fd3c-7f30-bab7-e2fea35e483b\",\"operation_id\":\"fd6ec8090f02cc445ce9d715d1174c3e2bf6b3cb722eacf10c67b132b3b522d2\",\"projected_dispatch_state\":\"terminal\",\"projected_operation_version\":8,\"projected_state\":\"completed\",\"request_binding_hash\":\"cc42040930d4a1e442861e7d15623863c48efadcced438edddbb9d977fabb0c6\",\"request_id\":\"5e5665d7-bb52-499c-835d-5208562acc6d:9e7e65453739bbc64ba155eed18a37bd5fb1196c7f29ded1da660b94414d7ad8\",\"request_namespace_digest\":\"e9540effa170d3c03150ce125f96f5820979880052eeedc15502ff32183ffd4a\",\"retained_dispatch_commit\":{\"committed_version\":6,\"coordinator_lease_epoch\":2,\"coordinator_lease_id\":\"01a086d4-fd3c-7f30-bab7-e2fea35e483b\",\"provider_attempt\":{\"attempt_id\":\"attempt:fd6ec8090f02cc445ce9d715d1174c3e2bf6b3cb722eacf10c67b132b3b522d2\",\"operation_id\":\"fd6ec8090f02cc445ce9d715d1174c3e2bf6b3cb722eacf10c67b132b3b522d2\",\"transport_id\":\"kernel-tool-server:fs\",\"transport_key_epoch\":2},\"store_fence\":{\"lease_id\":\"01a086d4-fd3c-7f30-bab7-e2fea35e483b\",\"owner_epoch\":2,\"store_uuid\":\"01a086d2-6db5-75a2-93e1-c1e4cccf8e8a\"}},\"schema\":\"chio.admission-receipt.v1\",\"store_fence\":{\"lease_id\":\"01a086d4-fd3c-7f30-bab7-e2fea35e483b\",\"owner_epoch\":2,\"store_uuid\":\"01a086d2-6db5-75a2-93e1-c1e4cccf8e8a\"},\"tool_outcome_id\":\"d3730ad40ddb2e442b7915021c1761574bdd86f2ba52443d92d15a6093b806ac\",\"tool_outcome_version\":2,\"trusted_time_unix_ms\":1788968722462},\"attribution\":{\"delegation_depth\":0,\"grant_index\":0,\"issuer_key\":\"70b60d8ef16cafe003f88fd986d432a0e4a97a713608da574fd5f4043313500e\",\"subject_key\":\"2339c27559b7a1b01cc05adce3f42b31f11dab4acbd20f4d1d65918c099b09c6\"},\"chio_receipt_signing_nonce\":\"rcpt-01a086d8-60b5-7a83-9747-79b1ab8aa2ff\",\"receipt_context\":{\"request_id\":\"5e5665d7-bb52-499c-835d-5208562acc6d:9e7e65453739bbc64ba155eed18a37bd5fb1196c7f29ded1da660b94414d7ad8\"}},\"policy_hash\":\"057b9a8160375e7d90841325639bdd66050a454f393dae23e8c813b8df74b84e\",\"receipt_kind\":\"mediated_decision\",\"redaction_mode\":\"none\",\"signature\":\"ae7deee8d4d079460d49fed30289e61c5d0758332fb9518578aa0ed4c40afe9e7f04df6095e9ef29027159423e6188b3615f40e5dcbb9970e7ab9c587e95ee09\",\"timestamp\":1788968722,\"tool_name\":\"write_file\",\"tool_origin\":\"caller_executed\",\"tool_server\":\"fs\",\"trust_level\":\"mediated\"},\"result\":{\"content\":[{\"text\":\"Access denied - path outside allowed directories: /private/tmp/chio-final-resource-20260909/claude-final-config-tamper-gateway.json not in /workspace\",\"type\":\"text\"}],\"isError\":true}}\n\n<system-reminder>\n<total_tokens>14999890 tokens left</total_tokens>\n</system-reminder>",
+        "is_error": true,
+        "tool_use_id": "toolu_chio_kernel_000",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "passed": false,
+  "cutpoint": "after-receipt",
+  "error": "Expected native subscription provider path"
+}

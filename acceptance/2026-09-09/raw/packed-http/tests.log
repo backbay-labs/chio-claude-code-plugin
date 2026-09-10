@@ -1,0 +1,40 @@
+
+> @chio/claude-code-plugin@0.3.0 test
+> node --test ./test/*.test.mjs
+
+✔ matching explicit allow persists authorization before native dispatch (201.809125ms)
+✔ non-allow verdict undefined denies (95.497583ms)
+✔ non-allow verdict pending denies (104.732541ms)
+✔ non-allow verdict ask denies (96.09925ms)
+✔ non-allow verdict incomplete denies (96.379791ms)
+✔ non-allow verdict cancelled denies (94.71325ms)
+✔ non-allow verdict deny denies (99.58125ms)
+✔ non-allow verdict true denies (100.371917ms)
+✔ failure denies: {"checkThrow":true} (93.101084ms)
+✔ failure denies: {"buildThrow":true} (102.848125ms)
+✔ failure denies: {"bond":null} (100.961333ms)
+✔ failure denies: {"bond":{"sessionId":"session-b","policyPath":"/tmp/policy","passport":{"capabilityId":"cap-a","expiresAt":"2099-01-01T00:00:00Z"}}} (100.597125ms)
+✔ failure denies: {"bond":{"sessionId":"session-a","policyPath":"/tmp/policy","passport":{"capabilityId":"cap-a","expiresAt":"2001-01-01T00:00:00Z"}}} (92.377292ms)
+✔ failure denies: {"verify":false} (93.083041ms)
+✔ failure denies: {"env":{"CHIO_TRUSTED_RECEIPT_KEY":""}} (103.196417ms)
+✔ failure denies: {"env":{"CHIO_SERVICE_TOKEN":"fixture"}} (103.758042ms)
+✔ substituted receipt rejected: kernel_key (107.955417ms)
+✔ substituted receipt rejected: capability_id (104.781083ms)
+✔ substituted receipt rejected: tool_server (100.77425ms)
+✔ substituted receipt rejected: tool_name (100.078416ms)
+✔ substituted receipt rejected: action (108.060708ms)
+✔ cost oracle failures never become zero spend (105.17875ms)
+✔ budgeted calls require an oracle (102.518083ms)
+✔ missing exact session is rejected even with sole bond (101.052625ms)
+✔ untrusted receipt is not archived after a post-tool event (211.086167ms)
+✔ post-tool observation stays unverified and request bound (314.682042ms)
+✔ private paths cannot hide inside workspace using two-dot names or symlink ancestors (3.233459ms)
+✔ launcher runs validation through preserved symlink main paths (121.502917ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3160.982958

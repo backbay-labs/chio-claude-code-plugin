@@ -1,0 +1,48 @@
+{
+  "claim": "actual native Claude, real provider, kernel SQLite fault and independent resource effects; bounded storage case only",
+  "cutpoint": "before-admission",
+  "archiveSha256": "0dd0d906fc34b3ac7d09e3b7f6cdee9f13f511731b25ec761feca7172c9b1158",
+  "launcherSha256": "b4a5126d02d2f573606147cb59e4a63277824d08c2b82981e6bce16deaf17105",
+  "gatewaySha256": "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+  "hostSha256": "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+  "model": "claude-sonnet-5",
+  "hostVersion": "2.1.267 (Claude Code)",
+  "harnessSha256": "081f4ebb5b62a3884a3a9c7dde6b9845b9e7a2706136602b0346284aa1fac17d",
+  "ownerManifest": {
+    "owner": "/Users/connor/.local/share/chio-required-operators/kernel-storage-fault-20260909/claude-r5-before-admission",
+    "gatewayConfig": "/Users/connor/.local/share/chio-required-operators/kernel-storage-fault-20260909/claude-r5-before-admission/gateway.json",
+    "output": "/private/tmp/chio-kernel-storage-fault-20260909/claude-r5-before-admission",
+    "endpoint": "http://127.0.0.1:58515",
+    "kernelSha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
+    "image": "sha256:188cb84d5d0bb4063d4ce5a3b9c3832445a5acda5604911cda80a9136d1850a0",
+    "volume": "chio-required-kernel-store-claude-r5-before-admission",
+    "auditVolume": "chio-required-kernel-store-claude-r5-before-admission-audit",
+    "policySha256": "8c2c732d9115799b13150f7924da0e68fc1f9b2d42a2618912511d407035cc66",
+    "ownerLauncher": "/Users/connor/Medica/backbay/standalone/arc/.worktrees/required-agent-integrations-20260909/integrations/required-agents/serve-filesystem.py",
+    "ownerLauncherSha256": "24187dd47e497d226fb0b1f6652a006a2514cff6bc84fea9b35361e948ed6399",
+    "barrierSha256": "a690f141d14fb3b9a18a8541e89bb5eabf76a18f71e504ad16cd2878bec398b6",
+    "helperSha256": "5da5e9d5743a3da8f045b4fd35f7597ac9890691f8f17dd6815ebaa6e8e6dcd7",
+    "prepareGatewaySha256": "9dacf32a85c2083f0d3804771dc8a648d0eeff9c6faa5440b44f008bc1c43892",
+    "sessionCredential": {
+      "schema": "chio.mcp.session-credential.v1",
+      "sessionId": "f5c5380dba920c1c820e49491fac4f2714bbc1883ccf58ab900b7fc17364643f",
+      "subjectKey": "89d0ba412d6b01d06684827123fa378e2807a8c0f2327cb7ce466053867baf94",
+      "capabilityIds": [
+        "cap-01a0894c-4be9-71b2-a0b4-0ce6900aa5e4"
+      ],
+      "serverId": "fs",
+      "endpointPath": "/mcp",
+      "allowedTools": [
+        "edit_file",
+        "list_directory",
+        "read_text_file",
+        "write_file"
+      ],
+      "issuedAt": 1789009874,
+      "expiresAt": 1789013473
+    },
+    "createdAtEpoch": 1789009874.091302,
+    "testOnlyTransportCutpoint": "/workspace/uncertain.txt reply held after resource returns"
+  },
+  "configSha256": "aba1cd51d077652ff6904fb2de164325921c313445bed01bb6ec6246f6a15b8d"
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "path": "/v1/messages?beta=true",
+    "tools": [
+      "Bash"
+    ],
+    "tool_results": []
+  },
+  {
+    "path": "/v1/messages?beta=true",
+    "tools": [
+      "Bash"
+    ],
+    "tool_results": [
+      {
+        "tool_use_id": "toolu_local_contract_01",
+        "type": "tool_result",
+        "content": "(Bash completed with no output)\n\n<system-reminder>\n<total_tokens>14999890 tokens left</total_tokens>\n</system-reminder>",
+        "is_error": false,
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ]
+  }
+]

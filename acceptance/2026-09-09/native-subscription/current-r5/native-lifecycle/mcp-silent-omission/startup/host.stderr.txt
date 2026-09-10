@@ -1,0 +1,1 @@
+[chio restricted] native host did not activate the exact Chio MCP tools

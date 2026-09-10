@@ -1,0 +1,27 @@
+[
+  {
+    "case": "kernel-absent",
+    "exitCode": 1,
+    "command": [
+      "node",
+      "/tmp/chio-claude-readiness-cold-r4-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+      "--host",
+      "/Users/connor/.local/share/claude/versions/2.1.267",
+      "--host-sha256",
+      "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+      "--profile",
+      "/tmp/chio-claude-approval-runtime-79f859fb6cf84ef3ac8938a4be78d71e/profile",
+      "--workspace",
+      "/tmp/chio-claude-approval-runtime-79f859fb6cf84ef3ac8938a4be78d71e/workspace",
+      "--gateway-config",
+      "/Users/connor/.local/share/chio-required-operators/claude-readiness-matrix-20260909/claude-approvals-84555202630f4955a2edef4d46813f3c/gateway.json",
+      "--gateway-sha256",
+      "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+      "--model",
+      "claude-sonnet-5",
+      "--model-auth",
+      "claude-login"
+    ],
+    "newDispatchRows": 0
+  }
+]

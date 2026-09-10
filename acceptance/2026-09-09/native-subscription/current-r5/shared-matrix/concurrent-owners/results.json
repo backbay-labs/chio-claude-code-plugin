@@ -1,0 +1,77 @@
+[
+  {
+    "case": "concurrent-owner-refused",
+    "exitCode": 1,
+    "command": [
+      "node",
+      "/tmp/chio-claude-native-outcomes-cold-r5-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+      "--host",
+      "/Users/connor/.local/share/claude/versions/2.1.267",
+      "--host-sha256",
+      "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+      "--profile",
+      "/tmp/chio-claude-approval-runtime-bf8c9c55af2e41adbab474bd0c62ba04/profile",
+      "--workspace",
+      "/tmp/chio-claude-approval-runtime-bf8c9c55af2e41adbab474bd0c62ba04/workspace",
+      "--gateway-config",
+      "/Users/connor/.local/share/chio-required-operators/claude-readiness-matrix-20260909/claude-approvals-e501c3726dd64c019f03270b6a2fe8c2/gateway.json",
+      "--gateway-sha256",
+      "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+      "--model",
+      "claude-sonnet-5",
+      "--model-auth",
+      "claude-login"
+    ],
+    "newDispatchRows": 0
+  },
+  {
+    "case": "first-owner",
+    "exitCode": 0,
+    "command": [
+      "node",
+      "/tmp/chio-claude-native-outcomes-cold-r5-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+      "--host",
+      "/Users/connor/.local/share/claude/versions/2.1.267",
+      "--host-sha256",
+      "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+      "--profile",
+      "/tmp/chio-claude-approval-runtime-5bd9b381b3ce42f38f43024b4c1b3680/profile",
+      "--workspace",
+      "/tmp/chio-claude-approval-runtime-5bd9b381b3ce42f38f43024b4c1b3680/workspace",
+      "--gateway-config",
+      "/Users/connor/.local/share/chio-required-operators/claude-readiness-matrix-20260909/claude-approvals-e501c3726dd64c019f03270b6a2fe8c2/gateway.json",
+      "--gateway-sha256",
+      "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+      "--model",
+      "claude-sonnet-5",
+      "--model-auth",
+      "claude-login"
+    ],
+    "newDispatchRows": 1
+  },
+  {
+    "case": "read-after-exclusive-owner",
+    "exitCode": 0,
+    "command": [
+      "node",
+      "/tmp/chio-claude-native-outcomes-cold-r5-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+      "--host",
+      "/Users/connor/.local/share/claude/versions/2.1.267",
+      "--host-sha256",
+      "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+      "--profile",
+      "/tmp/chio-claude-approval-runtime-a34cdf3cd4ba4cd9876ec70e1abe09bf/profile",
+      "--workspace",
+      "/tmp/chio-claude-approval-runtime-a34cdf3cd4ba4cd9876ec70e1abe09bf/workspace",
+      "--gateway-config",
+      "/Users/connor/.local/share/chio-required-operators/claude-readiness-matrix-20260909/claude-approvals-e501c3726dd64c019f03270b6a2fe8c2/gateway.json",
+      "--gateway-sha256",
+      "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+      "--model",
+      "claude-sonnet-5",
+      "--model-auth",
+      "claude-login"
+    ],
+    "newDispatchRows": 1
+  }
+]

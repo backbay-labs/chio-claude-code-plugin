@@ -1,0 +1,23 @@
+{
+  "label": "step-3",
+  "exitCode": 0,
+  "timeout": false,
+  "elapsedSeconds": 7.059,
+  "runtime": "/tmp/chio-claude-native-runtime-83e6bdc707f743e8884c5717dd7cdb45",
+  "newDispatchRows": 1,
+  "terminal": {
+    "code": 0,
+    "signal": null,
+    "exitCode": 0,
+    "hostInitialization": {
+      "ready": true,
+      "failed": false
+    },
+    "hostDelivery": {
+      "confirmed": 1,
+      "failed": false
+    },
+    "executionOutcome": "completed",
+    "retry": "never-automatic"
+  }
+}

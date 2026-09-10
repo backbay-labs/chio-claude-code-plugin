@@ -1,7 +1,7 @@
 {
   "name": "chio",
-  "version": "0.1.0",
-  "description": "Bond Claude Code to a Chio policy. Mediate every tool call; stream signed receipts.",
+  "version": "0.3.1-rc.1",
+  "description": "Chio diagnostics for Claude Code. Kernel MCP access requires the separate restricted launcher; integration acceptance pending.",
   "author": {
     "name": "Backbay Industries",
     "url": "https://github.com/backbay-industries"
@@ -9,8 +9,16 @@
   "homepage": "https://chio.world/plugins/claude-code",
   "repository": "https://github.com/backbay-industries/chio-claude-code-plugin",
   "license": "Apache-2.0",
-  "keywords": ["chio", "capabilities", "receipts", "policy", "agent-governance"],
-  "commands": ["./commands/"],
+  "keywords": [
+    "chio",
+    "capabilities",
+    "receipts",
+    "policy",
+    "agent-governance"
+  ],
+  "commands": [
+    "./commands/"
+  ],
   "hooks": "./hooks/hooks.json",
   "userConfig": {
     "policy_path": {

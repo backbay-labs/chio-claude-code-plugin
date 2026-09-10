@@ -1,0 +1,5 @@
+{
+  "status": "failed",
+  "reason": "Probe started before its dependent gateway preparation completed; private config was absent. No host process or protected dispatch started. Rerun required.",
+  "evidence_class": "LOCAL_PROBE_COORDINATION_FAILURE"
+}

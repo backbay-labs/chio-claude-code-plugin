@@ -1,0 +1,28 @@
+[
+  {
+    "method": "HEAD",
+    "path": "/api/hello",
+    "forwarded": false,
+    "failure": "model route refused"
+  },
+  {
+    "method": "POST",
+    "path": "/v1/messages?beta=true",
+    "forwarded": true,
+    "topLevelKeys": [
+      "model",
+      "messages",
+      "system",
+      "tools",
+      "metadata",
+      "max_tokens",
+      "thinking",
+      "temperature",
+      "stream"
+    ],
+    "toolNames": [
+      "mcp__chio__read_text_file"
+    ],
+    "status": 200
+  }
+]

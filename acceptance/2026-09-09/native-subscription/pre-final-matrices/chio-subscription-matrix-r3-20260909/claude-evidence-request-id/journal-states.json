@@ -1,0 +1,130 @@
+[
+  {
+    "requestId": "7dd46bb9-1325-43fa-829c-361e7e779d9a:c3108f9790e3f6134bbaff521a1e550532434013cac98fcb55072c91e1bb23dc",
+    "state": "completed",
+    "acknowledged": true,
+    "hostDeliveryConfirmed": true,
+    "outcome": {
+      "state": "completed",
+      "evidence": "verified",
+      "requestId": "7dd46bb9-1325-43fa-829c-361e7e779d9a:c3108f9790e3f6134bbaff521a1e550532434013cac98fcb55072c91e1bb23dc",
+      "receipt": {
+        "action": {
+          "parameter_hash": "ac565e649327bcbaf63915a01e3bc52b4730e38437e7acab4e5a11d97f34e9cf",
+          "parameters": {
+            "content": "authorized before in-flight revocation",
+            "path": "/workspace/claude-inflight-e518f42b893f.txt"
+          }
+        },
+        "boundary_class": "prevent",
+        "capability_id": "cap-01a088fc-10b8-77b1-a81b-af4d49c10f7a",
+        "content_hash": "b0e8920aac3e622ff4b63edfbc8bfc1ec4301f336eb813a5bae95587fdb83c46",
+        "decision": {
+          "verdict": "allow"
+        },
+        "evidence": [
+          {
+            "details": "sanitizer detected 2 findings (secret_high_entropy_token:2)",
+            "guard_name": "output-sanitizer",
+            "verdict": true
+          }
+        ],
+        "id": "91b830323dc2fd3fcc002368b2173287abe020ab6f8d61739b0440bfcdf0a732",
+        "kernel_key": "1e5677d422400a3f2db017bb2b7864906a126285e1850556e0777c58d5ce1917",
+        "metadata": {
+          "admission_operation": {
+            "compensation_status": "not_compensated",
+            "coordinator_lease_epoch": 3,
+            "coordinator_lease_id": "01a088fb-62af-71c1-bda6-64d2e9a84262",
+            "operation_id": "46961ba22ff61f05476dfd93fa198f96cc0eb02102bd675a954a8f5cf15c368b",
+            "projected_dispatch_state": "terminal",
+            "projected_operation_version": 8,
+            "projected_state": "completed",
+            "request_binding_hash": "1bf82b5658661101049bf1392528e18d96683e0961ecc25ec420bcb0d5c4cef7",
+            "request_id": "7dd46bb9-1325-43fa-829c-361e7e779d9a:c3108f9790e3f6134bbaff521a1e550532434013cac98fcb55072c91e1bb23dc",
+            "request_namespace_digest": "1aaedbe2f5ee601eb08b78ce2bcd0c710638ece5bfca950551a34900d293fe77",
+            "retained_dispatch_commit": {
+              "committed_version": 6,
+              "coordinator_lease_epoch": 3,
+              "coordinator_lease_id": "01a088fb-62af-71c1-bda6-64d2e9a84262",
+              "provider_attempt": {
+                "attempt_id": "attempt:46961ba22ff61f05476dfd93fa198f96cc0eb02102bd675a954a8f5cf15c368b",
+                "operation_id": "46961ba22ff61f05476dfd93fa198f96cc0eb02102bd675a954a8f5cf15c368b",
+                "transport_id": "kernel-tool-server:fs",
+                "transport_key_epoch": 3
+              },
+              "store_fence": {
+                "lease_id": "01a088fb-62af-71c1-bda6-64d2e9a84262",
+                "owner_epoch": 3,
+                "store_uuid": "01a087b4-82fc-7ea3-8268-cda098970e9e"
+              }
+            },
+            "schema": "chio.admission-receipt.v1",
+            "store_fence": {
+              "lease_id": "01a088fb-62af-71c1-bda6-64d2e9a84262",
+              "owner_epoch": 3,
+              "store_uuid": "01a087b4-82fc-7ea3-8268-cda098970e9e"
+            },
+            "tool_outcome_id": "2c821ea8287173558755d635f811d15000cc0e56cc54805f50ba00d3f2d43824",
+            "tool_outcome_version": 2,
+            "trusted_time_unix_ms": 1789004620600
+          },
+          "attribution": {
+            "delegation_depth": 0,
+            "grant_index": 0,
+            "issuer_key": "9b6890451ef646de65d88b26fdc1503c204947a1e743481bd036f9d4b0b2cee1",
+            "subject_key": "be2a524c16816635b4a899b51fab72fedd513276719e7f61d6ddfde14f3e3734"
+          },
+          "chio_receipt_signing_nonce": "rcpt-01a088fc-23be-72e3-9646-21b337e82286",
+          "post_invocation": {
+            "sanitized": true
+          },
+          "receipt_context": {
+            "request_id": "7dd46bb9-1325-43fa-829c-361e7e779d9a:c3108f9790e3f6134bbaff521a1e550532434013cac98fcb55072c91e1bb23dc"
+          }
+        },
+        "policy_hash": "057b9a8160375e7d90841325639bdd66050a454f393dae23e8c813b8df74b84e",
+        "receipt_kind": "mediated_decision",
+        "redaction_mode": "none",
+        "signature": "d53a395765ad54a77b1c220ce8d5eb5e6b03787e351e19f65510ac0729f48c19c4d07ff7b7f4a70788932ab47f7abcbff9cd6731f52bb8a99e21a9055d5df903",
+        "timestamp": 1789004620,
+        "tool_name": "write_file",
+        "tool_origin": "caller_executed",
+        "tool_server": "fs",
+        "trust_level": "mediated"
+      },
+      "result": {
+        "content": [
+          {
+            "text": "Successfully wrote to ****.txt",
+            "type": "text"
+          }
+        ],
+        "isError": false,
+        "structuredContent": {
+          "content": "Successfully wrote to ****.txt"
+        }
+      },
+      "delivery": {
+        "acknowledgement": "h0vmyG54LVZi-rHCNhguVEAeKB2lIBZfYEJDB5uezRc",
+        "receiptId": "91b830323dc2fd3fcc002368b2173287abe020ab6f8d61739b0440bfcdf0a732",
+        "requestHash": "ea33df1029d8799adc4916c9628ff1d8badbcafb3d757a58241e86f1a6b21a95",
+        "requestId": "7dd46bb9-1325-43fa-829c-361e7e779d9a:c3108f9790e3f6134bbaff521a1e550532434013cac98fcb55072c91e1bb23dc",
+        "resultHash": "b0e8920aac3e622ff4b63edfbc8bfc1ec4301f336eb813a5bae95587fdb83c46",
+        "schema": "chio.mcp.delivery-ack.v1"
+      }
+    }
+  },
+  {
+    "requestId": "7dd46bb9-1325-43fa-829c-361e7e779d9a:0809732c01e311f8df71ba7bbbb1cc1f15305a7c06be84f73afbd2a42777e255",
+    "state": "unknown",
+    "acknowledged": false,
+    "hostDeliveryConfirmed": null,
+    "outcome": {
+      "state": "unknown",
+      "evidence": "unverified",
+      "requestId": "7dd46bb9-1325-43fa-829c-361e7e779d9a:0809732c01e311f8df71ba7bbbb1cc1f15305a7c06be84f73afbd2a42777e255",
+      "reason": "missing or substituted execution evidence"
+    }
+  }
+]

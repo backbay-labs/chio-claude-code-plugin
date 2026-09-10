@@ -1,0 +1,104 @@
+{
+  "evidence_class": "REAL_HOST_LOCAL_MODEL_FIXTURE_NO_CHIO_KERNEL",
+  "root": "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-9rt1hez8",
+  "host_version": "2.1.266 (Claude Code)",
+  "host_sha256": "553d1b9e9e7068b275c0a783c7e139ff6503096f286e674c8c919379fb0eca62",
+  "cases": [
+    {
+      "case": "restricted-mcp-useful",
+      "exit_code": 0,
+      "elapsed_seconds": 0.859,
+      "model_requests": 2,
+      "effect_observed": "contract-effect",
+      "settings": {
+        "permissions": {
+          "allow": [
+            "Bash"
+          ]
+        }
+      },
+      "command": [
+        "/opt/homebrew/bin/node",
+        "/Users/connor/Medica/backbay/standalone/chio-claude-code-plugin/.worktrees/required-agent-integrations-20260909/scripts/restricted.mjs",
+        "--host",
+        "/Users/connor/.local/bin/claude",
+        "--host-sha256",
+        "553d1b9e9e7068b275c0a783c7e139ff6503096f286e674c8c919379fb0eca62",
+        "--profile",
+        "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-9rt1hez8/restricted-mcp-useful/profile",
+        "--workspace",
+        "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-9rt1hez8/restricted-mcp-useful/workspace",
+        "--endpoint",
+        "http://127.0.0.1:57145/mcp",
+        "--model",
+        "claude-sonnet-4-5"
+      ],
+      "mcp_calls": 1
+    },
+    {
+      "case": "restricted-mcp-denied",
+      "exit_code": 0,
+      "elapsed_seconds": 0.578,
+      "model_requests": 2,
+      "effect_observed": null,
+      "settings": {
+        "permissions": {
+          "allow": [
+            "Bash"
+          ]
+        }
+      },
+      "command": [
+        "/opt/homebrew/bin/node",
+        "/Users/connor/Medica/backbay/standalone/chio-claude-code-plugin/.worktrees/required-agent-integrations-20260909/scripts/restricted.mjs",
+        "--host",
+        "/Users/connor/.local/bin/claude",
+        "--host-sha256",
+        "553d1b9e9e7068b275c0a783c7e139ff6503096f286e674c8c919379fb0eca62",
+        "--profile",
+        "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-9rt1hez8/restricted-mcp-denied/profile",
+        "--workspace",
+        "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-9rt1hez8/restricted-mcp-denied/workspace",
+        "--endpoint",
+        "http://127.0.0.1:57145/mcp",
+        "--model",
+        "claude-sonnet-4-5"
+      ],
+      "mcp_calls": 1
+    },
+    {
+      "case": "restricted-mcp-absent",
+      "exit_code": 0,
+      "elapsed_seconds": 0.51,
+      "model_requests": 2,
+      "effect_observed": null,
+      "settings": {
+        "permissions": {
+          "allow": [
+            "Bash"
+          ]
+        }
+      },
+      "command": [
+        "/opt/homebrew/bin/node",
+        "/Users/connor/Medica/backbay/standalone/chio-claude-code-plugin/.worktrees/required-agent-integrations-20260909/scripts/restricted.mjs",
+        "--host",
+        "/Users/connor/.local/bin/claude",
+        "--host-sha256",
+        "553d1b9e9e7068b275c0a783c7e139ff6503096f286e674c8c919379fb0eca62",
+        "--profile",
+        "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-9rt1hez8/restricted-mcp-absent/profile",
+        "--workspace",
+        "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-9rt1hez8/restricted-mcp-absent/workspace",
+        "--endpoint",
+        "http://127.0.0.1:57145/mcp",
+        "--model",
+        "claude-sonnet-4-5"
+      ],
+      "mcp_calls": 0
+    }
+  ],
+  "probe_integrity": "PASS",
+  "probe_failures": [],
+  "integration_acceptance": "NOT_ESTABLISHED"
+}

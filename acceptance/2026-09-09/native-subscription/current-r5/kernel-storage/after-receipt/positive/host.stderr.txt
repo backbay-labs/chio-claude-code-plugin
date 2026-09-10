@@ -1,0 +1,1 @@
+[chio restricted] prepare the gateway with the exact UUID used for the host session

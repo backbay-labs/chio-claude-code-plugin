@@ -1,0 +1,11 @@
+{
+  "source": "aac1d52",
+  "artifactSha256": "49cc789adf09bc3c318cb772cdfb979a1fccef7af63183395baf85333dcbdb85",
+  "bridgeSha256": "b7785282b4f4e4da42e4158c7390a2d1411ba2763b01956b07896aadf6dcc6d9",
+  "kernelSha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
+  "hostVersion": "2.1.266",
+  "hostSha256": "553d1b9e9e7068b275c0a783c7e139ff6503096f286e674c8c919379fb0eca62",
+  "model": "LOCAL_MESSAGES_FIXTURE",
+  "runnerSha256": "efb97153d7cb619a5c6b37514800af23f944e70ce92ee661425497279d0a4549",
+  "acceptance": "unresolved"
+}

@@ -1,0 +1,8 @@
+[
+  {
+    "method": "HEAD",
+    "path": "/api/hello",
+    "forwarded": false,
+    "failure": "model route refused"
+  }
+]

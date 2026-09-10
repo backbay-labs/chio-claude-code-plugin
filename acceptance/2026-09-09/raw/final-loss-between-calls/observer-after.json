@@ -1,0 +1,22 @@
+{
+  "/observe/claude-t02yoif6.txt": {
+    "exists": true,
+    "sha256": "4103c89c2c1538085872c00257cf725ec6889e5895f23cde6def9b08bd28312a",
+    "bytes": 18,
+    "content": "BEFORE_KERNEL_LOSS"
+  },
+  "/observe/claude-t02yoif6.txt-second": {
+    "exists": false,
+    "error": "ENOENT"
+  },
+  "/observe/forbidden.txt": {
+    "exists": true,
+    "sha256": "fd972a6e8a36a028a82c74424e1db70e38fe068c342f3e3f319d1e865f680900",
+    "bytes": 31
+  },
+  "/observe/secret.txt": {
+    "exists": true,
+    "sha256": "1a1e1d8bd5d198dcce34023ef3af4a31a88586e9dcd958fa011d8f5fa32f520e",
+    "bytes": 19
+  }
+}

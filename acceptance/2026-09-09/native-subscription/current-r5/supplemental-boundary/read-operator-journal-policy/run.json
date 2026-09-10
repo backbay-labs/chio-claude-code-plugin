@@ -1,0 +1,7 @@
+{
+  "case": "read-operator-journal-policy",
+  "exitCode": 1,
+  "timeout": false,
+  "exactOuterPolicy": true,
+  "elapsedSeconds": 0.154
+}

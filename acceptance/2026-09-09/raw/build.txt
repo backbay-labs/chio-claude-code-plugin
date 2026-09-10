@@ -1,0 +1,10 @@
+$ bun run build:types && bun run bundle
+$ tsc --emitDeclarationOnly
+$ node ./scripts/bundle.mjs
+
+  dist/index.js         354.1kb
+  dist/state/bridge.js  336.4kb
+  dist/state/store.js     1.9kb
+  dist/state/paths.js     636b 
+
+⚡ Done in 26ms

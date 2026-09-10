@@ -7,6 +7,8 @@ export async function bond(args: string[]): Promise<string> {
   if (!policyArg) {
     throw new Error("usage: /chio:bond <policy-path> [ttl] [budget-usd]");
   }
+  const sessionId = process.env.CLAUDE_SESSION_ID;
+  if (!sessionId) throw new Error("CLAUDE_SESSION_ID is required; refusing to create an unbound capability");
   const policyPath = resolve(policyArg);
   const bridge = buildBridge();
 
@@ -26,7 +28,6 @@ export async function bond(args: string[]): Promise<string> {
     typeof passport.capabilityId === "string" &&
     passport.capabilityId.length > 0;
 
-  const sessionId = process.env.CLAUDE_SESSION_ID ?? `session-${Date.now()}`;
   const bondRecord: Parameters<typeof upsertBond>[0] = {
     sessionId,
     policyPath,

@@ -1,0 +1,29 @@
+[
+  {
+    "case": "journal-before-dispatch",
+    "passed": false,
+    "error": "Cutpoint returned success or unexpected resource dispatch",
+    "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-journal-before-dispatch-8e2d805abb5e4150aa42a9f278a28374"
+  },
+  {
+    "case": "cancel-before-dispatch",
+    "passed": true,
+    "newDispatchRows": 0,
+    "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-cancel-before-dispatch-45776372346f4f1885720c87de3c9d9d",
+    "sameAuthorityRecovery": true
+  },
+  {
+    "case": "kernel-network-refused",
+    "passed": true,
+    "newDispatchRows": 1,
+    "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-kernel-network-refused-3362f787d93649c6b761c05e9c579e13",
+    "sameAuthorityRecovery": true
+  },
+  {
+    "case": "journal-after-effect",
+    "passed": true,
+    "newDispatchRows": 1,
+    "privateState": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-native-journal-after-effect-12e88d624a294abe877de7ee55b8631e",
+    "sameAuthorityRecovery": true
+  }
+]

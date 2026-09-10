@@ -1,0 +1,7 @@
+{
+  "case": "write-operator-journal-positive",
+  "exitCode": 0,
+  "timeout": false,
+  "exactOuterPolicy": false,
+  "elapsedSeconds": 0.265
+}

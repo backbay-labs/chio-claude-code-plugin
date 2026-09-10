@@ -1,0 +1,3106 @@
+{
+  "claim": "Exact local static candidate bounded native continuation; no public-delivery or full I01-I08 acceptance",
+  "kernelSha256": "c03a8a711dbbd15da2c59655d9ab6d8f0068a20187363db7a78f4b5422ded93e",
+  "kernelSource": "bafa02b06de93553cecb6f60b340f3dd8fd9b401",
+  "archiveSha256": "1258385647d228ebeed32662091ed721aeda3b60450cabae480ca0d4292fbe0a",
+  "archiveSource": "16624ede65015be091e91b7c29213425d5e2517e",
+  "fixtureSource": "675f862e90dad6e8456b64fd9737a50c95de75ab",
+  "originalRoots": {
+    "continuation": "/tmp/chio-final-claude-native-continuation-20260910",
+    "storage-reconciliation-r2": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910"
+  },
+  "excluded": {
+    "reason": "Verified cold consumers and npm caches remain at original paths; no executed test outcome or native transcript is excluded",
+    "roots": [
+      "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-missing/consumer",
+      "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-missing/install-empty-cache",
+      "/tmp/chio-final-claude-native-continuation-20260910/cases/plugin-omitted/consumer",
+      "/tmp/chio-final-claude-native-continuation-20260910/cases/plugin-omitted/install-empty-cache",
+      "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/consumer",
+      "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/install-prior-empty-cache",
+      "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/install-upgrade-empty-cache"
+    ]
+  },
+  "files": [
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/capacity-hold.json",
+      "path": "raw/continuation/capacity-hold.json.gz",
+      "originalSha256": "c2bc6fe2d9e90953d6d16ea1c905412aa894d72ef4d19d95141778e898e57c69",
+      "compressedSha256": "cd1ed9da3051b23808e579ddd8112b3b6013af6023e0b881135c5baf370347d0",
+      "bytes": 343
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/driver-source.py",
+      "path": "raw/continuation/cases/driver-source.py.gz",
+      "originalSha256": "3466c1ca22b5661b23340b8b902c5a9c6fa9cbb0e8c852fc0cc0ff883f77520a",
+      "compressedSha256": "a5a9d91168f21b8ce658bfdc52e7e5ce122fcabadfe3407f5c3c06526472fd8a",
+      "bytes": 61783
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/after-fault-journal.json",
+      "path": "raw/continuation/cases/gateway-crash/after-fault-journal.json.gz",
+      "originalSha256": "f8e02d527d9a03e8ae01ee9944295630117d1db34d78101a3bb2dc70c6ae2579",
+      "compressedSha256": "47218a72a006436a3982741c61cda7da333f81b85344891d7cebe4bb68c95283",
+      "bytes": 5603
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/after-operator-recovery/after.json",
+      "path": "raw/continuation/cases/gateway-crash/after-operator-recovery/after.json.gz",
+      "originalSha256": "84c2d714db39e3da567066e3e51f4f840d554642ac57534fda074a049fb9e773",
+      "compressedSha256": "50900a4880d47d7a6708741a40c8f79a13571b44b595904733df134720e5f93b",
+      "bytes": 2569
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/after-operator-recovery/before.json",
+      "path": "raw/continuation/cases/gateway-crash/after-operator-recovery/before.json.gz",
+      "originalSha256": "7f5197eaba37931626e6f08c3603bc61f779644c2e6d19f118affd936f18b2d6",
+      "compressedSha256": "f18f5f1fda9f9ce578bcf08cc14a851e790d4baca651aad55f12291d774de794",
+      "bytes": 2099
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/after-operator-recovery/exit.json",
+      "path": "raw/continuation/cases/gateway-crash/after-operator-recovery/exit.json.gz",
+      "originalSha256": "e2a5db79a4a63e50c6750e25b722e84603f4e58d14b6ddfe523a105a06670b2d",
+      "compressedSha256": "14711eae8da04ca1251893e649148e0e1082d13fa0fc520c56cd591cf3796dda",
+      "bytes": 191
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/after-operator-recovery/host.stderr.txt",
+      "path": "raw/continuation/cases/gateway-crash/after-operator-recovery/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/after-operator-recovery/host.stdout.jsonl",
+      "path": "raw/continuation/cases/gateway-crash/after-operator-recovery/host.stdout.jsonl.gz",
+      "originalSha256": "36d6cbd86306c50ae2b767177c8820fe9f5a500c3ed9b3cc90625f50eccbbbda",
+      "compressedSha256": "4b30098c34b9804f1cc7258c2dd90565a9e875a8c637c349c8f1045d089cdff3",
+      "bytes": 14143
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/after-operator-recovery/launch.json",
+      "path": "raw/continuation/cases/gateway-crash/after-operator-recovery/launch.json.gz",
+      "originalSha256": "2826956f7572e12b68877bf9289b951682be07aeda1c3906df1adc76caca0b0f",
+      "compressedSha256": "f6babb567e1e849b9d6be4526cc7d60607c99ca8d65e6f8a092789a8c5385944",
+      "bytes": 923
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/after-operator-recovery/model-relay.json",
+      "path": "raw/continuation/cases/gateway-crash/after-operator-recovery/model-relay.json.gz",
+      "originalSha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "compressedSha256": "8584ac7ef7ed7294d347ec9f3246e410a09e60e439c99a1c0e5450d4cc53f548",
+      "bytes": 1027
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/after-operator-recovery/native-dispatch.json",
+      "path": "raw/continuation/cases/gateway-crash/after-operator-recovery/native-dispatch.json.gz",
+      "originalSha256": "afaaa7247fc0eef19a4048d0997463eb8558b9928b0df7c2e758dd729e11bcd1",
+      "compressedSha256": "09c4a537ef8837d952f695433ed8c4a5e5d8fb641486042c90a7114874e931cb",
+      "bytes": 287
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/after-operator-recovery/prompt.txt",
+      "path": "raw/continuation/cases/gateway-crash/after-operator-recovery/prompt.txt.gz",
+      "originalSha256": "24ecbcd3a613d804665fd75335fcdea3610754daf7954b2ce7728cd77a588636",
+      "compressedSha256": "627bcf924a70f2647b0a91f9a0c3f5da4c85e5acdb4a6c1a1fbc8e5440396f39",
+      "bytes": 447
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/after-operator-recovery/run.json",
+      "path": "raw/continuation/cases/gateway-crash/after-operator-recovery/run.json.gz",
+      "originalSha256": "c3d257e72a2139a0975455d342e576cd12f7dde086fb602f34ff89b8bfd32b67",
+      "compressedSha256": "7cb5bbadd8830a991736c4e48dc21680070abfa7f6187c6a38926c23c9ade96b",
+      "bytes": 504
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/after-recovery-journal.json",
+      "path": "raw/continuation/cases/gateway-crash/after-recovery-journal.json.gz",
+      "originalSha256": "04815cfda2ace6c20a671b731ef4fbaba1937d73e88d56992de3027e0dd660d6",
+      "compressedSha256": "b4fda65715ce98f6dc1b18ec284d43bc2ae214b33990f1e443cf0655bc8e116d",
+      "bytes": 11089
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/configuration.redacted.json",
+      "path": "raw/continuation/cases/gateway-crash/configuration.redacted.json.gz",
+      "originalSha256": "e8a44a653187a5ca8c385baf981e79560a6db9d9780f24ea5d4b01cfdb051ce7",
+      "compressedSha256": "be1aaaa4adddbb2914de50ab2522546338e9b78ffa4657476cd54ecd7ebb3764",
+      "bytes": 4967
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/dead-owner-lock-recovery.json",
+      "path": "raw/continuation/cases/gateway-crash/dead-owner-lock-recovery.json.gz",
+      "originalSha256": "0463dc5c26ebc8cff8735250bdb8700c04f096989b5905e2d1cfe6b53d4d8e8b",
+      "compressedSha256": "e2de8bd274e7ab7894f2087321d276b432bcb3b54fc5bf2d225210b331e6e4fe",
+      "bytes": 505
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/fault/after.json",
+      "path": "raw/continuation/cases/gateway-crash/fault/after.json.gz",
+      "originalSha256": "7f5197eaba37931626e6f08c3603bc61f779644c2e6d19f118affd936f18b2d6",
+      "compressedSha256": "f18f5f1fda9f9ce578bcf08cc14a851e790d4baca651aad55f12291d774de794",
+      "bytes": 2099
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/fault/before.json",
+      "path": "raw/continuation/cases/gateway-crash/fault/before.json.gz",
+      "originalSha256": "c1dae6fa6d77ed9d931d552938454cf0dd37cf88ef523be39825ae99fb378b2c",
+      "compressedSha256": "eea7d9bc3378b47a89397a5a9ed923327c8e5df9e571687712b06030cf070cf3",
+      "bytes": 1435
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/fault/descendant-lifecycle.json",
+      "path": "raw/continuation/cases/gateway-crash/fault/descendant-lifecycle.json.gz",
+      "originalSha256": "cc6ddd3effbe1c8b3a640d62da3b44d56a62e8d20cee9d4cb6d3f356dd92cd10",
+      "compressedSha256": "8f64603fd7e89cd102f66a57db140e46dead7aedacfb3e9917b139162b4201db",
+      "bytes": 418
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/fault/fault-identity.json",
+      "path": "raw/continuation/cases/gateway-crash/fault/fault-identity.json.gz",
+      "originalSha256": "c896b0bb889734e012e59e6ea6fdca99a43338ef4f237a2673a7c84026328961",
+      "compressedSha256": "8453cc1254f245e4777221d9ee8c1f38bc527a2a117e5a5122354693876c187a",
+      "bytes": 257
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/fault/fault.jsonl",
+      "path": "raw/continuation/cases/gateway-crash/fault/fault.jsonl.gz",
+      "originalSha256": "ff7a39a666d236cfa7f1db6c5c4376ba0f54570f18180d2216e383289e45c71d",
+      "compressedSha256": "825726e3f0114c29f96236dae1392b5ed7e229b6e4637f51deecb368a1d7564d",
+      "bytes": 264
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/fault/host.stderr.txt",
+      "path": "raw/continuation/cases/gateway-crash/fault/host.stderr.txt.gz",
+      "originalSha256": "8c3c0554ab80d4294dc44ebbde9f8a8a23b9f308ad0e21291e102bafea40b48d",
+      "compressedSha256": "e830e4a9952faf6747c07b7ee94e069d41679bb587d6465cfc37a7e70758e9e1",
+      "bytes": 1060
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/fault/host.stdout.jsonl",
+      "path": "raw/continuation/cases/gateway-crash/fault/host.stdout.jsonl.gz",
+      "originalSha256": "feabd85786f82f7d42a2c10faeafb31655575be073cb3f46a2e5b3c170c87bbb",
+      "compressedSha256": "366fe09b81ee7dc2e515f03b4e7c1e12cad7c969c7e08924f89e21a869b110c7",
+      "bytes": 2615
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/fault/launch.json",
+      "path": "raw/continuation/cases/gateway-crash/fault/launch.json.gz",
+      "originalSha256": "63136341d9277efcdaf1171981b8ed16542445dccbdd8e4ab87400ef63f89ebe",
+      "compressedSha256": "0ad66b039414f40302285d6cbacc49040b31717b9eb4d82cf9ee6db25c397bcc",
+      "bytes": 923
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/fault/native-dispatch.json",
+      "path": "raw/continuation/cases/gateway-crash/fault/native-dispatch.json.gz",
+      "originalSha256": "0b8f09e85aebe84eacf71b53c42703e4b27c1b0b8694833a0304f9928af7ea59",
+      "compressedSha256": "59603820bce90027f2378fd3b924aeb70300c2fc78679d5e2c866f498af7b873",
+      "bytes": 290
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/fault/prompt.txt",
+      "path": "raw/continuation/cases/gateway-crash/fault/prompt.txt.gz",
+      "originalSha256": "46e77cb6d9f49b10c08b127f5d92857ae1545dc8fb740515f892a8a8249dbd9f",
+      "compressedSha256": "0172eda43ab502fab23bc098c25dde15bd85c274d5dc532e18e3b532240b2f55",
+      "bytes": 482
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/fault/run.json",
+      "path": "raw/continuation/cases/gateway-crash/fault/run.json.gz",
+      "originalSha256": "b02c585e74c1d125d4f99f6e63732b76da05d025531d7a0626b5e929b35cc62d",
+      "compressedSha256": "3a7d9a8fca574825dad8c509bc9c3a2b51ea94fd72447660c16737c6d5ae56d7",
+      "bytes": 211
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/final-observation.json",
+      "path": "raw/continuation/cases/gateway-crash/final-observation.json.gz",
+      "originalSha256": "84c2d714db39e3da567066e3e51f4f840d554642ac57534fda074a049fb9e773",
+      "compressedSha256": "50900a4880d47d7a6708741a40c8f79a13571b44b595904733df134720e5f93b",
+      "bytes": 2569
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/operator-acknowledgement.json",
+      "path": "raw/continuation/cases/gateway-crash/operator-acknowledgement.json.gz",
+      "originalSha256": "46cfc55fddcbfc7d1df6d139f8aad5d5f84ae727bc1abf7d8dbc00cb19c33c74",
+      "compressedSha256": "b4224a32ba340eb2f5a76ce9746849a3064b721cb2873fd6ea38fbe2d65dd0b0",
+      "bytes": 260
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/operator-export.json",
+      "path": "raw/continuation/cases/gateway-crash/operator-export.json.gz",
+      "originalSha256": "578f30f298b11fd63a331516568b986a44c34d6f1123f203c3a73c4b81471663",
+      "compressedSha256": "b6105eb953e702ec1894e0712d55b09441d36becf7243e00306162dd84fe636b",
+      "bytes": 379
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/restart-fenced/after.json",
+      "path": "raw/continuation/cases/gateway-crash/restart-fenced/after.json.gz",
+      "originalSha256": "7f5197eaba37931626e6f08c3603bc61f779644c2e6d19f118affd936f18b2d6",
+      "compressedSha256": "f18f5f1fda9f9ce578bcf08cc14a851e790d4baca651aad55f12291d774de794",
+      "bytes": 2099
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/restart-fenced/before.json",
+      "path": "raw/continuation/cases/gateway-crash/restart-fenced/before.json.gz",
+      "originalSha256": "7f5197eaba37931626e6f08c3603bc61f779644c2e6d19f118affd936f18b2d6",
+      "compressedSha256": "f18f5f1fda9f9ce578bcf08cc14a851e790d4baca651aad55f12291d774de794",
+      "bytes": 2099
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/restart-fenced/exit.json",
+      "path": "raw/continuation/cases/gateway-crash/restart-fenced/exit.json.gz",
+      "originalSha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "compressedSha256": "1bf3b17c92a2c47ec390029bbd05fe7f503202f31bcc3b0b80f3a8805794215f",
+      "bytes": 192
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/restart-fenced/host.stderr.txt",
+      "path": "raw/continuation/cases/gateway-crash/restart-fenced/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/restart-fenced/host.stdout.jsonl",
+      "path": "raw/continuation/cases/gateway-crash/restart-fenced/host.stdout.jsonl.gz",
+      "originalSha256": "ff98b6d8f929f06a2403086b1207eb883abb20a33f52395ca6436992d4998b14",
+      "compressedSha256": "072ec1080356ac49a98e1cd023ccd11ddf77bf0122b58823be2bed7a05ae1334",
+      "bytes": 7683
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/restart-fenced/launch.json",
+      "path": "raw/continuation/cases/gateway-crash/restart-fenced/launch.json.gz",
+      "originalSha256": "267aa1004f37561aaed9d3dceae9144a583417e3eb1c0a3c7914d736ffe3024c",
+      "compressedSha256": "d95c2cc1118ebd228ab833547e48bc68034eea20835c9e146711003348e877a8",
+      "bytes": 923
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/restart-fenced/model-relay.json",
+      "path": "raw/continuation/cases/gateway-crash/restart-fenced/model-relay.json.gz",
+      "originalSha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "compressedSha256": "8584ac7ef7ed7294d347ec9f3246e410a09e60e439c99a1c0e5450d4cc53f548",
+      "bytes": 1027
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/restart-fenced/native-dispatch.json",
+      "path": "raw/continuation/cases/gateway-crash/restart-fenced/native-dispatch.json.gz",
+      "originalSha256": "28acae109f804088f87617c4498eaaa99bb56f6d72281c6e0345d542e1b39c63",
+      "compressedSha256": "6c880a3802d2fbe344962cf87660a8319ebb5b5b69bdb5e842461ffdcbdcd96d",
+      "bytes": 336
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/restart-fenced/prompt.txt",
+      "path": "raw/continuation/cases/gateway-crash/restart-fenced/prompt.txt.gz",
+      "originalSha256": "5139abaaf767aab906b4d6d7252bfc2cd83969232da62f99139a370949bf11c5",
+      "compressedSha256": "1d9e189f2c7e7d990e6297c883195960164e007a3b1250ca587ac756b1ae7fb4",
+      "bytes": 488
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-crash/restart-fenced/run.json",
+      "path": "raw/continuation/cases/gateway-crash/restart-fenced/run.json.gz",
+      "originalSha256": "3a47dc1ca913cce3c7fc2605f24cec352bf6cdbb1466e78ad5fda2e6e8389940",
+      "compressedSha256": "0cafa002cccf140ac15a1fdc4becd8d86f425c06bc3370b7ec990c0bff6d7c2b",
+      "bytes": 495
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-missing/configuration.redacted.json",
+      "path": "raw/continuation/cases/gateway-missing/configuration.redacted.json.gz",
+      "originalSha256": "a21a19cf8ee2e7ba2b779afd412f330c8a0858425a52b6bcc62c8e2fbb531d06",
+      "compressedSha256": "252c8aed1a9d70001720e9f633773b2ab43dd4dabb39cadc9ac1ba659b8cf9cc",
+      "bytes": 4969
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-missing/final-observation.json",
+      "path": "raw/continuation/cases/gateway-missing/final-observation.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-missing/install-installed-archive-files.json",
+      "path": "raw/continuation/cases/gateway-missing/install-installed-archive-files.json.gz",
+      "originalSha256": "343cbb2559223a0c863976807f1c85d602738f1be22b04f165d8dfb2a731163a",
+      "compressedSha256": "8b34a9b2612e7ba9f7e71c42a7b85339f0a1cbe612b7b99f52470c589c1dba09",
+      "bytes": 207958
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-missing/install.json",
+      "path": "raw/continuation/cases/gateway-missing/install.json.gz",
+      "originalSha256": "f45a449f3a44ebaff57186bf305aa190ad573643087f0875e68a88cdcc772b61",
+      "compressedSha256": "4fe925e02b6e1df2e477a189bb0d43261f62c7cbb8815d51ec6521d6f670ae71",
+      "bytes": 380
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-missing/omission.json",
+      "path": "raw/continuation/cases/gateway-missing/omission.json.gz",
+      "originalSha256": "d7f70722065d28609698cfafaae39a43eb16d36e154e641d7e25d09e41e67058",
+      "compressedSha256": "4b12ae9e02733a290da6703a6d450672cf37184d478a3535f5dad986214ee3b3",
+      "bytes": 269
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-missing/startup/after.json",
+      "path": "raw/continuation/cases/gateway-missing/startup/after.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-missing/startup/before.json",
+      "path": "raw/continuation/cases/gateway-missing/startup/before.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-missing/startup/host.stderr.txt",
+      "path": "raw/continuation/cases/gateway-missing/startup/host.stderr.txt.gz",
+      "originalSha256": "865208943c6a311df4b9c15f60501f458b21dcc8db469b0951a4ae0ab24d0e38",
+      "compressedSha256": "0f9f8d388f87413a11339e395a6ea469b66d7a9deb91acb14561a0ed00d7a4ad",
+      "bytes": 211
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-missing/startup/host.stdout.jsonl",
+      "path": "raw/continuation/cases/gateway-missing/startup/host.stdout.jsonl.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-missing/startup/native-dispatch.json",
+      "path": "raw/continuation/cases/gateway-missing/startup/native-dispatch.json.gz",
+      "originalSha256": "1349daece26ecacdaa41c09250cd7b18d6732893d1707ae0cba72206167db549",
+      "compressedSha256": "290922b7b05c3fcd73b9eb3fb4e6d4b451a07569e0a94b1ceacc1b94d2bce9a9",
+      "bytes": 47
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-missing/startup/prompt.txt",
+      "path": "raw/continuation/cases/gateway-missing/startup/prompt.txt.gz",
+      "originalSha256": "a25629b6cebfc3b288f9c582ffb178689c8d8f7ed237b09858800e45329dfff5",
+      "compressedSha256": "d821b8307c07da696a9b3081c9b806a7f2ee0f9f77d73e1be99f72bfda78ecdc",
+      "bytes": 480
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/gateway-missing/startup/run.json",
+      "path": "raw/continuation/cases/gateway-missing/startup/run.json.gz",
+      "originalSha256": "a529d6ad373f3c68311ddc4f39e26286ac35cae048cfd1b8ac7667c1b2bfa6ba",
+      "compressedSha256": "e95d906cd0195c1c3575177ee20621c414a7f3b7e8c39714d7e08365f283febb",
+      "bytes": 211
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-missing/configuration.redacted.json",
+      "path": "raw/continuation/cases/host-missing/configuration.redacted.json.gz",
+      "originalSha256": "aad44c4358ab9cd56bdcb5002a5b0538f5997cf9b963be59c276bb5e56af8c1c",
+      "compressedSha256": "525a75d6277de06206df93548998e2b77c565ec888388ae1ac9aa5d018525e06",
+      "bytes": 4966
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-missing/final-observation.json",
+      "path": "raw/continuation/cases/host-missing/final-observation.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-missing/startup/after.json",
+      "path": "raw/continuation/cases/host-missing/startup/after.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-missing/startup/before.json",
+      "path": "raw/continuation/cases/host-missing/startup/before.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-missing/startup/host.stderr.txt",
+      "path": "raw/continuation/cases/host-missing/startup/host.stderr.txt.gz",
+      "originalSha256": "1667f508ff9376c23d3888c8a23cd6b9427828074d0d993bfd56d2ff09a95831",
+      "compressedSha256": "b98b5de7bbfad0e1f67f27ed8aa00a10ba065bfeee0533bb824ea6ddb7441c5f",
+      "bytes": 159
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-missing/startup/host.stdout.jsonl",
+      "path": "raw/continuation/cases/host-missing/startup/host.stdout.jsonl.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-missing/startup/native-dispatch.json",
+      "path": "raw/continuation/cases/host-missing/startup/native-dispatch.json.gz",
+      "originalSha256": "1349daece26ecacdaa41c09250cd7b18d6732893d1707ae0cba72206167db549",
+      "compressedSha256": "290922b7b05c3fcd73b9eb3fb4e6d4b451a07569e0a94b1ceacc1b94d2bce9a9",
+      "bytes": 47
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-missing/startup/prompt.txt",
+      "path": "raw/continuation/cases/host-missing/startup/prompt.txt.gz",
+      "originalSha256": "fa065f887512633265405fe325114fe0ba05a915760f9d773ce8c0c6cff4368c",
+      "compressedSha256": "620987cae1ea6f166ff4a0f1bc255f0fdda746ff424178c2cbf6f0c5d925131a",
+      "bytes": 480
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-missing/startup/run.json",
+      "path": "raw/continuation/cases/host-missing/startup/run.json.gz",
+      "originalSha256": "655530257513c330e4c40c468f8675c61e993e9270eb02b116010c643f9f3d12",
+      "compressedSha256": "597705954c28f45c7c571eec0d64705743bf362c9411160d1453014c2476182e",
+      "bytes": 212
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/after-fault-journal.json",
+      "path": "raw/continuation/cases/host-response-loss/after-fault-journal.json.gz",
+      "originalSha256": "4b5c7087b3ee7c0cf2a0acd8905eb1afd5b1f4870b17d7e2c671350c46dd0c0d",
+      "compressedSha256": "089336db5a115182b217deb62db8a032a93e0852c7736bb2ca8ba56792565f2b",
+      "bytes": 5603
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/after-operator-recovery/after.json",
+      "path": "raw/continuation/cases/host-response-loss/after-operator-recovery/after.json.gz",
+      "originalSha256": "c1dae6fa6d77ed9d931d552938454cf0dd37cf88ef523be39825ae99fb378b2c",
+      "compressedSha256": "eea7d9bc3378b47a89397a5a9ed923327c8e5df9e571687712b06030cf070cf3",
+      "bytes": 1435
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/after-operator-recovery/before.json",
+      "path": "raw/continuation/cases/host-response-loss/after-operator-recovery/before.json.gz",
+      "originalSha256": "ad4e50c80b51949795e5153f776a092d5abed6bec3b44d88e4a66ff22f845204",
+      "compressedSha256": "bd280d3526cd83c5d8cdb4edef94a876b45b960bca1f6aaca12e5f0a0a9ee19f",
+      "bytes": 965
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/after-operator-recovery/exit.json",
+      "path": "raw/continuation/cases/host-response-loss/after-operator-recovery/exit.json.gz",
+      "originalSha256": "e2a5db79a4a63e50c6750e25b722e84603f4e58d14b6ddfe523a105a06670b2d",
+      "compressedSha256": "14711eae8da04ca1251893e649148e0e1082d13fa0fc520c56cd591cf3796dda",
+      "bytes": 191
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/after-operator-recovery/host.stderr.txt",
+      "path": "raw/continuation/cases/host-response-loss/after-operator-recovery/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/after-operator-recovery/host.stdout.jsonl",
+      "path": "raw/continuation/cases/host-response-loss/after-operator-recovery/host.stdout.jsonl.gz",
+      "originalSha256": "3975b10eac71d220bcf8119342339e539bca90d9662bf3172ccd55f30a110881",
+      "compressedSha256": "39482d1694b0cd634aa9b0d3a71e27e9c3cd5de892dedcfb21f40d2c8847d4d6",
+      "bytes": 14035
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/after-operator-recovery/launch.json",
+      "path": "raw/continuation/cases/host-response-loss/after-operator-recovery/launch.json.gz",
+      "originalSha256": "2864d29a4d50c323d10c55ed2f537d01ef991284edcdf636465a478211d0c030",
+      "compressedSha256": "9d03316f5ac7009a94c0c82a806f43ed4ac851dc40ba89fc7550b8da0fe7ece3",
+      "bytes": 923
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/after-operator-recovery/model-relay.json",
+      "path": "raw/continuation/cases/host-response-loss/after-operator-recovery/model-relay.json.gz",
+      "originalSha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "compressedSha256": "8584ac7ef7ed7294d347ec9f3246e410a09e60e439c99a1c0e5450d4cc53f548",
+      "bytes": 1027
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/after-operator-recovery/native-dispatch.json",
+      "path": "raw/continuation/cases/host-response-loss/after-operator-recovery/native-dispatch.json.gz",
+      "originalSha256": "0a06d006e795cd2becc4f354b13e6dc86ac3d6c5b5e865ef74d69fae48260240",
+      "compressedSha256": "1c3259204a2842737bf19fcf2137ac525d3a91c4b2889e0bd89f4582b59c6bea",
+      "bytes": 287
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/after-operator-recovery/prompt.txt",
+      "path": "raw/continuation/cases/host-response-loss/after-operator-recovery/prompt.txt.gz",
+      "originalSha256": "4f3479eaeb45633d23ab87995c024a010b755eda8a0373cb4f52f1b88642a1bc",
+      "compressedSha256": "83f632c5144d95c48a9b5fb15e2854e805fd670c4f3b914f96ef43382aa86db8",
+      "bytes": 447
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/after-operator-recovery/run.json",
+      "path": "raw/continuation/cases/host-response-loss/after-operator-recovery/run.json.gz",
+      "originalSha256": "268193b9d8c56def656557ec5c5bf3f1de4d62354748f20f5bae832c26ce9ea3",
+      "compressedSha256": "efaa86d549d33b683e46ef9db85f6bfe0de26fbeeda48cba48c34af917d6b4d6",
+      "bytes": 504
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/after-recovery-journal.json",
+      "path": "raw/continuation/cases/host-response-loss/after-recovery-journal.json.gz",
+      "originalSha256": "115ff595fbce177e305bd8adbe9beacfce73e45d3347ec2d3a5ec5f8811ff6c7",
+      "compressedSha256": "0c75c8afacaa97f964bdb818efa8bbeb596f04eed76011a5d739e8ab4902353c",
+      "bytes": 11089
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/configuration.redacted.json",
+      "path": "raw/continuation/cases/host-response-loss/configuration.redacted.json.gz",
+      "originalSha256": "fc1f4deac655446eac6fb87b0f8a38a4a256e33b4426e6faf06385a087e5ff9d",
+      "compressedSha256": "b9c46ec930a757acca1e1becd0515a069e9abb1a03074e42fc50ad77675f271e",
+      "bytes": 4972
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/fault/after.json",
+      "path": "raw/continuation/cases/host-response-loss/fault/after.json.gz",
+      "originalSha256": "ad4e50c80b51949795e5153f776a092d5abed6bec3b44d88e4a66ff22f845204",
+      "compressedSha256": "bd280d3526cd83c5d8cdb4edef94a876b45b960bca1f6aaca12e5f0a0a9ee19f",
+      "bytes": 965
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/fault/before.json",
+      "path": "raw/continuation/cases/host-response-loss/fault/before.json.gz",
+      "originalSha256": "59bc5d82c3dc59549b1c2ec2925194e6e07374bcc604d86b6ccd5d3e2bcbde44",
+      "compressedSha256": "9efb57f4e4083e3cd095f73b405a5474ec8a33da4a9898cae38533cdd3a58c7b",
+      "bytes": 299
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/fault/exit.json",
+      "path": "raw/continuation/cases/host-response-loss/fault/exit.json.gz",
+      "originalSha256": "f3bc8161f2514d1da92b27682e7d6b5d9090c3894abb794eb789f8f4db0643fe",
+      "compressedSha256": "6049cd3df62b765abb9a5f64338c1b6ada45011ef9e0fd54d67074d644da8ace",
+      "bytes": 191
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/fault/fault-identity.json",
+      "path": "raw/continuation/cases/host-response-loss/fault/fault-identity.json.gz",
+      "originalSha256": "638f29d956c0628a7f150b49d50457ae2fc0bbd68daf5a0d6efd2772f65dc5d0",
+      "compressedSha256": "0bcd9003f3e5fecdb156d9d03ebbef547459e2ebaa43725dfaeae19c042a935d",
+      "bytes": 262
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/fault/fault.jsonl",
+      "path": "raw/continuation/cases/host-response-loss/fault/fault.jsonl.gz",
+      "originalSha256": "67b1c59b1d6957d85976f789c99339a07bc8920ca47d6133de21b273ceb55301",
+      "compressedSha256": "198e659800022a9227b3c74ec0c7a7a8da093aded8ce8ff69f512705b96d1b57",
+      "bytes": 399
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/fault/host.stderr.txt",
+      "path": "raw/continuation/cases/host-response-loss/fault/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/fault/host.stdout.jsonl",
+      "path": "raw/continuation/cases/host-response-loss/fault/host.stdout.jsonl.gz",
+      "originalSha256": "99286496b56fcb0d1c718ed63dc31c8646a2f1caf4e31055ef92a0e125e86342",
+      "compressedSha256": "f292aa86c6a1cd57fa31bbf5c73811b06afbcd36dbe1cff5d819700c2a40579c",
+      "bytes": 5677
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/fault/launch.json",
+      "path": "raw/continuation/cases/host-response-loss/fault/launch.json.gz",
+      "originalSha256": "0f135cacbfb4c802cb9879d188123239962fad7cf68104ecfb44de771949e46d",
+      "compressedSha256": "8a51abfd244af041d1546a7720733a26db162154552559adfb0f517741046edf",
+      "bytes": 923
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/fault/model-relay.json",
+      "path": "raw/continuation/cases/host-response-loss/fault/model-relay.json.gz",
+      "originalSha256": "b278954f161340fdc2f2f702518e0349d8e1c6cca80debbd50cf3f27aebe04fc",
+      "compressedSha256": "b5036321370448e448c7dd70509792f639f375ac7bd5f3f2fa814437fd586a66",
+      "bytes": 735
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/fault/native-dispatch.json",
+      "path": "raw/continuation/cases/host-response-loss/fault/native-dispatch.json.gz",
+      "originalSha256": "6e92ee8f99bbffefb9d99b3c80780972ffb92fbcdb38c4d9107ffb26abcda8c6",
+      "compressedSha256": "ceadc0172f2ef48d3eaf56a099250421e55eef0f101563d48ab508a63853ed38",
+      "bytes": 330
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/fault/prompt.txt",
+      "path": "raw/continuation/cases/host-response-loss/fault/prompt.txt.gz",
+      "originalSha256": "0744f73546727781c5fd96f3588dfa3e552c1e05fc01d9ff0f3ad84f41e602a3",
+      "compressedSha256": "b96282aa5802c93aa0788439ecb90ee9e49019bd887c5c297c00b52cbdc446b9",
+      "bytes": 482
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/fault/run.json",
+      "path": "raw/continuation/cases/host-response-loss/fault/run.json.gz",
+      "originalSha256": "80dd6377e860392a1b25abd8c7f0999c2721bb6c88f60d1921d1a5e7064de2aa",
+      "compressedSha256": "40d16834960ee2fe1a82c59a505b79b96bf437f60b346dd815f3ebbd25d0199e",
+      "bytes": 485
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/final-observation.json",
+      "path": "raw/continuation/cases/host-response-loss/final-observation.json.gz",
+      "originalSha256": "c1dae6fa6d77ed9d931d552938454cf0dd37cf88ef523be39825ae99fb378b2c",
+      "compressedSha256": "eea7d9bc3378b47a89397a5a9ed923327c8e5df9e571687712b06030cf070cf3",
+      "bytes": 1435
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/operator-acknowledgement.json",
+      "path": "raw/continuation/cases/host-response-loss/operator-acknowledgement.json.gz",
+      "originalSha256": "7a38f07eed957508fbcb6079f5e0cac3fc2c105c44bb41c766ca85d61ee4f67f",
+      "compressedSha256": "a0c1931877b25280f6fdbef7b1a79239012635d0926a7e8dd255c406d2029853",
+      "bytes": 260
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/operator-export.json",
+      "path": "raw/continuation/cases/host-response-loss/operator-export.json.gz",
+      "originalSha256": "ed01e0b81d17363aee68d73b203ce69dced76847373f7dc993923bb6bdd479a0",
+      "compressedSha256": "bf78ff235f8c1b305e1c3cb0a07dbdc5203cbadd054133f976f78310951dfb85",
+      "bytes": 384
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/restart-fenced/after.json",
+      "path": "raw/continuation/cases/host-response-loss/restart-fenced/after.json.gz",
+      "originalSha256": "ad4e50c80b51949795e5153f776a092d5abed6bec3b44d88e4a66ff22f845204",
+      "compressedSha256": "bd280d3526cd83c5d8cdb4edef94a876b45b960bca1f6aaca12e5f0a0a9ee19f",
+      "bytes": 965
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/restart-fenced/before.json",
+      "path": "raw/continuation/cases/host-response-loss/restart-fenced/before.json.gz",
+      "originalSha256": "ad4e50c80b51949795e5153f776a092d5abed6bec3b44d88e4a66ff22f845204",
+      "compressedSha256": "bd280d3526cd83c5d8cdb4edef94a876b45b960bca1f6aaca12e5f0a0a9ee19f",
+      "bytes": 965
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/restart-fenced/exit.json",
+      "path": "raw/continuation/cases/host-response-loss/restart-fenced/exit.json.gz",
+      "originalSha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "compressedSha256": "1bf3b17c92a2c47ec390029bbd05fe7f503202f31bcc3b0b80f3a8805794215f",
+      "bytes": 192
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/restart-fenced/host.stderr.txt",
+      "path": "raw/continuation/cases/host-response-loss/restart-fenced/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/restart-fenced/host.stdout.jsonl",
+      "path": "raw/continuation/cases/host-response-loss/restart-fenced/host.stdout.jsonl.gz",
+      "originalSha256": "fd7c02251bdd9bcf37b26060e2b2d7fc24c25089cd32785e2e6207b960c3516b",
+      "compressedSha256": "995b91f67d58a7bc803399b63bd72c40d357a0e38183dacc02dc6e31711acb3d",
+      "bytes": 7784
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/restart-fenced/launch.json",
+      "path": "raw/continuation/cases/host-response-loss/restart-fenced/launch.json.gz",
+      "originalSha256": "f24078c6f87f9518e7a6e864dae23e5001d2e8ddabcbee64e8494868469e9511",
+      "compressedSha256": "e320cfbb977d293bca01865ac829b925c8a11b66ebad2beeccd8d25494c68e77",
+      "bytes": 923
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/restart-fenced/model-relay.json",
+      "path": "raw/continuation/cases/host-response-loss/restart-fenced/model-relay.json.gz",
+      "originalSha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "compressedSha256": "8584ac7ef7ed7294d347ec9f3246e410a09e60e439c99a1c0e5450d4cc53f548",
+      "bytes": 1027
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/restart-fenced/native-dispatch.json",
+      "path": "raw/continuation/cases/host-response-loss/restart-fenced/native-dispatch.json.gz",
+      "originalSha256": "b47b3e97ef107b9b5cbd3d24d5134a6de709d2b998ef9240f310dce92f089452",
+      "compressedSha256": "0f259a0c334e4d08dd62f26bdc29042b11dd1421ffd065fa107b6a747891cd85",
+      "bytes": 336
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/restart-fenced/prompt.txt",
+      "path": "raw/continuation/cases/host-response-loss/restart-fenced/prompt.txt.gz",
+      "originalSha256": "0783088b1b4848863db73bf4cadf0857f268d1dbf605a076a9b30c2b309fa6ff",
+      "compressedSha256": "1ca54db0bb8613dac2b3f70e445d3527489e8c5ba777ee51f6081ec054b33b1a",
+      "bytes": 488
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/host-response-loss/restart-fenced/run.json",
+      "path": "raw/continuation/cases/host-response-loss/restart-fenced/run.json.gz",
+      "originalSha256": "7826f86a6b37756392e6ce0606c1bd4403790b3d9eef11199c3933a86b5b473c",
+      "compressedSha256": "7d8c0c48bc0ce6bd7ed815b7d780980e9ca078c2500e6919ad4811ded28da734",
+      "bytes": 496
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/identity.json",
+      "path": "raw/continuation/cases/identity.json.gz",
+      "originalSha256": "0b728a554d9874467a52950032cabcaff7b06dd5cd0f83f2e3a142194ded18b1",
+      "compressedSha256": "340b9a06d00c6504f9d21b92f390540636e8a7ec0bed83a008dd52866f4dcf71",
+      "bytes": 1577
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-crash/configuration.redacted.json",
+      "path": "raw/continuation/cases/init-crash/configuration.redacted.json.gz",
+      "originalSha256": "813e746b251cc84687882aa27e00ce1a385070d56162296ff4eb8cbea304fda7",
+      "compressedSha256": "fd0c0902831c34266057f73a60b916022f2ec71cc7319c051d53d0b607305e90",
+      "bytes": 4964
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-crash/final-observation.json",
+      "path": "raw/continuation/cases/init-crash/final-observation.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-crash/startup/after.json",
+      "path": "raw/continuation/cases/init-crash/startup/after.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-crash/startup/before.json",
+      "path": "raw/continuation/cases/init-crash/startup/before.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-crash/startup/host.stderr.txt",
+      "path": "raw/continuation/cases/init-crash/startup/host.stderr.txt.gz",
+      "originalSha256": "8c3c0554ab80d4294dc44ebbde9f8a8a23b9f308ad0e21291e102bafea40b48d",
+      "compressedSha256": "e830e4a9952faf6747c07b7ee94e069d41679bb587d6465cfc37a7e70758e9e1",
+      "bytes": 1060
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-crash/startup/host.stdout.jsonl",
+      "path": "raw/continuation/cases/init-crash/startup/host.stdout.jsonl.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-crash/startup/launch.json",
+      "path": "raw/continuation/cases/init-crash/startup/launch.json.gz",
+      "originalSha256": "fe6c75966eaccf7029dc2088b95ccddcfd33ae51b16262c8029582d65ec8d71e",
+      "compressedSha256": "13172815dc8e8a3544fbe215ecc7646def3ab25401b21e29e393ee384b1a7d02",
+      "bytes": 923
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-crash/startup/native-dispatch.json",
+      "path": "raw/continuation/cases/init-crash/startup/native-dispatch.json.gz",
+      "originalSha256": "1349daece26ecacdaa41c09250cd7b18d6732893d1707ae0cba72206167db549",
+      "compressedSha256": "290922b7b05c3fcd73b9eb3fb4e6d4b451a07569e0a94b1ceacc1b94d2bce9a9",
+      "bytes": 47
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-crash/startup/prompt.txt",
+      "path": "raw/continuation/cases/init-crash/startup/prompt.txt.gz",
+      "originalSha256": "d9dedcfa28f0babaeaee86e1be77365af26e421793537227b9cb53cbb2ca8802",
+      "compressedSha256": "5f96366278b9f3024fd7211d116c326943b2de06adec4b12810edbd772c1821c",
+      "bytes": 480
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-crash/startup/run.json",
+      "path": "raw/continuation/cases/init-crash/startup/run.json.gz",
+      "originalSha256": "5cc441dde01c115e3628515ed0ed8985ec0f2d327990c82acb148af23ec7cb10",
+      "compressedSha256": "005669c87d04f3e3eabeaf916843bfc7ac5e844b13d3b81dd53b2773176e17d8",
+      "bytes": 212
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-crash/startup-fault-identity.json",
+      "path": "raw/continuation/cases/init-crash/startup-fault-identity.json.gz",
+      "originalSha256": "f5b24fc1bd92a43726a167615aae9427f5f4da46dba49cf490377a61f63bef49",
+      "compressedSha256": "7dbf877dc502f158bbd1982591c45971ef1da0b5b16a296c2926d39f4084f0da",
+      "bytes": 234
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-crash/startup-fault.jsonl",
+      "path": "raw/continuation/cases/init-crash/startup-fault.jsonl.gz",
+      "originalSha256": "5e0f04df858e04d81bac9d2abe66d6e83865d12c1b04dd248f9c7cb2060aa2dd",
+      "compressedSha256": "8b79acf6f88d7f30a28b0946316f384edf48f72f2073928ffc551ef6e5dc43fd",
+      "bytes": 120
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-malformed/configuration.redacted.json",
+      "path": "raw/continuation/cases/init-malformed/configuration.redacted.json.gz",
+      "originalSha256": "24c961fbaf315d67554f425807200d3ba3534c205375b433c71c54d2fa020616",
+      "compressedSha256": "1a76b97ae201306b40c5be82bf130df47bfcc3b42055602f60276341b6de38e0",
+      "bytes": 4968
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-malformed/final-observation.json",
+      "path": "raw/continuation/cases/init-malformed/final-observation.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-malformed/startup/after.json",
+      "path": "raw/continuation/cases/init-malformed/startup/after.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-malformed/startup/before.json",
+      "path": "raw/continuation/cases/init-malformed/startup/before.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-malformed/startup/exit.json",
+      "path": "raw/continuation/cases/init-malformed/startup/exit.json.gz",
+      "originalSha256": "cc4665b80d0cccd6932868d14374310627ba706a0ff4d8d817c84a533fbe8390",
+      "compressedSha256": "8c46cd425160f4d8cb6abdaa55d2d497e6c153112a1a4778f7f5b3595941c326",
+      "bytes": 210
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-malformed/startup/host.stderr.txt",
+      "path": "raw/continuation/cases/init-malformed/startup/host.stderr.txt.gz",
+      "originalSha256": "e399b1477642417bd5c39795533e1b8efdf4b0dfcb426f23a215fcf59547ebb2",
+      "compressedSha256": "b1290a9fb29ddd321e3e3bfdb027063aa9a3bb4b5fb7fad5f978ea118e282197",
+      "bytes": 72
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-malformed/startup/host.stdout.jsonl",
+      "path": "raw/continuation/cases/init-malformed/startup/host.stdout.jsonl.gz",
+      "originalSha256": "2a9e3285bb15cdfbe11c060c3122e85ba10110bb6385a60be1b4428d5e3066e5",
+      "compressedSha256": "7b5d07ba19a99113e30a94e15e99190e59c7349190865b2bd010536e830eb86a",
+      "bytes": 770
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-malformed/startup/launch.json",
+      "path": "raw/continuation/cases/init-malformed/startup/launch.json.gz",
+      "originalSha256": "9b8912cbbd4b8f05521f0c259cd90ee10f3a8ef3f01aca238fce89abe9c05cb0",
+      "compressedSha256": "6197cd3e599866a59729c86a95937cc6ffd6cddfe672169a048e7357175d4dcf",
+      "bytes": 923
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-malformed/startup/model-relay.json",
+      "path": "raw/continuation/cases/init-malformed/startup/model-relay.json.gz",
+      "originalSha256": "c5e01897759ae9b98f59889974441343b858512d3c5ccfa47be490bcdf0a53cd",
+      "compressedSha256": "d37cb3558f23b86700f1171e8227a29da5fbd6167afdd757f704484e6982e498",
+      "bytes": 465
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-malformed/startup/native-dispatch.json",
+      "path": "raw/continuation/cases/init-malformed/startup/native-dispatch.json.gz",
+      "originalSha256": "1349daece26ecacdaa41c09250cd7b18d6732893d1707ae0cba72206167db549",
+      "compressedSha256": "290922b7b05c3fcd73b9eb3fb4e6d4b451a07569e0a94b1ceacc1b94d2bce9a9",
+      "bytes": 47
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-malformed/startup/prompt.txt",
+      "path": "raw/continuation/cases/init-malformed/startup/prompt.txt.gz",
+      "originalSha256": "9c5db0024abd7e4f658619f4a32b0ee2ff625688f65bc1543954b762c53dd4d6",
+      "compressedSha256": "6b5ed096f76cff36c2037355ec3782ed4ce354162812bb1a7eb5a0fd5e5819fd",
+      "bytes": 480
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-malformed/startup/run.json",
+      "path": "raw/continuation/cases/init-malformed/startup/run.json.gz",
+      "originalSha256": "d3eb0c5d68c3d1d2accb5d67c9d6a6f93820086ab973d797ed02e4e306fd59c0",
+      "compressedSha256": "4676403d581874ab9fd56be167d4bc889f883377d22237c7880c534fdbc85bc1",
+      "bytes": 507
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-malformed/startup-fault-identity.json",
+      "path": "raw/continuation/cases/init-malformed/startup-fault-identity.json.gz",
+      "originalSha256": "f5b24fc1bd92a43726a167615aae9427f5f4da46dba49cf490377a61f63bef49",
+      "compressedSha256": "7dbf877dc502f158bbd1982591c45971ef1da0b5b16a296c2926d39f4084f0da",
+      "bytes": 234
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-malformed/startup-fault.jsonl",
+      "path": "raw/continuation/cases/init-malformed/startup-fault.jsonl.gz",
+      "originalSha256": "297cba8e878144bffa72068edb784be53b3e62980c6214607bb16a1a9e020767",
+      "compressedSha256": "c5ec43ac189f2b736b773d421991f351a5661fa374407154886c335dd8be31a4",
+      "bytes": 124
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-timeout/configuration.redacted.json",
+      "path": "raw/continuation/cases/init-timeout/configuration.redacted.json.gz",
+      "originalSha256": "2dd91b0c1319cc5793aa952dc77ce2979852b87dab7147461b38bb39957ca606",
+      "compressedSha256": "7e014394479c70b3b53d989a37d663727a798653c0241b86818f4dd2cfb10784",
+      "bytes": 4966
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-timeout/final-observation.json",
+      "path": "raw/continuation/cases/init-timeout/final-observation.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-timeout/startup/after.json",
+      "path": "raw/continuation/cases/init-timeout/startup/after.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-timeout/startup/before.json",
+      "path": "raw/continuation/cases/init-timeout/startup/before.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-timeout/startup/exit.json",
+      "path": "raw/continuation/cases/init-timeout/startup/exit.json.gz",
+      "originalSha256": "cc4665b80d0cccd6932868d14374310627ba706a0ff4d8d817c84a533fbe8390",
+      "compressedSha256": "8c46cd425160f4d8cb6abdaa55d2d497e6c153112a1a4778f7f5b3595941c326",
+      "bytes": 210
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-timeout/startup/host.stderr.txt",
+      "path": "raw/continuation/cases/init-timeout/startup/host.stderr.txt.gz",
+      "originalSha256": "e399b1477642417bd5c39795533e1b8efdf4b0dfcb426f23a215fcf59547ebb2",
+      "compressedSha256": "b1290a9fb29ddd321e3e3bfdb027063aa9a3bb4b5fb7fad5f978ea118e282197",
+      "bytes": 72
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-timeout/startup/host.stdout.jsonl",
+      "path": "raw/continuation/cases/init-timeout/startup/host.stdout.jsonl.gz",
+      "originalSha256": "32718ddebb24ae83eb0d89759cd7edcbbfe3c8e4343efaa8af696109a6a1ec6f",
+      "compressedSha256": "dfb69fdd0a1ac5e7623cd2e8b1646ac78c1435b1bf008d3d3ff0b79c02638559",
+      "bytes": 771
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-timeout/startup/launch.json",
+      "path": "raw/continuation/cases/init-timeout/startup/launch.json.gz",
+      "originalSha256": "92e9aefd98e2b2af4030bb263acfd8c6dd1d9758f0711f39d218e588b97aa4d6",
+      "compressedSha256": "6a32f9eb40ab2572d2d8d2fd1d3a60485942566d0b4f854cfd30a73aecdc4909",
+      "bytes": 923
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-timeout/startup/model-relay.json",
+      "path": "raw/continuation/cases/init-timeout/startup/model-relay.json.gz",
+      "originalSha256": "c5e01897759ae9b98f59889974441343b858512d3c5ccfa47be490bcdf0a53cd",
+      "compressedSha256": "d37cb3558f23b86700f1171e8227a29da5fbd6167afdd757f704484e6982e498",
+      "bytes": 465
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-timeout/startup/native-dispatch.json",
+      "path": "raw/continuation/cases/init-timeout/startup/native-dispatch.json.gz",
+      "originalSha256": "1349daece26ecacdaa41c09250cd7b18d6732893d1707ae0cba72206167db549",
+      "compressedSha256": "290922b7b05c3fcd73b9eb3fb4e6d4b451a07569e0a94b1ceacc1b94d2bce9a9",
+      "bytes": 47
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-timeout/startup/prompt.txt",
+      "path": "raw/continuation/cases/init-timeout/startup/prompt.txt.gz",
+      "originalSha256": "6323d1f76a2cd63413652580f9c3fa1aea7575c59e1eef94c97c4dc58cc0ed79",
+      "compressedSha256": "f5b1ee37da19e0bf58fd8e13884948563e57f645291fb2430890f6aa6c778035",
+      "bytes": 480
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-timeout/startup/run.json",
+      "path": "raw/continuation/cases/init-timeout/startup/run.json.gz",
+      "originalSha256": "7f891937f0766333c48c1cd4267d7f35691475de6481b4e7e200b45f976e0cb9",
+      "compressedSha256": "97f20144998e9b35b591a3513117239d26120e31b22070b448385978cb7c4ec4",
+      "bytes": 508
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-timeout/startup-fault-identity.json",
+      "path": "raw/continuation/cases/init-timeout/startup-fault-identity.json.gz",
+      "originalSha256": "f5b24fc1bd92a43726a167615aae9427f5f4da46dba49cf490377a61f63bef49",
+      "compressedSha256": "7dbf877dc502f158bbd1982591c45971ef1da0b5b16a296c2926d39f4084f0da",
+      "bytes": 234
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/init-timeout/startup-fault.jsonl",
+      "path": "raw/continuation/cases/init-timeout/startup-fault.jsonl.gz",
+      "originalSha256": "28a9e3d573ba4a8592a6231ab7aaf67a707f4a78164b487e034e39970d82d5be",
+      "compressedSha256": "4a35f0a77bbc10f97358c9fde54b33787ea42d8e7ffb14d5259f2c5af1f2d854",
+      "bytes": 122
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/installed-archive-files.json",
+      "path": "raw/continuation/cases/installed-archive-files.json.gz",
+      "originalSha256": "343cbb2559223a0c863976807f1c85d602738f1be22b04f165d8dfb2a731163a",
+      "compressedSha256": "8b34a9b2612e7ba9f7e71c42a7b85339f0a1cbe612b7b99f52470c589c1dba09",
+      "bytes": 207958
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/mcp-silent-omission/configuration.redacted.json",
+      "path": "raw/continuation/cases/mcp-silent-omission/configuration.redacted.json.gz",
+      "originalSha256": "1c0881a5ef3266c4fe2ea85524b4dec9ca4939908d64a50ce2ec3a65f59c850a",
+      "compressedSha256": "6bed065368dc0ad43c1c7ba76e26fc6e17fcca21dc779c3ce82b7daee184112e",
+      "bytes": 4973
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/mcp-silent-omission/final-observation.json",
+      "path": "raw/continuation/cases/mcp-silent-omission/final-observation.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/mcp-silent-omission/omit-native-mcp.mjs",
+      "path": "raw/continuation/cases/mcp-silent-omission/omit-native-mcp.mjs.gz",
+      "originalSha256": "d0c9705c6bdadcaf7c19f022a0b01a3dc7c8eb7cb5678eb49cdd2d19edf9347e",
+      "compressedSha256": "992fc7deba6870647ffbe1d7c28b0ad35c6cba356e14f4e6b44f1d8573a91b5a",
+      "bytes": 808
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/mcp-silent-omission/startup/after.json",
+      "path": "raw/continuation/cases/mcp-silent-omission/startup/after.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/mcp-silent-omission/startup/before.json",
+      "path": "raw/continuation/cases/mcp-silent-omission/startup/before.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/mcp-silent-omission/startup/exit.json",
+      "path": "raw/continuation/cases/mcp-silent-omission/startup/exit.json.gz",
+      "originalSha256": "cc4665b80d0cccd6932868d14374310627ba706a0ff4d8d817c84a533fbe8390",
+      "compressedSha256": "8c46cd425160f4d8cb6abdaa55d2d497e6c153112a1a4778f7f5b3595941c326",
+      "bytes": 210
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/mcp-silent-omission/startup/host.stderr.txt",
+      "path": "raw/continuation/cases/mcp-silent-omission/startup/host.stderr.txt.gz",
+      "originalSha256": "e399b1477642417bd5c39795533e1b8efdf4b0dfcb426f23a215fcf59547ebb2",
+      "compressedSha256": "b1290a9fb29ddd321e3e3bfdb027063aa9a3bb4b5fb7fad5f978ea118e282197",
+      "bytes": 72
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/mcp-silent-omission/startup/host.stdout.jsonl",
+      "path": "raw/continuation/cases/mcp-silent-omission/startup/host.stdout.jsonl.gz",
+      "originalSha256": "3c1f5c7eca68622c85d31d613f57126ee7f3ab2a28bdbc2efe007192f3695079",
+      "compressedSha256": "3dd1f7cf3c2a10fa40b763dabf127523af90a835560c20329acad1812c9260b3",
+      "bytes": 737
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/mcp-silent-omission/startup/launch.json",
+      "path": "raw/continuation/cases/mcp-silent-omission/startup/launch.json.gz",
+      "originalSha256": "b3fcb0e7046ecf28c0408d966151bfaaf07ddc790bc646ef11b0daac4c3d6ab3",
+      "compressedSha256": "3615f48907d5cde1285fd20287f0382bfc80069e51a5d9c84bf0c031a2c80d67",
+      "bytes": 923
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/mcp-silent-omission/startup/model-relay.json",
+      "path": "raw/continuation/cases/mcp-silent-omission/startup/model-relay.json.gz",
+      "originalSha256": "c5e01897759ae9b98f59889974441343b858512d3c5ccfa47be490bcdf0a53cd",
+      "compressedSha256": "d37cb3558f23b86700f1171e8227a29da5fbd6167afdd757f704484e6982e498",
+      "bytes": 465
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/mcp-silent-omission/startup/native-dispatch.json",
+      "path": "raw/continuation/cases/mcp-silent-omission/startup/native-dispatch.json.gz",
+      "originalSha256": "1349daece26ecacdaa41c09250cd7b18d6732893d1707ae0cba72206167db549",
+      "compressedSha256": "290922b7b05c3fcd73b9eb3fb4e6d4b451a07569e0a94b1ceacc1b94d2bce9a9",
+      "bytes": 47
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/mcp-silent-omission/startup/prompt.txt",
+      "path": "raw/continuation/cases/mcp-silent-omission/startup/prompt.txt.gz",
+      "originalSha256": "f9594a85c2ef98bf401747efc00038cbb3162fd6a6abd0d53f9568773d5904ce",
+      "compressedSha256": "99c4e4efbed4369fe526a973953d10167480754bbe878b6f6304e5502cd1ff82",
+      "bytes": 480
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/mcp-silent-omission/startup/run.json",
+      "path": "raw/continuation/cases/mcp-silent-omission/startup/run.json.gz",
+      "originalSha256": "04adae062f17824a276190d41b8e7f3b269be174367aeca40e6cee2156447956",
+      "compressedSha256": "1b38e32e88064ee40e19aebc8f6558ddcd5e86af941426fb54290fed1fe505c1",
+      "bytes": 507
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/mcp-silent-omission/startup-fault-identity.json",
+      "path": "raw/continuation/cases/mcp-silent-omission/startup-fault-identity.json.gz",
+      "originalSha256": "b38abefa0320fe6b0dae92a2998c8691ae35401d9dea190298c5fa383c16035a",
+      "compressedSha256": "1f5125f82a1934a59ea53e5513e1cfdcb3601bfa22bf34b05beb979ba2ef9df3",
+      "bytes": 194
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/mcp-silent-omission/startup-fault.jsonl",
+      "path": "raw/continuation/cases/mcp-silent-omission/startup-fault.jsonl.gz",
+      "originalSha256": "abdd1dcdac53f13a45c783f785f15df64f05c2bbda05f44a7fa8ba3d0b0cc78e",
+      "compressedSha256": "a1c166f657c2c02fc831ffbeade441f98e02ebcc11a6ab171d8ac586cfe1c295",
+      "bytes": 99
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/plugin-omitted/configuration.redacted.json",
+      "path": "raw/continuation/cases/plugin-omitted/configuration.redacted.json.gz",
+      "originalSha256": "f9723af39e6f689b27f4802f70f82f4ad8ad5d4aaf294bd7c6c2e9e745fa2fa1",
+      "compressedSha256": "a488ce731799af980d5d31d0730f76d3b835eb0f2c3033879c45a91f76be9f14",
+      "bytes": 4968
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/plugin-omitted/final-observation.json",
+      "path": "raw/continuation/cases/plugin-omitted/final-observation.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/plugin-omitted/install-installed-archive-files.json",
+      "path": "raw/continuation/cases/plugin-omitted/install-installed-archive-files.json.gz",
+      "originalSha256": "343cbb2559223a0c863976807f1c85d602738f1be22b04f165d8dfb2a731163a",
+      "compressedSha256": "8b34a9b2612e7ba9f7e71c42a7b85339f0a1cbe612b7b99f52470c589c1dba09",
+      "bytes": 207958
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/plugin-omitted/install.json",
+      "path": "raw/continuation/cases/plugin-omitted/install.json.gz",
+      "originalSha256": "f45a449f3a44ebaff57186bf305aa190ad573643087f0875e68a88cdcc772b61",
+      "compressedSha256": "4fe925e02b6e1df2e477a189bb0d43261f62c7cbb8815d51ec6521d6f670ae71",
+      "bytes": 380
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/plugin-omitted/omission.json",
+      "path": "raw/continuation/cases/plugin-omitted/omission.json.gz",
+      "originalSha256": "7e2c75b620af3f09e3508ed41f9e540283c55ab22cf5d55f0a75c4683222a2c9",
+      "compressedSha256": "9167449eb21f251243104789ced5d7ad1369270cb74ffbcff379c9ccfe8f0703",
+      "bytes": 267
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/plugin-omitted/startup/after.json",
+      "path": "raw/continuation/cases/plugin-omitted/startup/after.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/plugin-omitted/startup/before.json",
+      "path": "raw/continuation/cases/plugin-omitted/startup/before.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/plugin-omitted/startup/host.stderr.txt",
+      "path": "raw/continuation/cases/plugin-omitted/startup/host.stderr.txt.gz",
+      "originalSha256": "913faea4bf7d905eff360bc13fdbe7e4f6611806ce9b8695f57dc2743ad27572",
+      "compressedSha256": "b7fcfbdd26b376eda3d9521d67548426158d1c2d82b09b24d52a8c3dc5c0fbb2",
+      "bytes": 1387
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/plugin-omitted/startup/host.stdout.jsonl",
+      "path": "raw/continuation/cases/plugin-omitted/startup/host.stdout.jsonl.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/plugin-omitted/startup/native-dispatch.json",
+      "path": "raw/continuation/cases/plugin-omitted/startup/native-dispatch.json.gz",
+      "originalSha256": "1349daece26ecacdaa41c09250cd7b18d6732893d1707ae0cba72206167db549",
+      "compressedSha256": "290922b7b05c3fcd73b9eb3fb4e6d4b451a07569e0a94b1ceacc1b94d2bce9a9",
+      "bytes": 47
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/plugin-omitted/startup/prompt.txt",
+      "path": "raw/continuation/cases/plugin-omitted/startup/prompt.txt.gz",
+      "originalSha256": "d36e7ce71cf12bb77695941c629d88b48522c609d5a3a94ddea7c5b8c347833f",
+      "compressedSha256": "238413be8f1acf0bbec508611e114364cf4a6877e2fd89ffd68ec4c4c9c6358c",
+      "bytes": 480
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/plugin-omitted/startup/run.json",
+      "path": "raw/continuation/cases/plugin-omitted/startup/run.json.gz",
+      "originalSha256": "adf4a6833eb0daf33caf01abc4b4bb3e2cdb6b0fd92da3f26330a3a8e150fe49",
+      "compressedSha256": "ba95e3ef7cb4851526181651c3e0ef60ced0a4bb58ac394a375aa0bf52d2d752",
+      "bytes": 212
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/results.json",
+      "path": "raw/continuation/cases/results.json.gz",
+      "originalSha256": "d4ea861a150c65524aabece59181c6d50e6ce92f6de35d383a58e46d438707c8",
+      "compressedSha256": "9d57d2567db6078cece15fdef44af30b9b69ca07466eddf878a1f3dda1be3ecd",
+      "bytes": 3659
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/after-fault-journal.json",
+      "path": "raw/continuation/cases/sigterm-recovery/after-fault-journal.json.gz",
+      "originalSha256": "4b4263a2761588be0b171a427bef891e1115d8aea1d826f8797794f3e23188fe",
+      "compressedSha256": "69aa154d01eeacf7e59604ccf2cbc2dd6fe3d99c0a0b0c7bac143a77dbfa3dcc",
+      "bytes": 5603
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/after-operator-recovery/after.json",
+      "path": "raw/continuation/cases/sigterm-recovery/after-operator-recovery/after.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/after-operator-recovery/before.json",
+      "path": "raw/continuation/cases/sigterm-recovery/after-operator-recovery/before.json.gz",
+      "originalSha256": "a94ed07d80b52b80ef79c2e103deef0774cc453837693183b59d30406b155f93",
+      "compressedSha256": "089737998600c3e88d7f0b84823c1dd370b5c423ded81e941910b0408ce05a51",
+      "bytes": 3233
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/after-operator-recovery/exit.json",
+      "path": "raw/continuation/cases/sigterm-recovery/after-operator-recovery/exit.json.gz",
+      "originalSha256": "e2a5db79a4a63e50c6750e25b722e84603f4e58d14b6ddfe523a105a06670b2d",
+      "compressedSha256": "14711eae8da04ca1251893e649148e0e1082d13fa0fc520c56cd591cf3796dda",
+      "bytes": 191
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/after-operator-recovery/host.stderr.txt",
+      "path": "raw/continuation/cases/sigterm-recovery/after-operator-recovery/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/after-operator-recovery/host.stdout.jsonl",
+      "path": "raw/continuation/cases/sigterm-recovery/after-operator-recovery/host.stdout.jsonl.gz",
+      "originalSha256": "0513398c2c986348d75dac957f74d62819ccb6932f395c4741d432d6b379045d",
+      "compressedSha256": "1400f941dc01a5a7a37175ad6aeca18dc3e27fc5ac057bd39492d5b880b91c80",
+      "bytes": 13993
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/after-operator-recovery/launch.json",
+      "path": "raw/continuation/cases/sigterm-recovery/after-operator-recovery/launch.json.gz",
+      "originalSha256": "25d5ce7a0e03984af1fa87e6e86b6cc0a9206bf24f36663a498a89296389e0b8",
+      "compressedSha256": "1490eea1173d82e53ed0994b3d9bdf53701d69a52cf3131b28e300b3fcd84bd3",
+      "bytes": 923
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/after-operator-recovery/model-relay.json",
+      "path": "raw/continuation/cases/sigterm-recovery/after-operator-recovery/model-relay.json.gz",
+      "originalSha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "compressedSha256": "8584ac7ef7ed7294d347ec9f3246e410a09e60e439c99a1c0e5450d4cc53f548",
+      "bytes": 1027
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/after-operator-recovery/native-dispatch.json",
+      "path": "raw/continuation/cases/sigterm-recovery/after-operator-recovery/native-dispatch.json.gz",
+      "originalSha256": "90df9fc8a6fe53fcea49c06d3b60b11a702d49504f87f49b2cc3410d878d640f",
+      "compressedSha256": "5e58459d4757cb1a17b82ffcbdfe8d8f962de6ab9fb91e897540661e7044acda",
+      "bytes": 287
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/after-operator-recovery/prompt.txt",
+      "path": "raw/continuation/cases/sigterm-recovery/after-operator-recovery/prompt.txt.gz",
+      "originalSha256": "f373467b612942e61b494af8e1cf178e649f9a3b548a905242568fcb1577c3ad",
+      "compressedSha256": "1e900fcdac85e920ea818a2249f3326d64525a600be9a24c93fdb2b5fdad32c5",
+      "bytes": 447
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/after-operator-recovery/run.json",
+      "path": "raw/continuation/cases/sigterm-recovery/after-operator-recovery/run.json.gz",
+      "originalSha256": "2ed979fab71b81286aa00c5f34fe4bb286bb1a6343b4400c8ce1f64c9e285ed8",
+      "compressedSha256": "edb1ef5e4ac3c026769f4d35d87f6fbf32086221574e58e070eb32c8d63211f9",
+      "bytes": 503
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/after-recovery-journal.json",
+      "path": "raw/continuation/cases/sigterm-recovery/after-recovery-journal.json.gz",
+      "originalSha256": "5920e09e94ee5f8713eaaef7a297ee932a9d47c012c69d763e72f99273e9b6e2",
+      "compressedSha256": "92ffd20362c9d2eaa9e7eaabe3f1f2814421dcd4917c2ca56076a8ea0a4cb431",
+      "bytes": 11089
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/configuration.redacted.json",
+      "path": "raw/continuation/cases/sigterm-recovery/configuration.redacted.json.gz",
+      "originalSha256": "03924f59f2397ac3b166772c7ba3d73e63282e53c35cbc14a9e528dba660ad65",
+      "compressedSha256": "952c3452c5f23948e24130bf475e36bf9c7732b8bb1fc8650d150d8f09a5b26a",
+      "bytes": 4970
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/fault/after.json",
+      "path": "raw/continuation/cases/sigterm-recovery/fault/after.json.gz",
+      "originalSha256": "a94ed07d80b52b80ef79c2e103deef0774cc453837693183b59d30406b155f93",
+      "compressedSha256": "089737998600c3e88d7f0b84823c1dd370b5c423ded81e941910b0408ce05a51",
+      "bytes": 3233
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/fault/before.json",
+      "path": "raw/continuation/cases/sigterm-recovery/fault/before.json.gz",
+      "originalSha256": "84c2d714db39e3da567066e3e51f4f840d554642ac57534fda074a049fb9e773",
+      "compressedSha256": "50900a4880d47d7a6708741a40c8f79a13571b44b595904733df134720e5f93b",
+      "bytes": 2569
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/fault/descendant-lifecycle.json",
+      "path": "raw/continuation/cases/sigterm-recovery/fault/descendant-lifecycle.json.gz",
+      "originalSha256": "d03f332e9a2528fb9cb2da60c718503abe2a00485d3c557eebdf21afa1d202ca",
+      "compressedSha256": "7ab25f7a5b5ac80a7b71f5208cc1c6d74f1b4620fccab3f5811c76fbfd67c217",
+      "bytes": 488
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/fault/exit.json",
+      "path": "raw/continuation/cases/sigterm-recovery/fault/exit.json.gz",
+      "originalSha256": "c78aa39d06e6f2698990461b2cb77a32a7113a9407cff3fc0ff4326d30bdd9ee",
+      "compressedSha256": "00d542eb8c0ead8795763e418a4505332c35ffdf5eb3a6c2e38b3ec98604f9fa",
+      "bytes": 193
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/fault/fault-identity.json",
+      "path": "raw/continuation/cases/sigterm-recovery/fault/fault-identity.json.gz",
+      "originalSha256": "73d1aad90e45e17681175fc3f0edaa37f7d24361507af49e8d62c37b73d08e54",
+      "compressedSha256": "5498a4cf9d26fe469dc9d9b6c0aa88e778c9f5ad095e6f1078ce425721d5afd8",
+      "bytes": 262
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/fault/fault.jsonl",
+      "path": "raw/continuation/cases/sigterm-recovery/fault/fault.jsonl.gz",
+      "originalSha256": "0a89a976e386a3f647987b628d96d2447dd86012cb1fd84a1c6fc2f50b6e0ac2",
+      "compressedSha256": "d2e05dcc9263f95fb11400688ebd6dfc346a6f035f05f0652df90ae00a9d1c0e",
+      "bytes": 303
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/fault/host.stderr.txt",
+      "path": "raw/continuation/cases/sigterm-recovery/fault/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/fault/host.stdout.jsonl",
+      "path": "raw/continuation/cases/sigterm-recovery/fault/host.stdout.jsonl.gz",
+      "originalSha256": "401f639e6da84ba9d6e08a19b99e5e025259d42b8f74ae00cab2d98ba0d2855f",
+      "compressedSha256": "92bd73c864ff41ab474647c07b53d0a0db1554c217ccdfa252d5aff4467d81a0",
+      "bytes": 5709
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/fault/launch.json",
+      "path": "raw/continuation/cases/sigterm-recovery/fault/launch.json.gz",
+      "originalSha256": "95010f3110620d5fd09a14bcb9181eab69fd6776bb13bcce703f20e36315ed16",
+      "compressedSha256": "117f2961797f7cd8f539f71c24777c51ec92a541b439c5a4c202366b0364dacb",
+      "bytes": 923
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/fault/model-relay.json",
+      "path": "raw/continuation/cases/sigterm-recovery/fault/model-relay.json.gz",
+      "originalSha256": "b278954f161340fdc2f2f702518e0349d8e1c6cca80debbd50cf3f27aebe04fc",
+      "compressedSha256": "b5036321370448e448c7dd70509792f639f375ac7bd5f3f2fa814437fd586a66",
+      "bytes": 735
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/fault/native-dispatch.json",
+      "path": "raw/continuation/cases/sigterm-recovery/fault/native-dispatch.json.gz",
+      "originalSha256": "1a45e5e41701178982b989cb06d28c7213f7a9983076adf031c2d9784399cb94",
+      "compressedSha256": "35549765f21278e17b03b1e38412b5e99dba5f666ecef26dc16313bef26aa33e",
+      "bytes": 330
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/fault/prompt.txt",
+      "path": "raw/continuation/cases/sigterm-recovery/fault/prompt.txt.gz",
+      "originalSha256": "112e33b31e89da14c3674ff54f8f09fcbe96c05b4c389b2d62fc402c1289274c",
+      "compressedSha256": "a916ed6d90f46d2132f6516e2834be23dea735cd7c3275ae83f125b1d274347f",
+      "bytes": 482
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/fault/run.json",
+      "path": "raw/continuation/cases/sigterm-recovery/fault/run.json.gz",
+      "originalSha256": "32b84a9f3a94cc556e72d9494610b965edf35f426ff012ddd92784584271585a",
+      "compressedSha256": "b1d0a6c8d07842ff5cb1fe1031172a624516beed33faa7af164c1a577e22ab97",
+      "bytes": 488
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/final-observation.json",
+      "path": "raw/continuation/cases/sigterm-recovery/final-observation.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/operator-acknowledgement.json",
+      "path": "raw/continuation/cases/sigterm-recovery/operator-acknowledgement.json.gz",
+      "originalSha256": "f47b65eac428852bd302a5d6a6bd26693ee1d179a392d514f7ec1952839116dc",
+      "compressedSha256": "865ba001210581dce7f28568792ce858a2d100a55b52b0edcba4f336b912e0b0",
+      "bytes": 260
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/operator-export.json",
+      "path": "raw/continuation/cases/sigterm-recovery/operator-export.json.gz",
+      "originalSha256": "4c2936563a4436a150acdc1066284f871e145931515d09385e70e269048f980c",
+      "compressedSha256": "56aa6ab1436fc64c41b9185415eb824bfa6eee2d2606b2f6800d8c43e162b50a",
+      "bytes": 382
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/restart-fenced/after.json",
+      "path": "raw/continuation/cases/sigterm-recovery/restart-fenced/after.json.gz",
+      "originalSha256": "a94ed07d80b52b80ef79c2e103deef0774cc453837693183b59d30406b155f93",
+      "compressedSha256": "089737998600c3e88d7f0b84823c1dd370b5c423ded81e941910b0408ce05a51",
+      "bytes": 3233
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/restart-fenced/before.json",
+      "path": "raw/continuation/cases/sigterm-recovery/restart-fenced/before.json.gz",
+      "originalSha256": "a94ed07d80b52b80ef79c2e103deef0774cc453837693183b59d30406b155f93",
+      "compressedSha256": "089737998600c3e88d7f0b84823c1dd370b5c423ded81e941910b0408ce05a51",
+      "bytes": 3233
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/restart-fenced/exit.json",
+      "path": "raw/continuation/cases/sigterm-recovery/restart-fenced/exit.json.gz",
+      "originalSha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "compressedSha256": "1bf3b17c92a2c47ec390029bbd05fe7f503202f31bcc3b0b80f3a8805794215f",
+      "bytes": 192
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/restart-fenced/host.stderr.txt",
+      "path": "raw/continuation/cases/sigterm-recovery/restart-fenced/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/restart-fenced/host.stdout.jsonl",
+      "path": "raw/continuation/cases/sigterm-recovery/restart-fenced/host.stdout.jsonl.gz",
+      "originalSha256": "1cce1af5357421f09a0651874031753ac5f256354e6a633cec224814603be165",
+      "compressedSha256": "1e675569f2510d26aea7c1c42adde250026454342a1a1094d198f42396dc3d87",
+      "bytes": 7440
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/restart-fenced/launch.json",
+      "path": "raw/continuation/cases/sigterm-recovery/restart-fenced/launch.json.gz",
+      "originalSha256": "4c3ae9b1b14699dd1104634fa42f5e5b4a36fd94e2e0823831a76e08e23e5f80",
+      "compressedSha256": "94ee697fb290a88b9027ac703d935cb1837e890bf9748225951f93d138142d42",
+      "bytes": 923
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/restart-fenced/model-relay.json",
+      "path": "raw/continuation/cases/sigterm-recovery/restart-fenced/model-relay.json.gz",
+      "originalSha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "compressedSha256": "8584ac7ef7ed7294d347ec9f3246e410a09e60e439c99a1c0e5450d4cc53f548",
+      "bytes": 1027
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/restart-fenced/native-dispatch.json",
+      "path": "raw/continuation/cases/sigterm-recovery/restart-fenced/native-dispatch.json.gz",
+      "originalSha256": "9862ade9532c092184dd46fc2b1f4dbff8161bc9bbb44ac29bd777e4a15ef66a",
+      "compressedSha256": "e1f37fc993b719a733cd4e4bc1276053e474f6f3914312447d9941d9667286b0",
+      "bytes": 336
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/restart-fenced/prompt.txt",
+      "path": "raw/continuation/cases/sigterm-recovery/restart-fenced/prompt.txt.gz",
+      "originalSha256": "64bfe2dfac982ccc084c4088889ac5dcad1f7017a2f4725d84c31db9ac88e51e",
+      "compressedSha256": "5ac7b8e4d2a51e3fed49628938d5afa22e2718253c7b785211e8c4ba19ba1f3e",
+      "bytes": 488
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/sigterm-recovery/restart-fenced/run.json",
+      "path": "raw/continuation/cases/sigterm-recovery/restart-fenced/run.json.gz",
+      "originalSha256": "7b34baa62873f4a544a1b495a2ac6fbd1b238371de736d2f9062f7c5fd69a828",
+      "compressedSha256": "7a58d879bb6ab5c03672faa16814b835de971e06f3a08a42b08e10b8f93d2486",
+      "bytes": 496
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/after-fault-journal.json",
+      "path": "raw/continuation/cases/upgrade-removal/after-fault-journal.json.gz",
+      "originalSha256": "d197e2442c6a618e9d50cf0cae2a9d6b92a0a281ee72a2d14cbb254e9619a5a1",
+      "compressedSha256": "4e15cd1f08ccd96498aba4b02a977be72b058b85fdc663fbb019a57e9b2f8cfd",
+      "bytes": 5603
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/after-operator-recovery/after.json",
+      "path": "raw/continuation/cases/upgrade-removal/after-operator-recovery/after.json.gz",
+      "originalSha256": "7d1a0b7c5a086afe3b0ae3b068bf6c50c1bbf953a04c3494c8ad598792c27276",
+      "compressedSha256": "8a73fe297837435a5150d17ad6847be72bf1df54b21cfce4636d70fbb0d3dfc1",
+      "bytes": 4838
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/after-operator-recovery/before.json",
+      "path": "raw/continuation/cases/upgrade-removal/after-operator-recovery/before.json.gz",
+      "originalSha256": "05f5d21bbf0e857b683619d3ed30ed1f9feae4fe6b401e80980cf12f65d07690",
+      "compressedSha256": "93ed6adc7c1a03e0f984463fab24efc2a5623004fbaaf551f2746442b16e84f2",
+      "bytes": 4367
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/after-operator-recovery/exit.json",
+      "path": "raw/continuation/cases/upgrade-removal/after-operator-recovery/exit.json.gz",
+      "originalSha256": "e2a5db79a4a63e50c6750e25b722e84603f4e58d14b6ddfe523a105a06670b2d",
+      "compressedSha256": "14711eae8da04ca1251893e649148e0e1082d13fa0fc520c56cd591cf3796dda",
+      "bytes": 191
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/after-operator-recovery/host.stderr.txt",
+      "path": "raw/continuation/cases/upgrade-removal/after-operator-recovery/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/after-operator-recovery/host.stdout.jsonl",
+      "path": "raw/continuation/cases/upgrade-removal/after-operator-recovery/host.stdout.jsonl.gz",
+      "originalSha256": "625b4a2fdd17f731c20e35f015adbceb9a87b461f96f6384df6af4b84f0a5140",
+      "compressedSha256": "fb8fd34be3eb1394f85aea9a559606c7abc1ebec75f4ccd6d25ecf9b3c1fede1",
+      "bytes": 13471
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/after-operator-recovery/launch.json",
+      "path": "raw/continuation/cases/upgrade-removal/after-operator-recovery/launch.json.gz",
+      "originalSha256": "ef0fb17145dbb85e2d8451eaa541310a9555c302918fd76b3f598b515b1df6c9",
+      "compressedSha256": "fa954bb7c09a1c5ca2bab218802810c4746aaf7c70ddfb03d4c84e370cc6bb56",
+      "bytes": 923
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/after-operator-recovery/model-relay.json",
+      "path": "raw/continuation/cases/upgrade-removal/after-operator-recovery/model-relay.json.gz",
+      "originalSha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "compressedSha256": "8584ac7ef7ed7294d347ec9f3246e410a09e60e439c99a1c0e5450d4cc53f548",
+      "bytes": 1027
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/after-operator-recovery/native-dispatch.json",
+      "path": "raw/continuation/cases/upgrade-removal/after-operator-recovery/native-dispatch.json.gz",
+      "originalSha256": "816ca59e08e65c5a4609cf01152307de79d49c0716e63d023d67e83dee932fa0",
+      "compressedSha256": "0c430fa22bb755f7b09504e6080fd54c6c70eb5366a95fcd4699b6b24fb7f13e",
+      "bytes": 287
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/after-operator-recovery/prompt.txt",
+      "path": "raw/continuation/cases/upgrade-removal/after-operator-recovery/prompt.txt.gz",
+      "originalSha256": "62ea9c13a92adbd51ffb3d14c2eba6d7e06b6ee54d35a72bb3715bb3e936eabc",
+      "compressedSha256": "f5f57ef95fc017faa556536d61a9d73a419ef4d875cb642fa9778d9da210beeb",
+      "bytes": 447
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/after-operator-recovery/run.json",
+      "path": "raw/continuation/cases/upgrade-removal/after-operator-recovery/run.json.gz",
+      "originalSha256": "69e2d77c9db26c1c71e69211e791c08210a81a8d7150aeab05e1369b96845434",
+      "compressedSha256": "d27b0fdb137f173b39b04e8161b22cf12768db6b66bfaca4dbafcce25860d645",
+      "bytes": 825
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/after-recovery-journal.json",
+      "path": "raw/continuation/cases/upgrade-removal/after-recovery-journal.json.gz",
+      "originalSha256": "5f460220ca3b1c54a87e8c3828a4c2f8d6d371820f6d5da605562d834da9ef56",
+      "compressedSha256": "2f3c199590177f5d337bbbd87f7e11ef5726f8168702c3129f967408a36a5dfd",
+      "bytes": 11089
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/configuration.redacted.json",
+      "path": "raw/continuation/cases/upgrade-removal/configuration.redacted.json.gz",
+      "originalSha256": "9c85b49c2acba6b2b23a59aa5b9f4daada10c16f5d693a8d5aa33d2a0e2de420",
+      "compressedSha256": "a8127aa7a65df29184643d6967b28ead109aea1ebdc9de1833cb2c9edd42addc",
+      "bytes": 4969
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/fault/after.json",
+      "path": "raw/continuation/cases/upgrade-removal/fault/after.json.gz",
+      "originalSha256": "05f5d21bbf0e857b683619d3ed30ed1f9feae4fe6b401e80980cf12f65d07690",
+      "compressedSha256": "93ed6adc7c1a03e0f984463fab24efc2a5623004fbaaf551f2746442b16e84f2",
+      "bytes": 4367
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/fault/before.json",
+      "path": "raw/continuation/cases/upgrade-removal/fault/before.json.gz",
+      "originalSha256": "1fc870ae4202b6e7b4e653981c1503dd76a3ec7bcf16ef48724907592feb8752",
+      "compressedSha256": "3290ef2bb2c36b181642d43330832d7b7ed47c77af2a9b72dcd9fdced045c8e6",
+      "bytes": 3703
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/fault/exit.json",
+      "path": "raw/continuation/cases/upgrade-removal/fault/exit.json.gz",
+      "originalSha256": "f3bc8161f2514d1da92b27682e7d6b5d9090c3894abb794eb789f8f4db0643fe",
+      "compressedSha256": "6049cd3df62b765abb9a5f64338c1b6ada45011ef9e0fd54d67074d644da8ace",
+      "bytes": 191
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/fault/fault-identity.json",
+      "path": "raw/continuation/cases/upgrade-removal/fault/fault-identity.json.gz",
+      "originalSha256": "638f29d956c0628a7f150b49d50457ae2fc0bbd68daf5a0d6efd2772f65dc5d0",
+      "compressedSha256": "0bcd9003f3e5fecdb156d9d03ebbef547459e2ebaa43725dfaeae19c042a935d",
+      "bytes": 262
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/fault/fault.jsonl",
+      "path": "raw/continuation/cases/upgrade-removal/fault/fault.jsonl.gz",
+      "originalSha256": "a0e14442c89294ef702f07156a4bb647cefd42c8a7f347609646f78b1411a7f7",
+      "compressedSha256": "0f2385e8c172a6be5a1e9609b2d94d1142c4e3051b496e9c9cf8c811e8ad6504",
+      "bytes": 400
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/fault/host.stderr.txt",
+      "path": "raw/continuation/cases/upgrade-removal/fault/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/fault/host.stdout.jsonl",
+      "path": "raw/continuation/cases/upgrade-removal/fault/host.stdout.jsonl.gz",
+      "originalSha256": "2a930c820357bbfa2b8fa3b03db747740f41c1a26e84478e7853b6e4f47a1349",
+      "compressedSha256": "aed48c8265d2802a5387e80594bf816ec096d52a179c464ecb39eebda4c470a1",
+      "bytes": 4986
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/fault/launch.json",
+      "path": "raw/continuation/cases/upgrade-removal/fault/launch.json.gz",
+      "originalSha256": "6ab0d6df6d9f6cdcbf91b2567e6a5b27a0f324352287fce8a844007d975efb66",
+      "compressedSha256": "ff8f390ad94c53e96ddf1c63aed96495f8592e50ca86089a4c3e38dd552d77e6",
+      "bytes": 923
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/fault/model-relay.json",
+      "path": "raw/continuation/cases/upgrade-removal/fault/model-relay.json.gz",
+      "originalSha256": "b278954f161340fdc2f2f702518e0349d8e1c6cca80debbd50cf3f27aebe04fc",
+      "compressedSha256": "b5036321370448e448c7dd70509792f639f375ac7bd5f3f2fa814437fd586a66",
+      "bytes": 735
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/fault/native-dispatch.json",
+      "path": "raw/continuation/cases/upgrade-removal/fault/native-dispatch.json.gz",
+      "originalSha256": "3c61d0edebd4372f5260dbd5dacaa9600c10a9c72afa5e2efde74ad7cb10cd9d",
+      "compressedSha256": "66fd05a1f6b443263c5a5ba485fd00d20cacd66b57b89ca502f0155bd64cdb54",
+      "bytes": 330
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/fault/prompt.txt",
+      "path": "raw/continuation/cases/upgrade-removal/fault/prompt.txt.gz",
+      "originalSha256": "5715446e47c760a54cad9ceb35990a9d0c54f11629409569342be90f31d27ca9",
+      "compressedSha256": "4a6ab605b8e111411e77c6ac121187346c60321aefcc78ec0e7bcc321969ab24",
+      "bytes": 482
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/fault/run.json",
+      "path": "raw/continuation/cases/upgrade-removal/fault/run.json.gz",
+      "originalSha256": "b7adf85f5c1fabf62aa422df4900256fadda7ddabdf9fb37f838b426c0406511",
+      "compressedSha256": "bfdac693401c2747a04a1ec9b0b4967e3102be72efe0a9f4f92a0d811efc12d9",
+      "bytes": 807
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/final-observation.json",
+      "path": "raw/continuation/cases/upgrade-removal/final-observation.json.gz",
+      "originalSha256": "7d1a0b7c5a086afe3b0ae3b068bf6c50c1bbf953a04c3494c8ad598792c27276",
+      "compressedSha256": "8a73fe297837435a5150d17ad6847be72bf1df54b21cfce4636d70fbb0d3dfc1",
+      "bytes": 4838
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/install-prior-installed-archive-files.json",
+      "path": "raw/continuation/cases/upgrade-removal/install-prior-installed-archive-files.json.gz",
+      "originalSha256": "8f727702ef812779f48f71e64e90861051606c63052e1fbb63f3e051aa281ce7",
+      "compressedSha256": "4528ed93a6d63987be3e5cb57fa4f6cd37320e90ee9e148e5b3bdc67fd8dcb1f",
+      "bytes": 207958
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/install-prior.json",
+      "path": "raw/continuation/cases/upgrade-removal/install-prior.json.gz",
+      "originalSha256": "decea0cf2381fb05c459a6b0d693b78e4ebd468964012060ad81f75851a3cf30",
+      "compressedSha256": "e6f2292f2a204885d28ed09bfdb5805900d725aaa66fdcad81309e00535c0958",
+      "bytes": 380
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/install-upgrade-installed-archive-files.json",
+      "path": "raw/continuation/cases/upgrade-removal/install-upgrade-installed-archive-files.json.gz",
+      "originalSha256": "343cbb2559223a0c863976807f1c85d602738f1be22b04f165d8dfb2a731163a",
+      "compressedSha256": "8b34a9b2612e7ba9f7e71c42a7b85339f0a1cbe612b7b99f52470c589c1dba09",
+      "bytes": 207958
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/install-upgrade.json",
+      "path": "raw/continuation/cases/upgrade-removal/install-upgrade.json.gz",
+      "originalSha256": "7aaf93792ce0ce0fe55609ca992c8e2a72d88a6cfbcba175cc4343ed45f1868c",
+      "compressedSha256": "d89e9f74388ef7aa51f2340576ab6ce71054b7e658a8244dc7db99c589a6d094",
+      "bytes": 383
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/operator-acknowledgement.json",
+      "path": "raw/continuation/cases/upgrade-removal/operator-acknowledgement.json.gz",
+      "originalSha256": "576d9ddc25d2c781a72188b46b8e9de6b8752f7fa857bd4d5f2c744d7fa64e8d",
+      "compressedSha256": "21aee6a06df8302138731fed572852a1343d3d88474dd9570800d114a1b27d38",
+      "bytes": 260
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/operator-export.json",
+      "path": "raw/continuation/cases/upgrade-removal/operator-export.json.gz",
+      "originalSha256": "491cd82bab8e1d6eabb7d9eee359fc0a0a04a88bf703260f9a6bc97b49f71314",
+      "compressedSha256": "9f3ed42563a147bdcf360e12426784ad8242412e2906769a7d7e50f98d52944e",
+      "bytes": 381
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/removal-state-preservation.json",
+      "path": "raw/continuation/cases/upgrade-removal/removal-state-preservation.json.gz",
+      "originalSha256": "2b04034f22e8acf20b022b271a27809df611fb866c89dae2928e0c5b003a90dd",
+      "compressedSha256": "da7a053b6a8f6f980fd0d2cbe5b562d81104ade0a02a88f82e065cec13727e4f",
+      "bytes": 743
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/removal.json",
+      "path": "raw/continuation/cases/upgrade-removal/removal.json.gz",
+      "originalSha256": "0a10bfcfb503ff692495f0ebd99b6e459a86c273b6875903e990fe7361f000c5",
+      "compressedSha256": "389d7bb124ca6da818c58d4e6f7b224d965a1978914c3698cf71a45214469cd7",
+      "bytes": 83
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/removed-entrypoint.json",
+      "path": "raw/continuation/cases/upgrade-removal/removed-entrypoint.json.gz",
+      "originalSha256": "08eb92c18c25b2b0baa924c931ca8ba01d3daaa010feac6ca7bdc4063c592dbc",
+      "compressedSha256": "a9e7e949ed77faeec04894ecb060a28f5a11874fb2406eee15c29c0cda3c945d",
+      "bytes": 911
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/restart-fenced/after.json",
+      "path": "raw/continuation/cases/upgrade-removal/restart-fenced/after.json.gz",
+      "originalSha256": "05f5d21bbf0e857b683619d3ed30ed1f9feae4fe6b401e80980cf12f65d07690",
+      "compressedSha256": "93ed6adc7c1a03e0f984463fab24efc2a5623004fbaaf551f2746442b16e84f2",
+      "bytes": 4367
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/restart-fenced/before.json",
+      "path": "raw/continuation/cases/upgrade-removal/restart-fenced/before.json.gz",
+      "originalSha256": "05f5d21bbf0e857b683619d3ed30ed1f9feae4fe6b401e80980cf12f65d07690",
+      "compressedSha256": "93ed6adc7c1a03e0f984463fab24efc2a5623004fbaaf551f2746442b16e84f2",
+      "bytes": 4367
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/restart-fenced/exit.json",
+      "path": "raw/continuation/cases/upgrade-removal/restart-fenced/exit.json.gz",
+      "originalSha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "compressedSha256": "1bf3b17c92a2c47ec390029bbd05fe7f503202f31bcc3b0b80f3a8805794215f",
+      "bytes": 192
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/restart-fenced/host.stderr.txt",
+      "path": "raw/continuation/cases/upgrade-removal/restart-fenced/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/restart-fenced/host.stdout.jsonl",
+      "path": "raw/continuation/cases/upgrade-removal/restart-fenced/host.stdout.jsonl.gz",
+      "originalSha256": "b085d608e192a05f466617f7d35a0f4b6a489787c73783d66f04f9123338e5c5",
+      "compressedSha256": "b34b343d1dc18c3ccb606a9bd24e3aa53f700b6270205686f51c30ac5551d70a",
+      "bytes": 6515
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/restart-fenced/launch.json",
+      "path": "raw/continuation/cases/upgrade-removal/restart-fenced/launch.json.gz",
+      "originalSha256": "3f9c003d8ba26e63698bb4b0fdeb0bf15e2ec1e5f63a5521f551cb5e03a6237d",
+      "compressedSha256": "53aa0e12b3e814d9a58c13ec1915d2f3ced9d376283f77b6e55c871f77adb521",
+      "bytes": 923
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/restart-fenced/model-relay.json",
+      "path": "raw/continuation/cases/upgrade-removal/restart-fenced/model-relay.json.gz",
+      "originalSha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "compressedSha256": "8584ac7ef7ed7294d347ec9f3246e410a09e60e439c99a1c0e5450d4cc53f548",
+      "bytes": 1027
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/restart-fenced/native-dispatch.json",
+      "path": "raw/continuation/cases/upgrade-removal/restart-fenced/native-dispatch.json.gz",
+      "originalSha256": "adff98bfb89220c4f32a004de2219f4bcfb327a50a831ed49da4639f97e0fec5",
+      "compressedSha256": "ed47a8f970c7a8de7bfb866758cbc346ca5ca2c237e6bc17e6f72e8307310411",
+      "bytes": 336
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/restart-fenced/prompt.txt",
+      "path": "raw/continuation/cases/upgrade-removal/restart-fenced/prompt.txt.gz",
+      "originalSha256": "8e0e76f540d3db3282b2e7093d14dd7abbf07e48a9d453666cff0e3c7ac87504",
+      "compressedSha256": "2b09c31587d2a8019437c18abb11796490a9d5af0977c10db41d7ee52e5ee262",
+      "bytes": 488
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/restart-fenced/run.json",
+      "path": "raw/continuation/cases/upgrade-removal/restart-fenced/run.json.gz",
+      "originalSha256": "df30a470f94b18d1c568bed645092f8c14d21ab4ab355c26be1e674cf959f1b4",
+      "compressedSha256": "67b95bd437030d988b40a1afb970133bfd06c9fe098ecfaa8c6f79c816a32c1e",
+      "bytes": 817
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/cases/upgrade-removal/upgrade-state-preservation.json",
+      "path": "raw/continuation/cases/upgrade-removal/upgrade-state-preservation.json.gz",
+      "originalSha256": "da7c0df99c5382a622ba39e2b4220d64d023afcaa3baea657068f587ae234636",
+      "compressedSha256": "b71d100b43de52d032e8e85501284151a83c45601537941b27bd443b96d02ee4",
+      "bytes": 664
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/native.stderr",
+      "path": "raw/continuation/native.stderr.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/native.stdout",
+      "path": "raw/continuation/native.stdout.gz",
+      "originalSha256": "ae658754396d9c846e8da0e490ee64df873fe9ceead8aacc9826c2264a158f1b",
+      "compressedSha256": "d93b1b5cfea523dd3d1aa1d9fe27ce39ddb664d6ec609a96dab00aa36b8677b8",
+      "bytes": 11041
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/owner-stop.json",
+      "path": "raw/continuation/owner-stop.json.gz",
+      "originalSha256": "2029f160f1f2e78b22ea0ab3863c0e3c75c6c40f41bffb891663b9b23070483a",
+      "compressedSha256": "862d8228b3a7919f43940f58f787c06bfe1b19e485e368fc1cc3d59b17c9842f",
+      "bytes": 24915
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/after.json",
+      "path": "raw/continuation/paired-timing/after.json.gz",
+      "originalSha256": "d79548a475d006a6d920e5614518b076df8cdde8001323997be12a1fa05675e7",
+      "compressedSha256": "d7079164a1882c248c2f681081a20dfad8afc85a7ab2295e20d1366149a5d3f3",
+      "bytes": 7243
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/before.json",
+      "path": "raw/continuation/paired-timing/before.json.gz",
+      "originalSha256": "dcc0e3be7fe96a9ba15dc030209a7b2a16cf4ec4c456d5a918e06e34673f6485",
+      "compressedSha256": "8cc6898564f585aa0715b0462d171947e6b6e26b066279b1ddd1eb30d3ecb909",
+      "bytes": 4412
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/direct-bridge.mjs",
+      "path": "raw/continuation/paired-timing/direct-bridge.mjs.gz",
+      "originalSha256": "906520ca8bcabad2ec0035f72998c6ba3ff7bee814b1314dd7c07f8c376e2f4f",
+      "compressedSha256": "7dc34ec7fb7cc843dfa6be0ebb5e0b916b9e9a9925741b797cee1f305e94c221",
+      "bytes": 1596
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/driver-source.py",
+      "path": "raw/continuation/paired-timing/driver-source.py.gz",
+      "originalSha256": "47964583dd9c6688e7745796ac07ae27d03f86a8a270034b4d9b87f4535140f2",
+      "compressedSha256": "11327776f9807b19527fb4d83502e629d89a1a8b557b051b396136b58f42caf6",
+      "bytes": 16430
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/identity.json",
+      "path": "raw/continuation/paired-timing/identity.json.gz",
+      "originalSha256": "1cb161f7594bd19bf66c9bf571b6d80a05e05e69a92e5222ae9e525416256236",
+      "compressedSha256": "73bb87a99cfa5a57ab6213ca622a7afb6f5c2844761b842346d159014235f44d",
+      "bytes": 1312
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/installed-archive-files.json",
+      "path": "raw/continuation/paired-timing/installed-archive-files.json.gz",
+      "originalSha256": "343cbb2559223a0c863976807f1c85d602738f1be22b04f165d8dfb2a731163a",
+      "compressedSha256": "8b34a9b2612e7ba9f7e71c42a7b85339f0a1cbe612b7b99f52470c589c1dba09",
+      "bytes": 207958
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-1/direct-records/acknowledgement.json",
+      "path": "raw/continuation/paired-timing/pair-1/direct-records/acknowledgement.json.gz",
+      "originalSha256": "c1ab12e43cc05c974724c62e303b9a1ee067d05b3d161c7aa43029b81b86694b",
+      "compressedSha256": "c7559ca5dace9f73c59ca4e3e63e631f74ad37377f753ad8c04304e97507bc33",
+      "bytes": 165
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-1/direct-records/outcome.json",
+      "path": "raw/continuation/paired-timing/pair-1/direct-records/outcome.json.gz",
+      "originalSha256": "3df4f8d33f4975380bcdd18c4b57ab09d2595d90f4c8af07756bc7942028ca65",
+      "compressedSha256": "7aca6f960d89caf8f1b07743349736ec6c03ff300b9066af4b58163e5b03cb5e",
+      "bytes": 3435
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-1/direct-records/pending.json",
+      "path": "raw/continuation/paired-timing/pair-1/direct-records/pending.json.gz",
+      "originalSha256": "a03a9f8e226806da7c65b5cf4e0f78a2ffda3b00941643a927f6c73cf8d30f25",
+      "compressedSha256": "b681c85fde16fbaec185b664965dc913f7188ad563baf2fdf638ba99c281bdf4",
+      "bytes": 162
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-1/direct.stderr.txt",
+      "path": "raw/continuation/paired-timing/pair-1/direct.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-1/direct.stdout.json",
+      "path": "raw/continuation/paired-timing/pair-1/direct.stdout.json.gz",
+      "originalSha256": "60472eb82ec9bb36a77c614649c69b5ff27f845ea45b2f08c2c704a0ae0e222c",
+      "compressedSha256": "327d4ef5fe6f4b1331a9bd6a8b96851c63e3553b93b989f4671acc9bb88fd8eb",
+      "bytes": 221
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-1/exit.json",
+      "path": "raw/continuation/paired-timing/pair-1/exit.json.gz",
+      "originalSha256": "e2a5db79a4a63e50c6750e25b722e84603f4e58d14b6ddfe523a105a06670b2d",
+      "compressedSha256": "14711eae8da04ca1251893e649148e0e1082d13fa0fc520c56cd591cf3796dda",
+      "bytes": 191
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-1/launch.json",
+      "path": "raw/continuation/paired-timing/pair-1/launch.json.gz",
+      "originalSha256": "b73f957c508988c8653ea1160798494cb8ed64835f2edf0eb5eb093dc359cab4",
+      "compressedSha256": "c9eba5472f87221630d580f8d0a756c1a18146bb5dd3f7daf664c0c820e351a2",
+      "bytes": 920
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-1/native-command.json",
+      "path": "raw/continuation/paired-timing/pair-1/native-command.json.gz",
+      "originalSha256": "efbebe6fb036f0b234dcdbf5d2fa28e2ebd6625f2cf1f891d2287be4786ea540",
+      "compressedSha256": "60a89974014445fc691ac33bb18c1532af0ee43e9058524c22530ab4a757c33c",
+      "bytes": 838
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-1/native-journal.json",
+      "path": "raw/continuation/paired-timing/pair-1/native-journal.json.gz",
+      "originalSha256": "e153aef25e4d3b3badc53242d89a5961fe57c5e4333f11382929374f4a525d48",
+      "compressedSha256": "ed820aaf554c90098cf729d8717ecbeb54975ad0ce90bb8189f1274c019870be",
+      "bytes": 5455
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-1/native-timing.json",
+      "path": "raw/continuation/paired-timing/pair-1/native-timing.json.gz",
+      "originalSha256": "d1fda39e7ccde66ebfda5bf1dbdff861cc8afb4e4ac914831d2c0200b3dd553f",
+      "compressedSha256": "8625670a373ca08f6ea1e1521a193d8df97e1fb911baa16833a53ca1dfc67c61",
+      "bytes": 560
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-1/native.stderr.txt",
+      "path": "raw/continuation/paired-timing/pair-1/native.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-1/native.stdout.jsonl",
+      "path": "raw/continuation/paired-timing/pair-1/native.stdout.jsonl.gz",
+      "originalSha256": "b44a0ed4497ce7ac03da336a3938420f7045646b9c7743375bf3d84b967d971a",
+      "compressedSha256": "e17a14b7e870badb07146fa6282100499ba07acc345537b4ef27b505a39a1fa1",
+      "bytes": 13213
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-1/prompt.txt",
+      "path": "raw/continuation/paired-timing/pair-1/prompt.txt.gz",
+      "originalSha256": "25f19fa60648122f5533ecf224b00c38e2f289be753e593d87ddbf19d145d6ed",
+      "compressedSha256": "1c70f07a4512528e933d7ac1e2bc9cbf31cf2156990b88873b0b4bc922a987e6",
+      "bytes": 203
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-1/scopes.json",
+      "path": "raw/continuation/paired-timing/pair-1/scopes.json.gz",
+      "originalSha256": "d141eda67b5e6aa7bd9ab1c605a2af165a436d21c7fddbfafc34fdd6c4e2b194",
+      "compressedSha256": "641eb1c52746f9f0f6f3c3e49ac4969adb9a5531663215db9faad7385a0e9373",
+      "bytes": 1137
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-2/direct-records/acknowledgement.json",
+      "path": "raw/continuation/paired-timing/pair-2/direct-records/acknowledgement.json.gz",
+      "originalSha256": "7e29a25ebf78a3b35c6ff5b896e74376d0da10db6fdf5ddf9f79aeb9809359ea",
+      "compressedSha256": "5069cc1248092536c6056de93e095eded5c74b3fa57e4961e4f742cfd7e6ce01",
+      "bytes": 165
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-2/direct-records/outcome.json",
+      "path": "raw/continuation/paired-timing/pair-2/direct-records/outcome.json.gz",
+      "originalSha256": "6fba1ca21eff82e7bec645581fe27853321d92f859a28fbe4de0637ee953daf1",
+      "compressedSha256": "167210f8c6b17a186aa2e0c7c750e03a8f795dd720c514501fca91f56d254139",
+      "bytes": 3435
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-2/direct-records/pending.json",
+      "path": "raw/continuation/paired-timing/pair-2/direct-records/pending.json.gz",
+      "originalSha256": "ca243c49562143b3d61ac0c573ad9f717db87bb61a9f306f7bb01b75e33dc5fc",
+      "compressedSha256": "3cc75f895a912008f78abe76578bc430e9be4a94959b2f9870f7f43b772e7f00",
+      "bytes": 162
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-2/direct.stderr.txt",
+      "path": "raw/continuation/paired-timing/pair-2/direct.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-2/direct.stdout.json",
+      "path": "raw/continuation/paired-timing/pair-2/direct.stdout.json.gz",
+      "originalSha256": "b6370d2815b655eaa21d5545be43e8d0a8396dbfde7156faa3fcb0ebdff71361",
+      "compressedSha256": "9588d281a637bfd4101650ea91bd64b52f08d6b8b04297fce8090a85425ff5aa",
+      "bytes": 223
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-2/exit.json",
+      "path": "raw/continuation/paired-timing/pair-2/exit.json.gz",
+      "originalSha256": "e2a5db79a4a63e50c6750e25b722e84603f4e58d14b6ddfe523a105a06670b2d",
+      "compressedSha256": "14711eae8da04ca1251893e649148e0e1082d13fa0fc520c56cd591cf3796dda",
+      "bytes": 191
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-2/launch.json",
+      "path": "raw/continuation/paired-timing/pair-2/launch.json.gz",
+      "originalSha256": "acaa95d8c7f0f4ee6aabc0921d0e832086378ce05202bf654776de09dc501913",
+      "compressedSha256": "803da9e03c321f388c4e9d7e9dea5d6fb596c500a52d770e0109d8c4f4a4ea7c",
+      "bytes": 920
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-2/native-command.json",
+      "path": "raw/continuation/paired-timing/pair-2/native-command.json.gz",
+      "originalSha256": "f211a69ff0a4d15402187359e5501ab968de66a60597d1e7053911a1843eb52f",
+      "compressedSha256": "920c0d5e63e8c33eed5aa6c3d93cdc27fcbd0cddff0a77b89826b440de4408ef",
+      "bytes": 838
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-2/native-journal.json",
+      "path": "raw/continuation/paired-timing/pair-2/native-journal.json.gz",
+      "originalSha256": "82f7affc1c91e911c9de1c24ae8a552a5de3cf5dd84c8b0be66f8da0d9e8c0a1",
+      "compressedSha256": "58201dbc803aa8cba0ff52dd931f8af56840d79e1dc920e824823495deb75a19",
+      "bytes": 5455
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-2/native-timing.json",
+      "path": "raw/continuation/paired-timing/pair-2/native-timing.json.gz",
+      "originalSha256": "a225172be799afb467e690d193647601f9a2acd12642b30c72382c24211f4eb4",
+      "compressedSha256": "96ef71f01e9722bcbe748add9da6a44b35373973b47f744370fd57ed34b687d7",
+      "bytes": 560
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-2/native.stderr.txt",
+      "path": "raw/continuation/paired-timing/pair-2/native.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-2/native.stdout.jsonl",
+      "path": "raw/continuation/paired-timing/pair-2/native.stdout.jsonl.gz",
+      "originalSha256": "f8b707ad4fdf72440e549ba8990642b172fdefa7c5dbf76dfced3b1e7d498ccc",
+      "compressedSha256": "4395fae44494d59990722810ce127138a6a65103a97c4053598ec71b4d4617f1",
+      "bytes": 12571
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-2/prompt.txt",
+      "path": "raw/continuation/paired-timing/pair-2/prompt.txt.gz",
+      "originalSha256": "25f19fa60648122f5533ecf224b00c38e2f289be753e593d87ddbf19d145d6ed",
+      "compressedSha256": "1c70f07a4512528e933d7ac1e2bc9cbf31cf2156990b88873b0b4bc922a987e6",
+      "bytes": 203
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-2/scopes.json",
+      "path": "raw/continuation/paired-timing/pair-2/scopes.json.gz",
+      "originalSha256": "b332d8f0612069f9cc658616b97fc11d142957aad63dc98757ae549383448f46",
+      "compressedSha256": "2e6ad69e02f3f7f10add50e806aa18d0339665009e827fa9c9c1dc57c934ac3c",
+      "bytes": 1137
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-3/direct-records/acknowledgement.json",
+      "path": "raw/continuation/paired-timing/pair-3/direct-records/acknowledgement.json.gz",
+      "originalSha256": "701e3a2c41873640fe23296d459e03e60546b4a93efe7a058704d4ecb24f9eef",
+      "compressedSha256": "eb8f7639733b6a4b80203c1e3053f4524914ee21daa7554402843f22b09754fe",
+      "bytes": 165
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-3/direct-records/outcome.json",
+      "path": "raw/continuation/paired-timing/pair-3/direct-records/outcome.json.gz",
+      "originalSha256": "4d33ea00779d429f1c1798bc370c4734e01e21dc87446b25d8ffabf1ed8850ac",
+      "compressedSha256": "e94e8d206b20684140b36a57b38fea2398bd2bf9951a5b8f2aa13781c68058f9",
+      "bytes": 3435
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-3/direct-records/pending.json",
+      "path": "raw/continuation/paired-timing/pair-3/direct-records/pending.json.gz",
+      "originalSha256": "01bb73814f8b26f7930bba31ac8caa71e036a9f23b6136a42db18ec6449ecb00",
+      "compressedSha256": "ce2e6446b96bd1107612305c66ce552cdc0b4ed844ab1b1e6bbb6cf6bd4725ad",
+      "bytes": 162
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-3/direct.stderr.txt",
+      "path": "raw/continuation/paired-timing/pair-3/direct.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-3/direct.stdout.json",
+      "path": "raw/continuation/paired-timing/pair-3/direct.stdout.json.gz",
+      "originalSha256": "df6bdddc7d53e25401ad24a2e01ca8ef8c6405d1ada976ac45c6cce3c1067d40",
+      "compressedSha256": "fce85e11d8abe2cb660685b780d6e76d1e1723250cd1819369862cbcb661106e",
+      "bytes": 224
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-3/exit.json",
+      "path": "raw/continuation/paired-timing/pair-3/exit.json.gz",
+      "originalSha256": "e2a5db79a4a63e50c6750e25b722e84603f4e58d14b6ddfe523a105a06670b2d",
+      "compressedSha256": "14711eae8da04ca1251893e649148e0e1082d13fa0fc520c56cd591cf3796dda",
+      "bytes": 191
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-3/launch.json",
+      "path": "raw/continuation/paired-timing/pair-3/launch.json.gz",
+      "originalSha256": "a35cfb0129d97c8d8d3013880b7a853d87176b41f46be8c5e5580716f0fe72a2",
+      "compressedSha256": "02fd42d10d3c6df07227117657d4728382a8c290b94cbddf54c0c402f0c1eeee",
+      "bytes": 920
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-3/native-command.json",
+      "path": "raw/continuation/paired-timing/pair-3/native-command.json.gz",
+      "originalSha256": "c4fa497feac6f912aa293650a253e9c54f9bfe807a960c42fc32df8657bf37a5",
+      "compressedSha256": "efd94be1d40a8532963c42626fde42d3e7dc17fba63f26bbbecfff00f29f36f8",
+      "bytes": 838
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-3/native-journal.json",
+      "path": "raw/continuation/paired-timing/pair-3/native-journal.json.gz",
+      "originalSha256": "755b0b1efe40c35889111d0a2d5b1880816a430196513fa819b4327327aec497",
+      "compressedSha256": "ac1e5d4d1cb8d4ebe59330a8dd29177eb8d89969b1c3ad16e6566b8bb609d5dc",
+      "bytes": 5455
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-3/native-timing.json",
+      "path": "raw/continuation/paired-timing/pair-3/native-timing.json.gz",
+      "originalSha256": "46f7f41ca5daf56ca85a0ace3c06156b59be8caacd61f31c8028d59c5251c03c",
+      "compressedSha256": "429cd681d1551bd9aefb19ea3abee3ca6bd029e6aadb577fea7aad99dad424e3",
+      "bytes": 560
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-3/native.stderr.txt",
+      "path": "raw/continuation/paired-timing/pair-3/native.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-3/native.stdout.jsonl",
+      "path": "raw/continuation/paired-timing/pair-3/native.stdout.jsonl.gz",
+      "originalSha256": "33db4c0bf0fccd734a146b4265bdc0ce1383976f2bb5630d08880bd1e10282c3",
+      "compressedSha256": "25b1a2bebc6cb2661e62263f341ebd8facf9b66b30e8858a0561514d95d5ec10",
+      "bytes": 12529
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-3/prompt.txt",
+      "path": "raw/continuation/paired-timing/pair-3/prompt.txt.gz",
+      "originalSha256": "25f19fa60648122f5533ecf224b00c38e2f289be753e593d87ddbf19d145d6ed",
+      "compressedSha256": "1c70f07a4512528e933d7ac1e2bc9cbf31cf2156990b88873b0b4bc922a987e6",
+      "bytes": 203
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/pair-3/scopes.json",
+      "path": "raw/continuation/paired-timing/pair-3/scopes.json.gz",
+      "originalSha256": "0d6a2cd4be6485fcc141b945e32e1e72291075e3a41be7245bb2c61d1432c3f1",
+      "compressedSha256": "55837ab260b52f682003d99acf72c84bdf39b8e9fea614ba16487bd7ca46216d",
+      "bytes": 1137
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/samples.json",
+      "path": "raw/continuation/paired-timing/samples.json.gz",
+      "originalSha256": "5fa28cc132df8ee871e96e85760802c373aad8ecc0614882f004fd4d95c2f9ce",
+      "compressedSha256": "f34aa9e0705d68e90e9bb20a2f8f6e524700a4f9d1b6ef10a1186099091c43ad",
+      "bytes": 1990
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/summary.json",
+      "path": "raw/continuation/paired-timing/summary.json.gz",
+      "originalSha256": "d02f335b6360f695d1febc3fac5b84e1e9037ce06752fb4e14e6a1a54d13db24",
+      "compressedSha256": "51ec4c8f366db654b7f54a7e2971bf45b7938afbd470032263ea1ab229ac1559",
+      "bytes": 3031
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/resource-capacity.json",
+      "path": "raw/continuation/resource-capacity.json.gz",
+      "originalSha256": "e41d0a847d780f24a292856defee073074a0c429410594a98440df9216b0ba12",
+      "compressedSha256": "d37c88bef3ba7137b2b9a9659e3add1837ed60386b79e6c50348213b6a758c14",
+      "bytes": 189
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/runs.json",
+      "path": "raw/continuation/runs.json.gz",
+      "originalSha256": "3057858089fc803c457627bc7e7fb323317d505797e21a6946b551a946c6a5a3",
+      "compressedSha256": "bb0e4a23168f591c0c294df70c64f6abf4bc85b8fdb2321d12b99d6e708d667f",
+      "bytes": 2762
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/selected-inputs.json",
+      "path": "raw/continuation/selected-inputs.json.gz",
+      "originalSha256": "5fdd6a4d007df238c5548def449f46a0d21fb230dd4f794fb9d0d58f17a782f7",
+      "compressedSha256": "e8ca8ea7d740f1904499ac58b35748459dc0bc7bfe19424cecd89912c21acfe1",
+      "bytes": 3704
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/start.stderr",
+      "path": "raw/continuation/start.stderr.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/start.stdout",
+      "path": "raw/continuation/start.stdout.gz",
+      "originalSha256": "edc4c26279f15d232a5aebd2d600279ed8faec00aef9c0a72cc897aa24cc977b",
+      "compressedSha256": "656a193dd1ce2c5c1a5a3415dc9d45c91b19daa0e9d48a936f68d39abdebc06a",
+      "bytes": 79
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/timing-command.json",
+      "path": "raw/continuation/timing-command.json.gz",
+      "originalSha256": "a4a9f708653015b8ca8b690d4122a970239ca2670b72b5c8f40be675cf41ec37",
+      "compressedSha256": "e553f5440b6560c3925a4f545828b2b67d464df823dbed66eda1fa0772a52048",
+      "bytes": 1416
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/timing-preparation-failure.json",
+      "path": "raw/continuation/timing-preparation-failure.json.gz",
+      "originalSha256": "a1ee70b806b069fb5d34378655f9b78d284fc9fd1e84cd7520868ffae035f33b",
+      "compressedSha256": "8e24fdb19375303b7442358a8489335f8a5f216a3037d08ac744e2c8883f7f5b",
+      "bytes": 400
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/timing-result.json",
+      "path": "raw/continuation/timing-result.json.gz",
+      "originalSha256": "211222bfc60d2a61995a32aae13fe1004da89289fca06c3d313d5fbd7c971b1f",
+      "compressedSha256": "883087fc55b39e4d3c8cfae76e342eb814f0c246f884946de323a2aebfb283d0",
+      "bytes": 96
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/timing.stderr",
+      "path": "raw/continuation/timing.stderr.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-native-continuation-20260910/timing.stdout",
+      "path": "raw/continuation/timing.stdout.gz",
+      "originalSha256": "186d626f91622265151a82219b0856ff6bef2edbdd460e26dc57b063f2e48c6f",
+      "compressedSha256": "7bc7f70588fa982f01ddcfa716115079cf29e1cda11bfbfbebabf836cd35f465",
+      "bytes": 1780
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/create.stderr",
+      "path": "raw/storage-reconciliation-r2/create.stderr.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/create.stdout",
+      "path": "raw/storage-reconciliation-r2/create.stdout.gz",
+      "originalSha256": "d3bc0572197876f81ce857484ac980be3ea466f021a086567b79ef7f0bd1457b",
+      "compressedSha256": "1472872a02ff89fccb9847630094cc51299232796f30adcc666da9459d7b36cc",
+      "bytes": 2139
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/admission-reconciliation.json",
+      "path": "raw/storage-reconciliation-r2/native/admission-reconciliation.json.gz",
+      "originalSha256": "d6905a2b86e1d33f43e9b4cc9fb7ffcee3420b059a0da6f5f9d690f7f1dd9bd5",
+      "compressedSha256": "a587fe8dfcb684b8187a2f679e4eeb84c69fce53f2c7470fc844c42050cb3e25",
+      "bytes": 115
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/driver-source.py",
+      "path": "raw/storage-reconciliation-r2/native/driver-source.py.gz",
+      "originalSha256": "72b01784c3392b60384bfe54dea9e662fb8b7bc41a4112e81ba9deb020f159ec",
+      "compressedSha256": "928bca2f20c4887065ddf10156c8c02c1e936d795187f078b71b39bfc7791ff2",
+      "bytes": 22997
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/effect-before-fault.json",
+      "path": "raw/storage-reconciliation-r2/native/effect-before-fault.json.gz",
+      "originalSha256": "bd0a5887fff47c400c0adeb27db7d70ec41657fbcdbbe1aef5bc3d8c0a983248",
+      "compressedSha256": "f0a8c13a0861487952c2e38da31896fdc39e167ebac8d4913fb4151da4b4a50c",
+      "bytes": 1238
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/fault/command.json",
+      "path": "raw/storage-reconciliation-r2/native/fault/command.json.gz",
+      "originalSha256": "967ebaf966feacafea3e1e259eca9d96e1cdb3f790b9af0ae9b12093dc0c6ec4",
+      "compressedSha256": "8961b9587f372e18e002fa1bd1519e4062c3df0ce5073910ba64cec608d1df81",
+      "bytes": 840
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/fault/exit.json",
+      "path": "raw/storage-reconciliation-r2/native/fault/exit.json.gz",
+      "originalSha256": "f3bc8161f2514d1da92b27682e7d6b5d9090c3894abb794eb789f8f4db0643fe",
+      "compressedSha256": "6049cd3df62b765abb9a5f64338c1b6ada45011ef9e0fd54d67074d644da8ace",
+      "bytes": 191
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/fault/host.stderr.txt",
+      "path": "raw/storage-reconciliation-r2/native/fault/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/fault/host.stdout.jsonl",
+      "path": "raw/storage-reconciliation-r2/native/fault/host.stdout.jsonl.gz",
+      "originalSha256": "8765735a013dfedba821677494fa1fd1a576e695b5f791d0e5d659f3dc35b686",
+      "compressedSha256": "b3bbc2dfeb82744e14c28a7e048b58a0d0027167c6f353ed5106f88daee4b2b4",
+      "bytes": 5176
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/fault/launch.json",
+      "path": "raw/storage-reconciliation-r2/native/fault/launch.json.gz",
+      "originalSha256": "3ca3076ec0a4be15f54b56e09cfcc76a3bfa1e7531c759f13f64d8cef8164ebe",
+      "compressedSha256": "79aead98054119a254caaeb6fc648d2f581f9301795e9a125e04893348a20cd4",
+      "bytes": 926
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/fault/model-relay.json",
+      "path": "raw/storage-reconciliation-r2/native/fault/model-relay.json.gz",
+      "originalSha256": "b278954f161340fdc2f2f702518e0349d8e1c6cca80debbd50cf3f27aebe04fc",
+      "compressedSha256": "b5036321370448e448c7dd70509792f639f375ac7bd5f3f2fa814437fd586a66",
+      "bytes": 735
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/fault/prompt.txt",
+      "path": "raw/storage-reconciliation-r2/native/fault/prompt.txt.gz",
+      "originalSha256": "84a171c8413bbffec3b21a52b7253c8ee907996addb5ae12dac0f8b34b6cecdf",
+      "compressedSha256": "d39f659d6ce61610e3c06ffa38288790ab050cb8fabba78a7f1b53060f3df604",
+      "bytes": 473
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/fault/run.json",
+      "path": "raw/storage-reconciliation-r2/native/fault/run.json.gz",
+      "originalSha256": "f9050f537d8799b932b8cf2fd13e714ed68cfac0e99049c1fb309fcefee51852",
+      "compressedSha256": "b154bb21f240ffc8b61775fccc4d5e4eb2312c2200107dde6dad79190834a97d",
+      "bytes": 1049
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/fault-command.json",
+      "path": "raw/storage-reconciliation-r2/native/fault-command.json.gz",
+      "originalSha256": "4494e2547bda25fcfcf9c24ad96ed713ec900d3243a14da480ab72bf818b482d",
+      "compressedSha256": "d0f8c13150e4ab15378dbd910a1b53df54446caf8309f0ce7682ba1a939040fc",
+      "bytes": 563
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/fault-journal.json",
+      "path": "raw/storage-reconciliation-r2/native/fault-journal.json.gz",
+      "originalSha256": "f11d7e14f41ff7cfa8bd85df37496b454795856865bffc91e52f17d6e5014623",
+      "compressedSha256": "4a68232fcee9df1042c166d8a5801fed454ca4e24b09548e77df3a027dbbcbba",
+      "bytes": 6524
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/fault-locked.json",
+      "path": "raw/storage-reconciliation-r2/native/fault-locked.json.gz",
+      "originalSha256": "6735eef02281adbd454257146645ff9b0323710f0fe1604eeb54d9844f520f79",
+      "compressedSha256": "859e53c44f59dc9e1ec9f443143e5058c7f2bdb9d9e91a3791bcb48730c17d61",
+      "bytes": 361
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/fault-process.stderr.txt",
+      "path": "raw/storage-reconciliation-r2/native/fault-process.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/fault-process.stdout.txt",
+      "path": "raw/storage-reconciliation-r2/native/fault-process.stdout.txt.gz",
+      "originalSha256": "cc407f3dc5e11d5d281b2427fce3836a86cf19653b6b1240dc8802cf746038bc",
+      "compressedSha256": "eb26dd634e1078b5e3129dd3a7b32014463061579ff1ebf0d41511333e4afb87",
+      "bytes": 189
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/fault-released.json",
+      "path": "raw/storage-reconciliation-r2/native/fault-released.json.gz",
+      "originalSha256": "3f1fe8c309ddc2aa086ef70dfaeb50fcda8bdbf81c739432d2f8524d0c9b9e84",
+      "compressedSha256": "957d725750e0d7c0e43c4f81a27ca59cc41f67eb36c2df3f45f2d32bfda0308f",
+      "bytes": 74
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/fence-verification.json",
+      "path": "raw/storage-reconciliation-r2/native/fence-verification.json.gz",
+      "originalSha256": "3189e2df1d74a46af5388e4691119a167347da6f21fe018f231a0b527d51e07f",
+      "compressedSha256": "7636bb7b40f05f928db19471f13290ad1299757437ab9c30dcb3822729ba900a",
+      "bytes": 920
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/final-journal.json",
+      "path": "raw/storage-reconciliation-r2/native/final-journal.json.gz",
+      "originalSha256": "f11d7e14f41ff7cfa8bd85df37496b454795856865bffc91e52f17d6e5014623",
+      "compressedSha256": "4a68232fcee9df1042c166d8a5801fed454ca4e24b09548e77df3a027dbbcbba",
+      "bytes": 6524
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/identity.json",
+      "path": "raw/storage-reconciliation-r2/native/identity.json.gz",
+      "originalSha256": "6444b521bf8c9a56b63fdf9c9873e4fa6cf311d4d30b6bc838cccb2832b59d2c",
+      "compressedSha256": "f5b3c2918433fa2147cb3869eedb03c56152368f10a349f79f3d8877603ffc72",
+      "bytes": 3150
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/initial-journal.json",
+      "path": "raw/storage-reconciliation-r2/native/initial-journal.json.gz",
+      "originalSha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "compressedSha256": "abc129be8d26e8d4afe9ce45f9d5a73c8ed9aa62810ca24ee789fe4581dc4a80",
+      "bytes": 3
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/installed-archive-files.json",
+      "path": "raw/storage-reconciliation-r2/native/installed-archive-files.json.gz",
+      "originalSha256": "343cbb2559223a0c863976807f1c85d602738f1be22b04f165d8dfb2a731163a",
+      "compressedSha256": "8b34a9b2612e7ba9f7e71c42a7b85339f0a1cbe612b7b99f52470c589c1dba09",
+      "bytes": 207958
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-after-owner-restart.json",
+      "path": "raw/storage-reconciliation-r2/native/native-after-owner-restart.json.gz",
+      "originalSha256": "a6caaf8902d8ef276896edfe90aba2edebb6ac6be09f29130f0610709c1a5c6d",
+      "compressedSha256": "9792d0356d77080ff71fa3a83a580f4467c5f7d32712b94f4d18512163d9b2f0",
+      "bytes": 47392
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-after-stop.json",
+      "path": "raw/storage-reconciliation-r2/native/native-after-stop.json.gz",
+      "originalSha256": "2bcb85935a9f70176990a8dff23975b84c4b2d53fa5cad3e0ee2f964f4bd0755",
+      "compressedSha256": "c5bda46f73eeded11514c4b07282efaac083a6cd3cc0514e92e924bc3d406e0f",
+      "bytes": 47392
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-after-unlock.json",
+      "path": "raw/storage-reconciliation-r2/native/native-after-unlock.json.gz",
+      "originalSha256": "9e37cba2b7a804a657b4beca18583ba62d4d9c39e1a9ef14f3190f8a239d79b5",
+      "compressedSha256": "15244c958388b9c9817ca646c1bcd5289231d2c503f40828fe8e580310e79b83",
+      "bytes": 41621
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-fault-after.json",
+      "path": "raw/storage-reconciliation-r2/native/native-fault-after.json.gz",
+      "originalSha256": "50285d93de97fbf24dd15b1001e43fc296bdf2dd97450213af432fdb432d3962",
+      "compressedSha256": "33e5a2dfa5a6a65d6c03b08abb63e0ce3fed83f7849c2663b48e712e65b28de4",
+      "bytes": 41622
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-fault-before.json",
+      "path": "raw/storage-reconciliation-r2/native/native-fault-before.json.gz",
+      "originalSha256": "b36c0913a47535c06c0a8ba5cc3c02ccae58a9c56508755375ccf00120d06f63",
+      "compressedSha256": "9224722e314bfe87ad23a2d79ddb937659cb13f52877b33219d2d174da549e7e",
+      "bytes": 38651
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-final.json",
+      "path": "raw/storage-reconciliation-r2/native/native-final.json.gz",
+      "originalSha256": "da5bd8c21b298cf539dd779f8281dcadbcfa578f7f45cd5b50fd7b34c9048466",
+      "compressedSha256": "10459bb8f429499fbdae126917419c8f7e018f7187b093b1a116ee7de43a25fb",
+      "bytes": 47392
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-initial.json",
+      "path": "raw/storage-reconciliation-r2/native/native-initial.json.gz",
+      "originalSha256": "54d43ebd31048751a9d68ff88515a4c348e65f6ae34461cd2077eb898aa880dd",
+      "compressedSha256": "5a5ce6b4a395b6d6cf453ea4adc288546816400e350d94a574f87a5217484e04",
+      "bytes": 539
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-new-action-after-restart-after.json",
+      "path": "raw/storage-reconciliation-r2/native/native-new-action-after-restart-after.json.gz",
+      "originalSha256": "e36d88524deb54db1f4842fb4bdf59a865ed2e786aedfe7a29452e0172da8aa8",
+      "compressedSha256": "47a51bbb261f39b8a6bfb27295d7e62bc1d2c83609f21dacc878ae0b1c92c679",
+      "bytes": 47393
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-new-action-after-restart-before.json",
+      "path": "raw/storage-reconciliation-r2/native/native-new-action-after-restart-before.json.gz",
+      "originalSha256": "a9c16f919114bb40193b8c5d7fcfbe3148619728d8e0a69849c1a144eab9af12",
+      "compressedSha256": "f84d170e84bd34e1623c0ebeced2a0501b1b0668846ba26bc31335b2a9e8e584",
+      "bytes": 47391
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-new-action-after-unlock-after.json",
+      "path": "raw/storage-reconciliation-r2/native/native-new-action-after-unlock-after.json.gz",
+      "originalSha256": "cde2c905bd83a76902b6728a3aa056eb0434c4fd008d5074cc7ae14bd9ecd4ff",
+      "compressedSha256": "858ed33cf94e767f1f9a78b8f8fc681f063dedcc8396cc4d810bf3c9c4f3b38b",
+      "bytes": 41621
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-new-action-after-unlock-before.json",
+      "path": "raw/storage-reconciliation-r2/native/native-new-action-after-unlock-before.json.gz",
+      "originalSha256": "5587b40195ea1b5a492d701e9a88def3a3530a1d4e49eb66e98337d65204d959",
+      "compressedSha256": "140b5d5774828b9b7d4be5c4936f3d0f730b25f68a815e83be78c3815de798e7",
+      "bytes": 41620
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-positive-after.json",
+      "path": "raw/storage-reconciliation-r2/native/native-positive-after.json.gz",
+      "originalSha256": "4980772e57e62e181496430fb26fc87825a0a6e0d1478b6c24b08181c6355a0d",
+      "compressedSha256": "0050cf4d39e0d908c75246d2cf5f279821306d70373fbc0a2fb7ca0289c667c6",
+      "bytes": 38650
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-positive-before.json",
+      "path": "raw/storage-reconciliation-r2/native/native-positive-before.json.gz",
+      "originalSha256": "144092830d93b2a2c6437d2f61f5862a8eabe1387f555d8521175d4eacb69c97",
+      "compressedSha256": "24b5792a618512428cd39e8fc199c5de601e579d511b58cce789609592eede15",
+      "bytes": 539
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-reconciliation-0.json",
+      "path": "raw/storage-reconciliation-r2/native/native-reconciliation-0.json.gz",
+      "originalSha256": "0489a67b47e8a2f785319c5bf73aba4e441b8eeebff45073d7eb8a185646333a",
+      "compressedSha256": "1a567549f93ec6eeef9bdb6b91658490fef4520ff7cb6c25298e492684686ad2",
+      "bytes": 47392
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-same-action-after-restart-after.json",
+      "path": "raw/storage-reconciliation-r2/native/native-same-action-after-restart-after.json.gz",
+      "originalSha256": "a9e537833909076ac022c2743764f6f6b27faeb8bc48592bcebdac135c71c106",
+      "compressedSha256": "2706b884078fb059b4f8512c8a6a6fff2a8f84173116d756531a136d721f10dd",
+      "bytes": 47392
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-same-action-after-restart-before.json",
+      "path": "raw/storage-reconciliation-r2/native/native-same-action-after-restart-before.json.gz",
+      "originalSha256": "fad1ea95a7e0967e80ec077ce7131dd6a51153be2575f38804073eed2d59989e",
+      "compressedSha256": "af21629ceb1a574de75ad6c3dbe0bb2f896b5731a16df072faeec03c81b54720",
+      "bytes": 47393
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-same-action-after-unlock-after.json",
+      "path": "raw/storage-reconciliation-r2/native/native-same-action-after-unlock-after.json.gz",
+      "originalSha256": "478aed439eba828e7f20487d2ce0e7f12771319787f9b6d08de5ac9508e17b7f",
+      "compressedSha256": "ee4c210041525efdd253e0a1c8527076071495537fa30ebf8a660ac7fde5e337",
+      "bytes": 41621
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/native-same-action-after-unlock-before.json",
+      "path": "raw/storage-reconciliation-r2/native/native-same-action-after-unlock-before.json.gz",
+      "originalSha256": "7ec51e7a1e0f6d67dadc23c0cc4d18a69bfe741c6b62defe3abea8e2e3bfde06",
+      "compressedSha256": "3a64b9560cd107f84ebdc67cde2b470f36e32dd1b9a72c396d6a36b73ca541b3",
+      "bytes": 41621
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/new-action-after-restart/command.json",
+      "path": "raw/storage-reconciliation-r2/native/new-action-after-restart/command.json.gz",
+      "originalSha256": "98f5855e981dd503670b3df37ad6243da4fb4c533b2545069cb579dd84726614",
+      "compressedSha256": "f13bb83f9fb24c90559fc77555c48240344536897da8302a4d31f411e2909496",
+      "bytes": 840
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/new-action-after-restart/exit.json",
+      "path": "raw/storage-reconciliation-r2/native/new-action-after-restart/exit.json.gz",
+      "originalSha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "compressedSha256": "1bf3b17c92a2c47ec390029bbd05fe7f503202f31bcc3b0b80f3a8805794215f",
+      "bytes": 192
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/new-action-after-restart/host.stderr.txt",
+      "path": "raw/storage-reconciliation-r2/native/new-action-after-restart/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/new-action-after-restart/host.stdout.jsonl",
+      "path": "raw/storage-reconciliation-r2/native/new-action-after-restart/host.stdout.jsonl.gz",
+      "originalSha256": "358f588bb9e1ba112bfcba09878607d82202cc829e6bd13d87414a8cb6cd1c0a",
+      "compressedSha256": "7fbe5b6ab599852c96308759bc2ed98a4fb13e03e04f654b4c088ed504875b3e",
+      "bytes": 6390
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/new-action-after-restart/launch.json",
+      "path": "raw/storage-reconciliation-r2/native/new-action-after-restart/launch.json.gz",
+      "originalSha256": "0848efea24545bc8b8db7b3a5bfe7d40d19aab503e7ca44384d8d20cd0b4d8d3",
+      "compressedSha256": "84772739862f83b90714abfb79bdde048c67a36af1b06941d0f32e42a9d5fbbb",
+      "bytes": 926
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/new-action-after-restart/model-relay.json",
+      "path": "raw/storage-reconciliation-r2/native/new-action-after-restart/model-relay.json.gz",
+      "originalSha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "compressedSha256": "8584ac7ef7ed7294d347ec9f3246e410a09e60e439c99a1c0e5450d4cc53f548",
+      "bytes": 1027
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/new-action-after-restart/prompt.txt",
+      "path": "raw/storage-reconciliation-r2/native/new-action-after-restart/prompt.txt.gz",
+      "originalSha256": "7551aed85a0904c1533241f36541063ab6c5a387661e46ef836e906317cf1f0d",
+      "compressedSha256": "817e67ec2a82a747101dc268125e5f10725a9127a4eba6050269d269df0c51ca",
+      "bytes": 450
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/new-action-after-restart/run.json",
+      "path": "raw/storage-reconciliation-r2/native/new-action-after-restart/run.json.gz",
+      "originalSha256": "508f4a6a04845c8e53a635f2f6372d5afc7a696a518bb2668e3e5772a5c1bfcf",
+      "compressedSha256": "f556cc152b2f267a7cf1c2c08e6f2f51dcc595f9c6a8c4f7d7214e3a25f673c8",
+      "bytes": 1089
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/new-action-after-unlock/command.json",
+      "path": "raw/storage-reconciliation-r2/native/new-action-after-unlock/command.json.gz",
+      "originalSha256": "e231f71a606c564081ca47e4ff2172f8e46b8e18c3b68dfaf9bb0a4bae1f8f11",
+      "compressedSha256": "5dd06e9c72432c3068090c2fa16aaee7b7dd7c9dfcf7e10d9f8681d896a89230",
+      "bytes": 840
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/new-action-after-unlock/exit.json",
+      "path": "raw/storage-reconciliation-r2/native/new-action-after-unlock/exit.json.gz",
+      "originalSha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "compressedSha256": "1bf3b17c92a2c47ec390029bbd05fe7f503202f31bcc3b0b80f3a8805794215f",
+      "bytes": 192
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/new-action-after-unlock/host.stderr.txt",
+      "path": "raw/storage-reconciliation-r2/native/new-action-after-unlock/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/new-action-after-unlock/host.stdout.jsonl",
+      "path": "raw/storage-reconciliation-r2/native/new-action-after-unlock/host.stdout.jsonl.gz",
+      "originalSha256": "2151af6a532cb464fa6c8e65e0b414383de5101d3f5cd4c378db9950fc12e5b2",
+      "compressedSha256": "113281b36edfd9a427c8540631096a8dd9995b5a084c406563cdf07e9877a5a0",
+      "bytes": 6808
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/new-action-after-unlock/launch.json",
+      "path": "raw/storage-reconciliation-r2/native/new-action-after-unlock/launch.json.gz",
+      "originalSha256": "9bd2b7096a7e331967cc8d19f5b44af79e50ec1fa0cab1bdb37ae925bc0c5540",
+      "compressedSha256": "e026417db8f78a12908a97ae0ad4fabdef34316eb014ab3dce206c11c325d05b",
+      "bytes": 926
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/new-action-after-unlock/model-relay.json",
+      "path": "raw/storage-reconciliation-r2/native/new-action-after-unlock/model-relay.json.gz",
+      "originalSha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "compressedSha256": "8584ac7ef7ed7294d347ec9f3246e410a09e60e439c99a1c0e5450d4cc53f548",
+      "bytes": 1027
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/new-action-after-unlock/prompt.txt",
+      "path": "raw/storage-reconciliation-r2/native/new-action-after-unlock/prompt.txt.gz",
+      "originalSha256": "7551aed85a0904c1533241f36541063ab6c5a387661e46ef836e906317cf1f0d",
+      "compressedSha256": "817e67ec2a82a747101dc268125e5f10725a9127a4eba6050269d269df0c51ca",
+      "bytes": 450
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/new-action-after-unlock/run.json",
+      "path": "raw/storage-reconciliation-r2/native/new-action-after-unlock/run.json.gz",
+      "originalSha256": "1ef185087264df5b05921721e803e955b8127aeda8b95a60a81adacad6a5bac3",
+      "compressedSha256": "12ee3e855cdc3009063c0a2c7dc8621c229d8a84cd5aa690d9c6e73be99a826b",
+      "bytes": 1088
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/positive/command.json",
+      "path": "raw/storage-reconciliation-r2/native/positive/command.json.gz",
+      "originalSha256": "4c5bfe7b73640dcee50e465c71d58652a23d84871e6e7f8b8a87d66622d3c6a4",
+      "compressedSha256": "a640c082162fbf46f7837d16da385d053af743566a0d00b7d368a6a58b88328e",
+      "bytes": 840
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/positive/exit.json",
+      "path": "raw/storage-reconciliation-r2/native/positive/exit.json.gz",
+      "originalSha256": "e2a5db79a4a63e50c6750e25b722e84603f4e58d14b6ddfe523a105a06670b2d",
+      "compressedSha256": "14711eae8da04ca1251893e649148e0e1082d13fa0fc520c56cd591cf3796dda",
+      "bytes": 191
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/positive/host.stderr.txt",
+      "path": "raw/storage-reconciliation-r2/native/positive/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/positive/host.stdout.jsonl",
+      "path": "raw/storage-reconciliation-r2/native/positive/host.stdout.jsonl.gz",
+      "originalSha256": "5d4f8c78a797351299533bd34ce4d33efe903a824a07be248caf206b6279c34e",
+      "compressedSha256": "0e5f2d55a3cc684b30f211200d46de4e2f437cbe0d9af4c6c2b4cf5e06fdc55f",
+      "bytes": 13791
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/positive/launch.json",
+      "path": "raw/storage-reconciliation-r2/native/positive/launch.json.gz",
+      "originalSha256": "9ac180ba3ed0b79a7ae1eea372b8eecdb4fa26d6d65dff894f2493aa0f24cc3e",
+      "compressedSha256": "04472146ba654c4bba0a0459651124394f0cdc7847c10b306d7c24c5fdf45e2f",
+      "bytes": 926
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/positive/model-relay.json",
+      "path": "raw/storage-reconciliation-r2/native/positive/model-relay.json.gz",
+      "originalSha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "compressedSha256": "8584ac7ef7ed7294d347ec9f3246e410a09e60e439c99a1c0e5450d4cc53f548",
+      "bytes": 1027
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/positive/prompt.txt",
+      "path": "raw/storage-reconciliation-r2/native/positive/prompt.txt.gz",
+      "originalSha256": "ddcb4bc9133ae6745aa88db1d6cfcf8c0bf8b2770f78d44f8a258de0a9732643",
+      "compressedSha256": "376b20c0307221787a5be10665d3f611ca73de38c160a16d960c6595398c6d64",
+      "bytes": 478
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/positive/run.json",
+      "path": "raw/storage-reconciliation-r2/native/positive/run.json.gz",
+      "originalSha256": "5fa32fa6a92dde9afbc6a3ed27306986fda8414410e8cd7f704a91c5eb9c7273",
+      "compressedSha256": "ed266f77217a90153400741f67f6e97032f44cab6ed2cd588271a26271265632",
+      "bytes": 5763
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/positive-journal.json",
+      "path": "raw/storage-reconciliation-r2/native/positive-journal.json.gz",
+      "originalSha256": "68c04f5fd7fe0af6197e631bc9da647121dd30918ead72738704900df969775f",
+      "compressedSha256": "f096d12f364d666d1fc69958eebff50ffe5325a5c7357732e8bb282a7f8ecd29",
+      "bytes": 5637
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/resource-replied.json",
+      "path": "raw/storage-reconciliation-r2/native/resource-replied.json.gz",
+      "originalSha256": "de5eb82b51fe7a433b14f7e5696bc6b81757e7b111251d1aa9c4bc47846e9782",
+      "compressedSha256": "c0182d083ed01e6113f12acf635fc40c88fbb4ea0bf33eca76059a8035c33093",
+      "bytes": 443
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/restart.json",
+      "path": "raw/storage-reconciliation-r2/native/restart.json.gz",
+      "originalSha256": "a9fdcacdeeb23592724ffb6a47d086dd5fed502bcd42f66087722bbd80b5b6ec",
+      "compressedSha256": "d23293381a73fe949dfe1d9fb2116dddc68636925e59aea0de14082b1280fa54",
+      "bytes": 504
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/result.json",
+      "path": "raw/storage-reconciliation-r2/native/result.json.gz",
+      "originalSha256": "e5bbfc10a96dcd6e4e19ec9737eba87d78e7ce43fc1cc12625aab1bd0efdd335",
+      "compressedSha256": "f2bc3d66f30f86b4e54c7d394549e38f984cf2eacea884d456f50330054f8c7a",
+      "bytes": 1391
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/same-action-after-restart/command.json",
+      "path": "raw/storage-reconciliation-r2/native/same-action-after-restart/command.json.gz",
+      "originalSha256": "9f08641db74e6395bd1a06bfe8f78dfb6f2bb9424366da337a6722f9b046733b",
+      "compressedSha256": "37adb09e7c662b8a2d81a55e5a32ea42981e5fa76763070bc081bddcebba435b",
+      "bytes": 840
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/same-action-after-restart/exit.json",
+      "path": "raw/storage-reconciliation-r2/native/same-action-after-restart/exit.json.gz",
+      "originalSha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "compressedSha256": "1bf3b17c92a2c47ec390029bbd05fe7f503202f31bcc3b0b80f3a8805794215f",
+      "bytes": 192
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/same-action-after-restart/host.stderr.txt",
+      "path": "raw/storage-reconciliation-r2/native/same-action-after-restart/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/same-action-after-restart/host.stdout.jsonl",
+      "path": "raw/storage-reconciliation-r2/native/same-action-after-restart/host.stdout.jsonl.gz",
+      "originalSha256": "0809d691f095d572edc6d7945a20e5e0926a90606674c9c069e97bb303ec4dda",
+      "compressedSha256": "3baff5b3ca8c152ae922284067cfa5f5710667e3f979dd520a2990af53d1402a",
+      "bytes": 6915
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/same-action-after-restart/launch.json",
+      "path": "raw/storage-reconciliation-r2/native/same-action-after-restart/launch.json.gz",
+      "originalSha256": "88b3f4eea9b65b32b0189997224991642795b1bd57367f094205f63d8603c7bc",
+      "compressedSha256": "8e60309a90c63442319a5c6beaf1f8513f5cbd55957d980ace45dc8804dc0879",
+      "bytes": 926
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/same-action-after-restart/model-relay.json",
+      "path": "raw/storage-reconciliation-r2/native/same-action-after-restart/model-relay.json.gz",
+      "originalSha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "compressedSha256": "8584ac7ef7ed7294d347ec9f3246e410a09e60e439c99a1c0e5450d4cc53f548",
+      "bytes": 1027
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/same-action-after-restart/prompt.txt",
+      "path": "raw/storage-reconciliation-r2/native/same-action-after-restart/prompt.txt.gz",
+      "originalSha256": "84a171c8413bbffec3b21a52b7253c8ee907996addb5ae12dac0f8b34b6cecdf",
+      "compressedSha256": "d39f659d6ce61610e3c06ffa38288790ab050cb8fabba78a7f1b53060f3df604",
+      "bytes": 473
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/same-action-after-restart/run.json",
+      "path": "raw/storage-reconciliation-r2/native/same-action-after-restart/run.json.gz",
+      "originalSha256": "32909f987644558e66416a1cff76ddddb94f1bff250b3bf7978970d7acdb8396",
+      "compressedSha256": "b871999c5e7b5ce1673a41799a35d193f14b030b7d772418657ea3c71f8963ba",
+      "bytes": 1113
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/same-action-after-unlock/command.json",
+      "path": "raw/storage-reconciliation-r2/native/same-action-after-unlock/command.json.gz",
+      "originalSha256": "9df4c340924a00d3a5ca6598576067f0eee6ebb71e2b702c9121ba974012917c",
+      "compressedSha256": "b6b7d50ba5d0a9b1bb43483b396de203771b51a674c9c2c41636dcdb9c550e28",
+      "bytes": 840
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/same-action-after-unlock/exit.json",
+      "path": "raw/storage-reconciliation-r2/native/same-action-after-unlock/exit.json.gz",
+      "originalSha256": "c6de8fc7853d1188b9254bc48f70133cd47eebf4e8db8c4a4f0832046b6729b8",
+      "compressedSha256": "1bf3b17c92a2c47ec390029bbd05fe7f503202f31bcc3b0b80f3a8805794215f",
+      "bytes": 192
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/same-action-after-unlock/host.stderr.txt",
+      "path": "raw/storage-reconciliation-r2/native/same-action-after-unlock/host.stderr.txt.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/same-action-after-unlock/host.stdout.jsonl",
+      "path": "raw/storage-reconciliation-r2/native/same-action-after-unlock/host.stdout.jsonl.gz",
+      "originalSha256": "60e0d67ab90dfabf814b92b2b38190198e4a328efc6272e3b2aab46f2505bc6b",
+      "compressedSha256": "43b1bc6de091d9bb3bae3d472ebab29b89020808d1f2cb7cda7206d69698ff03",
+      "bytes": 6613
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/same-action-after-unlock/launch.json",
+      "path": "raw/storage-reconciliation-r2/native/same-action-after-unlock/launch.json.gz",
+      "originalSha256": "2751a852831a20fefa8711a8befb3107299e27f5c342e36e316c4d06bac63f45",
+      "compressedSha256": "cb63ad6f00b9910944b84726cc8199ee87750b58ebeb911ebe5fb9a6821b4e84",
+      "bytes": 926
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/same-action-after-unlock/model-relay.json",
+      "path": "raw/storage-reconciliation-r2/native/same-action-after-unlock/model-relay.json.gz",
+      "originalSha256": "903511d928567c7f3b9eb2915d0e21fcdce224d3b26a51c6d46d41b127deeffc",
+      "compressedSha256": "8584ac7ef7ed7294d347ec9f3246e410a09e60e439c99a1c0e5450d4cc53f548",
+      "bytes": 1027
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/same-action-after-unlock/prompt.txt",
+      "path": "raw/storage-reconciliation-r2/native/same-action-after-unlock/prompt.txt.gz",
+      "originalSha256": "84a171c8413bbffec3b21a52b7253c8ee907996addb5ae12dac0f8b34b6cecdf",
+      "compressedSha256": "d39f659d6ce61610e3c06ffa38288790ab050cb8fabba78a7f1b53060f3df604",
+      "bytes": 473
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/same-action-after-unlock/run.json",
+      "path": "raw/storage-reconciliation-r2/native/same-action-after-unlock/run.json.gz",
+      "originalSha256": "7511a3219204fa3ce81e6daea4b25bc88c82cf34c01e0e7f628ebd1c0e0791a5",
+      "compressedSha256": "8347767ffbd8831712e7912d181bae1ef8444c0fb7f656ad020a1f98ebace72b",
+      "bytes": 1112
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/storage-helper.py",
+      "path": "raw/storage-reconciliation-r2/native/storage-helper.py.gz",
+      "originalSha256": "7de25889696ee9c1cca324130c6f10e34a41bdce555495a118673ad1336dd8d5",
+      "compressedSha256": "8e916fdf66d9f470896294e0f8b22abdb6251e05c4ea2719a8eaab7ec0822580",
+      "bytes": 10863
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/verify-fences.mjs",
+      "path": "raw/storage-reconciliation-r2/native/verify-fences.mjs.gz",
+      "originalSha256": "93e929d539b3c59b9db09b8c781113b9ce92c8e799287c6f565b7e1782d5f496",
+      "compressedSha256": "f6987ff0966f62f4241909f99d2892b0080fd2eb05569506bcab1fb4dce61cf1",
+      "bytes": 1779
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native.stderr",
+      "path": "raw/storage-reconciliation-r2/native.stderr.gz",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 0
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native.stdout",
+      "path": "raw/storage-reconciliation-r2/native.stdout.gz",
+      "originalSha256": "c4be53fac33a373df610ebcc852836549615d6755e0111fe17ac48c7d35ea8d1",
+      "compressedSha256": "1d5125385c83c0e08f1d7c1c99c0a0b7a1218f8e63f9a9ec191c45fc1db11e5a",
+      "bytes": 3276
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owner-stop.json",
+      "path": "raw/storage-reconciliation-r2/owner-stop.json.gz",
+      "originalSha256": "a3b28bb198fd0c13dabc0ebca887a6969732ed926a00b6988d101579af2a31a6",
+      "compressedSha256": "c05f28c389a147b84b75a41cad697cc1947d2d1a6cadbd283af709e46a520a4f",
+      "bytes": 3139
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/effect-before-fault.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/effect-before-fault.json.gz",
+      "originalSha256": "bd0a5887fff47c400c0adeb27db7d70ec41657fbcdbbe1aef5bc3d8c0a983248",
+      "compressedSha256": "f0a8c13a0861487952c2e38da31896fdc39e167ebac8d4913fb4151da4b4a50c",
+      "bytes": 1238
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/fault-locked.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/fault-locked.json.gz",
+      "originalSha256": "6735eef02281adbd454257146645ff9b0323710f0fe1604eeb54d9844f520f79",
+      "compressedSha256": "859e53c44f59dc9e1ec9f443143e5058c7f2bdb9d9e91a3791bcb48730c17d61",
+      "bytes": 361
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/fault-released.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/fault-released.json.gz",
+      "originalSha256": "3f1fe8c309ddc2aa086ef70dfaeb50fcda8bdbf81c739432d2f8524d0c9b9e84",
+      "compressedSha256": "957d725750e0d7c0e43c4f81a27ca59cc41f67eb36c2df3f45f2d32bfda0308f",
+      "bytes": 74
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/initial-observer.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/initial-observer.json.gz",
+      "originalSha256": "a8da32fd5e8fc32765e86569b697bed96184d9ce9ad504fa5cf93bd81b0022bb",
+      "compressedSha256": "36262bb0923fd86b83cf3ce7cb54fd40cf99f83729b6c8d34ffb9e5d6c7bac6f",
+      "bytes": 177
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/manifest.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/manifest.json.gz",
+      "originalSha256": "c084e95cc519f09b0a8f8d87412c8dd11cc38dbaa5a753f4b0a26cf98b80bffb",
+      "compressedSha256": "173c5ec512be17f1fa448aa7d199391898bb8ebfae99c5cb2aced287e35b37dc",
+      "bytes": 2259
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-after-owner-restart.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-after-owner-restart.json.gz",
+      "originalSha256": "a6caaf8902d8ef276896edfe90aba2edebb6ac6be09f29130f0610709c1a5c6d",
+      "compressedSha256": "9792d0356d77080ff71fa3a83a580f4467c5f7d32712b94f4d18512163d9b2f0",
+      "bytes": 47392
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-after-stop.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-after-stop.json.gz",
+      "originalSha256": "2bcb85935a9f70176990a8dff23975b84c4b2d53fa5cad3e0ee2f964f4bd0755",
+      "compressedSha256": "c5bda46f73eeded11514c4b07282efaac083a6cd3cc0514e92e924bc3d406e0f",
+      "bytes": 47392
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-after-unlock.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-after-unlock.json.gz",
+      "originalSha256": "9e37cba2b7a804a657b4beca18583ba62d4d9c39e1a9ef14f3190f8a239d79b5",
+      "compressedSha256": "15244c958388b9c9817ca646c1bcd5289231d2c503f40828fe8e580310e79b83",
+      "bytes": 41621
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-fault-after.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-fault-after.json.gz",
+      "originalSha256": "50285d93de97fbf24dd15b1001e43fc296bdf2dd97450213af432fdb432d3962",
+      "compressedSha256": "33e5a2dfa5a6a65d6c03b08abb63e0ce3fed83f7849c2663b48e712e65b28de4",
+      "bytes": 41622
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-fault-before.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-fault-before.json.gz",
+      "originalSha256": "b36c0913a47535c06c0a8ba5cc3c02ccae58a9c56508755375ccf00120d06f63",
+      "compressedSha256": "9224722e314bfe87ad23a2d79ddb937659cb13f52877b33219d2d174da549e7e",
+      "bytes": 38651
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-final.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-final.json.gz",
+      "originalSha256": "da5bd8c21b298cf539dd779f8281dcadbcfa578f7f45cd5b50fd7b34c9048466",
+      "compressedSha256": "10459bb8f429499fbdae126917419c8f7e018f7187b093b1a116ee7de43a25fb",
+      "bytes": 47392
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-initial.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-initial.json.gz",
+      "originalSha256": "54d43ebd31048751a9d68ff88515a4c348e65f6ae34461cd2077eb898aa880dd",
+      "compressedSha256": "5a5ce6b4a395b6d6cf453ea4adc288546816400e350d94a574f87a5217484e04",
+      "bytes": 539
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-new-action-after-restart-after.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-new-action-after-restart-after.json.gz",
+      "originalSha256": "e36d88524deb54db1f4842fb4bdf59a865ed2e786aedfe7a29452e0172da8aa8",
+      "compressedSha256": "47a51bbb261f39b8a6bfb27295d7e62bc1d2c83609f21dacc878ae0b1c92c679",
+      "bytes": 47393
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-new-action-after-restart-before.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-new-action-after-restart-before.json.gz",
+      "originalSha256": "a9c16f919114bb40193b8c5d7fcfbe3148619728d8e0a69849c1a144eab9af12",
+      "compressedSha256": "f84d170e84bd34e1623c0ebeced2a0501b1b0668846ba26bc31335b2a9e8e584",
+      "bytes": 47391
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-new-action-after-unlock-after.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-new-action-after-unlock-after.json.gz",
+      "originalSha256": "cde2c905bd83a76902b6728a3aa056eb0434c4fd008d5074cc7ae14bd9ecd4ff",
+      "compressedSha256": "858ed33cf94e767f1f9a78b8f8fc681f063dedcc8396cc4d810bf3c9c4f3b38b",
+      "bytes": 41621
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-new-action-after-unlock-before.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-new-action-after-unlock-before.json.gz",
+      "originalSha256": "5587b40195ea1b5a492d701e9a88def3a3530a1d4e49eb66e98337d65204d959",
+      "compressedSha256": "140b5d5774828b9b7d4be5c4936f3d0f730b25f68a815e83be78c3815de798e7",
+      "bytes": 41620
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-positive-after.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-positive-after.json.gz",
+      "originalSha256": "4980772e57e62e181496430fb26fc87825a0a6e0d1478b6c24b08181c6355a0d",
+      "compressedSha256": "0050cf4d39e0d908c75246d2cf5f279821306d70373fbc0a2fb7ca0289c667c6",
+      "bytes": 38650
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-positive-before.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-positive-before.json.gz",
+      "originalSha256": "144092830d93b2a2c6437d2f61f5862a8eabe1387f555d8521175d4eacb69c97",
+      "compressedSha256": "24b5792a618512428cd39e8fc199c5de601e579d511b58cce789609592eede15",
+      "bytes": 539
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-reconciliation-0.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-reconciliation-0.json.gz",
+      "originalSha256": "0489a67b47e8a2f785319c5bf73aba4e441b8eeebff45073d7eb8a185646333a",
+      "compressedSha256": "1a567549f93ec6eeef9bdb6b91658490fef4520ff7cb6c25298e492684686ad2",
+      "bytes": 47392
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-same-action-after-restart-after.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-same-action-after-restart-after.json.gz",
+      "originalSha256": "a9e537833909076ac022c2743764f6f6b27faeb8bc48592bcebdac135c71c106",
+      "compressedSha256": "2706b884078fb059b4f8512c8a6a6fff2a8f84173116d756531a136d721f10dd",
+      "bytes": 47392
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-same-action-after-restart-before.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-same-action-after-restart-before.json.gz",
+      "originalSha256": "fad1ea95a7e0967e80ec077ce7131dd6a51153be2575f38804073eed2d59989e",
+      "compressedSha256": "af21629ceb1a574de75ad6c3dbe0bb2f896b5731a16df072faeec03c81b54720",
+      "bytes": 47393
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-same-action-after-unlock-after.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-same-action-after-unlock-after.json.gz",
+      "originalSha256": "478aed439eba828e7f20487d2ce0e7f12771319787f9b6d08de5ac9508e17b7f",
+      "compressedSha256": "ee4c210041525efdd253e0a1c8527076071495537fa30ebf8a660ac7fde5e337",
+      "bytes": 41621
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/native-same-action-after-unlock-before.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/native-same-action-after-unlock-before.json.gz",
+      "originalSha256": "7ec51e7a1e0f6d67dadc23c0cc4d18a69bfe741c6b62defe3abea8e2e3bfde06",
+      "compressedSha256": "3a64b9560cd107f84ebdc67cde2b470f36e32dd1b9a72c396d6a36b73ca541b3",
+      "bytes": 41621
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/prepare.log",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/prepare.log.gz",
+      "originalSha256": "60b1ea54d79589ffc9e6cc213392eba7bf073503fd5277ecd4c06ee4568bdea8",
+      "compressedSha256": "4e55ec8cc7c740a8c4a73bd7a6c5fc9d783e02081aea27fa7adca97a63cb2f27",
+      "bytes": 108
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/release",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/release.gz",
+      "originalSha256": "be7368d21047148639b9d202dba3561424c08929ac5a7be448edc3d7415ce179",
+      "compressedSha256": "2bb8c39d7c30fc9b35b7e9e63351bde2f5937e84e45e9ee203340ac15a16a623",
+      "bytes": 83
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/resource-replied.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/resource-replied.json.gz",
+      "originalSha256": "de5eb82b51fe7a433b14f7e5696bc6b81757e7b111251d1aa9c4bc47846e9782",
+      "compressedSha256": "c0182d083ed01e6113f12acf635fc40c88fbb4ea0bf33eca76059a8035c33093",
+      "bytes": 443
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/restart.log",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/restart.log.gz",
+      "originalSha256": "379abef6889d60050ced7835c78189f9c7195c1319a805145bf9dc718ab3684e",
+      "compressedSha256": "182ba0264f84867e6c18d2a7601e20748180219cefecefec647ee32a4d19cc22",
+      "bytes": 81
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/start-command.json",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/start-command.json.gz",
+      "originalSha256": "bf230112aa830213d20116b9ddc9b384d2f62012d479ac8c6eecec3c23741dc5",
+      "compressedSha256": "b65cd39679e17a3b3e70e143c027ebae5bc73cae851ddb1451d5761c0a460d17",
+      "bytes": 878
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/start.log",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/start.log.gz",
+      "originalSha256": "b01b77f7295c6232e5004e62235aa7d2e512f95630dfb4371834322d2ff4aaef",
+      "compressedSha256": "1f9d23487e9f188f06ac30d064c24a7e0bb9e02491fe4e7fabd095a1b302fdaa",
+      "bytes": 81
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/owners/final-claude-reconciliation-r2-20260910-after-admission/unlock",
+      "path": "raw/storage-reconciliation-r2/owners/final-claude-reconciliation-r2-20260910-after-admission/unlock.gz",
+      "originalSha256": "e62e443dabb018863a30fd36a678695e84574f695f3e117205e02ffebfaef216",
+      "compressedSha256": "7b68d4e48ef12883b0624512146b0a4523dc6d45f4aed732241e2b897b881d9a",
+      "bytes": 52
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/runs.json",
+      "path": "raw/storage-reconciliation-r2/runs.json.gz",
+      "originalSha256": "421c1bd5633c6448641881260b4ed2bdeaf4f00e1b407ca24b5845b073220e9b",
+      "compressedSha256": "12412ff13be303534032db89018f2ecd0c1b86f6126baee78768c7b6a292dacc",
+      "bytes": 2652
+    },
+    {
+      "originalPath": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/selected-inputs.json",
+      "path": "raw/storage-reconciliation-r2/selected-inputs.json.gz",
+      "originalSha256": "312e449d6595b13a6ed0f08e2e2cdfc176c942d8c8f3ddc15f411c35d4842b92",
+      "compressedSha256": "5db388cb0b26cc4d24cc857d6545d68c467a4417e8e828625e47abdd4ed55fbc",
+      "bytes": 2323
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "label": "cutpoint",
+  "exitCode": 2,
+  "timeout": false,
+  "elapsedSeconds": 21.331,
+  "runtime": "/tmp/chio-claude-native-runtime-485a7b5c98034868a518e9bfdd2b2399",
+  "newDispatchRows": 1,
+  "terminal": {
+    "code": 0,
+    "signal": null,
+    "exitCode": 2,
+    "hostInitialization": {
+      "ready": true,
+      "failed": false
+    },
+    "hostDelivery": {
+      "confirmed": 1,
+      "failed": false
+    },
+    "executionOutcome": "unresolved",
+    "retry": "never-automatic"
+  }
+}

@@ -1,0 +1,3 @@
+Validating marketplace manifest: /Users/connor/Medica/backbay/standalone/chio-claude-code-plugin/.worktrees/required-agent-integrations-20260909/.claude-plugin/marketplace.json
+
+✔ Validation passed

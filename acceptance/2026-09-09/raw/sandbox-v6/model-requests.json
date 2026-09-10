@@ -1,0 +1,19 @@
+[
+  {
+    "path": "/v1/messages",
+    "keys": [
+      "model",
+      "messages",
+      "system",
+      "tools",
+      "metadata",
+      "max_tokens",
+      "thinking",
+      "temperature",
+      "stream"
+    ],
+    "tools": [
+      "mcp__chio__read_text_file"
+    ]
+  }
+]

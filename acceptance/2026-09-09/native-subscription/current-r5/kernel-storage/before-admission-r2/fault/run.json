@@ -1,0 +1,83 @@
+{
+  "label": "fault",
+  "exitCode": 2,
+  "timeout": false,
+  "elapsedSeconds": 9.009,
+  "newDispatches": 0,
+  "terminal": {
+    "code": 1,
+    "signal": null,
+    "exitCode": 2,
+    "hostInitialization": {
+      "ready": true,
+      "failed": false
+    },
+    "hostDelivery": {
+      "confirmed": 0,
+      "failed": true
+    },
+    "executionOutcome": "unresolved",
+    "retry": "never-automatic"
+  },
+  "calls": [
+    {
+      "type": "tool_use",
+      "id": "toolu_01KU4aKoyw6yTheMnb28w3QR",
+      "name": "mcp__chio__write_file",
+      "input": {
+        "path": "/workspace/before-fault.txt",
+        "content": "retain original native storage effect before-admission"
+      },
+      "caller": {
+        "type": "direct"
+      }
+    }
+  ],
+  "outcomes": {
+    "toolu_01KU4aKoyw6yTheMnb28w3QR": {
+      "state": "unknown",
+      "evidence": "verified",
+      "requestId": "260e53db-7801-4337-ab89-2f4d83dec6c2:e8c898bfe1fe39e55fb692c83d1f3f023ef4fa8f4f556d5e661451d1cf0c4973",
+      "receipt": {
+        "action": {
+          "parameter_hash": "e2afefffbb873726008d2574f7162b084477afab3669368f52ef22bd53e41e4e",
+          "parameters": {
+            "content": "retain original native storage effect before-admission",
+            "path": "/workspace/before-fault.txt"
+          }
+        },
+        "boundary_class": "prevent",
+        "capability_id": "cap-01a08953-5717-79a1-a8b0-d4106e647cbe",
+        "content_hash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "decision": {
+          "guard": "kernel",
+          "reason": "durable admission failed: admission operation store is unavailable: database is locked",
+          "verdict": "deny"
+        },
+        "id": "284fce4897452b299dc4739b923d3bdeff8174494874c5889912e1905153ecc6",
+        "kernel_key": "fd8aa8ef9bc8cfc15eed5c80d86dde797a344c32c06cef74e1c8aa2c64c30648",
+        "metadata": {
+          "attribution": {
+            "delegation_depth": 0,
+            "issuer_key": "ae6f7c044617c012efb2f9f1c8316514d6aab07903df4baf2184806a0b3803f9",
+            "subject_key": "973d4f12062a50e9025f3912ca237b32361d353795f4377d1a68e76b14af00c5"
+          },
+          "chio_receipt_signing_nonce": "rcpt-01a08954-1356-7110-ac10-042e741f3bb2",
+          "receipt_context": {
+            "request_id": "260e53db-7801-4337-ab89-2f4d83dec6c2:e8c898bfe1fe39e55fb692c83d1f3f023ef4fa8f4f556d5e661451d1cf0c4973"
+          }
+        },
+        "policy_hash": "057b9a8160375e7d90841325639bdd66050a454f393dae23e8c813b8df74b84e",
+        "receipt_kind": "mediated_decision",
+        "redaction_mode": "none",
+        "signature": "9af253c0a972c812f84fecada356b50c332832b018d04c4f426886a1dab3a4dd0d3df55e186c48440dd3755c7dbef7120c0981e147c408bf5ff6f7986bdcc804",
+        "timestamp": 1789010378,
+        "tool_name": "write_file",
+        "tool_origin": "caller_executed",
+        "tool_server": "fs",
+        "trust_level": "mediated"
+      },
+      "reason": "durable admission rejected this attempt; the original operation requires reconciliation"
+    }
+  }
+}

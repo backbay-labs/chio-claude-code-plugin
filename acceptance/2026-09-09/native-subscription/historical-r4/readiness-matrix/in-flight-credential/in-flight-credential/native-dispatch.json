@@ -1,0 +1,27 @@
+{
+  "launchPreflightRefused": false,
+  "calls": [
+    {
+      "id": "toolu_01FkG6uNTWyH2HUxKEFZDtQg",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/claude-inflight-b52a7c52467f.txt",
+        "content": "authorized before in-flight revocation"
+      }
+    },
+    {
+      "id": "toolu_0167bzLZQ2cHm8QMNVzcGANY",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/claude-inflight-b52a7c52467f.txt",
+        "content": "forbidden after in-flight revocation"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_01FkG6uNTWyH2HUxKEFZDtQg",
+    "toolu_0167bzLZQ2cHm8QMNVzcGANY"
+  ],
+  "expectedAttemptObserved": true,
+  "attemptCount": 2
+}

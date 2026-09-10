@@ -1,0 +1,44 @@
+{
+  "label": "new-action-after-restart",
+  "exitCode": 2,
+  "timeout": false,
+  "elapsedSeconds": 6.699,
+  "newDispatches": 0,
+  "terminal": {
+    "code": 0,
+    "signal": null,
+    "exitCode": 2,
+    "hostInitialization": {
+      "ready": true,
+      "failed": false
+    },
+    "hostDelivery": {
+      "confirmed": 0,
+      "failed": false
+    },
+    "executionOutcome": "unresolved",
+    "retry": "never-automatic"
+  },
+  "calls": [
+    {
+      "type": "tool_use",
+      "id": "toolu_01M3JbzSnYjoNzzDbTQQoZj3",
+      "name": "mcp__chio__write_file",
+      "input": {
+        "path": "/workspace/claude-storage-blocked.txt",
+        "content": "must not dispatch"
+      },
+      "caller": {
+        "type": "direct"
+      }
+    }
+  ],
+  "outcomes": {
+    "toolu_01M3JbzSnYjoNzzDbTQQoZj3": {
+      "state": "not_dispatched",
+      "evidence": "unverified",
+      "requestId": "51456abf-63e8-40fe-a42c-8ef4521a0f38:5a64b77dc0e6aac190e51189d80e10b9b8066a4f149292731b46ac6434619236",
+      "reason": "an unresolved operation fences this gateway; operator reconciliation required"
+    }
+  }
+}

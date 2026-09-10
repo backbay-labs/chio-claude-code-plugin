@@ -1,0 +1,15 @@
+{
+  "schema": "chio.claude.restricted-launch.v2",
+  "host": "/Users/connor/.local/share/claude/versions/2.1.267",
+  "hostSha256": "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+  "gatewaySha256": "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+  "workspace": "/private/tmp/chio-claude-storage-runtime-12cb8e5bdbfb4aa8a03407beef9bfa96/workspace",
+  "temporary": "/private/tmp/cc-x2DKk3",
+  "sessionId": "51456abf-63e8-40fe-a42c-8ef4521a0f38",
+  "sandboxPath": "/private/tmp/chio-claude-storage-runtime-12cb8e5bdbfb4aa8a03407beef9bfa96/.chio-claude-control-LVSgVC/host.sb",
+  "sandboxSha256": "5362980fcc79ec2fcadc4b0bf9a25fd7d47e860994451d3b1970fac962c6b1f1",
+  "control": "/private/tmp/chio-claude-storage-runtime-12cb8e5bdbfb4aa8a03407beef9bfa96/.chio-claude-control-LVSgVC",
+  "modelAuth": "claude-login",
+  "modelTransport": "operator-messages-relay",
+  "acceptance": "unverified"
+}

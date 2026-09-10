@@ -1,0 +1,22 @@
+{
+  "launchPreflightRefused": false,
+  "calls": [
+    {
+      "id": "toolu_013DGzZ71KGRNmg41ZpNhn2n",
+      "name": "mcp__chio__chio_resume",
+      "arguments": {
+        "requestId": "3469fa6f-562f-4ecc-9535-26483d7df66a:64067167c75b982b4d8ef0694036aa7c1f97c006ae8187b38e8e3e21c46fe17d",
+        "tool": "write_file",
+        "arguments": {
+          "path": "/workspace/claude-approved-8d80c2736793.txt",
+          "content": "exact operator-approved effect"
+        }
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_013DGzZ71KGRNmg41ZpNhn2n"
+  ],
+  "expectedAttemptObserved": true,
+  "attemptCount": 1
+}

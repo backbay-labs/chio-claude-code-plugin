@@ -1,0 +1,15 @@
+{
+  "submission": {
+    "output": "/Users/connor/.local/share/chio-required-operators/claude-readiness-matrix-20260909/claude-approvals-73aa4ba18c364a1aa2ff8d80c2736793/rejected-submission.json",
+    "status": "pending",
+    "approvalId": "approval-cfa857dc3d4e6fefa8107a673cc0d488db9d9bf740b5efcb67f093d0de1bad22",
+    "protectedDispatch": false
+  },
+  "decision": {
+    "output": "/Users/connor/.local/share/chio-required-operators/claude-readiness-matrix-20260909/claude-approvals-73aa4ba18c364a1aa2ff8d80c2736793/journal/approvals/a8077c6bcaa85bc9229c103ff3026dec7fe19033b6ec71064cf818510486ba35.json",
+    "status": "denied",
+    "approvalId": "approval-cfa857dc3d4e6fefa8107a673cc0d488db9d9bf740b5efcb67f093d0de1bad22",
+    "protectedDispatch": false
+  },
+  "protectedDispatch": false
+}

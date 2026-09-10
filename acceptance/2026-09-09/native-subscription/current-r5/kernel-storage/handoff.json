@@ -1,0 +1,249 @@
+{
+  "claim": "Three bounded actual native Claude/provider kernel-storage cases passed; no blanket I01-I08 closure claim",
+  "runtimeArchiveSha256": "0dd0d906fc34b3ac7d09e3b7f6cdee9f13f511731b25ec761feca7172c9b1158",
+  "kernelSha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
+  "harnessCommit": "608104118b7cb3a4e7605129dbfb0c0bfb92c5e5",
+  "sharedHelperRepairCommit": "6459e583b",
+  "cases": [
+    {
+      "case": "after-receipt",
+      "port": 58514,
+      "evidence": "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt-r2",
+      "result": {
+        "passed": true,
+        "cutpoint": "after-receipt",
+        "originalRequestId": "51456abf-63e8-40fe-a42c-8ef4521a0f38:3d4e5f9d31c9944045ffe8c6de772918854d4be429c077ba0c952821827ed397",
+        "positiveDispatches": 1,
+        "faultDispatches": 1,
+        "dispatchesAfterRetriesAndRestart": 2,
+        "unknownAcknowledged": false,
+        "originalAuthorityPreserved": true,
+        "ownerRestarted": true,
+        "admissionState": "completed",
+        "retainedToolOutcomes": 1,
+        "ownerFences": [
+          {
+            "table": "remote_session_credential_calls",
+            "requestId": "51456abf-63e8-40fe-a42c-8ef4521a0f38:3d4e5f9d31c9944045ffe8c6de772918854d4be429c077ba0c952821827ed397",
+            "state": "fenced",
+            "signatureVerifiedAgainstPinnedKernel": true,
+            "tamperedRequestRejected": true,
+            "canonicalPreimageSha256": "cea4968fe79697381c296cae646b9afd0e963e909d8c96777970368bb6e5a951"
+          },
+          {
+            "table": "remote_session_credential_latches",
+            "requestId": "51456abf-63e8-40fe-a42c-8ef4521a0f38:3d4e5f9d31c9944045ffe8c6de772918854d4be429c077ba0c952821827ed397",
+            "state": "fenced",
+            "signatureVerifiedAgainstPinnedKernel": true,
+            "tamperedRequestRejected": true,
+            "canonicalPreimageSha256": "cea4968fe79697381c296cae646b9afd0e963e909d8c96777970368bb6e5a951"
+          }
+        ],
+        "recoveryClaim": "safe refusal with retained uncertainty; no new authority or automatic reconciliation"
+      },
+      "owner": "/Users/connor/.local/share/chio-required-operators/kernel-storage-fault-20260909/claude-r5-after-receipt-r2",
+      "ownerManifest": {
+        "owner": "/Users/connor/.local/share/chio-required-operators/kernel-storage-fault-20260909/claude-r5-after-receipt-r2",
+        "gatewayConfig": "/Users/connor/.local/share/chio-required-operators/kernel-storage-fault-20260909/claude-r5-after-receipt-r2/gateway.json",
+        "output": "/private/tmp/chio-kernel-storage-fault-20260909/claude-r5-after-receipt-r2",
+        "endpoint": "http://127.0.0.1:58514",
+        "kernelSha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
+        "image": "sha256:188cb84d5d0bb4063d4ce5a3b9c3832445a5acda5604911cda80a9136d1850a0",
+        "volume": "chio-required-kernel-store-claude-r5-after-receipt-r2",
+        "auditVolume": "chio-required-kernel-store-claude-r5-after-receipt-r2-audit",
+        "policySha256": "8c2c732d9115799b13150f7924da0e68fc1f9b2d42a2618912511d407035cc66",
+        "ownerLauncher": "/Users/connor/Medica/backbay/standalone/arc/.worktrees/required-agent-integrations-20260909/integrations/required-agents/serve-filesystem.py",
+        "ownerLauncherSha256": "24187dd47e497d226fb0b1f6652a006a2514cff6bc84fea9b35361e948ed6399",
+        "barrierSha256": "a690f141d14fb3b9a18a8541e89bb5eabf76a18f71e504ad16cd2878bec398b6",
+        "helperSha256": "7de25889696ee9c1cca324130c6f10e34a41bdce555495a118673ad1336dd8d5",
+        "prepareGatewaySha256": "9dacf32a85c2083f0d3804771dc8a648d0eeff9c6faa5440b44f008bc1c43892",
+        "hostSessionId": "51456abf-63e8-40fe-a42c-8ef4521a0f38",
+        "sessionCredential": {
+          "schema": "chio.mcp.session-credential.v1",
+          "sessionId": "cef3083b19460468f7bf30c87adc39b6771bc961ec27a5b59d0bbe0e72ebc02f",
+          "subjectKey": "4576a64720228ea8d51304a9e05b42e2654d60ec0f01b0a519cd672aad3f0318",
+          "capabilityIds": [
+            "cap-01a08953-553d-7431-861e-394bccfb8823"
+          ],
+          "serverId": "fs",
+          "endpointPath": "/mcp",
+          "allowedTools": [
+            "edit_file",
+            "list_directory",
+            "read_text_file",
+            "write_file"
+          ],
+          "issuedAt": 1789010335,
+          "expiresAt": 1789013935
+        },
+        "createdAtEpoch": 1789010335.232053,
+        "testOnlyTransportCutpoint": "/workspace/uncertain.txt reply held after resource returns"
+      },
+      "driverSha256": "04957d902deb12b40fda451623de4af8c68900d27a55f72c81d433e20e2798a9"
+    },
+    {
+      "case": "before-admission",
+      "port": 58515,
+      "evidence": "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission-r2",
+      "result": {
+        "passed": true,
+        "cutpoint": "before-admission",
+        "originalRequestId": "260e53db-7801-4337-ab89-2f4d83dec6c2:e8c898bfe1fe39e55fb692c83d1f3f023ef4fa8f4f556d5e661451d1cf0c4973",
+        "positiveDispatches": 1,
+        "faultDispatches": 0,
+        "dispatchesAfterRetriesAndRestart": 1,
+        "unknownAcknowledged": false,
+        "originalAuthorityPreserved": true,
+        "ownerRestarted": true,
+        "admissionState": null,
+        "retainedToolOutcomes": 0,
+        "ownerFences": [
+          {
+            "table": "remote_session_credential_calls",
+            "requestId": "260e53db-7801-4337-ab89-2f4d83dec6c2:e8c898bfe1fe39e55fb692c83d1f3f023ef4fa8f4f556d5e661451d1cf0c4973",
+            "state": "fenced",
+            "signatureVerifiedAgainstPinnedKernel": true,
+            "tamperedRequestRejected": true,
+            "canonicalPreimageSha256": "cd6f3bd75b05f204e49b580b073b5f287f9673c9f85037ba04aaed80a2a44693"
+          },
+          {
+            "table": "remote_session_credential_latches",
+            "requestId": "260e53db-7801-4337-ab89-2f4d83dec6c2:e8c898bfe1fe39e55fb692c83d1f3f023ef4fa8f4f556d5e661451d1cf0c4973",
+            "state": "fenced",
+            "signatureVerifiedAgainstPinnedKernel": true,
+            "tamperedRequestRejected": true,
+            "canonicalPreimageSha256": "cd6f3bd75b05f204e49b580b073b5f287f9673c9f85037ba04aaed80a2a44693"
+          }
+        ],
+        "recoveryClaim": "safe refusal with retained uncertainty; no new authority or automatic reconciliation"
+      },
+      "owner": "/Users/connor/.local/share/chio-required-operators/kernel-storage-fault-20260909/claude-r5-before-admission-r2",
+      "ownerManifest": {
+        "owner": "/Users/connor/.local/share/chio-required-operators/kernel-storage-fault-20260909/claude-r5-before-admission-r2",
+        "gatewayConfig": "/Users/connor/.local/share/chio-required-operators/kernel-storage-fault-20260909/claude-r5-before-admission-r2/gateway.json",
+        "output": "/private/tmp/chio-kernel-storage-fault-20260909/claude-r5-before-admission-r2",
+        "endpoint": "http://127.0.0.1:58515",
+        "kernelSha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
+        "image": "sha256:188cb84d5d0bb4063d4ce5a3b9c3832445a5acda5604911cda80a9136d1850a0",
+        "volume": "chio-required-kernel-store-claude-r5-before-admission-r2",
+        "auditVolume": "chio-required-kernel-store-claude-r5-before-admission-r2-audit",
+        "policySha256": "8c2c732d9115799b13150f7924da0e68fc1f9b2d42a2618912511d407035cc66",
+        "ownerLauncher": "/Users/connor/Medica/backbay/standalone/arc/.worktrees/required-agent-integrations-20260909/integrations/required-agents/serve-filesystem.py",
+        "ownerLauncherSha256": "24187dd47e497d226fb0b1f6652a006a2514cff6bc84fea9b35361e948ed6399",
+        "barrierSha256": "a690f141d14fb3b9a18a8541e89bb5eabf76a18f71e504ad16cd2878bec398b6",
+        "helperSha256": "7de25889696ee9c1cca324130c6f10e34a41bdce555495a118673ad1336dd8d5",
+        "prepareGatewaySha256": "9dacf32a85c2083f0d3804771dc8a648d0eeff9c6faa5440b44f008bc1c43892",
+        "hostSessionId": "260e53db-7801-4337-ab89-2f4d83dec6c2",
+        "sessionCredential": {
+          "schema": "chio.mcp.session-credential.v1",
+          "sessionId": "82ffdeceaa0a3dac5dbd195f44abafb449c20f6d58f6cfda71ed6e7334b8cbaa",
+          "subjectKey": "973d4f12062a50e9025f3912ca237b32361d353795f4377d1a68e76b14af00c5",
+          "capabilityIds": [
+            "cap-01a08953-5717-79a1-a8b0-d4106e647cbe"
+          ],
+          "serverId": "fs",
+          "endpointPath": "/mcp",
+          "allowedTools": [
+            "edit_file",
+            "list_directory",
+            "read_text_file",
+            "write_file"
+          ],
+          "issuedAt": 1789010335,
+          "expiresAt": 1789013935
+        },
+        "createdAtEpoch": 1789010335.7021508,
+        "testOnlyTransportCutpoint": "/workspace/uncertain.txt reply held after resource returns"
+      },
+      "driverSha256": "04957d902deb12b40fda451623de4af8c68900d27a55f72c81d433e20e2798a9"
+    },
+    {
+      "case": "after-admission",
+      "port": 58516,
+      "evidence": "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission-r2",
+      "result": {
+        "passed": true,
+        "cutpoint": "after-admission",
+        "originalRequestId": "0bd2cfab-f0b0-4d3a-b07b-93fa747bd613:3fa531e02d59a567557eeb2bceb51d29908340fa6c0e011cf6c75a960188692c",
+        "positiveDispatches": 1,
+        "faultDispatches": 1,
+        "dispatchesAfterRetriesAndRestart": 2,
+        "unknownAcknowledged": false,
+        "originalAuthorityPreserved": true,
+        "ownerRestarted": true,
+        "admissionState": "outcome_unknown_after_dispatch",
+        "retainedToolOutcomes": 0,
+        "ownerFences": [
+          {
+            "table": "remote_session_credential_calls",
+            "requestId": "0bd2cfab-f0b0-4d3a-b07b-93fa747bd613:3fa531e02d59a567557eeb2bceb51d29908340fa6c0e011cf6c75a960188692c",
+            "state": "fenced",
+            "signatureVerifiedAgainstPinnedKernel": true,
+            "tamperedRequestRejected": true,
+            "canonicalPreimageSha256": "48364dff6e2509dbad043d4fe1dbe0647c3508afd2796e09d0f26c9fcb897801"
+          },
+          {
+            "table": "remote_session_credential_latches",
+            "requestId": "0bd2cfab-f0b0-4d3a-b07b-93fa747bd613:3fa531e02d59a567557eeb2bceb51d29908340fa6c0e011cf6c75a960188692c",
+            "state": "fenced",
+            "signatureVerifiedAgainstPinnedKernel": true,
+            "tamperedRequestRejected": true,
+            "canonicalPreimageSha256": "48364dff6e2509dbad043d4fe1dbe0647c3508afd2796e09d0f26c9fcb897801"
+          }
+        ],
+        "recoveryClaim": "safe refusal with retained uncertainty; no new authority or automatic reconciliation"
+      },
+      "owner": "/Users/connor/.local/share/chio-required-operators/kernel-storage-fault-20260909/claude-r5-after-admission-r2",
+      "ownerManifest": {
+        "owner": "/Users/connor/.local/share/chio-required-operators/kernel-storage-fault-20260909/claude-r5-after-admission-r2",
+        "gatewayConfig": "/Users/connor/.local/share/chio-required-operators/kernel-storage-fault-20260909/claude-r5-after-admission-r2/gateway.json",
+        "output": "/private/tmp/chio-kernel-storage-fault-20260909/claude-r5-after-admission-r2",
+        "endpoint": "http://127.0.0.1:58516",
+        "kernelSha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
+        "image": "sha256:188cb84d5d0bb4063d4ce5a3b9c3832445a5acda5604911cda80a9136d1850a0",
+        "volume": "chio-required-kernel-store-claude-r5-after-admission-r2",
+        "auditVolume": "chio-required-kernel-store-claude-r5-after-admission-r2-audit",
+        "policySha256": "8c2c732d9115799b13150f7924da0e68fc1f9b2d42a2618912511d407035cc66",
+        "ownerLauncher": "/Users/connor/Medica/backbay/standalone/arc/.worktrees/required-agent-integrations-20260909/integrations/required-agents/serve-filesystem.py",
+        "ownerLauncherSha256": "24187dd47e497d226fb0b1f6652a006a2514cff6bc84fea9b35361e948ed6399",
+        "barrierSha256": "a690f141d14fb3b9a18a8541e89bb5eabf76a18f71e504ad16cd2878bec398b6",
+        "helperSha256": "7de25889696ee9c1cca324130c6f10e34a41bdce555495a118673ad1336dd8d5",
+        "prepareGatewaySha256": "9dacf32a85c2083f0d3804771dc8a648d0eeff9c6faa5440b44f008bc1c43892",
+        "hostSessionId": "0bd2cfab-f0b0-4d3a-b07b-93fa747bd613",
+        "sessionCredential": {
+          "schema": "chio.mcp.session-credential.v1",
+          "sessionId": "15526eca8d9f42d055d799b701ba5f2043904d9f90fca9df13fb36294fec83ff",
+          "subjectKey": "7dfdee4b162d0e4f12a5419e103625667cafd4c43822496b8cdf6845e0c6ced9",
+          "capabilityIds": [
+            "cap-01a08953-5a0c-7312-9543-fb9ed68cc2c8"
+          ],
+          "serverId": "fs",
+          "endpointPath": "/mcp",
+          "allowedTools": [
+            "edit_file",
+            "list_directory",
+            "read_text_file",
+            "write_file"
+          ],
+          "issuedAt": 1789010336,
+          "expiresAt": 1789013936
+        },
+        "createdAtEpoch": 1789010336.463936,
+        "testOnlyTransportCutpoint": "/workspace/uncertain.txt reply held after resource returns"
+      },
+      "driverSha256": "04957d902deb12b40fda451623de4af8c68900d27a55f72c81d433e20e2798a9"
+    }
+  ],
+  "rejectedSetup": [
+    "/tmp/chio-claude-kernel-storage-r5-20260909/after-receipt",
+    "/tmp/chio-claude-kernel-storage-r5-20260909/before-admission",
+    "/tmp/chio-claude-kernel-storage-r5-20260909/after-admission"
+  ],
+  "rejectedSetupReason": "Shared helper used a non-UUID host session; native launcher rejected before tools, faults, or effects. Preserved old states; fresh UUID r2 owners created.",
+  "operationalNote": "/tmp/chio-claude-kernel-storage-r5-20260909/OPERATIONAL-NOTE.md",
+  "timing": "/tmp/chio-claude-kernel-storage-r5-20260909/operational-timing.json",
+  "secretScan": "/tmp/chio-claude-kernel-storage-r5-20260909/secret-scan.json",
+  "ownerState": "Retained and running after supported same-owner restart; credentials and original unknown operations remain fenced. Never reuse as fresh authority or erase uncertainty.",
+  "intervention": "No new authority, session preparation, unknown ACK, journal clearing, or resource deletion after the fault. Identical and new actions fenced before and after restart.",
+  "copyGuidance": "All evidence files under this root are bounded raw observations/source snapshots and may be archived after the recorded secret scan. Shared owner manifests and create commands also remain under /tmp/chio-kernel-storage-fault-20260909/claude-r5-*-r2."
+}

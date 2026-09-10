@@ -1,0 +1,5 @@
+{
+  "passed": false,
+  "cutpoint": "before-admission",
+  "error": "Expected native subscription provider path"
+}

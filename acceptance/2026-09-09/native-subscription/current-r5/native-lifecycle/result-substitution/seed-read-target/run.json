@@ -1,0 +1,23 @@
+{
+  "label": "seed-read-target",
+  "exitCode": 0,
+  "timeout": false,
+  "elapsedSeconds": 10.957,
+  "runtime": "/tmp/chio-claude-native-runtime-cc56c52d270840eaaaaec9d7108d2acb",
+  "newDispatchRows": 1,
+  "terminal": {
+    "code": 0,
+    "signal": null,
+    "exitCode": 0,
+    "hostInitialization": {
+      "ready": true,
+      "failed": false
+    },
+    "hostDelivery": {
+      "confirmed": 1,
+      "failed": false
+    },
+    "executionOutcome": "completed",
+    "retry": "never-automatic"
+  }
+}

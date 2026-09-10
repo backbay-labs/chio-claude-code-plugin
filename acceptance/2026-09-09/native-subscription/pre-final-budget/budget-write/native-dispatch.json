@@ -1,0 +1,18 @@
+{
+  "launchPreflightRefused": false,
+  "calls": [
+    {
+      "id": "toolu_01NAMjaxDw1vgnmRaA3ytmNc",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/claude-budget-8d6a48f496a1.txt",
+        "content": "native aggregate original"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_01NAMjaxDw1vgnmRaA3ytmNc"
+  ],
+  "expectedAttemptObserved": true,
+  "attemptCount": 1
+}

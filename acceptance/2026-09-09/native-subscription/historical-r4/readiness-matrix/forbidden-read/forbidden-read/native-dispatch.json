@@ -1,0 +1,17 @@
+{
+  "launchPreflightRefused": false,
+  "calls": [
+    {
+      "id": "toolu_01LMbhhrDJ9tQC6ixqyNGmy3",
+      "name": "mcp__chio__read_text_file",
+      "arguments": {
+        "path": "/workspace/secret.txt"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_01LMbhhrDJ9tQC6ixqyNGmy3"
+  ],
+  "expectedAttemptObserved": true,
+  "attemptCount": 1
+}

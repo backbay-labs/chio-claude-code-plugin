@@ -1,0 +1,440 @@
+{
+  "evidence_class": "REAL_HOST_LOCAL_MODEL_FIXTURE_NO_CHIO_KERNEL",
+  "root": "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916",
+  "host_version": "2.1.266 (Claude Code)",
+  "host_sha256": "553d1b9e9e7068b275c0a783c7e139ff6503096f286e674c8c919379fb0eca62",
+  "cases": [
+    {
+      "case": "observer-positive-control",
+      "exit_code": 0,
+      "elapsed_seconds": 0.384,
+      "model_requests": 2,
+      "effect_observed": "contract-effect",
+      "settings": {
+        "permissions": {
+          "allow": [
+            "Bash"
+          ]
+        }
+      },
+      "command": [
+        "/Users/connor/.local/bin/claude",
+        "-p",
+        "--model",
+        "claude-sonnet-4-5",
+        "--output-format",
+        "stream-json",
+        "--verbose",
+        "--setting-sources",
+        "",
+        "--settings",
+        "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916/observer-positive-control/settings.json",
+        "--strict-mcp-config",
+        "--mcp-config",
+        "{\"mcpServers\":{}}",
+        "--no-chrome",
+        "--permission-mode",
+        "dontAsk",
+        "--no-session-persistence",
+        "--include-hook-events",
+        "--tools",
+        "Bash"
+      ]
+    },
+    {
+      "case": "structured-deny",
+      "exit_code": 0,
+      "elapsed_seconds": 0.366,
+      "model_requests": 2,
+      "effect_observed": null,
+      "settings": {
+        "permissions": {
+          "allow": [
+            "Bash"
+          ]
+        },
+        "hooks": {
+          "PreToolUse": [
+            {
+              "matcher": "Bash",
+              "hooks": [
+                {
+                  "type": "command",
+                  "command": "/opt/homebrew/bin/node /private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916/structured-deny/hook.mjs",
+                  "timeout": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "command": [
+        "/Users/connor/.local/bin/claude",
+        "-p",
+        "--model",
+        "claude-sonnet-4-5",
+        "--output-format",
+        "stream-json",
+        "--verbose",
+        "--setting-sources",
+        "",
+        "--settings",
+        "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916/structured-deny/settings.json",
+        "--strict-mcp-config",
+        "--mcp-config",
+        "{\"mcpServers\":{}}",
+        "--no-chrome",
+        "--permission-mode",
+        "dontAsk",
+        "--no-session-persistence",
+        "--include-hook-events",
+        "--tools",
+        "Bash"
+      ]
+    },
+    {
+      "case": "blocking-exit-two",
+      "exit_code": 0,
+      "elapsed_seconds": 0.363,
+      "model_requests": 2,
+      "effect_observed": null,
+      "settings": {
+        "permissions": {
+          "allow": [
+            "Bash"
+          ]
+        },
+        "hooks": {
+          "PreToolUse": [
+            {
+              "matcher": "Bash",
+              "hooks": [
+                {
+                  "type": "command",
+                  "command": "/opt/homebrew/bin/node /private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916/blocking-exit-two/hook.mjs",
+                  "timeout": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "command": [
+        "/Users/connor/.local/bin/claude",
+        "-p",
+        "--model",
+        "claude-sonnet-4-5",
+        "--output-format",
+        "stream-json",
+        "--verbose",
+        "--setting-sources",
+        "",
+        "--settings",
+        "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916/blocking-exit-two/settings.json",
+        "--strict-mcp-config",
+        "--mcp-config",
+        "{\"mcpServers\":{}}",
+        "--no-chrome",
+        "--permission-mode",
+        "dontAsk",
+        "--no-session-persistence",
+        "--include-hook-events",
+        "--tools",
+        "Bash"
+      ]
+    },
+    {
+      "case": "hook-crash",
+      "exit_code": 0,
+      "elapsed_seconds": 0.453,
+      "model_requests": 2,
+      "effect_observed": "contract-effect",
+      "settings": {
+        "permissions": {
+          "allow": [
+            "Bash"
+          ]
+        },
+        "hooks": {
+          "PreToolUse": [
+            {
+              "matcher": "Bash",
+              "hooks": [
+                {
+                  "type": "command",
+                  "command": "/opt/homebrew/bin/node /private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916/hook-crash/hook.mjs",
+                  "timeout": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "command": [
+        "/Users/connor/.local/bin/claude",
+        "-p",
+        "--model",
+        "claude-sonnet-4-5",
+        "--output-format",
+        "stream-json",
+        "--verbose",
+        "--setting-sources",
+        "",
+        "--settings",
+        "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916/hook-crash/settings.json",
+        "--strict-mcp-config",
+        "--mcp-config",
+        "{\"mcpServers\":{}}",
+        "--no-chrome",
+        "--permission-mode",
+        "dontAsk",
+        "--no-session-persistence",
+        "--include-hook-events",
+        "--tools",
+        "Bash"
+      ]
+    },
+    {
+      "case": "hook-missing",
+      "exit_code": 0,
+      "elapsed_seconds": 0.461,
+      "model_requests": 2,
+      "effect_observed": "contract-effect",
+      "settings": {
+        "permissions": {
+          "allow": [
+            "Bash"
+          ]
+        },
+        "hooks": {
+          "PreToolUse": [
+            {
+              "matcher": "Bash",
+              "hooks": [
+                {
+                  "type": "command",
+                  "command": "/opt/homebrew/bin/node /private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916/hook-missing/hook.mjs",
+                  "timeout": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "command": [
+        "/Users/connor/.local/bin/claude",
+        "-p",
+        "--model",
+        "claude-sonnet-4-5",
+        "--output-format",
+        "stream-json",
+        "--verbose",
+        "--setting-sources",
+        "",
+        "--settings",
+        "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916/hook-missing/settings.json",
+        "--strict-mcp-config",
+        "--mcp-config",
+        "{\"mcpServers\":{}}",
+        "--no-chrome",
+        "--permission-mode",
+        "dontAsk",
+        "--no-session-persistence",
+        "--include-hook-events",
+        "--tools",
+        "Bash"
+      ]
+    },
+    {
+      "case": "hook-timeout",
+      "exit_code": 0,
+      "elapsed_seconds": 1.415,
+      "model_requests": 2,
+      "effect_observed": "contract-effect",
+      "settings": {
+        "permissions": {
+          "allow": [
+            "Bash"
+          ]
+        },
+        "hooks": {
+          "PreToolUse": [
+            {
+              "matcher": "Bash",
+              "hooks": [
+                {
+                  "type": "command",
+                  "command": "/opt/homebrew/bin/node /private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916/hook-timeout/hook.mjs",
+                  "timeout": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "command": [
+        "/Users/connor/.local/bin/claude",
+        "-p",
+        "--model",
+        "claude-sonnet-4-5",
+        "--output-format",
+        "stream-json",
+        "--verbose",
+        "--setting-sources",
+        "",
+        "--settings",
+        "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916/hook-timeout/settings.json",
+        "--strict-mcp-config",
+        "--mcp-config",
+        "{\"mcpServers\":{}}",
+        "--no-chrome",
+        "--permission-mode",
+        "dontAsk",
+        "--no-session-persistence",
+        "--include-hook-events",
+        "--tools",
+        "Bash"
+      ]
+    },
+    {
+      "case": "hook-malformed-output",
+      "exit_code": 0,
+      "elapsed_seconds": 0.468,
+      "model_requests": 2,
+      "effect_observed": "contract-effect",
+      "settings": {
+        "permissions": {
+          "allow": [
+            "Bash"
+          ]
+        },
+        "hooks": {
+          "PreToolUse": [
+            {
+              "matcher": "Bash",
+              "hooks": [
+                {
+                  "type": "command",
+                  "command": "/opt/homebrew/bin/node /private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916/hook-malformed-output/hook.mjs",
+                  "timeout": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "command": [
+        "/Users/connor/.local/bin/claude",
+        "-p",
+        "--model",
+        "claude-sonnet-4-5",
+        "--output-format",
+        "stream-json",
+        "--verbose",
+        "--setting-sources",
+        "",
+        "--settings",
+        "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916/hook-malformed-output/settings.json",
+        "--strict-mcp-config",
+        "--mcp-config",
+        "{\"mcpServers\":{}}",
+        "--no-chrome",
+        "--permission-mode",
+        "dontAsk",
+        "--no-session-persistence",
+        "--include-hook-events",
+        "--tools",
+        "Bash"
+      ]
+    },
+    {
+      "case": "hook-silent-omission",
+      "exit_code": 0,
+      "elapsed_seconds": 0.457,
+      "model_requests": 2,
+      "effect_observed": "contract-effect",
+      "settings": {
+        "permissions": {
+          "allow": [
+            "Bash"
+          ]
+        },
+        "hooks": {
+          "PreToolUse": [
+            {
+              "matcher": "Bash",
+              "hooks": [
+                {
+                  "type": "command",
+                  "command": "/opt/homebrew/bin/node /private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916/hook-silent-omission/hook.mjs",
+                  "timeout": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "command": [
+        "/Users/connor/.local/bin/claude",
+        "-p",
+        "--model",
+        "claude-sonnet-4-5",
+        "--output-format",
+        "stream-json",
+        "--verbose",
+        "--setting-sources",
+        "",
+        "--settings",
+        "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916/hook-silent-omission/settings.json",
+        "--strict-mcp-config",
+        "--mcp-config",
+        "{\"mcpServers\":{}}",
+        "--no-chrome",
+        "--permission-mode",
+        "dontAsk",
+        "--no-session-persistence",
+        "--include-hook-events",
+        "--tools",
+        "Bash"
+      ]
+    },
+    {
+      "case": "restricted-native-unavailable",
+      "exit_code": 0,
+      "elapsed_seconds": 0.294,
+      "model_requests": 2,
+      "effect_observed": null,
+      "settings": {
+        "permissions": {
+          "allow": [
+            "Bash"
+          ]
+        }
+      },
+      "command": [
+        "/Users/connor/.local/bin/claude",
+        "-p",
+        "--model",
+        "claude-sonnet-4-5",
+        "--output-format",
+        "stream-json",
+        "--verbose",
+        "--setting-sources",
+        "",
+        "--settings",
+        "/private/var/folders/jy/95wms_mn265f0bpj_v6wc4zh0000gn/T/chio-claude-contract-7sibg916/restricted-native-unavailable/settings.json",
+        "--strict-mcp-config",
+        "--mcp-config",
+        "{\"mcpServers\":{}}",
+        "--no-chrome",
+        "--permission-mode",
+        "dontAsk",
+        "--no-session-persistence",
+        "--include-hook-events",
+        "--tools",
+        "",
+        "--restricted"
+      ]
+    }
+  ]
+}

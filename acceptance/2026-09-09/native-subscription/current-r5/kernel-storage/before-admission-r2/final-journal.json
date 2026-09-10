@@ -1,0 +1,178 @@
+[
+  {
+    "requestId": "260e53db-7801-4337-ab89-2f4d83dec6c2:e8c898bfe1fe39e55fb692c83d1f3f023ef4fa8f4f556d5e661451d1cf0c4973",
+    "digest": "f721b64269f2416a81bf066d8757d32631f2be8a66f4431f6ccbd946a6c43c26",
+    "state": "unknown",
+    "outcome": {
+      "state": "unknown",
+      "evidence": "verified",
+      "requestId": "260e53db-7801-4337-ab89-2f4d83dec6c2:e8c898bfe1fe39e55fb692c83d1f3f023ef4fa8f4f556d5e661451d1cf0c4973",
+      "receipt": {
+        "action": {
+          "parameter_hash": "e2afefffbb873726008d2574f7162b084477afab3669368f52ef22bd53e41e4e",
+          "parameters": {
+            "content": "retain original native storage effect before-admission",
+            "path": "/workspace/before-fault.txt"
+          }
+        },
+        "boundary_class": "prevent",
+        "capability_id": "cap-01a08953-5717-79a1-a8b0-d4106e647cbe",
+        "content_hash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+        "decision": {
+          "guard": "kernel",
+          "reason": "durable admission failed: admission operation store is unavailable: database is locked",
+          "verdict": "deny"
+        },
+        "id": "284fce4897452b299dc4739b923d3bdeff8174494874c5889912e1905153ecc6",
+        "kernel_key": "fd8aa8ef9bc8cfc15eed5c80d86dde797a344c32c06cef74e1c8aa2c64c30648",
+        "metadata": {
+          "attribution": {
+            "delegation_depth": 0,
+            "issuer_key": "ae6f7c044617c012efb2f9f1c8316514d6aab07903df4baf2184806a0b3803f9",
+            "subject_key": "973d4f12062a50e9025f3912ca237b32361d353795f4377d1a68e76b14af00c5"
+          },
+          "chio_receipt_signing_nonce": "rcpt-01a08954-1356-7110-ac10-042e741f3bb2",
+          "receipt_context": {
+            "request_id": "260e53db-7801-4337-ab89-2f4d83dec6c2:e8c898bfe1fe39e55fb692c83d1f3f023ef4fa8f4f556d5e661451d1cf0c4973"
+          }
+        },
+        "policy_hash": "057b9a8160375e7d90841325639bdd66050a454f393dae23e8c813b8df74b84e",
+        "receipt_kind": "mediated_decision",
+        "redaction_mode": "none",
+        "signature": "9af253c0a972c812f84fecada356b50c332832b018d04c4f426886a1dab3a4dd0d3df55e186c48440dd3755c7dbef7120c0981e147c408bf5ff6f7986bdcc804",
+        "timestamp": 1789010378,
+        "tool_name": "write_file",
+        "tool_origin": "caller_executed",
+        "tool_server": "fs",
+        "trust_level": "mediated"
+      },
+      "reason": "durable admission rejected this attempt; the original operation requires reconciliation"
+    },
+    "acknowledged": false,
+    "hostDeliveryRequired": true,
+    "request": {
+      "tool": "write_file",
+      "arguments": {
+        "path": "/workspace/before-fault.txt",
+        "content": "retain original native storage effect before-admission"
+      },
+      "requestId": "260e53db-7801-4337-ab89-2f4d83dec6c2:e8c898bfe1fe39e55fb692c83d1f3f023ef4fa8f4f556d5e661451d1cf0c4973"
+    }
+  },
+  {
+    "requestId": "260e53db-7801-4337-ab89-2f4d83dec6c2:5e0b65300e7f68967a1e51485ffcf1b94ec7c00cc07a3b73e235f92c3bb6ada5",
+    "digest": "b5a44b75b34f290fde560887ffcd5b204d5877fa4b1d565dc0146a292c37680d",
+    "state": "completed",
+    "outcome": {
+      "state": "completed",
+      "evidence": "verified",
+      "requestId": "260e53db-7801-4337-ab89-2f4d83dec6c2:5e0b65300e7f68967a1e51485ffcf1b94ec7c00cc07a3b73e235f92c3bb6ada5",
+      "receipt": {
+        "action": {
+          "parameter_hash": "b877496e49fb78a2e862c30bfc7d1ab1d8f0b89114440a109933ce5533f34b25",
+          "parameters": {
+            "content": "acknowledged Claude positive before-admission",
+            "path": "/workspace/claude-storage-positive.txt"
+          }
+        },
+        "boundary_class": "prevent",
+        "capability_id": "cap-01a08953-5717-79a1-a8b0-d4106e647cbe",
+        "content_hash": "80f17dc4938a1f5f8a58b19a0ae5d1f9d22eec90d9150c24d3e138581a9af6e5",
+        "decision": {
+          "verdict": "allow"
+        },
+        "id": "0180f4b2f9fba8ec623956580815404ee0ac2ccefc2821d392099aefa5ff80dd",
+        "kernel_key": "fd8aa8ef9bc8cfc15eed5c80d86dde797a344c32c06cef74e1c8aa2c64c30648",
+        "metadata": {
+          "admission_operation": {
+            "compensation_status": "not_compensated",
+            "coordinator_lease_epoch": 2,
+            "coordinator_lease_id": "01a08953-5107-7b80-8aca-2fea9fd90b3f",
+            "operation_id": "a813a9152ae128018e8a15a5f57a24c292953793324917a2b98ea1d2bf11b485",
+            "projected_dispatch_state": "terminal",
+            "projected_operation_version": 8,
+            "projected_state": "completed",
+            "request_binding_hash": "bd934d0497026deddda06e787cecbc041c05eaedea757c0c87a7355240df2e6d",
+            "request_id": "260e53db-7801-4337-ab89-2f4d83dec6c2:5e0b65300e7f68967a1e51485ffcf1b94ec7c00cc07a3b73e235f92c3bb6ada5",
+            "request_namespace_digest": "6128dc40d9837bd290707cd43b248d99246790960ad2f7aa116fff93a41db7c9",
+            "retained_dispatch_commit": {
+              "committed_version": 6,
+              "coordinator_lease_epoch": 2,
+              "coordinator_lease_id": "01a08953-5107-7b80-8aca-2fea9fd90b3f",
+              "provider_attempt": {
+                "attempt_id": "attempt:a813a9152ae128018e8a15a5f57a24c292953793324917a2b98ea1d2bf11b485",
+                "operation_id": "a813a9152ae128018e8a15a5f57a24c292953793324917a2b98ea1d2bf11b485",
+                "transport_id": "kernel-tool-server:fs",
+                "transport_key_epoch": 2
+              },
+              "store_fence": {
+                "lease_id": "01a08953-5107-7b80-8aca-2fea9fd90b3f",
+                "owner_epoch": 2,
+                "store_uuid": "01a08953-4aef-7e63-82a4-e9f8c6d40ed8"
+              }
+            },
+            "schema": "chio.admission-receipt.v1",
+            "store_fence": {
+              "lease_id": "01a08953-5107-7b80-8aca-2fea9fd90b3f",
+              "owner_epoch": 2,
+              "store_uuid": "01a08953-4aef-7e63-82a4-e9f8c6d40ed8"
+            },
+            "tool_outcome_id": "48f64acfe85691a542ac45efe2dca86f875d3163c1a79116b7c20202484cd855",
+            "tool_outcome_version": 2,
+            "trusted_time_unix_ms": 1789010370361
+          },
+          "attribution": {
+            "delegation_depth": 0,
+            "grant_index": 0,
+            "issuer_key": "ae6f7c044617c012efb2f9f1c8316514d6aab07903df4baf2184806a0b3803f9",
+            "subject_key": "973d4f12062a50e9025f3912ca237b32361d353795f4377d1a68e76b14af00c5"
+          },
+          "chio_receipt_signing_nonce": "rcpt-01a08953-dfc2-7bb0-a0e6-5a3d3bca5619",
+          "receipt_context": {
+            "request_id": "260e53db-7801-4337-ab89-2f4d83dec6c2:5e0b65300e7f68967a1e51485ffcf1b94ec7c00cc07a3b73e235f92c3bb6ada5"
+          }
+        },
+        "policy_hash": "057b9a8160375e7d90841325639bdd66050a454f393dae23e8c813b8df74b84e",
+        "receipt_kind": "mediated_decision",
+        "redaction_mode": "none",
+        "signature": "06e8455b2c64630aa6c7bc885731fd453b866f009edb6ff544375a9055c633620373a87764c1cf2fa1a0919c498dc726f24be7bb56f9979f09c1f5b7d722d409",
+        "timestamp": 1789010370,
+        "tool_name": "write_file",
+        "tool_origin": "caller_executed",
+        "tool_server": "fs",
+        "trust_level": "mediated"
+      },
+      "result": {
+        "content": [
+          {
+            "text": "Successfully wrote to /workspace/claude-storage-positive.txt",
+            "type": "text"
+          }
+        ],
+        "isError": false,
+        "structuredContent": {
+          "content": "Successfully wrote to /workspace/claude-storage-positive.txt"
+        }
+      },
+      "delivery": {
+        "acknowledgement": "prKghxiUgolxf-rpbwlN5wGKel28Al_2X8pefjLbMwo",
+        "receiptId": "0180f4b2f9fba8ec623956580815404ee0ac2ccefc2821d392099aefa5ff80dd",
+        "requestHash": "6e6c61b94d61875b6ed22050bd735b7e52cb6b80684d3dc97933a8313b2cb67b",
+        "requestId": "260e53db-7801-4337-ab89-2f4d83dec6c2:5e0b65300e7f68967a1e51485ffcf1b94ec7c00cc07a3b73e235f92c3bb6ada5",
+        "resultHash": "80f17dc4938a1f5f8a58b19a0ae5d1f9d22eec90d9150c24d3e138581a9af6e5",
+        "schema": "chio.mcp.delivery-ack.v1"
+      }
+    },
+    "acknowledged": true,
+    "hostDeliveryRequired": true,
+    "request": {
+      "tool": "write_file",
+      "arguments": {
+        "path": "/workspace/claude-storage-positive.txt",
+        "content": "acknowledged Claude positive before-admission"
+      },
+      "requestId": "260e53db-7801-4337-ab89-2f4d83dec6c2:5e0b65300e7f68967a1e51485ffcf1b94ec7c00cc07a3b73e235f92c3bb6ada5"
+    },
+    "hostDeliveryConfirmed": true
+  }
+]

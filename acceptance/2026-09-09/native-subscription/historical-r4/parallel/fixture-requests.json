@@ -1,0 +1,42 @@
+[
+  {
+    "path": "/v1/messages?beta=true",
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "toolResults": []
+  },
+  {
+    "path": "/v1/messages?beta=true",
+    "tools": [
+      "mcp__chio__edit_file",
+      "mcp__chio__list_directory",
+      "mcp__chio__read_text_file",
+      "mcp__chio__write_file"
+    ],
+    "toolResults": [
+      {
+        "tool_use_id": "toolu_parallel_a",
+        "type": "tool_result",
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"state\":\"completed\",\"evidence\":\"verified\",\"requestId\":\"10a42804-244d-4643-b845-fba42f170a30:4ebe2bbdad55f410224798bb49644a2b4a86eba7f4176aca84c501fe02dd5e78\",\"receipt\":{\"action\":{\"parameter_hash\":\"35273ab04ccf0217c4576014f0ea5c502e43c8f3b0297c6a045b6ae85f0804fb\",\"parameters\":{\"content\":\"parallel native fixture a\",\"path\":\"/workspace/claude-parallel-aa7ba3782bc74dcbbf151468d369fc06.txt\"}},\"boundary_class\":\"prevent\",\"capability_id\":\"cap-01a08936-50ab-7f10-bf9d-2b6bb54309ac\",\"content_hash\":\"ffe437e0e37452ef2fc60389c812ca62cae393442bb75b9f2039acb53204099c\",\"decision\":{\"verdict\":\"allow\"},\"id\":\"0980d203c9d2f9d3c2733147133c292114b92aa3c720726d98c780b2d70af37e\",\"kernel_key\":\"1e5677d422400a3f2db017bb2b7864906a126285e1850556e0777c58d5ce1917\",\"metadata\":{\"admission_operation\":{\"compensation_status\":\"not_compensated\",\"coordinator_lease_epoch\":5,\"coordinator_lease_id\":\"01a08905-775c-7a51-8a58-264295ae47e6\",\"operation_id\":\"edd1583da32a5613c28fec87358a48831825fffa2b9d947e0ec34973085c8710\",\"projected_dispatch_state\":\"terminal\",\"projected_operation_version\":8,\"projected_state\":\"completed\",\"request_binding_hash\":\"4b1290360d73c6091efc3707d1c971dd21e72d1f1c2170e885685b108379154f\",\"request_id\":\"10a42804-244d-4643-b845-fba42f170a30:4ebe2bbdad55f410224798bb49644a2b4a86eba7f4176aca84c501fe02dd5e78\",\"request_namespace_digest\":\"1aaedbe2f5ee601eb08b78ce2bcd0c710638ece5bfca950551a34900d293fe77\",\"retained_dispatch_commit\":{\"committed_version\":6,\"coordinator_lease_epoch\":5,\"coordinator_lease_id\":\"01a08905-775c-7a51-8a58-264295ae47e6\",\"provider_attempt\":{\"attempt_id\":\"attempt:edd1583da32a5613c28fec87358a48831825fffa2b9d947e0ec34973085c8710\",\"operation_id\":\"edd1583da32a5613c28fec87358a48831825fffa2b9d947e0ec34973085c8710\",\"transport_id\":\"kernel-tool-server:fs\",\"transport_key_epoch\":5},\"store_fence\":{\"lease_id\":\"01a08905-775c-7a51-8a58-264295ae47e6\",\"owner_epoch\":5,\"store_uuid\":\"01a087b4-82fc-7ea3-8268-cda098970e9e\"}},\"schema\":\"chio.admission-receipt.v1\",\"store_fence\":{\"lease_id\":\"01a08905-775c-7a51-8a58-264295ae47e6\",\"owner_epoch\":5,\"store_uuid\":\"01a087b4-82fc-7ea3-8268-cda098970e9e\"},\"tool_outcome_id\":\"33fa80497bbced9ae8e6eb217c49fec40b392a34bb054f4ab867b5211c820408\",\"tool_outcome_version\":2,\"trusted_time_unix_ms\":1789008435267},\"attribution\":{\"delegation_depth\":0,\"grant_index\":0,\"issuer_key\":\"9b6890451ef646de65d88b26fdc1503c204947a1e743481bd036f9d4b0b2cee1\",\"subject_key\":\"411998f6392d51a7e359e379554013f0fe7dc86b5f17c10db9280a9abfcb28c9\"},\"chio_receipt_signing_nonce\":\"rcpt-01a08936-58c9-7c60-b4e3-231e2af73446\",\"receipt_context\":{\"request_id\":\"10a42804-244d-4643-b845-fba42f170a30:4ebe2bbdad55f410224798bb49644a2b4a86eba7f4176aca84c501fe02dd5e78\"}},\"policy_hash\":\"057b9a8160375e7d90841325639bdd66050a454f393dae23e8c813b8df74b84e\",\"receipt_kind\":\"mediated_decision\",\"redaction_mode\":\"none\",\"signature\":\"ec567a62ab4d40878303fbc69597c5b40c82220f9a05c64d4a36f5a8436c3f5508d85064f9b2ff3efc3ce510e9c75025fd3600f228b3835a6d210922959dcd03\",\"timestamp\":1789008435,\"tool_name\":\"write_file\",\"tool_origin\":\"caller_executed\",\"tool_server\":\"fs\",\"trust_level\":\"mediated\"},\"result\":{\"content\":[{\"text\":\"Successfully wrote to /workspace/claude-parallel-aa7ba3782bc74dcbbf151468d369fc06.txt\",\"type\":\"text\"}],\"isError\":false,\"structuredContent\":{\"content\":\"Successfully wrote to /workspace/claude-parallel-aa7ba3782bc74dcbbf151468d369fc06.txt\"}},\"delivery\":{\"acknowledgement\":\"UMj2McmuJR27xFJ0XyeVaeKVv04zqdpSN_EmHG5AFj4\",\"receiptId\":\"0980d203c9d2f9d3c2733147133c292114b92aa3c720726d98c780b2d70af37e\",\"requestHash\":\"fad571cccd2d6386c8720857d0842b100026b558b75d1b7ac17180993105f28d\",\"requestId\":\"10a42804-244d-4643-b845-fba42f170a30:4ebe2bbdad55f410224798bb49644a2b4a86eba7f4176aca84c501fe02dd5e78\",\"resultHash\":\"ffe437e0e37452ef2fc60389c812ca62cae393442bb75b9f2039acb53204099c\",\"schema\":\"chio.mcp.delivery-ack.v1\"}}"
+          }
+        ]
+      },
+      {
+        "type": "tool_result",
+        "content": "{\"state\":\"not_dispatched\",\"evidence\":\"unverified\",\"requestId\":\"10a42804-244d-4643-b845-fba42f170a30:0cf60115883c077310e86d726fac235af577bcd2fbaa0725d2e91eed38f1dd23\",\"reason\":\"an unresolved operation fences this gateway; operator reconciliation required\"}",
+        "is_error": true,
+        "tool_use_id": "toolu_parallel_b",
+        "cache_control": {
+          "type": "ephemeral"
+        }
+      }
+    ]
+  }
+]

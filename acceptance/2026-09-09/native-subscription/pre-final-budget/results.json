@@ -1,0 +1,102 @@
+[
+  {
+    "case": "budget-write",
+    "exitCode": 0,
+    "command": [
+      "node",
+      "/tmp/chio-claude-subscription-cold-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+      "--host",
+      "/Users/connor/.local/share/claude/versions/2.1.267",
+      "--host-sha256",
+      "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+      "--profile",
+      "/tmp/chio-claude-approval-runtime-62bc8aacb15740ec9363efd91ba7887d/profile",
+      "--workspace",
+      "/tmp/chio-claude-approval-runtime-62bc8aacb15740ec9363efd91ba7887d/workspace",
+      "--gateway-config",
+      "/Users/connor/.local/share/chio-required-operators/budget3-hosts-20260909/claude-approvals-a5e3e20ecba64667b8c38d6a48f496a1/gateway.json",
+      "--gateway-sha256",
+      "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+      "--model",
+      "claude-sonnet-5",
+      "--model-auth",
+      "claude-login"
+    ],
+    "newDispatchRows": 1
+  },
+  {
+    "case": "budget-edit",
+    "exitCode": 0,
+    "command": [
+      "node",
+      "/tmp/chio-claude-subscription-cold-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+      "--host",
+      "/Users/connor/.local/share/claude/versions/2.1.267",
+      "--host-sha256",
+      "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+      "--profile",
+      "/tmp/chio-claude-approval-runtime-db59aae9d90f4b16aa02bff02a773765/profile",
+      "--workspace",
+      "/tmp/chio-claude-approval-runtime-db59aae9d90f4b16aa02bff02a773765/workspace",
+      "--gateway-config",
+      "/Users/connor/.local/share/chio-required-operators/budget3-hosts-20260909/claude-approvals-a5e3e20ecba64667b8c38d6a48f496a1/gateway.json",
+      "--gateway-sha256",
+      "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+      "--model",
+      "claude-sonnet-5",
+      "--model-auth",
+      "claude-login"
+    ],
+    "newDispatchRows": 1
+  },
+  {
+    "case": "budget-read",
+    "exitCode": 0,
+    "command": [
+      "node",
+      "/tmp/chio-claude-subscription-cold-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+      "--host",
+      "/Users/connor/.local/share/claude/versions/2.1.267",
+      "--host-sha256",
+      "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+      "--profile",
+      "/tmp/chio-claude-approval-runtime-da94125f76db4579a2ead265a51000e8/profile",
+      "--workspace",
+      "/tmp/chio-claude-approval-runtime-da94125f76db4579a2ead265a51000e8/workspace",
+      "--gateway-config",
+      "/Users/connor/.local/share/chio-required-operators/budget3-hosts-20260909/claude-approvals-a5e3e20ecba64667b8c38d6a48f496a1/gateway.json",
+      "--gateway-sha256",
+      "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+      "--model",
+      "claude-sonnet-5",
+      "--model-auth",
+      "claude-login"
+    ],
+    "newDispatchRows": 1
+  },
+  {
+    "case": "budget-exhausted",
+    "exitCode": 3,
+    "command": [
+      "node",
+      "/tmp/chio-claude-subscription-cold-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+      "--host",
+      "/Users/connor/.local/share/claude/versions/2.1.267",
+      "--host-sha256",
+      "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+      "--profile",
+      "/tmp/chio-claude-approval-runtime-972f5c7b737641dcb945cc32fca11037/profile",
+      "--workspace",
+      "/tmp/chio-claude-approval-runtime-972f5c7b737641dcb945cc32fca11037/workspace",
+      "--gateway-config",
+      "/Users/connor/.local/share/chio-required-operators/budget3-hosts-20260909/claude-approvals-a5e3e20ecba64667b8c38d6a48f496a1/gateway.json",
+      "--gateway-sha256",
+      "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+      "--model",
+      "claude-sonnet-5",
+      "--model-auth",
+      "claude-login"
+    ],
+    "newDispatchRows": 0
+  }
+]

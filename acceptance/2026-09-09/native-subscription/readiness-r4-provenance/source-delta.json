@@ -1,0 +1,9 @@
+{
+  "runtimeSourceRevision": "cd303d5",
+  "archiveSha256": "ee69944dc92941ab20fed41d0ae5bc6d83dc3c31f9c8717f5c46765aa820a6ab",
+  "includedUncommittedNonruntimeFile": "scripts/acceptance/native-subscription.py",
+  "includedBytesSha256": "04be29a4618d76822ad9fbd93dc285f0196d4b525bc77ec0493ce7d62d57cf1e",
+  "retainedExactSnapshot": "packaged-native-subscription.py",
+  "cause": "npm package files includes scripts directory while an independently owned acceptance driver was being developed",
+  "claim": "Runtime source is cd303d5; full packaged source includes this explicit nonruntime delta. Do not claim a clean-commit-only archive."
+}

@@ -1,0 +1,23 @@
+{
+  "label": "restart-fenced",
+  "exitCode": 2,
+  "timeout": false,
+  "elapsedSeconds": 10.377,
+  "runtime": "/tmp/chio-claude-native-runtime-91d9e5d39cd7406796904db6eab1f586",
+  "newDispatchRows": 0,
+  "terminal": {
+    "code": 0,
+    "signal": null,
+    "exitCode": 2,
+    "hostInitialization": {
+      "ready": true,
+      "failed": false
+    },
+    "hostDelivery": {
+      "confirmed": 0,
+      "failed": false
+    },
+    "executionOutcome": "unresolved",
+    "retry": "never-automatic"
+  }
+}

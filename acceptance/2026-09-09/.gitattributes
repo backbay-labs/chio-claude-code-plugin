@@ -1,0 +1,2 @@
+# Preserve exact captured transcript bytes.
+raw/** -text -whitespace

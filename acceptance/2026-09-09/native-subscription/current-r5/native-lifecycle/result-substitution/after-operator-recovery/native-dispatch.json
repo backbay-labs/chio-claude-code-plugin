@@ -1,0 +1,14 @@
+{
+  "calls": [
+    {
+      "id": "toolu_01M6ZBtAj3VfbfJAyqsLvofY",
+      "name": "mcp__chio__read_text_file",
+      "arguments": {
+        "path": "/workspace/claude-qualified-037f4976f2aa4411.txt"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_01M6ZBtAj3VfbfJAyqsLvofY"
+  ]
+}

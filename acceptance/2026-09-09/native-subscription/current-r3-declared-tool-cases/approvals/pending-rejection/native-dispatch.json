@@ -1,0 +1,18 @@
+{
+  "launchPreflightRefused": false,
+  "calls": [
+    {
+      "id": "toolu_01VBbuy2bxysEvYyRQdGzixU",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/claude-rejected-14574430fe6a.txt",
+        "content": "must never appear"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_01VBbuy2bxysEvYyRQdGzixU"
+  ],
+  "expectedAttemptObserved": true,
+  "attemptCount": 1
+}

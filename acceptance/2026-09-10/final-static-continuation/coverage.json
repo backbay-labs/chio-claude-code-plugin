@@ -1,0 +1,185 @@
+{
+  "claim": "23 bounded production native-mode cases across exact same static kernel and125838 archive; real subscription inference where host startup succeeds, earlier prevention for startup and expiry failures; supplemental fixtures and timing recorded separately",
+  "supplementalCases": [
+    {
+      "case": "native-boundary",
+      "assertions": 27,
+      "modelSource": "local fixture",
+      "source": "/tmp/chio-final-claude-native-20260910/native/supplemental-boundary"
+    },
+    {
+      "case": "parallel",
+      "assertions": 1,
+      "modelSource": "local fixture",
+      "source": "/tmp/chio-final-claude-native-20260910/parallel/case/summary.json"
+    }
+  ],
+  "pairedTiming": "/tmp/chio-final-claude-native-continuation-20260910/paired-timing/summary.json",
+  "priorFailedAndIncompleteEvidence": "../final-static-initial/README.md",
+  "programAcceptance": false,
+  "remainingGates": "Shared host/kernel matrix and artifact publication/usable delivery are separate coordinator-owned requirements",
+  "passedProductionModeCases": [
+    {
+      "case": "sanitized-path",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-20260910/native/sanitized-path/results.json",
+      "sourceSha256": "28992616b29dce68605417027f87df8e139757c99f4830ffce365e1618730e46",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "completed-tool-error",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-20260910/native/cases/results.json",
+      "sourceSha256": "feb57536ed819c6d371b3c207ec7a0acd9aac19f7240ba0421020b64f8ad3248",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "journal-before-dispatch",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-20260910/native/cases/results.json",
+      "sourceSha256": "feb57536ed819c6d371b3c207ec7a0acd9aac19f7240ba0421020b64f8ad3248",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "cancel-before-dispatch",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-20260910/native/cases/results.json",
+      "sourceSha256": "feb57536ed819c6d371b3c207ec7a0acd9aac19f7240ba0421020b64f8ad3248",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "kernel-network-refused",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-20260910/native/cases/results.json",
+      "sourceSha256": "feb57536ed819c6d371b3c207ec7a0acd9aac19f7240ba0421020b64f8ad3248",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "journal-after-effect",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-20260910/native/cases/results.json",
+      "sourceSha256": "feb57536ed819c6d371b3c207ec7a0acd9aac19f7240ba0421020b64f8ad3248",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "result-substitution",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-20260910/native/cases/results.json",
+      "sourceSha256": "feb57536ed819c6d371b3c207ec7a0acd9aac19f7240ba0421020b64f8ad3248",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "aggregate-budget",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-20260910/budget/case/results.json",
+      "sourceSha256": "c79e47ded1eb6fc14c71d554e045be758cb84355bdb39429765b6e22c4f6be24",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "host-response-loss",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-continuation-20260910/cases/results.json",
+      "sourceSha256": "d4ea861a150c65524aabece59181c6d50e6ce92f6de35d383a58e46d438707c8",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "gateway-crash",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-continuation-20260910/cases/results.json",
+      "sourceSha256": "d4ea861a150c65524aabece59181c6d50e6ce92f6de35d383a58e46d438707c8",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "sigterm-recovery",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-continuation-20260910/cases/results.json",
+      "sourceSha256": "d4ea861a150c65524aabece59181c6d50e6ce92f6de35d383a58e46d438707c8",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "plugin-omitted",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-continuation-20260910/cases/results.json",
+      "sourceSha256": "d4ea861a150c65524aabece59181c6d50e6ce92f6de35d383a58e46d438707c8",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "gateway-missing",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-continuation-20260910/cases/results.json",
+      "sourceSha256": "d4ea861a150c65524aabece59181c6d50e6ce92f6de35d383a58e46d438707c8",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "host-missing",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-continuation-20260910/cases/results.json",
+      "sourceSha256": "d4ea861a150c65524aabece59181c6d50e6ce92f6de35d383a58e46d438707c8",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "mcp-silent-omission",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-continuation-20260910/cases/results.json",
+      "sourceSha256": "d4ea861a150c65524aabece59181c6d50e6ce92f6de35d383a58e46d438707c8",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "init-malformed",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-continuation-20260910/cases/results.json",
+      "sourceSha256": "d4ea861a150c65524aabece59181c6d50e6ce92f6de35d383a58e46d438707c8",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "init-timeout",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-continuation-20260910/cases/results.json",
+      "sourceSha256": "d4ea861a150c65524aabece59181c6d50e6ce92f6de35d383a58e46d438707c8",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "init-crash",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-continuation-20260910/cases/results.json",
+      "sourceSha256": "d4ea861a150c65524aabece59181c6d50e6ce92f6de35d383a58e46d438707c8",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "upgrade-removal",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-continuation-20260910/cases/results.json",
+      "sourceSha256": "d4ea861a150c65524aabece59181c6d50e6ce92f6de35d383a58e46d438707c8",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "expired-capability",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-20260910/expiry/summary.json",
+      "kind": "bounded production native-mode case",
+      "sourceSha256": "51ca1188a6732d5a0a2181d5bd6afe294f3277393aa6da0080680fc302d01630"
+    },
+    {
+      "case": "storage-before-admission",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-20260910/storage/before-admission/result.json",
+      "sourceSha256": "f4deb43def2fe5b4e54cdf244c1a95680264874bb6dca152fce6fe1f98066781",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "storage-after-receipt",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-native-20260910/storage/after-receipt/result.json",
+      "sourceSha256": "9170b24b7718d8bd23cb89fba62825e902cd0b836a9007883a3ef295a2b81e4d",
+      "kind": "bounded production native-mode case"
+    },
+    {
+      "case": "storage-after-admission",
+      "passed": true,
+      "source": "/tmp/chio-final-claude-storage-reconciliation-r2-20260910/native/result.json",
+      "sourceSha256": "e5bbfc10a96dcd6e4e19ec9737eba87d78e7ce43fc1cc12625aab1bd0efdd335",
+      "kind": "bounded production native-mode case"
+    }
+  ],
+  "expiredCapabilityBoundary": "Production restricted launcher rejected expired delegated authority before starting native host or provider inference; independently zero resource dispatch. This is not an in-flight capability-expiry test."
+}

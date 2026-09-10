@@ -1,0 +1,12 @@
+{
+  "artifact": "/tmp/chio-claude-supervisor-package-20260909/chio-claude-code-plugin-0.3.0.tgz",
+  "sha256": "8a7f9a21615271ec12ff641ff90ff3e6fec8229caf0d4cde5b0eda9b138c1e82",
+  "hostVersion": "2.1.267",
+  "hostSha256": "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+  "kernelSha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
+  "bridgeSha256": "7d9e34f7408a316e35125982a23faaecfd2f31f4da6b50ca8eab287c2c918f67",
+  "componentTests": 29,
+  "componentSkips": 0,
+  "model": "local deterministic Messages fixture",
+  "acceptance": "unresolved"
+}

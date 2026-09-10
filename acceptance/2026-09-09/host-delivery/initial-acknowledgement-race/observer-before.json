@@ -1,0 +1,21 @@
+{
+  "/observe/claude-gl3rw68q.txt": {
+    "exists": false,
+    "error": "ENOENT"
+  },
+  "/observe/claude-gl3rw68q.txt-second": {
+    "exists": false,
+    "error": "ENOENT"
+  },
+  "/observe/forbidden.txt": {
+    "exists": true,
+    "sha256": "fd972a6e8a36a028a82c74424e1db70e38fe068c342f3e3f319d1e865f680900",
+    "bytes": 31
+  },
+  "/observe/secret.txt": {
+    "exists": true,
+    "sha256": "1a1e1d8bd5d198dcce34023ef3af4a31a88586e9dcd958fa011d8f5fa32f520e",
+    "bytes": 19
+  },
+  "dispatch": []
+}
