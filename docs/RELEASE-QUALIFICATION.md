@@ -6,7 +6,8 @@ real-host I01-I08 acceptance, a compatible public kernel, or six-host completion
 
 ## Current boundary
 
-- Package version: `0.3.0`. Existing local candidate tarball hashes do
+- Source package version: `0.3.1-rc.1` (see `package.json`). This identifies the
+  source candidate, not a published npm version. Existing local tarball hashes do
   not identify newly rebuilt archives, including metadata-only rebuilds.
 - Public repository identity: `backbay-labs/chio-claude-code-plugin`.
 - Workflow: `.github/workflows/release.yml`.
@@ -43,11 +44,14 @@ cache, with scripts disabled:
 ```sh
 npm install --offline --ignore-scripts --no-audit --no-fund \
   --cache /absolute/new-empty-cache /absolute/new-candidate-directory/package.tgz
-npm publish /absolute/new-candidate-directory/package.tgz --dry-run --ignore-scripts --access public
+npm publish /absolute/new-candidate-directory/package.tgz \
+  --dry-run --ignore-scripts --access public --tag candidate
 ```
 
 The filename `package.tgz` above is a placeholder for the emitted tarball. The
-workflow checks the emitted checksum, installed package name, absence of local
+explicit `candidate` tag makes the prerelease dry run valid; this command does
+not publish. The workflow checks the emitted checksum, installed package name,
+absence of local
 `file:`/`link:`/`workspace:` dependencies, and installed entrypoint syntax.
 The cold consumer install is offline and therefore fails if an unpublished or omitted dependency is needed.
 
@@ -89,18 +93,21 @@ reproducibility claim is established by the presence of this YAML alone.
 
 ## Verify and recover
 
-The GitHub Release contains the tarball, `release-identity.json`, `SHA256SUMS`,
+After a qualified promotion, the GitHub Release must contain the tarball,
+`release-identity.json`, `SHA256SUMS`,
 its `.sig` and `.pem`, and `package.intoto.jsonl`. Pin the intended repository,
-tag, source commit, and expected checksums before trusting the package:
+tag, source commit, and expected checksums before trusting the package. The
+commands below illustrate the current source version after publication; they
+do not assert that this tag or its assets already exist:
 
 ```sh
 sha256sum --check SHA256SUMS
 cosign verify-blob --certificate SHA256SUMS.pem --signature SHA256SUMS.sig \
-  --certificate-identity 'https://github.com/backbay-labs/chio-claude-code-plugin/.github/workflows/release.yml@refs/tags/v0.3.0' \
+  --certificate-identity 'https://github.com/backbay-labs/chio-claude-code-plugin/.github/workflows/release.yml@refs/tags/v0.3.1-rc.1' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com SHA256SUMS
 slsa-verifier verify-artifact package.tgz \
   --provenance-path package.intoto.jsonl \
-  --source-uri github.com/backbay-labs/chio-claude-code-plugin --source-tag 'v0.3.0'
+  --source-uri github.com/backbay-labs/chio-claude-code-plugin --source-tag 'v0.3.1-rc.1'
 ```
 
 A timeout or failure after npm publication can leave a published version without
@@ -128,8 +135,10 @@ References: [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/)
 
 ## Verification of this workflow change
 
-Local execution used Node 22.19.0 and npm 11.8.0 in an isolated checkout. The
-workflow's locked dependency install with scripts disabled, build/type checks,
+The original workflow-change verification used Node 22.19.0 and npm 11.8.0
+in an isolated checkout. These historical observations are not a current-version
+acceptance record. The workflow's locked dependency install with scripts
+disabled, build/type checks,
 and 32 unit tests passed with zero failed or skipped tests. Staged packing,
 a new consumer directory with an empty cache, entrypoint checks, and
 `npm publish --dry-run` passed. `actionlint` passed. The source identity check
