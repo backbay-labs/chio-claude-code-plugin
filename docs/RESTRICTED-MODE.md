@@ -52,10 +52,13 @@ actual published package source separately from a development checkout.
 
 ## Launch
 
-Supply `ANTHROPIC_API_KEY` for a designated test account to the operator launcher.
-The key remains in its Messages relay; the sandboxed host gets a local relay
-token. This candidate supports the official Anthropic Messages origin and local
-fixtures only. Normal-profile OAuth credentials are not imported or qualified.
+Use `--model-auth claude-login` with the operator's existing Claude subscription
+login, following the procedure below. For the default API-key mode, omit that
+option and supply `ANTHROPIC_API_KEY` to the operator launcher. Provider
+credentials stay in the trusted parent; the sandboxed host receives a temporary
+relay token. Native subscription requests use the fixed official Anthropic
+Messages origin. Local fixtures are supported for labeled tests and do not
+establish real-provider acceptance.
 
 ```sh
 node /installed/chio/scripts/restricted.mjs \
@@ -65,6 +68,7 @@ node /installed/chio/scripts/restricted.mjs \
   --gateway-config /operator/private/claude-gateway.json \
   --profile /operator/new-claude-profile \
   --workspace /operator/disposable-empty-workspace \
+  --model-auth claude-login \
   --model <qualified-model> < /operator/task.txt
 ```
 
@@ -122,8 +126,9 @@ operations still fence the shared journal and owner, regardless of a new profile
 A stale lock after a crash can be inspected with `chio-gateway-operator status`
 and recovered with `chio-gateway-operator recover-lock`, supplying the absolute
 gateway config path. This checks dead process ownership and preserves unknown
-operation records. It is not resource-outcome reconciliation. Real Claude
-crash/restart acceptance on this procedure remains open.
+operation records. It is not resource-outcome reconciliation. Earlier artifacts
+have bounded real Claude crash/restart observations; full acceptance remains
+specific to the selected delivered combination.
 
 ## Upgrade and removal
 
@@ -142,11 +147,12 @@ Normal user configuration is never a cleanup target of the test scripts.
 
 ## Current unresolved delivery requirements
 
-A public compatible kernel and plugin combination, authenticated real-model
-workflow, full adversarial native-path inventory, every authority variant,
-independent result-substitution checks, crash/restart recovery and measured
-upgrade/removal remain required. This runbook is a candidate procedure, not an
-acceptance certificate.
+Earlier pinned artifacts have retained real native authenticated workflows,
+prevention, authority, result-substitution, crash/restart and upgrade/removal
+observations. Each record remains bound to its exact source and artifact hashes.
+The selected kernel/plugin combination must complete every applicable I01-I08
+case and compatible public delivery; required missing or skipped cases remain
+unresolved. This runbook is a candidate procedure, not an acceptance certificate.
 
 ## Existing Claude subscription login
 
@@ -156,4 +162,4 @@ The parent then forwards only the already bounded Messages requests from the act
 
 Run `claude auth status` in the trusted operator profile first. If login has expired, run `claude auth login` there and complete any browser/MFA step. Then launch new work with the subscription option. Authentication renewal never reconciles unknown protected outcomes. Do not use `--bare` for the trusted authentication helper because it disables native OAuth; the sandboxed agent retains bare mode and a temporary relay credential.
 
-The 2026-09-09 native subscription run used Claude Code 2.1.267 and claude-sonnet-5. Actual kernel write/read calls succeeded, while the forbidden write was denied. This is bounded current evidence, not complete I01-I08 acceptance.
+The 2026-09-09 native subscription run used Claude Code 2.1.267 and claude-sonnet-5. Actual kernel write/read calls succeeded, while the forbidden write was denied. These bounded observations belong to the recorded September 9 artifacts. They do not establish complete I01-I08 acceptance for a successor archive or kernel.
