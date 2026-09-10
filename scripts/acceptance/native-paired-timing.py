@@ -13,6 +13,7 @@ import json
 import os
 from pathlib import Path
 import re
+import runpy
 import shutil
 import signal
 import subprocess
@@ -54,14 +55,20 @@ def main():
     for name in ["operator-state", "package-dir", "archive", "output"]:
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--resource", required=True)
+    parser.add_argument("--artifact-sha256", required=True)
+    parser.add_argument("--kernel-sha256", required=True)
+    parser.add_argument("--port", type=int, required=True)
     parser.add_argument("--host", type=Path, default=Path("/Users/connor/.local/share/claude/versions/2.1.267"))
     args = parser.parse_args()
-    args.output.mkdir(mode=0o700, parents=True)
+    args.output.mkdir(mode=0o700, parents=True, exist_ok=False)
     args.package_dir = args.package_dir.resolve(strict=True)
     args.host = args.host.resolve(strict=True)
     operator = json.loads((args.operator_state / "operator.json").read_text())
-    require(digest(args.archive) == "0dd0d906fc34b3ac7d09e3b7f6cdee9f13f511731b25ec761feca7172c9b1158", "Expected frozen r5 archive")
-    require(operator["kernelSha256"] == "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25" and operator["port"] == 58494, "Expected dedicated healthy frozen kernel")
+    verifier_source = Path(__file__).with_name("native-subscription.py")
+    verify_installed_archive = runpy.run_path(str(verifier_source))["verify_installed_archive"]
+    save(args.output / "installed-archive-files.json", verify_installed_archive(args.archive, args.artifact_sha256, args.package_dir))
+    require(re.fullmatch(r"[a-f0-9]{64}", args.kernel_sha256) is not None, "Explicit kernel SHA-256 required")
+    require(operator["kernelSha256"] == args.kernel_sha256 and digest(Path(operator["command"][0])) == args.kernel_sha256 and operator["port"] == args.port, "Dedicated owner differs from selected kernel or port")
     require(args.resource.startswith("/workspace/claude-qualified-") and Path(args.resource).parent.as_posix() == "/workspace", "Use the designated existing qualification file")
     bridge = args.package_dir / "node_modules/@chio/bridge"
     launcher, gateway = args.package_dir / "scripts/restricted.mjs", args.package_dir / "dist/gateway-http.js"
@@ -72,7 +79,8 @@ def main():
                 "volume": operator["volume"], "auditVolume": operator["auditVolume"], "policySha256": operator["policySha256"],
                 "launcherSha256": digest(launcher), "gatewaySha256": digest(gateway), "bridgeEntrySha256": digest(bridge / "dist/index.js"),
                 "hostSha256": digest(args.host), "hostVersion": subprocess.check_output([str(args.host), "--version"], text=True).strip(),
-                "harnessSha256": digest(Path(__file__)), "resource": args.resource, "allowedTools": ["read_text_file"], "model": "claude-sonnet-5"}
+                "harnessSha256": digest(Path(__file__)), "archiveVerifierSha256": digest(verifier_source),
+                "resource": args.resource, "allowedTools": ["read_text_file"], "model": "claude-sonnet-5"}
     save(args.output / "identity.json", identity)
 
     def observe():
