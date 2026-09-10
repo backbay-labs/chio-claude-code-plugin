@@ -78,6 +78,13 @@ jobs:
           if (rel.startsWith('..') || isAbsolute(rel)) throw new Error('entrypoint escapes installed package');
           execFileSync(process.execPath, ['--check', target], { stdio: 'inherit' });
         }
+        await import(process.env.PACKAGE_NAME);
+        for (const entry of ['dist/gateway.js', 'scripts/restricted.mjs']) {
+          execFileSync(process.execPath, ['--check', resolve(root, entry)], {stdio:'inherit'});
+        }
+        for (const entry of ['docs/RESTRICTED-MODE.md', 'acceptance/2026-09-09/ACCEPTANCE.json']) {
+          if (!existsSync(resolve(root, entry))) throw new Error(`missing supported-mode artifact ${entry}`);
+        }
         NODE
         npm publish "${package_artifact}" --dry-run --ignore-scripts --access public
     - name: Retain qualified package
