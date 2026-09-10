@@ -25,7 +25,8 @@ snapshots are retained under `raw/`. `manifest.json` binds each lossless gzip
 member to its original bytes. Private authority and credential files remain
 outside this record.
 
-Passed real-provider cases in this run:
+Passed bounded production-mode cases in this run (real subscription inference
+where host startup succeeds; the expired-capability preflight stops earlier):
 
 - The fixed compact-SSN-pattern filename completed write, edit, read and list
   with four actual dispatches and four confirmed deliveries while sanitization
@@ -40,6 +41,8 @@ Passed real-provider cases in this run:
 - Aggregate budget allowed three calls and prevented the fourth effect.
 - The real owner-issued ten-second capability expired and prevented dispatch;
   the requested 900-second credential lifetime was clamped to that capability.
+  This preflight rejected expired authority before native host/provider startup;
+  it is not an in-flight capability-expiry observation.
 - Storage failure before admission caused no effect. Storage failure after the
   retained receipt preserved one original effect. Both refused same/new work
   after unlock and owner restart, without ACKing the unknown result. Signed
