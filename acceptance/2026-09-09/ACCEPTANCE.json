@@ -123,8 +123,15 @@
     ],
     "usefulNativeMcpConnectionMs": 6,
     "incrementalChioOverhead": null,
-    "matchedDirectBaselineRetained": false,
+    "matchedDirectBaselineRetained": true,
     "providerSpendMeasured": false,
-    "limits": "Native intervals include resource/gateway/kernel work. Harness elapsed time also includes inference and independent observers. The separate paired timing task is not claimed here."
+    "limits": "Three sequential pairs, distinct fresh scoped sessions; native wall-clock versus direct monotonic timing. Model/startup/preparation/ACK excluded. Does not isolate total kernel overhead or establish typical latency.",
+    "pairedTiming": "native-subscription/paired-timing-r5/summary.json",
+    "baselineKind": "direct frozen bridge execute-to-verified-response, including kernel",
+    "pairedNativeMinusDirectMs": [
+      125.062,
+      37.288,
+      -130.477
+    ]
   }
 }

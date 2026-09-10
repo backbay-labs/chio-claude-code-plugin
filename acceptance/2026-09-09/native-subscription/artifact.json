@@ -62,5 +62,7 @@
   "kernelStorageHarnessCommit": "608104118b7cb3a4e7605129dbfb0c0bfb92c5e5",
   "kernelStorageManifest": "current-r5/kernel-storage/archive-manifest.json",
   "operationalTiming": "current-r5/kernel-storage/operational-timing.json",
-  "operationalNote": "current-r5/kernel-storage/OPERATIONAL-NOTE.md"
+  "operationalNote": "current-r5/kernel-storage/OPERATIONAL-NOTE.md",
+  "pairedTiming": "paired-timing-r5/summary.json",
+  "pairedTimingLimit": "Three noisy native-MCP versus direct-bridge samples; both include kernel/resource verification. No total kernel overhead or general latency guarantee."
 }
