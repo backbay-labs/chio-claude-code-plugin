@@ -1,0 +1,137 @@
+{
+  "requestId": "a3d24836-6f4a-47e8-9ec5-0c9f9f3af2d5:9abf160bf5cd70fd474df1abe18674a5d382bc07fff574f0f19fd9139b55afb5",
+  "digest": "5590b38bc6074823c4b06f3e130caa60d3caf30de24a40b0e7fb915afd5945e2",
+  "state": "completed",
+  "outcome": {
+    "state": "completed",
+    "evidence": "verified",
+    "requestId": "a3d24836-6f4a-47e8-9ec5-0c9f9f3af2d5:9abf160bf5cd70fd474df1abe18674a5d382bc07fff574f0f19fd9139b55afb5",
+    "receipt": {
+      "action": {
+        "parameter_hash": "ecef5752efb87e2c2517ddfb0f5deefb54f21660706bb77c9d5431cbae136353",
+        "parameters": {
+          "content": "second legitimate effect requiring its own evidence",
+          "path": "/workspace/claude-inflight-d5fd179b4ae2.txt"
+        }
+      },
+      "boundary_class": "prevent",
+      "capability_id": "cap-01a08906-3dbe-7f21-90d4-83fd6f291daa",
+      "content_hash": "b0e8920aac3e622ff4b63edfbc8bfc1ec4301f336eb813a5bae95587fdb83c46",
+      "decision": {
+        "verdict": "allow"
+      },
+      "evidence": [
+        {
+          "details": "sanitizer detected 2 findings (secret_high_entropy_token:2)",
+          "guard_name": "output-sanitizer",
+          "verdict": true
+        }
+      ],
+      "id": "6c77726f257ca8a7cccad71f06954f32a6fa070846590882e5d5c49204889b38",
+      "kernel_key": "1e5677d422400a3f2db017bb2b7864906a126285e1850556e0777c58d5ce1917",
+      "metadata": {
+        "admission_operation": {
+          "compensation_status": "not_compensated",
+          "coordinator_lease_epoch": 5,
+          "coordinator_lease_id": "01a08905-775c-7a51-8a58-264295ae47e6",
+          "operation_id": "6802b38509eba203ad8b226ca3f5a67d3051a5df8ca298029d22949387e73bbe",
+          "projected_dispatch_state": "terminal",
+          "projected_operation_version": 8,
+          "projected_state": "completed",
+          "request_binding_hash": "13a014d144f08cf50edb3005e9c3be59c8b7b27622ff1acc85fd76e3338c65bb",
+          "request_id": "a3d24836-6f4a-47e8-9ec5-0c9f9f3af2d5:9abf160bf5cd70fd474df1abe18674a5d382bc07fff574f0f19fd9139b55afb5",
+          "request_namespace_digest": "1aaedbe2f5ee601eb08b78ce2bcd0c710638ece5bfca950551a34900d293fe77",
+          "retained_dispatch_commit": {
+            "committed_version": 6,
+            "coordinator_lease_epoch": 5,
+            "coordinator_lease_id": "01a08905-775c-7a51-8a58-264295ae47e6",
+            "provider_attempt": {
+              "attempt_id": "attempt:6802b38509eba203ad8b226ca3f5a67d3051a5df8ca298029d22949387e73bbe",
+              "operation_id": "6802b38509eba203ad8b226ca3f5a67d3051a5df8ca298029d22949387e73bbe",
+              "transport_id": "kernel-tool-server:fs",
+              "transport_key_epoch": 5
+            },
+            "store_fence": {
+              "lease_id": "01a08905-775c-7a51-8a58-264295ae47e6",
+              "owner_epoch": 5,
+              "store_uuid": "01a087b4-82fc-7ea3-8268-cda098970e9e"
+            }
+          },
+          "schema": "chio.admission-receipt.v1",
+          "store_fence": {
+            "lease_id": "01a08905-775c-7a51-8a58-264295ae47e6",
+            "owner_epoch": 5,
+            "store_uuid": "01a087b4-82fc-7ea3-8268-cda098970e9e"
+          },
+          "tool_outcome_id": "05e43573377e0fe070c9c3d2d76b4406a702473bb7d27924c9e8ee5b2ff75dc9",
+          "tool_outcome_version": 2,
+          "trusted_time_unix_ms": 1789005290117
+        },
+        "attribution": {
+          "delegation_depth": 0,
+          "grant_index": 0,
+          "issuer_key": "9b6890451ef646de65d88b26fdc1503c204947a1e743481bd036f9d4b0b2cee1",
+          "subject_key": "97541d3eca491ad9ca312a17f918916b52db6ad6dc6ba649431d166ed9c5c5a5"
+        },
+        "chio_receipt_signing_nonce": "rcpt-01a08906-5b1e-7b50-b41a-d9ad51edc5a3",
+        "post_invocation": {
+          "sanitized": true
+        },
+        "receipt_context": {
+          "request_id": "a3d24836-6f4a-47e8-9ec5-0c9f9f3af2d5:9abf160bf5cd70fd474df1abe18674a5d382bc07fff574f0f19fd9139b55afb5"
+        }
+      },
+      "policy_hash": "057b9a8160375e7d90841325639bdd66050a454f393dae23e8c813b8df74b84e",
+      "receipt_kind": "mediated_decision",
+      "redaction_mode": "none",
+      "signature": "a40c7b6faaf87c8be7760cf084e3ec7a3ee6abe364a4119a3743dfd9d1b8606bbd2868db352e434138da73c8c7d7f025983e7dd6e65cf73d8a1f986d033f9808",
+      "timestamp": 1789005290,
+      "tool_name": "write_file",
+      "tool_origin": "caller_executed",
+      "tool_server": "fs",
+      "trust_level": "mediated"
+    },
+    "result": {
+      "content": [
+        {
+          "text": "Successfully wrote to ****.txt",
+          "type": "text"
+        }
+      ],
+      "isError": false,
+      "structuredContent": {
+        "content": "Successfully wrote to ****.txt"
+      }
+    },
+    "delivery": {
+      "acknowledgement": "zHLkMqjRfZI-ItQ2Dwze-o_USFjiWabjoqgGZVUutf4",
+      "receiptId": "6c77726f257ca8a7cccad71f06954f32a6fa070846590882e5d5c49204889b38",
+      "requestHash": "a3cebd032cb883e922900874ae65ade3dd80044bbd97872e3002a67d0f8cd266",
+      "requestId": "a3d24836-6f4a-47e8-9ec5-0c9f9f3af2d5:9abf160bf5cd70fd474df1abe18674a5d382bc07fff574f0f19fd9139b55afb5",
+      "resultHash": "b0e8920aac3e622ff4b63edfbc8bfc1ec4301f336eb813a5bae95587fdb83c46",
+      "schema": "chio.mcp.delivery-ack.v1"
+    }
+  },
+  "acknowledged": true,
+  "hostDeliveryRequired": true,
+  "request": {
+    "tool": "write_file",
+    "arguments": {
+      "path": "/workspace/claude-inflight-d5fd179b4ae2.txt",
+      "content": "second legitimate effect requiring its own evidence"
+    },
+    "requestId": "a3d24836-6f4a-47e8-9ec5-0c9f9f3af2d5:9abf160bf5cd70fd474df1abe18674a5d382bc07fff574f0f19fd9139b55afb5"
+  },
+  "hostDeliveryConfirmed": true,
+  "operatorReconciliation": {
+    "previousState": "unknown",
+    "previousOutcome": {
+      "state": "unknown",
+      "evidence": "unverified",
+      "requestId": "a3d24836-6f4a-47e8-9ec5-0c9f9f3af2d5:9abf160bf5cd70fd474df1abe18674a5d382bc07fff574f0f19fd9139b55afb5",
+      "reason": "missing or substituted execution evidence"
+    },
+    "ownerRecordSha256": "4a76ee71f3939b22e3ddae8bfcd3029c8532ab8c1b7d8652ff6b05da62555d46",
+    "ownerSignature": "7a120b715d143b23a6938c8b759d8df6cdf65af9d601497834c9a3d50a8d97a89d78f1db578fda818c791b9c07364b689ef33ed4195ae6335f71abffdfc4810f"
+  }
+}

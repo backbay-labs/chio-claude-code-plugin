@@ -1,0 +1,18 @@
+{
+  "launchPreflightRefused": false,
+  "calls": [
+    {
+      "id": "toolu_01FfG2Kqz6wYEiGqMRZeJ4eE",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/forbidden.txt",
+        "content": "qualification-probe"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_01FfG2Kqz6wYEiGqMRZeJ4eE"
+  ],
+  "expectedAttemptObserved": true,
+  "attemptCount": 1
+}

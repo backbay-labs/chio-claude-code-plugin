@@ -1,0 +1,18 @@
+{
+  "launchPreflightRefused": false,
+  "calls": [
+    {
+      "id": "toolu_01Cdw6Dpjer5AfrxTBkqw3dL",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/claude-revoke-a05b320fa9dd.txt",
+        "content": "authorized before revocation"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_01Cdw6Dpjer5AfrxTBkqw3dL"
+  ],
+  "expectedAttemptObserved": true,
+  "attemptCount": 1
+}

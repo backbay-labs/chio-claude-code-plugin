@@ -1,0 +1,77 @@
+[
+  {
+    "case": "pending",
+    "exitCode": 4,
+    "command": [
+      "node",
+      "/tmp/chio-claude-subscription-cold-r3-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+      "--host",
+      "/Users/connor/.local/share/claude/versions/2.1.267",
+      "--host-sha256",
+      "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+      "--profile",
+      "/tmp/chio-claude-approval-runtime-473d5fc6f1cc4a7fa2d4cc7e05a1dc8a/profile",
+      "--workspace",
+      "/tmp/chio-claude-approval-runtime-473d5fc6f1cc4a7fa2d4cc7e05a1dc8a/workspace",
+      "--gateway-config",
+      "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-approvals-a952b766945948a8a4886dc94d6ce43b/gateway.json",
+      "--gateway-sha256",
+      "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+      "--model",
+      "claude-sonnet-5",
+      "--model-auth",
+      "claude-login"
+    ],
+    "newDispatchRows": 0
+  },
+  {
+    "case": "missing-decision",
+    "exitCode": 4,
+    "command": [
+      "node",
+      "/tmp/chio-claude-subscription-cold-r3-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+      "--host",
+      "/Users/connor/.local/share/claude/versions/2.1.267",
+      "--host-sha256",
+      "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+      "--profile",
+      "/tmp/chio-claude-approval-runtime-5c649ab6b37f463994d8562d599947b9/profile",
+      "--workspace",
+      "/tmp/chio-claude-approval-runtime-5c649ab6b37f463994d8562d599947b9/workspace",
+      "--gateway-config",
+      "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-approvals-a952b766945948a8a4886dc94d6ce43b/gateway.json",
+      "--gateway-sha256",
+      "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+      "--model",
+      "claude-sonnet-5",
+      "--model-auth",
+      "claude-login"
+    ],
+    "newDispatchRows": 0
+  },
+  {
+    "case": "substituted-arguments",
+    "exitCode": 4,
+    "command": [
+      "node",
+      "/tmp/chio-claude-subscription-cold-r3-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+      "--host",
+      "/Users/connor/.local/share/claude/versions/2.1.267",
+      "--host-sha256",
+      "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+      "--profile",
+      "/tmp/chio-claude-approval-runtime-3f7eb4c8c31041839af442d93bab124f/profile",
+      "--workspace",
+      "/tmp/chio-claude-approval-runtime-3f7eb4c8c31041839af442d93bab124f/workspace",
+      "--gateway-config",
+      "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-approvals-a952b766945948a8a4886dc94d6ce43b/gateway.json",
+      "--gateway-sha256",
+      "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+      "--model",
+      "claude-sonnet-5",
+      "--model-auth",
+      "claude-login"
+    ],
+    "newDispatchRows": 0
+  }
+]

@@ -1,0 +1,1 @@
+[chio restricted] EEXIST: file already exists, open '/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-approvals-0b081d756a694a2db6efd2e660c6cef6/journal/gateway.lock'

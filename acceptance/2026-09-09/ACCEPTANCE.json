@@ -4,8 +4,8 @@
   "confidence": "high for recorded observations; complete acceptance unknown",
   "date": "2026-09-09",
   "controlling_requirement": "Chio strategy document 19 I01-I08",
-  "host_version": "2.1.266",
-  "host_sha256": "553d1b9e9e7068b275c0a783c7e139ff6503096f286e674c8c919379fb0eca62",
+  "host_version": "2.1.267",
+  "host_sha256": "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
   "gates": {
     "I01": {
       "status": "unresolved",
@@ -41,14 +41,19 @@
     }
   },
   "external_blockers": [
-    "No supported real-model credential available in the isolated profile",
     "Qualified compatible artifacts have not passed shared release/publication gates"
   ],
   "evidence_classes": [
     "REAL_HOST_LOCAL_MODEL_FIXTURE_NO_CHIO_KERNEL",
     "REAL_HOST_REAL_KERNEL_LOCAL_MODEL_FIXTURE",
-    "MOCK_BRIDGE_UNIT_TEST"
+    "MOCK_BRIDGE_UNIT_TEST",
+    "REAL_HOST_REAL_KERNEL_NATIVE_SUBSCRIPTION_PROVIDER"
   ],
   "legacy_hook_mode": "failed-I04",
-  "report": "REPORT.md"
+  "report": "REPORT.md",
+  "initial_host_version": "2.1.266",
+  "initial_host_sha256": "553d1b9e9e7068b275c0a783c7e139ff6503096f286e674c8c919379fb0eca62",
+  "current_artifact": "8bf565bf5d704b01b0847cda64c4244fc1f15a19bc707f8e3a90aa3798064a23",
+  "current_record": "native-subscription/README.md",
+  "remaining_internal_work": "Complete exact-artifact native boundary/lifecycle qualification; see current record"
 }

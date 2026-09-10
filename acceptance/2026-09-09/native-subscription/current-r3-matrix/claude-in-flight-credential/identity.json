@@ -1,0 +1,13 @@
+{
+  "host": "claude",
+  "suite": "in-flight-credential",
+  "cases": 1,
+  "skips": 0,
+  "kernelSha256": "33dd1dea21a4ca5ecddeab4f30f6b06b0b90c513f0987aef552b0633d9da1e25",
+  "resourceImage": "sha256:188cb84d5d0bb4063d4ce5a3b9c3832445a5acda5604911cda80a9136d1850a0",
+  "hostImage": null,
+  "packageDirectory": "/tmp/chio-claude-subscription-cold-r3-20260909/node_modules/@chio/claude-code-plugin",
+  "privateConfiguration": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-approvals-b2b577d810d34553ad24f5da4e6d6ac1/gateway.json",
+  "configurationSha256": "f72b204b5680d5b85552100b2982d4a18228b16d5ea33ce00590e6101373164f",
+  "claim": "bounded real-host authority and explicit launcher refusal cases; full acceptance remains open"
+}

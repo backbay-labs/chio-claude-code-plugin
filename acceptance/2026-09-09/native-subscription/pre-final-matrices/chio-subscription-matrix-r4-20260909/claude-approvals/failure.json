@@ -1,0 +1,6 @@
+{
+  "error": "actual host did not execute the exact expected tool call; no acceptance claim",
+  "type": "RuntimeError",
+  "privateConfiguration": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-approvals-d70ca3cc9f584440bb21885cc5965911/gateway.json",
+  "claim": "unresolved; never counted as acceptance"
+}

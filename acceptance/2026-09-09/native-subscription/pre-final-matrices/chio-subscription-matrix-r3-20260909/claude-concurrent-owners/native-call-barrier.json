@@ -1,0 +1,6 @@
+{
+  "pid": 39977,
+  "method": "tools/call",
+  "tool": "write_file",
+  "cutpoint": "native-call-before-kernel-transport"
+}

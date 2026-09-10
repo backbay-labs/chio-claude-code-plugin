@@ -1,0 +1,17 @@
+{
+  "launchPreflightRefused": false,
+  "calls": [
+    {
+      "id": "toolu_01XBkr593vJ6XoJXtx8y1wrk",
+      "name": "mcp__chio__list_directory",
+      "arguments": {
+        "path": "/workspace"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_01XBkr593vJ6XoJXtx8y1wrk"
+  ],
+  "expectedAttemptObserved": true,
+  "attemptCount": 1
+}

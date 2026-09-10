@@ -1,0 +1,27 @@
+[
+  {
+    "case": "evidence-foreign-receipt",
+    "exitCode": 2,
+    "command": [
+      "node",
+      "/tmp/chio-claude-subscription-cold-r3-20260909/node_modules/@chio/claude-code-plugin/scripts/restricted.mjs",
+      "--host",
+      "/Users/connor/.local/share/claude/versions/2.1.267",
+      "--host-sha256",
+      "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+      "--profile",
+      "/tmp/chio-claude-approval-runtime-3bd6dfb4ec924bb5a7e5b0d1d4ec7347/profile",
+      "--workspace",
+      "/tmp/chio-claude-approval-runtime-3bd6dfb4ec924bb5a7e5b0d1d4ec7347/workspace",
+      "--gateway-config",
+      "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-approvals-f84cbb28a1f84160a2f0a0c85256b667/gateway.json",
+      "--gateway-sha256",
+      "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+      "--model",
+      "claude-sonnet-5",
+      "--model-auth",
+      "claude-login"
+    ],
+    "newDispatchRows": 2
+  }
+]

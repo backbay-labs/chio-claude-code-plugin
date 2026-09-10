@@ -1,0 +1,18 @@
+{
+  "launchPreflightRefused": false,
+  "calls": [
+    {
+      "id": "toolu_0135vwLYiauNmoV39FqfMC3e",
+      "name": "mcp__chio__write_file",
+      "arguments": {
+        "path": "/workspace/claude-parallel-eb803828d695.txt",
+        "content": "only the live owner may write"
+      }
+    }
+  ],
+  "returnedToolCallIds": [
+    "toolu_0135vwLYiauNmoV39FqfMC3e"
+  ],
+  "expectedAttemptObserved": true,
+  "attemptCount": 1
+}

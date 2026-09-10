@@ -1,0 +1,15 @@
+{
+  "submission": {
+    "output": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-approvals-1a3a3c8263434290a91a14574430fe6a/rejected-submission.json",
+    "status": "pending",
+    "approvalId": "approval-9dbcdb31c5fff5501e890143fb26bb9c5febf408edfc66a496e87d132c96a8e5",
+    "protectedDispatch": false
+  },
+  "decision": {
+    "output": "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/claude-approvals-1a3a3c8263434290a91a14574430fe6a/journal/approvals/bbeb462b0188547553f6211b6bb136ee3012121bb0fac3d52082a21f91d63c34.json",
+    "status": "denied",
+    "approvalId": "approval-9dbcdb31c5fff5501e890143fb26bb9c5febf408edfc66a496e87d132c96a8e5",
+    "protectedDispatch": false
+  },
+  "protectedDispatch": false
+}

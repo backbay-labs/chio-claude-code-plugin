@@ -1,0 +1,32 @@
+{
+  "host": "claude",
+  "exit": 3,
+  "newDispatchRows": 2,
+  "legitimateWrite": true,
+  "forbiddenUnchanged": true,
+  "journalStates": [
+    "completed",
+    "denied",
+    "completed"
+  ],
+  "command": [
+    "node",
+    "/Users/connor/Medica/backbay/standalone/chio-claude-code-plugin/.worktrees/required-agent-integrations-20260909/scripts/restricted.mjs",
+    "--host",
+    "/Users/connor/.local/share/claude/versions/2.1.267",
+    "--host-sha256",
+    "a681f3008f0050029aeebcab3af51bb6a55ddeb625a3af3141a4416d43cd2558",
+    "--profile",
+    "/Users/connor/.local/share/chio-required-operators/native-subscription-auth-20260909/claude/kernel-profile",
+    "--workspace",
+    "/Users/connor/.local/share/chio-required-operators/native-subscription-auth-20260909/claude/workspace",
+    "--gateway-config",
+    "/Users/connor/.local/share/chio-required-operators/claude-host-delivery-20260909/new-session-7f25afef393b424990c027d9640fe3b2/gateway.json",
+    "--gateway-sha256",
+    "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+    "--model",
+    "claude-sonnet-5",
+    "--model-auth",
+    "claude-login"
+  ]
+}
