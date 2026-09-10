@@ -1,0 +1,56 @@
+{
+  "schema": "chio.claude.auth-docs-successor.v1",
+  "accepted": false,
+  "sourceRevision": "16624ede65015be091e91b7c29213425d5e2517e",
+  "version": "0.3.1-rc.1",
+  "predecessorArchiveSha256": "8e053ba313fff434106c7e86819abbfc7e526b0c6e6b3d975aa7e892595b4966",
+  "archiveSha256": "1258385647d228ebeed32662091ed721aeda3b60450cabae480ca0d4292fbe0a",
+  "archive": "/Users/connor/.local/share/chio-required-candidates/claude-auth-docs-successor-20260910/chio-claude-code-plugin-0.3.1-rc.1.tgz",
+  "coldInstalledPackage": "/tmp/chio-claude-auth-docs-successor-20260910/consumer/node_modules/@chio/claude-code-plugin",
+  "installedFilesVerified": 1227,
+  "changedArchiveFiles": [
+    "package/docs/RESTRICTED-MODE.md"
+  ],
+  "unchangedRegularFiles": 1226,
+  "unchangedJavaScriptFiles": 431,
+  "nativeHostGateTestsRun": false,
+  "fullAcceptanceTransferred": false,
+  "claim": "documentation-only successor; final native and kernel qualification must select this exact archive",
+  "rawFiles": [
+    {
+      "path": "raw/archive-comparison.json.gz",
+      "decodedSha256": "133fc87522a51f3bf8a0694892dce52ca021a7b52638adbf5918891f9a47a1b4",
+      "compressedSha256": "14d41db51fef612cb61261929ed2a6c6182dd49f37a98fad622e88a0029c94d1"
+    },
+    {
+      "path": "raw/cold-install.json.gz",
+      "decodedSha256": "9368de263d2ae53d01388551b4eef9d8cf9aa23fda8eda400a99f09a5e5fc105",
+      "compressedSha256": "4d0e9cebf1a1d5133df6acc07b84f3ed08bc6a011da9f286d6af0ccd278f39ba"
+    },
+    {
+      "path": "raw/cold-install.stderr.gz",
+      "decodedSha256": "41dbe01d0aca81aba3b1a2e35261214ea4be6286c4a0f38509a81428e6e90264",
+      "compressedSha256": "547f89bad9a3cdfe9d4ce27463e8407d5149bc22d949f39f9b134896bf9147c8"
+    },
+    {
+      "path": "raw/cold-install.stdout.gz",
+      "decodedSha256": "84b3615a2b55669c4069410770606e7290261ae70a9db72789bff656c372ce48",
+      "compressedSha256": "3c0d0f62c6b70883d7ae460a68c9fd0d6e302b3feaf5dee4968398e672cbc5f9"
+    },
+    {
+      "path": "raw/package-source.json.gz",
+      "decodedSha256": "8ca602806c4a1b13efb16228721d9751ca8d4f96fcd0e429d5c0781eb87b460b",
+      "compressedSha256": "fc2ed4fa5344ffb6c3dd9741eb969ace80f514f8330317ecee330426cab6d362"
+    },
+    {
+      "path": "raw/package.stderr.gz",
+      "decodedSha256": "9034b861f97e24cc96b3a702d0ea722c793dd1adcf942819d06035c3a16f64a8",
+      "compressedSha256": "c5d1f954fa3394156ad444ca785239e926e30972418ee07d17fd3bedc4c7f6b9"
+    },
+    {
+      "path": "raw/package.stdout.gz",
+      "decodedSha256": "d365ad9434b134731ccfc2ce1187e1efc86745cb71f7703f896d5e727bbf35de",
+      "compressedSha256": "e13650bef176c86cb013c5d6c38e91deade41931361a9e0ab0787d797e051110"
+    }
+  ]
+}
