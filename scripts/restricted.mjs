@@ -110,7 +110,7 @@ async function main() {
   const modelAuth=opts["--model-auth"]??"api-key";
   if (!["api-key","claude-login"].includes(modelAuth)) throw new Error("model auth must be api-key or claude-login");
   if (modelAuth==="claude-login" && process.env.ANTHROPIC_BASE_URL && process.env.ANTHROPIC_BASE_URL!=="https://api.anthropic.com") throw new Error("Native subscription authentication cannot use an alternate upstream");
-  const oauth=modelAuth==="claude-login" ? await (await import("./native-login.mjs")).nativeLogin(host,workspace) : undefined;
+  const oauth=modelAuth==="claude-login" ? await (await import(pathToFileURL(join(scriptDirectory,"native-login.mjs")).href)).nativeLogin(host,workspace) : undefined;
   // A Messages request is actual host delivery evidence. Confirm it before
   // returning the next model turn so fast providers cannot outrun kernel ACK.
   const relay=await startModelRelay({upstreamBaseUrl:process.env.ANTHROPIC_BASE_URL??"https://api.anthropic.com",apiKey:oauth?undefined:process.env.ANTHROPIC_API_KEY,oauth,model:opts["--model"],toolNames,onToolResults:receiveHostResults});
@@ -129,7 +129,7 @@ async function main() {
     writeFileSync(join(profile,"launch.json"),JSON.stringify({schema:"chio.claude.restricted-launch.v2",host,hostSha256:opts["--host-sha256"],gatewaySha256,workspace,temporary,sessionId,sandboxPath,sandboxSha256:createHash("sha256").update(policy).digest("hex"),control,modelAuth,modelTransport:relay.fixture?"localhost-fixture-unaccepted":"operator-messages-relay",acceptance:"unverified"},null,2),{mode:0o600,flag:"wx"});
     const supervisorConfig=join(control,"host-supervisor.json");
     writeFileSync(supervisorConfig,JSON.stringify({command:"/usr/bin/sandbox-exec",args:command,cwd:workspace,env}),{mode:0o600,flag:"wx"});
-    const supervisor=fileURLToPath(new URL("./host-supervisor.mjs",import.meta.url));
+    const supervisor=join(scriptDirectory,"host-supervisor.mjs");
     const child=spawn(process.execPath,[supervisor,supervisorConfig],{cwd:workspace,
       env:{PATH:process.env.PATH,LANG:"en_US.UTF-8",OPENSSL_CONF:"/dev/null"},stdio:["inherit","pipe","inherit","pipe"]});
     const decoder=new StringDecoder("utf8");
