@@ -9,10 +9,12 @@ import argparse
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import signal
 import subprocess
+import tarfile
 import time
 import uuid
 
@@ -54,8 +56,9 @@ def main():
     parser.add_argument("--cutpoint", required=True, choices=["before-admission", "after-receipt", "after-admission"])
     parser.add_argument("--host", type=Path, default=Path("/Users/connor/.local/share/claude/versions/2.1.267"))
     parser.add_argument("--model", default="claude-sonnet-5")
+    parser.add_argument("--artifact-sha256", required=True, help="Explicit immutable candidate archive SHA-256")
     args = parser.parse_args()
-    args.output.mkdir(mode=0o700, parents=True)
+    args.output.mkdir(mode=0o700, parents=True, exist_ok=False)
     args.package_dir = args.package_dir.resolve(strict=True)
     args.host = args.host.resolve(strict=True)
     manifest = json.loads(args.manifest.read_text())
@@ -74,7 +77,25 @@ def main():
                 "gatewaySha256": digest(gateway), "hostSha256": digest(args.host), "model": args.model,
                 "hostVersion": subprocess.check_output([str(args.host), "--version"], text=True).strip(),
                 "harnessSha256": digest(Path(__file__)), "ownerManifest": manifest, "configSha256": config_hash}
-    require(identity["archiveSha256"] == "0dd0d906fc34b3ac7d09e3b7f6cdee9f13f511731b25ec761feca7172c9b1158", "Expected frozen r5 candidate")
+    require(re.fullmatch(r"[0-9a-f]{64}", args.artifact_sha256) is not None, "Explicit lowercase artifact SHA-256 required")
+    require(identity["archiveSha256"] == args.artifact_sha256, "Archive differs from explicitly selected candidate")
+    installed_files = []
+    with tarfile.open(args.archive) as archive:
+        for member in archive.getmembers():
+            if not member.isfile():
+                continue
+            require(member.name.startswith("package/"), "Archive file is outside package root")
+            relative = Path(member.name.removeprefix("package/"))
+            require(not relative.is_absolute() and ".." not in relative.parts, "Archive file escapes package root")
+            installed = (args.package_dir / relative).resolve(strict=True)
+            require(installed.is_relative_to(args.package_dir), "Installed file escapes candidate package")
+            expected = hashlib.sha256(archive.extractfile(member).read()).hexdigest()
+            actual = digest(installed)
+            require(expected == actual, "Installed candidate differs from archive: " + str(relative))
+            installed_files.append({"path": str(relative), "sha256": actual})
+    require(bool(installed_files), "Archive contained no regular package files")
+    identity["installedArchiveFilesVerified"] = len(installed_files)
+    save(args.output / "installed-archive-files.json", installed_files)
     save(args.output / "identity.json", identity)
     (args.output / "driver-source.py").write_bytes(Path(__file__).read_bytes())
     (args.output / "storage-helper.py").write_bytes(args.helper.read_bytes())

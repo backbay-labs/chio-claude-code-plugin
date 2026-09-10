@@ -1,0 +1,73 @@
+{
+  "accepted": false,
+  "archiveSha256": "8e053ba313fff434106c7e86819abbfc7e526b0c6e6b3d975aa7e892595b4966",
+  "kernelExecuted": false,
+  "claim": "package installation, upgrade and removal only; no kernel or retained-operation recovery acceptance",
+  "rawFiles": [
+    {
+      "path": "raw/harness-identity-validation.json.gz",
+      "decodedSha256": "4686d03a8ea5df328c10dd101aff1ec3a01b1d135b827611c4b6473351404bcd",
+      "compressedSha256": "3c5459eb4e3576de95ba8ba00bc5ca450648aa71b3cf9334057177ab06e8ee21"
+    },
+    {
+      "path": "raw/identity.json.gz",
+      "decodedSha256": "526e1fa2a50b96835e1ef62149268b1b21897b061bf34f8ef497969bebb93d2f",
+      "compressedSha256": "5b128144b3223e8720b38a3dc285ff573128a14f49eaf7469925b39953695deb"
+    },
+    {
+      "path": "raw/independent-installation-canary.txt.gz",
+      "decodedSha256": "0c220d813f473482970a8c7c5a5a97300736fca242affb64709e20592f24f25f",
+      "compressedSha256": "e0bb7c17172171c0e59bc9c3450d550ceac41ddca335e695ed4003ec030f7ea6"
+    },
+    {
+      "path": "raw/install-prior-file-identities.json.gz",
+      "decodedSha256": "8f727702ef812779f48f71e64e90861051606c63052e1fbb63f3e051aa281ce7",
+      "compressedSha256": "630b41a69bdf42fdc3756c056b6ee6bdeee956c2f6b5396e690dad4f3e2d23d6"
+    },
+    {
+      "path": "raw/install-prior.stderr.gz",
+      "decodedSha256": "41dbe01d0aca81aba3b1a2e35261214ea4be6286c4a0f38509a81428e6e90264",
+      "compressedSha256": "547f89bad9a3cdfe9d4ce27463e8407d5149bc22d949f39f9b134896bf9147c8"
+    },
+    {
+      "path": "raw/install-prior.stdout.gz",
+      "decodedSha256": "da13ab9d025b19c91553bc7d4c450975d3e4e36dd7c5fef6f223f8008ba39547",
+      "compressedSha256": "8ad0ddcf0cdb848891fb62d303f98bb2efd39f00bd390ab35c62e8125e331069"
+    },
+    {
+      "path": "raw/remove.stderr.gz",
+      "decodedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "compressedSha256": "f1b651238a58fe290baec6c5e32f3bdb1943dd2bd582f02569231f7a757c7837"
+    },
+    {
+      "path": "raw/remove.stdout.gz",
+      "decodedSha256": "18f9eb77f68ca55da8b07adde8894edca775e7f55ed846fe8b81cb83962c5f4a",
+      "compressedSha256": "44e3df4c267e931e5686b2a3f22b357b685cc6809c9cbd7435b04961ac956218"
+    },
+    {
+      "path": "raw/removed-entrypoint.stderr.gz",
+      "decodedSha256": "34ff3513de96a2000b00cb0088b0a164cec5c78e57a47cc939ab61d6f43f1f16",
+      "compressedSha256": "7b94dd6503f359938feb8d0a5510c3fe038df1cae9335e8021ca766d246254b7"
+    },
+    {
+      "path": "raw/results.json.gz",
+      "decodedSha256": "ca5c16a9b2788273591ba58aa5278067e0ab4f413a8431182c03f09879437c69",
+      "compressedSha256": "a73baf6354b7766f57b7ae7452b1c0d4737bf74ce38b4d16dcdeee1e41551027"
+    },
+    {
+      "path": "raw/upgrade-file-identities.json.gz",
+      "decodedSha256": "6e14585e74684cb51286dc0babbd480efeb884e51e887ed45ebd8c4dd83175f9",
+      "compressedSha256": "749a5fdcad134b5861b7b10b0c4946b22f1d0a0225bd72826dcb3664e5f002b1"
+    },
+    {
+      "path": "raw/upgrade.stderr.gz",
+      "decodedSha256": "41dbe01d0aca81aba3b1a2e35261214ea4be6286c4a0f38509a81428e6e90264",
+      "compressedSha256": "547f89bad9a3cdfe9d4ce27463e8407d5149bc22d949f39f9b134896bf9147c8"
+    },
+    {
+      "path": "raw/upgrade.stdout.gz",
+      "decodedSha256": "2ffb9eb6dc4193a7f08012177c4108dbad7919aff915353b6a76127b4b93cc27",
+      "compressedSha256": "87e8175b2862e08bb5ab52ef518ba70a629ae72b383ba80a49debb986aab00c8"
+    }
+  ]
+}
