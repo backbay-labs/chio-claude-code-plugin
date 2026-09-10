@@ -163,3 +163,31 @@ The parent then forwards only the already bounded Messages requests from the act
 Run `claude auth status` in the trusted operator profile first. If login has expired, run `claude auth login` there and complete any browser/MFA step. Then launch new work with the subscription option. Authentication renewal never reconciles unknown protected outcomes. Do not use `--bare` for the trusted authentication helper because it disables native OAuth; the sandboxed agent retains bare mode and a temporary relay credential.
 
 The 2026-09-09 native subscription run used Claude Code 2.1.267 and claude-sonnet-5. Actual kernel write/read calls succeeded, while the forbidden write was denied. These bounded observations belong to the recorded September 9 artifacts. They do not establish complete I01-I08 acceptance for a successor archive or kernel.
+
+## Compatibility hooks
+
+The historical marketplace plugin is available for diagnostics and bounded
+hook-contract testing. It does not establish the restricted launcher's process
+and resource boundary. The restricted launcher disables these hooks and plugins.
+
+```sh
+claude plugin marketplace add backbay-labs/chio-claude-code-plugin
+claude plugin install chio@chio
+```
+
+`PreToolUse` requires an exact session bond, a nonexpired capability, an explicit
+allow decision, a receipt matching the request and capability, and an
+operator-pinned `CHIO_TRUSTED_RECEIPT_KEY`. Budgeted calls require a cost oracle;
+oracle errors deny. Authorization evidence is persisted before native admission.
+The historical bridge daemon path is rejected because it dispatched an MCP tool
+during a precheck and could cause duplicate effects.
+
+`PostToolUse` keeps host-reported outcomes explicitly unverified. It does not
+turn a signed authorization into a signed execution result. Invalid or
+substituted evidence is not archived as successful.
+
+`CHIO_STATE_DIR` selects isolated plugin state. Otherwise state follows
+`CLAUDE_CONFIG_DIR`, then the normal Claude directory. `/chio:bond` passes the
+actual host session ID; a random session fallback is not accepted. These repairs
+do not fix host-level hook failure or precheck gaps. Read the
+[host contract probe guide](../SMOKE.md) for the observed boundary and test scope.

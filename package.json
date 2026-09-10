@@ -23,7 +23,8 @@
     "vendor",
     "docs/RESTRICTED-MODE.md",
     "acceptance/2026-09-09/REPORT.md",
-    "acceptance/2026-09-09/ACCEPTANCE.json"
+    "acceptance/2026-09-09/ACCEPTANCE.json",
+    "docs/assets"
   ],
   "scripts": {
     "build": "npm run build:types && npm run bundle",
