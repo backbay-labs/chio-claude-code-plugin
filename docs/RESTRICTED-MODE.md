@@ -128,3 +128,13 @@ workflow, full adversarial native-path inventory, every authority variant,
 independent result-substitution checks, crash/restart recovery and measured
 upgrade/removal remain required. This runbook is a candidate procedure, not an
 acceptance certificate.
+
+## Existing Claude subscription login
+
+Add `--model-auth claude-login` to use the operator's existing `claude auth login` session. The trusted parent briefly starts the pinned native Claude executable with safe mode, no tools, no MCP, no settings sources and no session persistence. Its base URL points to a temporary local authentication observer. Native Claude handles Keychain access and token refresh; the observer accepts one Messages authorization header, refuses inference, terminates the helper and keeps the credential only in parent memory. No provider credential is copied into the protected host, evidence or bundle. Explicit API-key mode remains available as the default.
+
+The parent then forwards only the already bounded Messages requests from the actual sandboxed Claude host. It replaces the temporary relay key with native OAuth authentication and retains the OAuth beta capability required by [Claude's gateway protocol](https://code.claude.com/docs/en/llm-gateway-protocol). The destination remains the fixed Anthropic origin; alternate routes and hosted tools remain refused. See [subscription gateway behavior](https://code.claude.com/docs/en/llm-gateway#subscriptions-and-gateways).
+
+Run `claude auth status` in the trusted operator profile first. If login has expired, run `claude auth login` there and complete any browser/MFA step. Then launch new work with the subscription option. Authentication renewal never reconciles unknown protected outcomes. Do not use `--bare` for the trusted authentication helper because it disables native OAuth; the sandboxed agent retains bare mode and a temporary relay credential.
+
+The 2026-09-09 native subscription run used Claude Code 2.1.267 and claude-sonnet-5. Actual kernel write/read calls succeeded, while the forbidden write was denied. This is bounded current evidence, not complete I01-I08 acceptance.

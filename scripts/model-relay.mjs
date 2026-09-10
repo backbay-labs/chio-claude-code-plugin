@@ -27,9 +27,9 @@ export function validateModelRequest(body,model,toolNames) {
   // These values cannot authorize remote tools, references, files or background work.
   if (body.metadata!==undefined && (!object(body.metadata)||!keys(body.metadata,["user_id"]))) throw new Error("unsupported metadata");
 }
-export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.com",apiKey,model,toolNames,onToolResults}) {
+export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.com",apiKey,oauth,model,toolNames,onToolResults}) {
   const upstream=new URL(upstreamBaseUrl);
-  if (!apiKey || upstream.username || upstream.password || upstream.search || upstream.hash || upstream.pathname!=="/" || !(upstream.origin==="https://api.anthropic.com" || upstream.protocol==="http:"&&upstream.hostname==="127.0.0.1"&&upstream.port)) throw new Error("explicit API credential and qualified provider or localhost fixture origin required");
+  if ((!apiKey && !oauth) || (apiKey && oauth) || (oauth && (!oauth.authorization?.startsWith("Bearer ") || !oauth.beta)) || upstream.username || upstream.password || upstream.search || upstream.hash || upstream.pathname!=="/" || !(upstream.origin==="https://api.anthropic.com" || upstream.protocol==="http:"&&upstream.hostname==="127.0.0.1"&&upstream.port)) throw new Error("explicit API or native subscription credential and qualified provider or localhost fixture origin required");
   const token=randomBytes(32).toString("hex"),events=[];
   const server=createServer(async (request,response)=>{
     const controller=new AbortController();response.on("close",()=>controller.abort());
@@ -42,7 +42,15 @@ export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.co
       const body=JSON.parse(Buffer.concat(chunks).toString());validateModelRequest(body,model,new Set(toolNames));
       if(onToolResults) await onToolResults(body.messages);
       event.topLevelKeys=Object.keys(body);event.toolNames=body.tools?.map(tool=>tool.name)??[];event.forwarded=true;
-      const result=await fetch(new URL(target.pathname,upstream),{method:"POST",redirect:"error",signal:controller.signal,headers:{"x-api-key":apiKey,"anthropic-version":"2023-06-01","content-type":"application/json"},body:JSON.stringify(body)});
+      const headers={"anthropic-version":"2023-06-01","content-type":"application/json"};
+      if (oauth) {
+        headers.authorization=oauth.authorization;
+        headers["anthropic-beta"]=[...new Set([...oauth.beta.split(","),...(request.headers["anthropic-beta"]??"").split(",")].filter(Boolean))].join(",");
+      } else {
+        headers["x-api-key"]=apiKey;
+        if (typeof request.headers["anthropic-beta"]==="string") headers["anthropic-beta"]=request.headers["anthropic-beta"];
+      }
+      const result=await fetch(new URL(target.pathname+target.search,upstream),{method:"POST",redirect:"error",signal:controller.signal,headers,body:JSON.stringify(body)});
       event.status=result.status;
       response.writeHead(result.status,{"content-type":result.headers.get("content-type")??"application/json"});
       if(result.body) for await(const data of result.body) response.write(data);

@@ -38,8 +38,9 @@ async function main() {
   const args = process.argv.slice(2);
   const allowed = new Set(["--host", "--host-sha256", "--profile", "--workspace", "--gateway-config", "--gateway-sha256", "--model"]);
   const opts = {};
+  const optional = new Set(["--model-auth"]);
   for (let i=0; i<args.length; i+=2) {
-    if (!allowed.has(args[i]) || !args[i+1] || Object.hasOwn(opts,args[i])) throw new Error("expected unique --host, --host-sha256, --profile, --workspace, --gateway-config, --gateway-sha256 and --model options");
+    if ((!allowed.has(args[i]) && !optional.has(args[i])) || !args[i+1] || Object.hasOwn(opts,args[i])) throw new Error("expected unique --host, --host-sha256, --profile, --workspace, --gateway-config, --gateway-sha256 and --model options");
     opts[args[i]] = args[i+1];
   }
   for (const key of allowed) if (!opts[key]) throw new Error(`${key} is required`);
@@ -106,9 +107,12 @@ async function main() {
     }
     return acknowledgements;
   }
+  const modelAuth=opts["--model-auth"]??"api-key";
+  if (!["api-key","claude-login"].includes(modelAuth)) throw new Error("model auth must be api-key or claude-login");
+  const oauth=modelAuth==="claude-login" ? await (await import("./native-login.mjs")).nativeLogin(host,workspace) : undefined;
   // A Messages request is actual host delivery evidence. Confirm it before
   // returning the next model turn so fast providers cannot outrun kernel ACK.
-  const relay=await startModelRelay({upstreamBaseUrl:process.env.ANTHROPIC_BASE_URL??"https://api.anthropic.com",apiKey:process.env.ANTHROPIC_API_KEY,model:opts["--model"],toolNames,onToolResults:receiveHostResults});
+  const relay=await startModelRelay({upstreamBaseUrl:process.env.ANTHROPIC_BASE_URL??"https://api.anthropic.com",apiKey:oauth?undefined:process.env.ANTHROPIC_API_KEY,oauth,model:opts["--model"],toolNames,onToolResults:receiveHostResults});
   try {
     const {startGatewayHttp}=await import(pathToFileURL(gateway).href);
     transport=await startGatewayHttp(config);
@@ -121,7 +125,7 @@ async function main() {
     Object.assign(env,{PATH:`${dirname(realpathSync(process.execPath))}:${dirname(host)}:/usr/bin:/bin`,HOME:profile,CLAUDE_CONFIG_DIR:profile,XDG_CONFIG_HOME:profile,TMPDIR:temporary,CLAUDE_CODE_TMPDIR:temporary,BUN_TMPDIR:temporary,XDG_RUNTIME_DIR:temporary,
       ANTHROPIC_API_KEY:relay.token,ANTHROPIC_BASE_URL:`http://127.0.0.1:${relay.port}`,MAX_THINKING_TOKENS:"0",CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC:"1",DISABLE_AUTOUPDATER:"1",OPENSSL_CONF:"/dev/null"});
     const command=["-f",sandboxPath,host,...makeArguments({settingsPath,mcpPath,model:opts["--model"],sessionId}),"--debug-file",join(profile,"host-debug.log")];
-    writeFileSync(join(profile,"launch.json"),JSON.stringify({schema:"chio.claude.restricted-launch.v2",host,hostSha256:opts["--host-sha256"],gatewaySha256,workspace,temporary,sessionId,sandboxPath,sandboxSha256:createHash("sha256").update(policy).digest("hex"),control,modelTransport:relay.fixture?"localhost-fixture-unaccepted":"operator-messages-relay",acceptance:"unverified"},null,2),{mode:0o600,flag:"wx"});
+    writeFileSync(join(profile,"launch.json"),JSON.stringify({schema:"chio.claude.restricted-launch.v2",host,hostSha256:opts["--host-sha256"],gatewaySha256,workspace,temporary,sessionId,sandboxPath,sandboxSha256:createHash("sha256").update(policy).digest("hex"),control,modelAuth,modelTransport:relay.fixture?"localhost-fixture-unaccepted":"operator-messages-relay",acceptance:"unverified"},null,2),{mode:0o600,flag:"wx"});
     const supervisorConfig=join(control,"host-supervisor.json");
     writeFileSync(supervisorConfig,JSON.stringify({command:"/usr/bin/sandbox-exec",args:command,cwd:workspace,env}),{mode:0o600,flag:"wx"});
     const supervisor=fileURLToPath(new URL("./host-supervisor.mjs",import.meta.url));
