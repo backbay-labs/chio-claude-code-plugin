@@ -92,7 +92,8 @@ async function main() {
   const settingsPath=join(control,"settings.json"),mcpPath=join(control,"mcp-session.json"),sandboxPath=join(control,"host.sb");
   writeFileSync(settingsPath,JSON.stringify({disableAllHooks:true,enabledPlugins:{},permissions:{defaultMode:"dontAsk"}}),{mode:0o600,flag:"wx"});
   const toolNames=[...config.tools.map(tool=>`mcp__chio__${tool.name}`),...(config.approval?["mcp__chio__chio_resume"]:[])];
-  let transport,delivered=0,deliveryFailed=false;
+  let transport,delivered=0,deliveryFailed=false,hostWorkIncomplete=false;
+  const hostPendingRequests=new Set();
   let acknowledgements=Promise.resolve();
   const confirmed=new Set();
   function retainUnresolvedHostResult() {
@@ -109,6 +110,11 @@ async function main() {
         try{outcome=JSON.parse(typeof content==="string"?content:Array.isArray(content)&&content.length===1&&content[0].type==="text"?content[0].text:"");}catch{retainUnresolvedHostResult();continue;}
         if(!outcome||typeof outcome!=="object"||!["completed","denied","not_dispatched","awaiting_approval"].includes(outcome.state)){
           retainUnresolvedHostResult();continue;
+        }
+        if(["denied","not_dispatched"].includes(outcome.state)||outcome.result?.isError===true)hostWorkIncomplete=true;
+        if(typeof outcome.requestId==="string"){
+          if(outcome.state==="awaiting_approval")hostPendingRequests.add(outcome.requestId);
+          else hostPendingRequests.delete(outcome.requestId);
         }
         if(outcome.state!=="completed"||outcome.evidence!=="verified"||!outcome.delivery)continue;
         acknowledgements=acknowledgements.then(async()=>{
@@ -180,8 +186,8 @@ async function main() {
     let records=[];
     try{records=readdirSync(journal).filter(name=>name.endsWith(".json")).map(name=>JSON.parse(readFileSync(join(journal,name),"utf8")));}catch{deliveryFailed=true;}
     const unresolved=deliveryFailed||records.some(record=>["pending","unknown"].includes(record.state)||record.state==="completed"&&(!record.acknowledged||!record.hostDeliveryConfirmed));
-    const unsuccessful=records.some(record=>record.state==="denied"||record.state==="not_dispatched"||record.outcome?.result?.isError===true);
-    const pending=records.some(record=>record.state==="awaiting_approval");
+    const unsuccessful=hostWorkIncomplete||records.some(record=>record.state==="denied"||record.state==="not_dispatched"||record.outcome?.result?.isError===true);
+    const pending=hostPendingRequests.size>0||records.some(record=>record.state==="awaiting_approval");
     const initializationFailed=hostInitializationFailed||!hostReady;
     const executionOutcome=unresolved?"unresolved":initializationFailed?"host-initialization-failed":pending?"awaiting-approval":unsuccessful?"protected-work-incomplete":state.code===0?"completed":"host-failed";
     const exitCode=unresolved?2:initializationFailed?1:pending?4:unsuccessful?3:state.code??1;

@@ -61,6 +61,9 @@ try {
   // Ask npm for the selected release files before adding stage-only dependencies.
   const listing = JSON.parse(run("npm", ["pack", "--dry-run", "--json", "--ignore-scripts"], root, true))[0];
   for (const file of listing.files) {
+    // Qualification drivers are operator fixtures, not runtime dependencies.
+    // Excluding them also prevents concurrent test development entering a release.
+    if (file.path.startsWith("scripts/acceptance/")) continue;
     const target = join(stage, file.path);
     if (!contained(stage, target) || file.path.startsWith("node_modules/")) throw new Error(`unexpected source pack entry ${file.path}`);
     mkdirSync(dirname(target), {recursive: true});
