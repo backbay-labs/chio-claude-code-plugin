@@ -1,0 +1,26 @@
+{
+  "schema": "chio.task.catalog.v1",
+  "templates": [{
+    "id": "preview",
+    "title": "Prepare exact preview",
+    "serverId": "replace-with-owner-id",
+    "expectedCapabilityId": "replace-with-kernel-capability",
+    "allowedTools": ["read_text_file", "write_file"],
+    "ttlSeconds": 1800,
+    "approval": { "requiredTools": ["write_file"], "purpose": "Review the exact preview write", "ttlSeconds": 300 },
+    "scope": { "resources": ["Selected disposable repository"], "destinations": ["Selected preview owner"], "restrictions": ["No production release"], "source": "operator_template", "budget": "unavailable" },
+    "requirements": [{
+      "id": "local",
+      "title": "Local checks",
+      "collector": { "kind": "json", "url": "http://127.0.0.1:9440/artifacts/{artifact}/local", "artifactPointer": "/artifact", "statePointer": "/state", "passedValue": "passed", "failedValues": ["failed"] }
+    }, {
+      "id": "hosted",
+      "title": "Hosted checks",
+      "collector": { "kind": "json", "url": "http://127.0.0.1:9440/artifacts/{artifact}/hosted", "artifactPointer": "/artifact", "statePointer": "/state", "passedValue": "passed", "failedValues": ["failed"] }
+    }, {
+      "id": "preview",
+      "title": "Preview behavior",
+      "collector": { "kind": "json", "url": "http://127.0.0.1:9440/artifacts/{artifact}/preview", "artifactPointer": "/artifact", "statePointer": "/state", "passedValue": "passed", "failedValues": ["failed"] }
+    }]
+  }]
+}

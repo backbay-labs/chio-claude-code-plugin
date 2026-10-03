@@ -24,6 +24,23 @@ export function parseStatus(text: string, sessionId: string): ControlStatus {
     if (intent.sessionId !== sessionId || !/^[0-9a-f-]{36}$/.test(intent.id) || !["approve", "decline", "alternative", "revoke"].includes(intent.kind)
       || !["requested", "submitted", "granted", "declined", "confirmed", "unknown", "failed"].includes(intent.state) || !Number.isSafeInteger(intent.expiresAt)) throw new Error("invalid control intent");
   }
+  if (value.workflow) {
+    const w = value.workflow;
+    if (!Array.isArray(w.templates) || w.templates.length > 32 || typeof w.continuation !== "boolean" || typeof w.proposals !== "boolean") throw new Error("invalid workflow projection");
+    for (const t of w.templates) if (typeof t.id !== "string" || typeof t.title !== "string" || !/^[0-9a-f]{64}$/.test(t.revision)
+      || !Array.isArray(t.allowedTools) || !Number.isSafeInteger(t.ttlSeconds) || !t.scope || t.scope.source !== "operator_template"
+      || [t.scope.resources, t.scope.destinations, t.scope.restrictions].some(a => !Array.isArray(a) || a.some(v => typeof v !== "string"))) throw new Error("invalid task template");
+    const t = w.task;
+    if (t && (t.sessionId !== sessionId || typeof t.id !== "string" || typeof t.title !== "string" || typeof t.goal !== "string"
+      || !/^[0-9a-f]{64}$/.test(t.revision) || !["ready", "outstanding", "failed"].includes(t.readiness)
+      || !t.artifact || !["git_commit", "sha256"].includes(t.artifact.kind) || !(t.artifact.kind === "git_commit" ? /^[0-9a-f]{40}$/ : /^[0-9a-f]{64}$/).test(t.artifact.digest)
+      || typeof t.artifact.label !== "string" || !Array.isArray(t.requirements) || t.requirements.length > 32
+      || t.requirements.some(r => typeof r.id !== "string" || typeof r.title !== "string" || !["outstanding", "running", "passed", "failed", "stale"].includes(r.state)
+        || !["none", "trusted_collector_observation"].includes(r.evidenceClass)) || !t.scope || t.scope.source !== "operator_template"
+      || [t.scope.resources, t.scope.destinations, t.scope.restrictions].some(a => !Array.isArray(a) || a.some(v => typeof v !== "string")))) throw new Error("invalid task contract");
+  }
+  if (value.continuations && (!Array.isArray(value.continuations) || value.continuations.length > 1000 || value.continuations.some(c => !/^[0-9a-f-]{36}$/.test(c.id)
+    || typeof c.requestId !== "string" || !["submitted", "completed", "unknown"].includes(c.state) || !["pending", "confirmed"].includes(c.delivery)))) throw new Error("invalid continuation projection");
   return value;
 }
 
@@ -45,7 +62,7 @@ export function operationText(operation: OperationView): string {
     : operation.state === "denied" ? "requested → denied" : "requested → not dispatched";
   lines.push(timeline);
   if (operation.receiptId) lines.push(`Receipt: ${safeText(operation.receiptId)}`);
-  lines.push(`Kernel acknowledgement: ${operation.acknowledged ? "confirmed" : "unconfirmed"}`, `Host delivery: ${operation.hostDeliveryConfirmed ? "confirmed" : "unconfirmed"}`);
+  lines.push(`Kernel acknowledgement: ${operation.acknowledged ? "confirmed" : "unconfirmed"}`, `Host delivery: ${operation.hostDeliveryConfirmed ? "confirmed" : "unconfirmed"}${operation.deliveryChannel ? " · " + operation.deliveryChannel : ""}`);
   if (operation.review) {
     lines.push(`Purpose: ${safeText(operation.review.purpose)}`, `Requested capability: ${safeText(operation.review.capabilityId)}`,
       `Grant TTL: ${operation.review.ttlSeconds}s · decision: ${operation.review.decision}`, "Restrictions: kernel policy applies · budget impact unavailable",

@@ -35,9 +35,9 @@ Run Claude Code against tools and data controlled by the [Chio kernel](https://g
 - **Recoverable uncertainty.** Unknown outcomes remain in the private journal and block new dispatch until the operator resolves them.
 - **Native session interface.** Inspect scope, exact action reviews, retained evidence and session-specific revocation requests while Claude works.
 
-**Status:** Version 0.4.0-rc.1 adds the [native mod interface](docs/NATIVE-MODS.md) against pinned Claude Code 2.1.287. The trusted operator service supplies session-scoped status and accepts review intent; kernel authority and protected execution remain outside the host. The interactive protected profile remains a qualification candidate. Earlier [bounded real-host evidence](acceptance/2026-09-10/final-static-continuation/README.md) pins a different host and does not qualify this version.
+**Status:** Version 0.4.0-rc.2 adds the [native mod interface](docs/NATIVE-MODS.md) against pinned Claude Code 2.1.287. The [controlled-task workflow](docs/CONTROLLED-TASKS.md) adds artifact-bound completion evidence, guided scopes, exact continuation and the typed `$.chio` interface. The trusted operator service supplies session-scoped status and accepts review intent; kernel authority and protected execution remain outside the host. The interactive protected profile remains a qualification candidate. Earlier [bounded real-host evidence](acceptance/2026-09-10/final-static-continuation/README.md) pins a different host and does not qualify this version.
 
-Native commands are `/chio`, `/chio-status`, `/chio-review`, `/chio-evidence` and `/chio-revoke`. See the [native interface runbook](docs/NATIVE-MODS.md) for activation, scoped credentials and operator confirmation. An ordinary session displays **kernel MCP tools only**; a mod does not confer protection on native Bash or file tools.
+Native commands include `/chio`, `/chio-status`, `/chio-review`, `/chio-evidence`, `/chio-revoke`, `/chio-task`, `/chio-completion`, `/chio-continue`, `/chio-outcome` and `/chio-why`. See the [native interface runbook](docs/NATIVE-MODS.md) for activation, scoped credentials and operator confirmation. An ordinary session displays **kernel MCP tools only**; a mod does not confer protection on native Bash or file tools.
 
 ## Build from source
 

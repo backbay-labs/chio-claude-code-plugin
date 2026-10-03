@@ -1,4 +1,5 @@
-/** Public projection only. Operator credentials, raw results and journals never cross this contract. */
+import type { WorkflowView, ContinuationView } from "./workflow.js";
+/** Status projects metadata. Operator credentials and journals stay outside the host; exact result receipt uses a separate bounded route. */
 export type OperationState = "pending" | "awaiting_approval" | "not_dispatched" | "unknown" | "denied" | "completed";
 export type IntentKind = "approve" | "decline" | "alternative" | "revoke";
 export type IntentState = "requested" | "submitted" | "granted" | "declined" | "confirmed" | "unknown" | "failed";
@@ -20,6 +21,7 @@ export interface OperationView {
   receiptId?: string;
   acknowledged: boolean;
   hostDeliveryConfirmed: boolean;
+  deliveryChannel?: "model_tool_result" | "native_control" | "unclassified";
   nextAction: "review" | "explicit_resume" | "linked_continuation" | "reconcile_original" | "acknowledge_delivery" | "none";
   review?: ReviewView;
 }
@@ -45,4 +47,6 @@ export interface ControlStatus {
   fenced: boolean;
   operations: OperationView[];
   intents: IntentView[];
+  workflow?: WorkflowView;
+  continuations?: ContinuationView[];
 }

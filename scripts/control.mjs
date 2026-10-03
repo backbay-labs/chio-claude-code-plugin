@@ -26,13 +26,18 @@ export async function main(args = process.argv.slice(2)) {
     process.stdout.write(JSON.stringify({ intent: await confirmControlIntent(config, operator, options["--intent"]), dispatchPerformed: false }) + "\n");
     return;
   }
-  if (!["serve", "status"].includes(action) || options["--operator-file"] || options["--intent"]) throw new Error("usage: control.mjs serve|status --gateway-config CONFIG [--credential-output NEW_FILE]; confirm --gateway-config CONFIG --intent ID --operator-file PRIVATE_FILE");
+  if (!["serve", "status", "inbox"].includes(action) || options["--operator-file"] || options["--intent"]) throw new Error("usage: control.mjs serve|status --gateway-config CONFIG [--credential-output NEW_FILE]; confirm --gateway-config CONFIG --intent ID --operator-file PRIVATE_FILE");
   const prepared = requireSessionCredential(JSON.parse(readFileSync(configPath, "utf8")));
   const authorityExpiresAt = prepared.sessionCredential.expiresAt;
-  if (action === "status") { process.stdout.write(JSON.stringify(await controlStatus({ config, authorityExpiresAt })) + "\n"); return; }
+  if (action === "inbox") {
+    const status = await controlStatus({ config, authorityExpiresAt, workflow: prepared.workflow });
+    console.log(JSON.stringify({ sessionId: status.sessionId, authority: status.authority, intents: status.intents.filter(i => i.state === "requested" || i.state === "submitted" || i.state === "unknown"),
+      taskRequests: status.workflow?.requests ?? [], exactActions: status.operations.filter(o => o.review), dispatchPerformed: false, next: "Inspect the exact action; confirm a requested intent using a distinct trusted operator credential outside Claude." })); return;
+  }
+  if (action === "status") { process.stdout.write(JSON.stringify(await controlStatus({ config, authorityExpiresAt, workflow: prepared.workflow })) + "\n"); return; }
   if (!options["--credential-output"]) throw new Error("serve requires a new private --credential-output file");
   const path = resolve(options["--credential-output"]);
-  const server = await startControlServer({ config, authorityExpiresAt });
+  const server = await startControlServer({ config, authorityExpiresAt, workflow: prepared.workflow });
   let created = false;
   try {
     writeFileSync(path, JSON.stringify({ schema: "chio.control.credential.v1", sessionId: config.sessionId, url: server.url, token: server.token, expiresAt: authorityExpiresAt }), { mode: 0o600, flag: "wx" });

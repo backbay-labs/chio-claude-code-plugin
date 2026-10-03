@@ -1,6 +1,6 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { createHash, randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
-import { closeSync, fsyncSync, lstatSync, mkdirSync, openSync, readFileSync, readdirSync, renameSync, writeFileSync } from "node:fs";
+import { closeSync, existsSync, fsyncSync, lstatSync, mkdirSync, openSync, readFileSync, readdirSync, renameSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { canonicalizeJson } from "@chio-protocol/sdk/invariants";
 import { createMcpExecutionClient, verifyCompletedOutcome } from "@chio/bridge";
@@ -10,11 +10,17 @@ import { gatewayStatus } from "../../node_modules/@chio/bridge/dist/gateway-oper
 import { verifyApprovalToolCall } from "../../node_modules/@chio/bridge/dist/approval.js";
 import type { ControlStatus, IntentKind, IntentState, IntentView, OperationView } from "../../types/control.js";
 
+import { createWorkflowControl, type WorkflowOptions } from "../workflow/control.js";
+import { projectTask, readCatalog, readTask, templateView } from "../workflow/tasks.js";
+
 const LIMIT = 1024 * 1024;
 const kinds: IntentKind[] = ["approve", "decline", "alternative", "revoke"];
 interface IntentRecord extends IntentView { schema: "chio.control.intent.v1"; binding: string; revision: string; createdAt: number }
 export interface ControlOptions {
   config: GatewayConfig;
+  workflow?: WorkflowOptions;
+  /** Launcher observations of exact model tool results; never inferred from ACK alone. */
+  modelDeliveryConfirmed?: (requestId: string) => boolean;
   authorityExpiresAt: number;
   scope?: ControlStatus["scope"];
   /** Test seam. Production uses the kernel's delegated-session validation. */
@@ -113,11 +119,29 @@ export async function controlStatus(options: ControlOptions): Promise<ControlSta
       if (valid) authority = "live";
     } catch { /* Retain evidence while the kernel is unreachable. */ }
   }
+  const workflow = options.workflow;
+  for (const [field, path] of [["task", workflow?.taskPath], ["catalog", workflow?.catalogPath]] as const) {
+    if (path && resolve(path) !== join(config.journalDir, "workflow", field + ".json")) throw new Error("foreign workflow path");
+  }
+  const task = workflow?.taskPath ? await projectTask(readTask(workflow.taskPath, config.sessionId, hash(gatewayBinding(config)))) : undefined;
+  const templates = workflow?.catalogPath ? readCatalog(workflow.catalogPath).map(templateView) : [];
+  const taskRequestDir = join(config.journalDir, "workflow", "task-requests");
+  const requestNames = existsSync(taskRequestDir) ? readdirSync(taskRequestDir).filter(name => name.endsWith(".json")) : [];
+  if (requestNames.length > 1000) throw new Error("task request retention requires maintenance");
+  const requests = requestNames.map(name => {
+    const r = privateJson<{ schema: string; id: string; sessionId: string; binding: string; templateId: string; revision: string; createdAt: number }>(join(taskRequestDir, name));
+    if (r.schema !== "chio.task.request.v1" || name !== r.id + ".json" || !/^[0-9a-f-]{36}$/.test(r.id) || r.sessionId !== config.sessionId
+      || r.binding !== hash(gatewayBinding(config)) || typeof r.templateId !== "string" || !/^[0-9a-f]{64}$/.test(r.revision) || !Number.isSafeInteger(r.createdAt) || r.createdAt > Date.now() + 5000) throw new Error("invalid or foreign task request");
+    const template = templates.find(t => t.id === r.templateId);
+    const state = !template || template.revision !== r.revision ? "stale" as const : Date.now() >= r.createdAt + Math.min(90_000, template.ttlSeconds * 1000) ? "expired" as const : "requested" as const;
+    return { id: r.id, templateId: r.templateId, state, createdAt: r.createdAt };
+  });
   const unresolved = operations.filter(op => op.state === "pending" || op.state === "unknown" || op.state === "completed" && op.nextAction !== "none").length;
   return { schema: "chio.control.status.v1", sessionId: config.sessionId, checkedAt: Date.now(), scope: options.scope ?? "kernel_mcp", authority,
     authorityExpiresAt: options.authorityExpiresAt, protectedTools: config.tools.map(tool => tool.name), revision: hash(gatewayBinding(config)),
     awaitingReview: operations.filter(op => op.review?.decision === "required").length, unresolved,
-    fenced: gatewayStatus(config).fenced, operations, intents };
+    fenced: gatewayStatus(config).fenced, operations, intents,
+    workflow: { ...(task ? { task } : {}), templates, requests, continuation: !!workflow?.resume && !!workflow?.acknowledge, proposals: !!workflow?.propose } };
 }
 function requestIntent(options: ControlOptions, input: Record<string, unknown>): IntentView {
   const config = options.config;
@@ -154,33 +178,55 @@ export async function startControlServer(options: ControlOptions) {
   // Freeze all authority selection before exposing a host credential.
   const pinned: ControlOptions = { ...options, config: JSON.parse(JSON.stringify(options.config)) as GatewayConfig };
   records(pinned.config);
+  const workflow = createWorkflowControl({ config: pinned.config, binding: hash(gatewayBinding(pinned.config)),
+    read: () => records(pinned.config), view: record => project(pinned.config, record),
+    live: async () => (await controlStatus(pinned)).authority === "live" }, pinned.workflow);
   const token = randomBytes(32).toString("hex");
   let statusReads = 0;
   let sessionMismatch = false;
+  let closing: Promise<void> | undefined;
   const server = createServer((request, response) => { void (async () => {
     const got = Buffer.from(request.headers.authorization ?? ""); const expected = Buffer.from(`Bearer ${token}`);
     if (request.headers.origin || got.length !== expected.length || !timingSafeEqual(got, expected)) return reply(response, 401, { error: "unauthorized" });
     if (pinned.authorityExpiresAt <= Math.floor(Date.now() / 1000)) return reply(response, 401, { error: "scoped credential expired" });
     const root = `/sessions/${encodeURIComponent(pinned.config.sessionId)}`;
-    if (pinned.onSessionMismatch && /^\/sessions\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/(status|intents)$/.test(request.url ?? "") && request.url !== root + "/status" && request.url !== root + "/intents") {
+    if (pinned.onSessionMismatch && /^\/sessions\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\//.test(request.url ?? "") && !request.url?.startsWith(root + "/")) {
       if (!sessionMismatch) { sessionMismatch = true; pinned.onSessionMismatch(); }
       return reply(response, 404, { error: "host session changed; original transport remains fenced" });
     }
     if (sessionMismatch) return reply(response, 409, { error: "host session changed; launch a newly bound host" });
     if (request.method === "GET" && request.url === root + "/status") {
       const status = await controlStatus(pinned); statusReads += 1;
-      return reply(response, 200, status);
+      const continuations = workflow.retained();
+      for (const operation of status.operations) {
+        if (operation.hostDeliveryConfirmed) operation.deliveryChannel = continuations.some(c => c.requestId === operation.requestId && c.receiptConfirmed === true) ? "native_control" : pinned.modelDeliveryConfirmed?.(operation.requestId) ? "model_tool_result" : "unclassified";
+      }
+      return reply(response, 200, { ...status, continuations });
     }
     if (request.method === "POST" && request.url === root + "/intents") return reply(response, 202, { intent: requestIntent(pinned, await body(request)), authorityAccepted: false, dispatchPerformed: false });
+    if (request.method === "POST" && request.url === root + "/continuations") return reply(response, 202, { continuation: await workflow.startContinuation(await body(request)) });
+    if (request.method === "POST" && request.url === root + "/proposals") return reply(response, 202, await workflow.propose(await body(request)));
+    if (request.method === "POST" && request.url === root + "/task-requests") return reply(response, 202, workflow.selectTemplate(await body(request)));
+    const continuationRoute = request.url?.startsWith(root + "/continuations/") ? request.url.slice((root + "/continuations/").length).split("/") : [];
+    if (continuationRoute.length === 2 && request.method === "GET" && continuationRoute[1] === "outcome") {
+      let result = workflow.outcome(continuationRoute[0]);
+      if (!result.ready && result.continuation.state === "submitted") {
+        await new Promise(resolveWait => setTimeout(resolveWait, 200));
+        result = workflow.outcome(continuationRoute[0]);
+      }
+      return reply(response, result.ready ? 200 : 202, result);
+    }
+    if (continuationRoute.length === 2 && request.method === "POST" && continuationRoute[1] === "ack") return reply(response, 200, await workflow.acknowledge(continuationRoute[0], await body(request)));
+    if (request.method === "GET" && request.url?.startsWith(root + "/explanations/")) return reply(response, 200, workflow.explain(decodeURIComponent(request.url.slice((root + "/explanations/").length))));
     return reply(response, 404, { error: "no route for this session" });
-  })().catch(() => reply(response, 409, { error: "control request unavailable, stale, or invalid; no action dispatched" })); });
+  })().catch(() => reply(response, 409, { error: "control request unavailable, stale, or unresolved; inspect the original operation without automatic retry" })); });
   server.requestTimeout = 5000; server.headersTimeout = 5000; server.timeout = 5000;
   await new Promise<void>((resolveReady, reject) => { server.once("error", reject); server.listen(0, "127.0.0.1", resolveReady); });
   const address = server.address(); if (!address || typeof address === "string") throw new Error("missing control listener");
   return { url: `http://127.0.0.1:${address.port}`, port: address.port, token,
     get statusReads() { return statusReads; },
     get sessionMismatch() { return sessionMismatch; },
-    close: () => new Promise<void>((resolveClose, reject) => { server.close(error => error ? reject(error) : resolveClose()); server.closeAllConnections(); }) };
+    close: () => closing ??= (async () => { await workflow.close(); await new Promise<void>((resolveClose, reject) => { server.close(error => error ? reject(error) : resolveClose()); server.closeAllConnections(); }); })() };
 }
 
 /** Called only by the trusted operator CLI, never by the host-facing listener. */

@@ -3783,29 +3783,29 @@ var require_resolve_props = __commonJS({
       let comma = null;
       let found = null;
       let start = null;
-      for (const token of tokens) {
+      for (const token2 of tokens) {
         if (reqSpace) {
-          if (token.type !== "space" && token.type !== "newline" && token.type !== "comma")
-            onError(token.offset, "MISSING_CHAR", "Tags and anchors must be separated from the next token by white space");
+          if (token2.type !== "space" && token2.type !== "newline" && token2.type !== "comma")
+            onError(token2.offset, "MISSING_CHAR", "Tags and anchors must be separated from the next token by white space");
           reqSpace = false;
         }
         if (tab) {
-          if (atNewline && token.type !== "comment" && token.type !== "newline") {
+          if (atNewline && token2.type !== "comment" && token2.type !== "newline") {
             onError(tab, "TAB_AS_INDENT", "Tabs are not allowed as indentation");
           }
           tab = null;
         }
-        switch (token.type) {
+        switch (token2.type) {
           case "space":
-            if (!flow && (indicator !== "doc-start" || next?.type !== "flow-collection") && token.source.includes("	")) {
-              tab = token;
+            if (!flow && (indicator !== "doc-start" || next?.type !== "flow-collection") && token2.source.includes("	")) {
+              tab = token2;
             }
             hasSpace = true;
             break;
           case "comment": {
             if (!hasSpace)
-              onError(token, "MISSING_CHAR", "Comments must be separated from other tokens by white space characters");
-            const cb = token.source.substring(1) || " ";
+              onError(token2, "MISSING_CHAR", "Comments must be separated from other tokens by white space characters");
+            const cb = token2.source.substring(1) || " ";
             if (!comment)
               comment = cb;
             else
@@ -3817,33 +3817,33 @@ var require_resolve_props = __commonJS({
           case "newline":
             if (atNewline) {
               if (comment)
-                comment += token.source;
+                comment += token2.source;
               else if (!found || indicator !== "seq-item-ind")
                 spaceBefore = true;
             } else
-              commentSep += token.source;
+              commentSep += token2.source;
             atNewline = true;
             hasNewline = true;
             if (anchor || tag)
-              newlineAfterProp = token;
+              newlineAfterProp = token2;
             hasSpace = true;
             break;
           case "anchor":
             if (anchor)
-              onError(token, "MULTIPLE_ANCHORS", "A node can have at most one anchor");
-            if (token.source.endsWith(":"))
-              onError(token.offset + token.source.length - 1, "BAD_ALIAS", "Anchor ending in : is ambiguous", true);
-            anchor = token;
-            start ?? (start = token.offset);
+              onError(token2, "MULTIPLE_ANCHORS", "A node can have at most one anchor");
+            if (token2.source.endsWith(":"))
+              onError(token2.offset + token2.source.length - 1, "BAD_ALIAS", "Anchor ending in : is ambiguous", true);
+            anchor = token2;
+            start ?? (start = token2.offset);
             atNewline = false;
             hasSpace = false;
             reqSpace = true;
             break;
           case "tag": {
             if (tag)
-              onError(token, "MULTIPLE_TAGS", "A node can have at most one tag");
-            tag = token;
-            start ?? (start = token.offset);
+              onError(token2, "MULTIPLE_TAGS", "A node can have at most one tag");
+            tag = token2;
+            start ?? (start = token2.offset);
             atNewline = false;
             hasSpace = false;
             reqSpace = true;
@@ -3851,25 +3851,25 @@ var require_resolve_props = __commonJS({
           }
           case indicator:
             if (anchor || tag)
-              onError(token, "BAD_PROP_ORDER", `Anchors and tags must be after the ${token.source} indicator`);
+              onError(token2, "BAD_PROP_ORDER", `Anchors and tags must be after the ${token2.source} indicator`);
             if (found)
-              onError(token, "UNEXPECTED_TOKEN", `Unexpected ${token.source} in ${flow ?? "collection"}`);
-            found = token;
+              onError(token2, "UNEXPECTED_TOKEN", `Unexpected ${token2.source} in ${flow ?? "collection"}`);
+            found = token2;
             atNewline = indicator === "seq-item-ind" || indicator === "explicit-key-ind";
             hasSpace = false;
             break;
           case "comma":
             if (flow) {
               if (comma)
-                onError(token, "UNEXPECTED_TOKEN", `Unexpected , in ${flow}`);
-              comma = token;
+                onError(token2, "UNEXPECTED_TOKEN", `Unexpected , in ${flow}`);
+              comma = token2;
               atNewline = false;
               hasSpace = false;
               break;
             }
           // else fallthrough
           default:
-            onError(token, "UNEXPECTED_TOKEN", `Unexpected ${token.type} token`);
+            onError(token2, "UNEXPECTED_TOKEN", `Unexpected ${token2.type} token`);
             atNewline = false;
             hasSpace = false;
         }
@@ -4142,15 +4142,15 @@ var require_resolve_end = __commonJS({
       if (end) {
         let hasSpace = false;
         let sep = "";
-        for (const token of end) {
-          const { source, type } = token;
+        for (const token2 of end) {
+          const { source, type } = token2;
           switch (type) {
             case "space":
               hasSpace = true;
               break;
             case "comment": {
               if (reqSpace && !hasSpace)
-                onError(token, "MISSING_CHAR", "Comments must be separated from other tokens by white space characters");
+                onError(token2, "MISSING_CHAR", "Comments must be separated from other tokens by white space characters");
               const cb = source.substring(1) || " ";
               if (!comment)
                 comment = cb;
@@ -4165,7 +4165,7 @@ var require_resolve_end = __commonJS({
               hasSpace = true;
               break;
             default:
-              onError(token, "UNEXPECTED_TOKEN", `Unexpected ${type} at node end`);
+              onError(token2, "UNEXPECTED_TOKEN", `Unexpected ${type} at node end`);
           }
           offset += source.length;
         }
@@ -4189,7 +4189,7 @@ var require_resolve_flow_collection = __commonJS({
     var utilContainsNewline = require_util_contains_newline();
     var utilMapIncludes = require_util_map_includes();
     var blockMsg = "Block collections are not allowed within flow collections";
-    var isBlock = (token) => token && (token.type === "block-map" || token.type === "block-seq");
+    var isBlock = (token2) => token2 && (token2.type === "block-map" || token2.type === "block-seq");
     function resolveFlowCollection({ composeNode, composeEmptyNode }, ctx, fc, onError, tag) {
       const isMap = fc.start.source === "{";
       const fcName = isMap ? "flow map" : "flow sequence";
@@ -4381,8 +4381,8 @@ var require_compose_collection = __commonJS({
     var resolveBlockMap = require_resolve_block_map();
     var resolveBlockSeq = require_resolve_block_seq();
     var resolveFlowCollection = require_resolve_flow_collection();
-    function resolveCollection(CN, ctx, token, onError, tagName, tag) {
-      const coll = token.type === "block-map" ? resolveBlockMap.resolveBlockMap(CN, ctx, token, onError, tag) : token.type === "block-seq" ? resolveBlockSeq.resolveBlockSeq(CN, ctx, token, onError, tag) : resolveFlowCollection.resolveFlowCollection(CN, ctx, token, onError, tag);
+    function resolveCollection(CN, ctx, token2, onError, tagName, tag) {
+      const coll = token2.type === "block-map" ? resolveBlockMap.resolveBlockMap(CN, ctx, token2, onError, tag) : token2.type === "block-seq" ? resolveBlockSeq.resolveBlockSeq(CN, ctx, token2, onError, tag) : resolveFlowCollection.resolveFlowCollection(CN, ctx, token2, onError, tag);
       const Coll = coll.constructor;
       if (tagName === "!" || tagName === Coll.tagName) {
         coll.tag = Coll.tagName;
@@ -4392,10 +4392,10 @@ var require_compose_collection = __commonJS({
         coll.tag = tagName;
       return coll;
     }
-    function composeCollection(CN, ctx, token, props, onError) {
+    function composeCollection(CN, ctx, token2, props, onError) {
       const tagToken = props.tag;
       const tagName = !tagToken ? null : ctx.directives.tagName(tagToken.source, (msg) => onError(tagToken, "TAG_RESOLVE_FAILED", msg));
-      if (token.type === "block-seq") {
+      if (token2.type === "block-seq") {
         const { anchor, newlineAfterProp: nl } = props;
         const lastProp = anchor && tagToken ? anchor.offset > tagToken.offset ? anchor : tagToken : anchor ?? tagToken;
         if (lastProp && (!nl || nl.offset < lastProp.offset)) {
@@ -4403,9 +4403,9 @@ var require_compose_collection = __commonJS({
           onError(lastProp, "MISSING_CHAR", message);
         }
       }
-      const expType = token.type === "block-map" ? "map" : token.type === "block-seq" ? "seq" : token.start.source === "{" ? "map" : "seq";
+      const expType = token2.type === "block-map" ? "map" : token2.type === "block-seq" ? "seq" : token2.start.source === "{" ? "map" : "seq";
       if (!tagToken || !tagName || tagName === "!" || tagName === YAMLMap.YAMLMap.tagName && expType === "map" || tagName === YAMLSeq.YAMLSeq.tagName && expType === "seq") {
-        return resolveCollection(CN, ctx, token, onError, tagName);
+        return resolveCollection(CN, ctx, token2, onError, tagName);
       }
       let tag = ctx.schema.tags.find((t) => t.tag === tagName && t.collection === expType);
       if (!tag) {
@@ -4419,10 +4419,10 @@ var require_compose_collection = __commonJS({
           } else {
             onError(tagToken, "TAG_RESOLVE_FAILED", `Unresolved tag: ${tagName}`, true);
           }
-          return resolveCollection(CN, ctx, token, onError, tagName);
+          return resolveCollection(CN, ctx, token2, onError, tagName);
         }
       }
-      const coll = resolveCollection(CN, ctx, token, onError, tagName, tag);
+      const coll = resolveCollection(CN, ctx, token2, onError, tagName, tag);
       const res = tag.resolve?.(coll, (msg) => onError(tagToken, "TAG_RESOLVE_FAILED", msg), ctx.options) ?? coll;
       const node = identity.isNode(res) ? res : new Scalar.Scalar(res);
       node.range = coll.range;
@@ -4572,31 +4572,31 @@ var require_resolve_block_scalar = __commonJS({
       let comment = "";
       let length = source.length;
       for (let i = 1; i < props.length; ++i) {
-        const token = props[i];
-        switch (token.type) {
+        const token2 = props[i];
+        switch (token2.type) {
           case "space":
             hasSpace = true;
           // fallthrough
           case "newline":
-            length += token.source.length;
+            length += token2.source.length;
             break;
           case "comment":
             if (strict && !hasSpace) {
               const message = "Comments must be separated from other tokens by white space characters";
-              onError(token, "MISSING_CHAR", message);
+              onError(token2, "MISSING_CHAR", message);
             }
-            length += token.source.length;
-            comment = token.source.substring(1);
+            length += token2.source.length;
+            comment = token2.source.substring(1);
             break;
           case "error":
-            onError(token, "UNEXPECTED_TOKEN", token.message);
-            length += token.source.length;
+            onError(token2, "UNEXPECTED_TOKEN", token2.message);
+            length += token2.source.length;
             break;
           /* istanbul ignore next should not happen */
           default: {
-            const message = `Unexpected token in block scalar header: ${token.type}`;
-            onError(token, "UNEXPECTED_TOKEN", message);
-            const ts = token.source;
+            const message = `Unexpected token in block scalar header: ${token2.type}`;
+            onError(token2, "UNEXPECTED_TOKEN", message);
+            const ts = token2.source;
             if (ts && typeof ts === "string")
               length += ts.length;
           }
@@ -4846,25 +4846,25 @@ var require_compose_scalar = __commonJS({
     var Scalar = require_Scalar();
     var resolveBlockScalar = require_resolve_block_scalar();
     var resolveFlowScalar = require_resolve_flow_scalar();
-    function composeScalar(ctx, token, tagToken, onError) {
-      const { value, type, comment, range } = token.type === "block-scalar" ? resolveBlockScalar.resolveBlockScalar(ctx, token, onError) : resolveFlowScalar.resolveFlowScalar(token, ctx.options.strict, onError);
+    function composeScalar(ctx, token2, tagToken, onError) {
+      const { value, type, comment, range } = token2.type === "block-scalar" ? resolveBlockScalar.resolveBlockScalar(ctx, token2, onError) : resolveFlowScalar.resolveFlowScalar(token2, ctx.options.strict, onError);
       const tagName = tagToken ? ctx.directives.tagName(tagToken.source, (msg) => onError(tagToken, "TAG_RESOLVE_FAILED", msg)) : null;
       let tag;
       if (ctx.options.stringKeys && ctx.atKey) {
         tag = ctx.schema[identity.SCALAR];
       } else if (tagName)
         tag = findScalarTagByName(ctx.schema, value, tagName, tagToken, onError);
-      else if (token.type === "scalar")
-        tag = findScalarTagByTest(ctx, value, token, onError);
+      else if (token2.type === "scalar")
+        tag = findScalarTagByTest(ctx, value, token2, onError);
       else
         tag = ctx.schema[identity.SCALAR];
       let scalar;
       try {
-        const res = tag.resolve(value, (msg) => onError(tagToken ?? token, "TAG_RESOLVE_FAILED", msg), ctx.options);
+        const res = tag.resolve(value, (msg) => onError(tagToken ?? token2, "TAG_RESOLVE_FAILED", msg), ctx.options);
         scalar = identity.isScalar(res) ? res : new Scalar.Scalar(res);
       } catch (error) {
         const msg = error instanceof Error ? error.message : String(error);
-        onError(tagToken ?? token, "TAG_RESOLVE_FAILED", msg);
+        onError(tagToken ?? token2, "TAG_RESOLVE_FAILED", msg);
         scalar = new Scalar.Scalar(value);
       }
       scalar.range = range;
@@ -4902,7 +4902,7 @@ var require_compose_scalar = __commonJS({
       onError(tagToken, "TAG_RESOLVE_FAILED", `Unresolved tag: ${tagName}`, tagName !== "tag:yaml.org,2002:str");
       return schema[identity.SCALAR];
     }
-    function findScalarTagByTest({ atKey, directives, schema }, value, token, onError) {
+    function findScalarTagByTest({ atKey, directives, schema }, value, token2, onError) {
       const tag = schema.tags.find((tag2) => (tag2.default === true || atKey && tag2.default === "key") && tag2.test?.test(value)) || schema[identity.SCALAR];
       if (schema.compat) {
         const compat = schema.compat.find((tag2) => tag2.default && tag2.test?.test(value)) ?? schema[identity.SCALAR];
@@ -4910,7 +4910,7 @@ var require_compose_scalar = __commonJS({
           const ts = directives.tagString(tag.tag);
           const cs = directives.tagString(compat.tag);
           const msg = `Value may be parsed as either ${ts} or ${cs}`;
-          onError(token, "TAG_RESOLVE_FAILED", msg, true);
+          onError(token2, "TAG_RESOLVE_FAILED", msg, true);
         }
       }
       return tag;
@@ -4960,22 +4960,22 @@ var require_compose_node = __commonJS({
     var resolveEnd = require_resolve_end();
     var utilEmptyScalarPosition = require_util_empty_scalar_position();
     var CN = { composeNode, composeEmptyNode };
-    function composeNode(ctx, token, props, onError) {
+    function composeNode(ctx, token2, props, onError) {
       const atKey = ctx.atKey;
       const { spaceBefore, comment, anchor, tag } = props;
       let node;
       let isSrcToken = true;
-      switch (token.type) {
+      switch (token2.type) {
         case "alias":
-          node = composeAlias(ctx, token, onError);
+          node = composeAlias(ctx, token2, onError);
           if (anchor || tag)
-            onError(token, "ALIAS_PROPS", "An alias node must not specify any properties");
+            onError(token2, "ALIAS_PROPS", "An alias node must not specify any properties");
           break;
         case "scalar":
         case "single-quoted-scalar":
         case "double-quoted-scalar":
         case "block-scalar":
-          node = composeScalar.composeScalar(ctx, token, tag, onError);
+          node = composeScalar.composeScalar(ctx, token2, tag, onError);
           if (anchor)
             node.anchor = anchor.source.substring(1);
           break;
@@ -4983,47 +4983,47 @@ var require_compose_node = __commonJS({
         case "block-seq":
         case "flow-collection":
           try {
-            node = composeCollection.composeCollection(CN, ctx, token, props, onError);
+            node = composeCollection.composeCollection(CN, ctx, token2, props, onError);
             if (anchor)
               node.anchor = anchor.source.substring(1);
           } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
-            onError(token, "RESOURCE_EXHAUSTION", message);
+            onError(token2, "RESOURCE_EXHAUSTION", message);
           }
           break;
         default: {
-          const message = token.type === "error" ? token.message : `Unsupported token (type: ${token.type})`;
-          onError(token, "UNEXPECTED_TOKEN", message);
+          const message = token2.type === "error" ? token2.message : `Unsupported token (type: ${token2.type})`;
+          onError(token2, "UNEXPECTED_TOKEN", message);
           isSrcToken = false;
         }
       }
-      node ?? (node = composeEmptyNode(ctx, token.offset, void 0, null, props, onError));
+      node ?? (node = composeEmptyNode(ctx, token2.offset, void 0, null, props, onError));
       if (anchor && node.anchor === "")
         onError(anchor, "BAD_ALIAS", "Anchor cannot be an empty string");
       if (atKey && ctx.options.stringKeys && (!identity.isScalar(node) || typeof node.value !== "string" || node.tag && node.tag !== "tag:yaml.org,2002:str")) {
         const msg = "With stringKeys, all keys must be strings";
-        onError(tag ?? token, "NON_STRING_KEY", msg);
+        onError(tag ?? token2, "NON_STRING_KEY", msg);
       }
       if (spaceBefore)
         node.spaceBefore = true;
       if (comment) {
-        if (token.type === "scalar" && token.source === "")
+        if (token2.type === "scalar" && token2.source === "")
           node.comment = comment;
         else
           node.commentBefore = comment;
       }
       if (ctx.options.keepSourceTokens && isSrcToken)
-        node.srcToken = token;
+        node.srcToken = token2;
       return node;
     }
     function composeEmptyNode(ctx, offset, before, pos, { spaceBefore, comment, anchor, tag, end }, onError) {
-      const token = {
+      const token2 = {
         type: "scalar",
         offset: utilEmptyScalarPosition.emptyScalarPosition(offset, before, pos),
         indent: -1,
         source: ""
       };
-      const node = composeScalar.composeScalar(ctx, token, tag, onError);
+      const node = composeScalar.composeScalar(ctx, token2, tag, onError);
       if (anchor) {
         node.anchor = anchor.source.substring(1);
         if (node.anchor === "")
@@ -5214,28 +5214,28 @@ ${cb}` : comment;
        * @param endOffset - Should be set if `forceDoc` is also set, to set the document range end and to indicate errors correctly.
        */
       *compose(tokens, forceDoc = false, endOffset = -1) {
-        for (const token of tokens)
-          yield* this.next(token);
+        for (const token2 of tokens)
+          yield* this.next(token2);
         yield* this.end(forceDoc, endOffset);
       }
       /** Advance the composer by one CST token. */
-      *next(token) {
+      *next(token2) {
         if (node_process.env.LOG_STREAM)
-          console.dir(token, { depth: null });
-        switch (token.type) {
+          console.dir(token2, { depth: null });
+        switch (token2.type) {
           case "directive":
-            this.directives.add(token.source, (offset, message, warning) => {
-              const pos = getErrorPos(token);
+            this.directives.add(token2.source, (offset, message, warning) => {
+              const pos = getErrorPos(token2);
               pos[0] += offset;
               this.onError(pos, "BAD_DIRECTIVE", message, warning);
             });
-            this.prelude.push(token.source);
+            this.prelude.push(token2.source);
             this.atDirectives = true;
             break;
           case "document": {
-            const doc = composeDoc.composeDoc(this.options, this.directives, token, this.onError);
+            const doc = composeDoc.composeDoc(this.options, this.directives, token2, this.onError);
             if (this.atDirectives && !doc.directives.docStart)
-              this.onError(token, "MISSING_CHAR", "Missing directives-end/doc-start indicator line");
+              this.onError(token2, "MISSING_CHAR", "Missing directives-end/doc-start indicator line");
             this.decorate(doc, false);
             if (this.doc)
               yield this.doc;
@@ -5248,11 +5248,11 @@ ${cb}` : comment;
             break;
           case "comment":
           case "newline":
-            this.prelude.push(token.source);
+            this.prelude.push(token2.source);
             break;
           case "error": {
-            const msg = token.source ? `${token.message}: ${JSON.stringify(token.source)}` : token.message;
-            const error = new errors.YAMLParseError(getErrorPos(token), "UNEXPECTED_TOKEN", msg);
+            const msg = token2.source ? `${token2.message}: ${JSON.stringify(token2.source)}` : token2.message;
+            const error = new errors.YAMLParseError(getErrorPos(token2), "UNEXPECTED_TOKEN", msg);
             if (this.atDirectives || !this.doc)
               this.errors.push(error);
             else
@@ -5262,11 +5262,11 @@ ${cb}` : comment;
           case "doc-end": {
             if (!this.doc) {
               const msg = "Unexpected doc-end without preceding document";
-              this.errors.push(new errors.YAMLParseError(getErrorPos(token), "UNEXPECTED_TOKEN", msg));
+              this.errors.push(new errors.YAMLParseError(getErrorPos(token2), "UNEXPECTED_TOKEN", msg));
               break;
             }
             this.doc.directives.docEnd = true;
-            const end = resolveEnd.resolveEnd(token.end, token.offset + token.source.length, this.doc.options.strict, this.onError);
+            const end = resolveEnd.resolveEnd(token2.end, token2.offset + token2.source.length, this.doc.options.strict, this.onError);
             this.decorate(this.doc, true);
             if (end.comment) {
               const dc = this.doc.comment;
@@ -5277,7 +5277,7 @@ ${end.comment}` : end.comment;
             break;
           }
           default:
-            this.errors.push(new errors.YAMLParseError(getErrorPos(token), "UNEXPECTED_TOKEN", `Unsupported token ${token.type}`));
+            this.errors.push(new errors.YAMLParseError(getErrorPos(token2), "UNEXPECTED_TOKEN", `Unsupported token ${token2.type}`));
         }
       }
       /**
@@ -5314,8 +5314,8 @@ var require_cst_scalar = __commonJS({
     var resolveFlowScalar = require_resolve_flow_scalar();
     var errors = require_errors();
     var stringifyString = require_stringifyString();
-    function resolveAsScalar(token, strict = true, onError) {
-      if (token) {
+    function resolveAsScalar(token2, strict = true, onError) {
+      if (token2) {
         const _onError = (pos, code, message) => {
           const offset = typeof pos === "number" ? pos : Array.isArray(pos) ? pos[0] : pos.offset;
           if (onError)
@@ -5323,13 +5323,13 @@ var require_cst_scalar = __commonJS({
           else
             throw new errors.YAMLParseError([offset, offset + 1], code, message);
         };
-        switch (token.type) {
+        switch (token2.type) {
           case "scalar":
           case "single-quoted-scalar":
           case "double-quoted-scalar":
-            return resolveFlowScalar.resolveFlowScalar(token, strict, _onError);
+            return resolveFlowScalar.resolveFlowScalar(token2, strict, _onError);
           case "block-scalar":
-            return resolveBlockScalar.resolveBlockScalar({ options: { strict } }, token, _onError);
+            return resolveBlockScalar.resolveBlockScalar({ options: { strict } }, token2, _onError);
         }
       }
       return null;
@@ -5366,13 +5366,13 @@ var require_cst_scalar = __commonJS({
           return { type: "scalar", offset, indent, source, end };
       }
     }
-    function setScalarValue(token, value, context = {}) {
+    function setScalarValue(token2, value, context = {}) {
       let { afterKey = false, implicitKey = false, inFlow = false, type } = context;
-      let indent = "indent" in token ? token.indent : null;
+      let indent = "indent" in token2 ? token2.indent : null;
       if (afterKey && typeof indent === "number")
         indent += 2;
       if (!type)
-        switch (token.type) {
+        switch (token2.type) {
           case "single-quoted-scalar":
             type = "QUOTE_SINGLE";
             break;
@@ -5380,7 +5380,7 @@ var require_cst_scalar = __commonJS({
             type = "QUOTE_DOUBLE";
             break;
           case "block-scalar": {
-            const header = token.props[0];
+            const header = token2.props[0];
             if (header.type !== "block-scalar-header")
               throw new Error("Invalid block scalar header");
             type = header.source[0] === ">" ? "BLOCK_FOLDED" : "BLOCK_LITERAL";
@@ -5398,40 +5398,40 @@ var require_cst_scalar = __commonJS({
       switch (source[0]) {
         case "|":
         case ">":
-          setBlockScalarValue(token, source);
+          setBlockScalarValue(token2, source);
           break;
         case '"':
-          setFlowScalarValue(token, source, "double-quoted-scalar");
+          setFlowScalarValue(token2, source, "double-quoted-scalar");
           break;
         case "'":
-          setFlowScalarValue(token, source, "single-quoted-scalar");
+          setFlowScalarValue(token2, source, "single-quoted-scalar");
           break;
         default:
-          setFlowScalarValue(token, source, "scalar");
+          setFlowScalarValue(token2, source, "scalar");
       }
     }
-    function setBlockScalarValue(token, source) {
+    function setBlockScalarValue(token2, source) {
       const he = source.indexOf("\n");
       const head = source.substring(0, he);
       const body2 = source.substring(he + 1) + "\n";
-      if (token.type === "block-scalar") {
-        const header = token.props[0];
+      if (token2.type === "block-scalar") {
+        const header = token2.props[0];
         if (header.type !== "block-scalar-header")
           throw new Error("Invalid block scalar header");
         header.source = head;
-        token.source = body2;
+        token2.source = body2;
       } else {
-        const { offset } = token;
-        const indent = "indent" in token ? token.indent : -1;
+        const { offset } = token2;
+        const indent = "indent" in token2 ? token2.indent : -1;
         const props = [
           { type: "block-scalar-header", offset, indent, source: head }
         ];
-        if (!addEndtoBlockProps(props, "end" in token ? token.end : void 0))
+        if (!addEndtoBlockProps(props, "end" in token2 ? token2.end : void 0))
           props.push({ type: "newline", offset: -1, indent, source: "\n" });
-        for (const key of Object.keys(token))
+        for (const key of Object.keys(token2))
           if (key !== "type" && key !== "offset")
-            delete token[key];
-        Object.assign(token, { type: "block-scalar", indent, props, source: body2 });
+            delete token2[key];
+        Object.assign(token2, { type: "block-scalar", indent, props, source: body2 });
       }
     }
     function addEndtoBlockProps(props, end) {
@@ -5448,40 +5448,40 @@ var require_cst_scalar = __commonJS({
           }
       return false;
     }
-    function setFlowScalarValue(token, source, type) {
-      switch (token.type) {
+    function setFlowScalarValue(token2, source, type) {
+      switch (token2.type) {
         case "scalar":
         case "double-quoted-scalar":
         case "single-quoted-scalar":
-          token.type = type;
-          token.source = source;
+          token2.type = type;
+          token2.source = source;
           break;
         case "block-scalar": {
-          const end = token.props.slice(1);
+          const end = token2.props.slice(1);
           let oa = source.length;
-          if (token.props[0].type === "block-scalar-header")
-            oa -= token.props[0].source.length;
+          if (token2.props[0].type === "block-scalar-header")
+            oa -= token2.props[0].source.length;
           for (const tok of end)
             tok.offset += oa;
-          delete token.props;
-          Object.assign(token, { type, source, end });
+          delete token2.props;
+          Object.assign(token2, { type, source, end });
           break;
         }
         case "block-map":
         case "block-seq": {
-          const offset = token.offset + source.length;
-          const nl = { type: "newline", offset, indent: token.indent, source: "\n" };
-          delete token.items;
-          Object.assign(token, { type, source, end: [nl] });
+          const offset = token2.offset + source.length;
+          const nl = { type: "newline", offset, indent: token2.indent, source: "\n" };
+          delete token2.items;
+          Object.assign(token2, { type, source, end: [nl] });
           break;
         }
         default: {
-          const indent = "indent" in token ? token.indent : -1;
-          const end = "end" in token && Array.isArray(token.end) ? token.end.filter((st) => st.type === "space" || st.type === "comment" || st.type === "newline") : [];
-          for (const key of Object.keys(token))
+          const indent = "indent" in token2 ? token2.indent : -1;
+          const end = "end" in token2 && Array.isArray(token2.end) ? token2.end.filter((st) => st.type === "space" || st.type === "comment" || st.type === "newline") : [];
+          for (const key of Object.keys(token2))
             if (key !== "type" && key !== "offset")
-              delete token[key];
-          Object.assign(token, { type, indent, source, end });
+              delete token2[key];
+          Object.assign(token2, { type, indent, source, end });
         }
       }
     }
@@ -5496,40 +5496,40 @@ var require_cst_stringify = __commonJS({
   "node_modules/@chio/bridge/node_modules/yaml/dist/parse/cst-stringify.js"(exports) {
     "use strict";
     var stringify = (cst) => "type" in cst ? stringifyToken(cst) : stringifyItem(cst);
-    function stringifyToken(token) {
-      switch (token.type) {
+    function stringifyToken(token2) {
+      switch (token2.type) {
         case "block-scalar": {
           let res = "";
-          for (const tok of token.props)
+          for (const tok of token2.props)
             res += stringifyToken(tok);
-          return res + token.source;
+          return res + token2.source;
         }
         case "block-map":
         case "block-seq": {
           let res = "";
-          for (const item of token.items)
+          for (const item of token2.items)
             res += stringifyItem(item);
           return res;
         }
         case "flow-collection": {
-          let res = token.start.source;
-          for (const item of token.items)
+          let res = token2.start.source;
+          for (const item of token2.items)
             res += stringifyItem(item);
-          for (const st of token.end)
+          for (const st of token2.end)
             res += st.source;
           return res;
         }
         case "document": {
-          let res = stringifyItem(token);
-          if (token.end)
-            for (const st of token.end)
+          let res = stringifyItem(token2);
+          if (token2.end)
+            for (const st of token2.end)
               res += st.source;
           return res;
         }
         default: {
-          let res = token.source;
-          if ("end" in token && token.end)
-            for (const st of token.end)
+          let res = token2.source;
+          if ("end" in token2 && token2.end)
+            for (const st of token2.end)
               res += st.source;
           return res;
         }
@@ -5591,16 +5591,16 @@ var require_cst_visit = __commonJS({
       if (typeof ctrl === "symbol")
         return ctrl;
       for (const field of ["key", "value"]) {
-        const token = item[field];
-        if (token && "items" in token) {
-          for (let i = 0; i < token.items.length; ++i) {
-            const ci = _visit(Object.freeze(path.concat([[field, i]])), token.items[i], visitor);
+        const token2 = item[field];
+        if (token2 && "items" in token2) {
+          for (let i = 0; i < token2.items.length; ++i) {
+            const ci = _visit(Object.freeze(path.concat([[field, i]])), token2.items[i], visitor);
             if (typeof ci === "number")
               i = ci - 1;
             else if (ci === BREAK)
               return BREAK;
             else if (ci === REMOVE) {
-              token.items.splice(i, 1);
+              token2.items.splice(i, 1);
               i -= 1;
             }
           }
@@ -5625,10 +5625,10 @@ var require_cst = __commonJS({
     var DOCUMENT = "";
     var FLOW_END = "";
     var SCALAR = "";
-    var isCollection = (token) => !!token && "items" in token;
-    var isScalar = (token) => !!token && (token.type === "scalar" || token.type === "single-quoted-scalar" || token.type === "double-quoted-scalar" || token.type === "block-scalar");
-    function prettyToken(token) {
-      switch (token) {
+    var isCollection = (token2) => !!token2 && "items" in token2;
+    var isScalar = (token2) => !!token2 && (token2.type === "scalar" || token2.type === "single-quoted-scalar" || token2.type === "double-quoted-scalar" || token2.type === "block-scalar");
+    function prettyToken(token2) {
+      switch (token2) {
         case BOM:
           return "<BOM>";
         case DOCUMENT:
@@ -5638,7 +5638,7 @@ var require_cst = __commonJS({
         case SCALAR:
           return "<SCALAR>";
         default:
-          return JSON.stringify(token);
+          return JSON.stringify(token2);
       }
     }
     function tokenType(source) {
@@ -6362,8 +6362,8 @@ var require_parser = __commonJS({
       }
       return -1;
     }
-    function isFlowToken(token) {
-      switch (token?.type) {
+    function isFlowToken(token2) {
+      switch (token2?.type) {
         case "alias":
         case "scalar":
         case "single-quoted-scalar":
@@ -6570,38 +6570,38 @@ var require_parser = __commonJS({
         return this.stack[this.stack.length - n];
       }
       *pop(error) {
-        const token = error ?? this.stack.pop();
-        if (!token) {
+        const token2 = error ?? this.stack.pop();
+        if (!token2) {
           const message = "Tried to pop an empty stack";
           yield { type: "error", offset: this.offset, source: "", message };
         } else if (this.stack.length === 0) {
-          yield token;
+          yield token2;
         } else {
           const top = this.peek(1);
-          if (token.type === "block-scalar") {
-            token.indent = "indent" in top ? top.indent : 0;
-          } else if (token.type === "flow-collection" && top.type === "document") {
-            token.indent = 0;
+          if (token2.type === "block-scalar") {
+            token2.indent = "indent" in top ? top.indent : 0;
+          } else if (token2.type === "flow-collection" && top.type === "document") {
+            token2.indent = 0;
           }
-          if (token.type === "flow-collection")
-            fixFlowSeqItems(token);
+          if (token2.type === "flow-collection")
+            fixFlowSeqItems(token2);
           switch (top.type) {
             case "document":
-              top.value = token;
+              top.value = token2;
               break;
             case "block-scalar":
-              top.props.push(token);
+              top.props.push(token2);
               break;
             case "block-map": {
               const it = top.items[top.items.length - 1];
               if (it.value) {
-                top.items.push({ start: [], key: token, sep: [] });
+                top.items.push({ start: [], key: token2, sep: [] });
                 this.onKeyLine = true;
                 return;
               } else if (it.sep) {
-                it.value = token;
+                it.value = token2;
               } else {
-                Object.assign(it, { key: token, sep: [] });
+                Object.assign(it, { key: token2, sep: [] });
                 this.onKeyLine = !it.explicitKey;
                 return;
               }
@@ -6610,34 +6610,34 @@ var require_parser = __commonJS({
             case "block-seq": {
               const it = top.items[top.items.length - 1];
               if (it.value)
-                top.items.push({ start: [], value: token });
+                top.items.push({ start: [], value: token2 });
               else
-                it.value = token;
+                it.value = token2;
               break;
             }
             case "flow-collection": {
               const it = top.items[top.items.length - 1];
               if (!it || it.value)
-                top.items.push({ start: [], key: token, sep: [] });
+                top.items.push({ start: [], key: token2, sep: [] });
               else if (it.sep)
-                it.value = token;
+                it.value = token2;
               else
-                Object.assign(it, { key: token, sep: [] });
+                Object.assign(it, { key: token2, sep: [] });
               return;
             }
             /* istanbul ignore next should not happen */
             default:
               yield* this.pop();
-              yield* this.pop(token);
+              yield* this.pop(token2);
           }
-          if ((top.type === "document" || top.type === "block-map" || top.type === "block-seq") && (token.type === "block-map" || token.type === "block-seq")) {
-            const last = token.items[token.items.length - 1];
-            if (last && !last.sep && !last.value && last.start.length > 0 && findNonEmptyIndex(last.start) === -1 && (token.indent === 0 || last.start.every((st) => st.type !== "comment" || st.indent < token.indent))) {
+          if ((top.type === "document" || top.type === "block-map" || top.type === "block-seq") && (token2.type === "block-map" || token2.type === "block-seq")) {
+            const last = token2.items[token2.items.length - 1];
+            if (last && !last.sep && !last.value && last.start.length > 0 && findNonEmptyIndex(last.start) === -1 && (token2.indent === 0 || last.start.every((st) => st.type !== "comment" || st.indent < token2.indent))) {
               if (top.type === "document")
                 top.end = last.start;
               else
                 top.items.push({ start: last.start });
-              token.items.splice(-1, 1);
+              token2.items.splice(-1, 1);
             }
           }
         }
@@ -7180,7 +7180,7 @@ var require_parser = __commonJS({
             yield* this.pop();
         }
       }
-      *lineEnd(token) {
+      *lineEnd(token2) {
         switch (this.type) {
           case "comma":
           case "doc-start":
@@ -7197,10 +7197,10 @@ var require_parser = __commonJS({
           case "space":
           case "comment":
           default:
-            if (token.end)
-              token.end.push(this.sourceToken);
+            if (token2.end)
+              token2.end.push(this.sourceToken);
             else
-              token.end = [this.sourceToken];
+              token2.end = [this.sourceToken];
             if (this.type === "newline")
               yield* this.pop();
         }
@@ -7361,9 +7361,9 @@ var require_dist = __commonJS({
 
 // src/control/service.ts
 import { createServer } from "node:http";
-import { createHash as createHash3, randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
-import { closeSync as closeSync3, fsyncSync as fsyncSync3, lstatSync as lstatSync3, mkdirSync as mkdirSync3, openSync as openSync3, readFileSync as readFileSync3, readdirSync as readdirSync3, renameSync as renameSync2, writeFileSync as writeFileSync3 } from "node:fs";
-import { join as join3, resolve as resolve3 } from "node:path";
+import { createHash as createHash4, randomBytes as randomBytes2, randomUUID as randomUUID3, timingSafeEqual } from "node:crypto";
+import { closeSync as closeSync4, existsSync as existsSync2, fsyncSync as fsyncSync4, lstatSync as lstatSync4, mkdirSync as mkdirSync4, openSync as openSync4, readFileSync as readFileSync4, readdirSync as readdirSync4, renameSync as renameSync3, writeFileSync as writeFileSync4 } from "node:fs";
+import { join as join4, resolve as resolve5 } from "node:path";
 
 // node_modules/@chio-protocol/sdk/dist/invariants/errors.js
 var ChioInvariantError = class extends Error {
@@ -8110,23 +8110,23 @@ function verifyApprovalToolCall(input, expected) {
   try {
     const params = input;
     const intent = params?._meta?.chioGovernedIntent;
-    const token = params?._meta?.chioApprovalToken;
+    const token2 = params?._meta?.chioApprovalToken;
     const now = Math.floor(Date.now() / 1e3);
-    if (params?.name !== expected.tool || canonicalizeJson2(params.arguments) !== canonicalizeJson2(expected.arguments) || params?._meta?.chioRequestId !== expected.requestId || intent?.server_id !== expected.serverId || intent.tool_name !== expected.tool || intent?.body?.kind !== "bound_tool_invocation" || intent.body.value?.capability_id !== expected.capabilityId || intent.body.value.parameters_hash !== "0x" + sha256Hex2(canonicalizeJson2(expected.arguments)) || intent.context?.mcpSessionId !== expected.sessionId || intent.context?.capabilityId !== expected.capabilityId || !token || !["approved", "denied"].includes(token.decision) || token.subject !== expected.subjectKey || token.request_id !== expected.requestId || typeof token.approver !== "string" || !expected.trustedSigners.some((key) => key.toLowerCase() === token.approver.toLowerCase()) || token.governed_intent_hash !== sha256Hex2(canonicalizeJson2(intent)) || typeof token.id !== "string" || !token.id || !Number.isSafeInteger(token.issued_at) || !Number.isSafeInteger(token.expires_at) || token.issued_at > now + 5 || token.expires_at <= now || token.expires_at <= token.issued_at || token.expires_at - token.issued_at > 3600 || token.algorithm !== void 0 || token.threshold_proposal_hash !== void 0)
+    if (params?.name !== expected.tool || canonicalizeJson2(params.arguments) !== canonicalizeJson2(expected.arguments) || params?._meta?.chioRequestId !== expected.requestId || intent?.server_id !== expected.serverId || intent.tool_name !== expected.tool || intent?.body?.kind !== "bound_tool_invocation" || intent.body.value?.capability_id !== expected.capabilityId || intent.body.value.parameters_hash !== "0x" + sha256Hex2(canonicalizeJson2(expected.arguments)) || intent.context?.mcpSessionId !== expected.sessionId || intent.context?.capabilityId !== expected.capabilityId || !token2 || !["approved", "denied"].includes(token2.decision) || token2.subject !== expected.subjectKey || token2.request_id !== expected.requestId || typeof token2.approver !== "string" || !expected.trustedSigners.some((key) => key.toLowerCase() === token2.approver.toLowerCase()) || token2.governed_intent_hash !== sha256Hex2(canonicalizeJson2(intent)) || typeof token2.id !== "string" || !token2.id || !Number.isSafeInteger(token2.issued_at) || !Number.isSafeInteger(token2.expires_at) || token2.issued_at > now + 5 || token2.expires_at <= now || token2.expires_at <= token2.issued_at || token2.expires_at - token2.issued_at > 3600 || token2.algorithm !== void 0 || token2.threshold_proposal_hash !== void 0)
       return void 0;
     const body2 = {
-      id: token.id,
-      approver: token.approver,
-      subject: token.subject,
-      governed_intent_hash: token.governed_intent_hash,
-      request_id: token.request_id,
-      issued_at: token.issued_at,
-      expires_at: token.expires_at,
-      decision: token.decision
+      id: token2.id,
+      approver: token2.approver,
+      subject: token2.subject,
+      governed_intent_hash: token2.governed_intent_hash,
+      request_id: token2.request_id,
+      issued_at: token2.issued_at,
+      expires_at: token2.expires_at,
+      decision: token2.decision
     };
-    if (!verifyUtf8MessageEd255192(canonicalizeJson2(body2), token.approver, token.signature))
+    if (!verifyUtf8MessageEd255192(canonicalizeJson2(body2), token2.approver, token2.signature))
       return void 0;
-    return { decision: token.decision, params: JSON.parse(canonicalizeJson2(params)) };
+    return { decision: token2.decision, params: JSON.parse(canonicalizeJson2(params)) };
   } catch {
     return void 0;
   }
@@ -8234,21 +8234,21 @@ function createMcpExecutionClient(options) {
         return Promise.resolve({ state: "not_dispatched", evidence: "unverified", requestId: request.requestId, reason: "invalid execution request" });
       }
       let snapshot;
-      let digest;
+      let digest2;
       try {
         snapshot = JSON.parse(canonicalizeJson2(request));
-        digest = sha256Hex2(canonicalizeJson2({ tool: snapshot.tool, arguments: snapshot.arguments, ...snapshot.approval ? { approval: snapshot.approval } : {} }));
+        digest2 = sha256Hex2(canonicalizeJson2({ tool: snapshot.tool, arguments: snapshot.arguments, ...snapshot.approval ? { approval: snapshot.approval } : {} }));
       } catch {
         return Promise.resolve({ state: "not_dispatched", evidence: "unverified", requestId: request.requestId, reason: "request is not canonical JSON" });
       }
       const prior = operations.get(snapshot.requestId);
       if (prior) {
-        if (prior.digest !== digest)
+        if (prior.digest !== digest2)
           return Promise.resolve({ state: "not_dispatched", evidence: "unverified", requestId: snapshot.requestId, reason: "request ID reused with different arguments" });
         return prior.outcome;
       }
       const outcome = dispatch(snapshot, control.signal);
-      operations.set(snapshot.requestId, { digest, outcome });
+      operations.set(snapshot.requestId, { digest: digest2, outcome });
       return outcome;
     }
   };
@@ -8525,15 +8525,15 @@ function createGateway(config, executor = createMcpExecutionClient(config.execut
       const parameters = resuming ? args.arguments : args;
       if (!tools.has(tool) || !parameters || typeof parameters !== "object" || Array.isArray(parameters))
         return refused("tool or arguments are outside the operator allowlist");
-      let digest;
+      let digest2;
       try {
-        digest = operationKey(canonicalizeJson2({ name: tool, args: parameters }));
+        digest2 = operationKey(canonicalizeJson2({ name: tool, args: parameters }));
       } catch {
         return refused("invalid canonical arguments");
       }
       const prior = records2.get(requestId);
       if (prior) {
-        if (prior.digest !== digest)
+        if (prior.digest !== digest2)
           return refused("operation identity conflicts with retained request");
         if (prior.state !== "awaiting_approval")
           return prior.outcome ? confirmDelivery(prior) : { state: "unknown", evidence: "unverified", requestId, reason: "interrupted dispatch requires resource reconciliation" };
@@ -8569,10 +8569,10 @@ function createGateway(config, executor = createMcpExecutionClient(config.execut
       if (snapshot.approval?.requiredTools.includes(tool)) {
         const proposal2 = { session_id: snapshot.execution.sessionId, capability_id: snapshot.execution.capabilityId, request_id: requestId, tool_name: tool, arguments: JSON.parse(canonicalizeJson2(parameters)), purpose: snapshot.approval.purpose, ttl_seconds: snapshot.approval.ttlSeconds };
         const outcome = { state: "awaiting_approval", evidence: "unverified", requestId, proposal: proposal2, reason: "proposal retained without dispatch; operator decision and explicit chio_resume are required" };
-        persist({ requestId, digest, state: "awaiting_approval", proposal: proposal2, outcome });
+        persist({ requestId, digest: digest2, state: "awaiting_approval", proposal: proposal2, outcome });
         return outcome;
       }
-      return dispatch({ requestId, digest, state: "pending" }, { tool, arguments: parameters, requestId }, signal);
+      return dispatch({ requestId, digest: digest2, state: "pending" }, { tool, arguments: parameters, requestId }, signal);
     },
     close() {
       if (!closed) {
@@ -8875,49 +8875,366 @@ if (process.argv[1] && realpathSync2(process.argv[1]) === realpathSync2(fileURLT
     process.exitCode = 1;
   });
 
+// src/workflow/control.ts
+import { randomBytes, randomUUID as randomUUID2 } from "node:crypto";
+import { existsSync, readdirSync as readdirSync3 } from "node:fs";
+import { join as join3, resolve as resolve4 } from "node:path";
+
+// src/workflow/store.ts
+import { createHash as createHash3, randomUUID } from "node:crypto";
+import { closeSync as closeSync3, fsyncSync as fsyncSync3, lstatSync as lstatSync3, mkdirSync as mkdirSync3, openSync as openSync3, readFileSync as readFileSync3, renameSync as renameSync2, unlinkSync as unlinkSync3, writeFileSync as writeFileSync3 } from "node:fs";
+import { dirname as dirname2 } from "node:path";
+function digest(value) {
+  return createHash3("sha256").update(canonicalizeJson(value)).digest("hex");
+}
+function privateRead(path) {
+  privatePath(path, false);
+  if (lstatSync3(path).size > 1024 * 1024) throw new Error("private workflow record exceeds limit");
+  return JSON.parse(readFileSync3(path, "utf8"));
+}
+function privateDirectory(path) {
+  mkdirSync3(path, { recursive: true, mode: 448 });
+  privatePath(path, true);
+}
+function privateSave(path, value, exclusive = false) {
+  privatePath(dirname2(path), true);
+  const contents = JSON.stringify(value);
+  if (Buffer.byteLength(contents) > 1024 * 1024) throw new Error("workflow record exceeds limit");
+  const temporary = exclusive ? path : path + "." + randomUUID() + ".tmp";
+  const fd = openSync3(temporary, "wx", 384);
+  try {
+    writeFileSync3(fd, contents);
+    fsyncSync3(fd);
+  } finally {
+    closeSync3(fd);
+  }
+  if (!exclusive) renameSync2(temporary, path);
+  const directory = openSync3(dirname2(path), "r");
+  try {
+    fsyncSync3(directory);
+  } finally {
+    closeSync3(directory);
+  }
+}
+
+// src/workflow/tasks.ts
+import { spawn } from "node:child_process";
+import { realpathSync as realpathSync3 } from "node:fs";
+import { resolve as resolve3 } from "node:path";
+var token = /^[a-zA-Z0-9_.-]{1,128}$/;
+function artifactValid(value) {
+  return !!value && typeof value.label === "string" && value.label.length <= 256 && (value.kind === "git_commit" ? /^[0-9a-f]{40}$/.test(value.digest) : value.kind === "sha256" && /^[0-9a-f]{64}$/.test(value.digest));
+}
+function validateTemplate(value) {
+  if (!value || !token.test(value.id) || typeof value.title !== "string" || value.title.length > 256 || !token.test(value.serverId) || typeof value.expectedCapabilityId !== "string" || !value.expectedCapabilityId || value.expectedCapabilityId.length > 512 || !Array.isArray(value.allowedTools) || !value.allowedTools.length || value.allowedTools.length > 64 || value.allowedTools.some((v) => !token.test(v)) || new Set(value.allowedTools).size !== value.allowedTools.length || !Number.isSafeInteger(value.ttlSeconds) || value.ttlSeconds < 1 || value.ttlSeconds > 3600 || !value.approval || !Array.isArray(value.approval.requiredTools) || value.approval.requiredTools.some((v) => !value.allowedTools.includes(v)) || typeof value.approval.purpose !== "string" || value.approval.purpose.length > 1024 || !Number.isSafeInteger(value.approval.ttlSeconds) || value.approval.ttlSeconds < 1 || value.approval.ttlSeconds > value.ttlSeconds || !value.scope || value.scope.source !== "operator_template" || value.scope.budget !== "unavailable" || [value.scope.resources, value.scope.destinations, value.scope.restrictions].some((a) => !Array.isArray(a) || a.length > 64 || a.some((s) => typeof s !== "string" || s.length > 1024)) || !Array.isArray(value.requirements) || !value.requirements.length || value.requirements.length > 32 || new Set(value.requirements.map((r) => r.id)).size !== value.requirements.length) throw new Error("invalid operator task template");
+  for (const r of value.requirements) {
+    if (!token.test(r.id) || typeof r.title !== "string" || r.title.length > 256) throw new Error("invalid completion requirement");
+    const c = r.collector;
+    if (c?.kind === "command") {
+      if (typeof c.cwd !== "string" || resolve3(c.cwd) !== c.cwd || !Array.isArray(c.argv) || !c.argv.length || c.argv.length > 64 || c.argv.some((a) => typeof a !== "string" || a.length > 4096) || !c.argv[0]?.startsWith("/") || !Number.isSafeInteger(c.timeoutMs) || c.timeoutMs < 1 || c.timeoutMs > 6e4) throw new Error("invalid operator command collector");
+    } else if (c?.kind === "json") {
+      const url = new URL(c.url);
+      if (url.protocol !== "https:" && !(url.protocol === "http:" && url.hostname === "127.0.0.1")) throw new Error("collector requires HTTPS or exact loopback");
+      if (url.username || url.password || url.hash || url.search || !c.artifactPointer.startsWith("/") || !c.statePointer.startsWith("/") || typeof c.passedValue !== "string" || !Array.isArray(c.failedValues) || c.failedValues.some((v) => typeof v !== "string")) throw new Error("invalid JSON collector");
+    } else throw new Error("unsupported evidence collector");
+  }
+  return value;
+}
+function readCatalog(path) {
+  const value = privateRead(path);
+  if (value.schema !== "chio.task.catalog.v1" || !Array.isArray(value.templates) || !value.templates.length || value.templates.length > 32 || new Set(value.templates.map((t) => t.id)).size !== value.templates.length) throw new Error("invalid operator catalog");
+  return value.templates.map(validateTemplate);
+}
+function templateView(value) {
+  return { id: value.id, title: value.title, revision: digest(value), allowedTools: value.allowedTools, ttlSeconds: value.ttlSeconds, scope: value.scope };
+}
+function taskRevision(task) {
+  return digest({
+    id: task.id,
+    sessionId: task.sessionId,
+    binding: task.binding,
+    title: task.title,
+    goal: task.goal,
+    artifact: task.artifact,
+    template: task.template,
+    checkout: task.checkout ?? null
+  });
+}
+function readTask(path, sessionId, binding) {
+  const task = privateRead(path);
+  if (task.schema !== "chio.task.v1" || typeof task.id !== "string" || !/^[0-9a-f-]{36}$/.test(task.id) || typeof task.sessionId !== "string" || !/^[0-9a-f]{64}$/.test(task.binding) || typeof task.title !== "string" || task.title.length > 256 || typeof task.goal !== "string" || task.goal.length > 4096 || !artifactValid(task.artifact) || !Array.isArray(task.observations) || task.observations.length > 1024 || sessionId !== void 0 && task.sessionId !== sessionId || binding !== void 0 && task.binding !== binding || task.checkout !== void 0 && (typeof task.checkout !== "string" || resolve3(task.checkout) !== task.checkout)) throw new Error("task has invalid or foreign binding");
+  validateTemplate(task.template);
+  if (task.observations.some((o) => !o || !task.template.requirements.some((r) => r.id === o.requirementId) || !/^[0-9a-f]{64}$/.test(o.revision) || !artifactValid(o.artifact) || !["outstanding", "running", "passed", "failed"].includes(o.state) || !Number.isSafeInteger(o.observedAt) || o.observedAt > Date.now() + 5e3 || typeof o.source !== "string" || o.source.length > 1024)) throw new Error("invalid retained evidence observation");
+  return task;
+}
+async function run(argv, cwd, timeoutMs) {
+  const child = spawn(argv[0], argv.slice(1), { cwd, shell: false, env: { PATH: process.env.PATH ?? "", LANG: "C.UTF-8", GIT_CONFIG_NOSYSTEM: "1", GIT_CONFIG_GLOBAL: "/dev/null" }, stdio: ["ignore", "pipe", "pipe"] });
+  let stdout = "", size = 0, overflow = false;
+  const capture = (data) => {
+    size += data.length;
+    if (size > 1024 * 1024) {
+      overflow = true;
+      child.kill("SIGTERM");
+    }
+  };
+  child.stdout.on("data", (data) => {
+    capture(data);
+    if (!overflow) stdout += data.toString();
+  });
+  child.stderr.on("data", capture);
+  const timeout = setTimeout(() => child.kill("SIGTERM"), timeoutMs);
+  const kill = setTimeout(() => child.kill("SIGKILL"), timeoutMs + 1e3);
+  try {
+    const code = await new Promise((done, reject) => {
+      child.once("error", reject);
+      child.once("close", (code2) => done(code2 ?? -1));
+    });
+    if (overflow) throw new Error("collector output exceeds limit");
+    return { code, stdout };
+  } finally {
+    clearTimeout(timeout);
+    clearTimeout(kill);
+  }
+}
+async function checkoutMatches(task, requireClean) {
+  if (!task.checkout) return true;
+  if (task.artifact.kind !== "git_commit" || realpathSync3(task.checkout) !== task.checkout) return false;
+  const head = await run(["/usr/bin/git", "-C", task.checkout, "rev-parse", "--verify", "HEAD"], task.checkout, 3e3);
+  if (head.code !== 0 || head.stdout.trim() !== task.artifact.digest) return false;
+  if (!requireClean) return true;
+  const status = await run(["/usr/bin/git", "-C", task.checkout, "status", "--porcelain", "--untracked-files=all"], task.checkout, 3e3);
+  return status.code === 0 && status.stdout.trim() === "";
+}
+async function projectTask(task) {
+  const revision = taskRevision(task);
+  const matches = await checkoutMatches(task, true);
+  const requirements = task.template.requirements.map((r) => {
+    const observation = task.observations.filter((o) => o.requirementId === r.id).at(-1);
+    const fresh = observation?.revision === revision && digest(observation.artifact) === digest(task.artifact) && matches;
+    const state = !matches || observation && !fresh ? "stale" : observation?.state ?? "outstanding";
+    return {
+      id: r.id,
+      title: r.title,
+      state,
+      evidenceClass: observation && fresh ? "trusted_collector_observation" : "none",
+      ...observation ? { observedAt: observation.observedAt, source: observation.source } : {}
+    };
+  });
+  const readiness = requirements.every((r) => r.state === "passed") ? "ready" : requirements.some((r) => r.state === "failed") ? "failed" : "outstanding";
+  return { id: task.id, sessionId: task.sessionId, revision, title: task.title, goal: task.goal, artifact: task.artifact, readiness, requirements, scope: task.template.scope };
+}
+
+// src/workflow/control.ts
+function uuid(value) {
+  return typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(value);
+}
+function publicContinuation(r) {
+  return { id: r.id, requestId: r.requestId, state: r.state, delivery: r.delivery, receiptConfirmed: r.receiptConfirmed === true || r.delivery === "confirmed", ...r.outcomeHash ? { outcomeHash: r.outcomeHash } : {} };
+}
+function createWorkflowControl(access, options = {}) {
+  const directory = join3(access.config.journalDir, "workflow");
+  privateDirectory(directory);
+  const continuations = join3(directory, "continuations");
+  privateDirectory(continuations);
+  const proposals = join3(directory, "proposals");
+  privateDirectory(proposals);
+  const taskRequests = join3(directory, "task-requests");
+  privateDirectory(taskRequests);
+  for (const [field, path] of [["task", options.taskPath], ["catalog", options.catalogPath]]) {
+    if (path && resolve4(path) !== join3(directory, field + ".json")) throw new Error("workflow file must be in this journal's private workflow directory");
+  }
+  const jobs = /* @__PURE__ */ new Set();
+  let closed = false;
+  function find(requestId) {
+    if (typeof requestId !== "string" || !requestId || requestId.length > 256) throw new Error("invalid retained operation id");
+    const record = access.read().find((r) => r.requestId === requestId);
+    if (!record) throw new Error("no original operation for this session");
+    return record;
+  }
+  function readContinuation(id) {
+    if (!uuid(id)) throw new Error("invalid continuation id");
+    const r = privateRead(join3(continuations, id + ".json"));
+    if (r.schema !== "chio.control.continuation.v1" || r.id !== id || r.binding !== access.binding || r.sessionId !== access.config.sessionId || !["submitted", "completed", "unknown"].includes(r.state) || !["pending", "confirmed"].includes(r.delivery) || !/^[0-9a-f]{64}$/.test(r.revision)) throw new Error("foreign or invalid continuation");
+    return r;
+  }
+  function retained() {
+    const names = readdirSync3(continuations).filter((n) => n.endsWith(".json"));
+    if (names.length > 1e3) throw new Error("continuation retention requires maintenance");
+    return names.map((name) => publicContinuation(readContinuation(name.slice(0, -5))));
+  }
+  async function project2() {
+    const task = options.taskPath ? await projectTask(readTask(options.taskPath, access.config.sessionId, access.binding)) : void 0;
+    return {
+      ...task ? { task } : {},
+      templates: options.catalogPath ? readCatalog(options.catalogPath).map(templateView) : [],
+      continuation: !!options.resume && !!options.acknowledge,
+      proposals: !!options.propose
+    };
+  }
+  async function startContinuation(input) {
+    if (closed || !options.resume || !options.acknowledge || !await access.live()) throw new Error("live parent continuation transport required");
+    if (Object.keys(input).some((k) => !["requestId", "revision"].includes(k))) throw new Error("continuation accepts an original id and revision only");
+    const record = find(input.requestId), view = access.view(record);
+    if (view.state !== "awaiting_approval" || view.review?.decision !== "granted" || input.revision !== view.review.revision || !record.proposal) throw new Error("no exact accepted grant for continuation");
+    const claim = join3(continuations, digest(record.requestId) + ".claim");
+    privateSave(claim, { requestId: record.requestId, revision: view.review.revision }, true);
+    const id = randomUUID2(), path = join3(continuations, id + ".json");
+    const pending = {
+      schema: "chio.control.continuation.v1",
+      id,
+      sessionId: access.config.sessionId,
+      binding: access.binding,
+      requestId: record.requestId,
+      revision: view.review.revision,
+      state: "submitted",
+      delivery: "pending"
+    };
+    privateSave(path, pending, true);
+    const job = (async () => {
+      try {
+        const original = find(record.requestId), current = access.view(original);
+        if (closed || !await access.live() || current.review?.decision !== "granted" || current.review.revision !== pending.revision || !original.proposal) throw new Error("grant or action changed before dispatch");
+        const result = await options.resume(id, original.requestId, original.proposal.tool_name, original.proposal.arguments);
+        const stored = find(original.requestId);
+        if (result.state !== "completed" || result.evidence !== "verified" || !stored.request || !verifyCompletedOutcome(result, access.config.execution, stored.request) || stored.state !== "completed" || digest(result) !== digest(stored.outcome)) throw new Error("continuation outcome remains unresolved");
+        privateSave(path, { ...pending, state: "completed", outcome: result, outcomeHash: digest(result), challenge: randomBytes(32).toString("hex") });
+      } catch {
+        privateSave(path, { ...pending, state: "unknown" });
+      }
+    })();
+    jobs.add(job);
+    void job.finally(() => jobs.delete(job)).catch(() => {
+    });
+    return publicContinuation(pending);
+  }
+  function outcome(id) {
+    const r = readContinuation(id);
+    if (r.state !== "completed") return { ready: false, continuation: publicContinuation(r) };
+    const original = find(r.requestId);
+    if (!r.outcome || !original.request || !verifyCompletedOutcome(r.outcome, access.config.execution, original.request) || digest(r.outcome) !== r.outcomeHash || !/^[0-9a-f]{64}$/.test(r.challenge ?? "")) throw new Error("retained continuation output is invalid");
+    privateSave(join3(continuations, r.id + ".json"), { ...r, served: true });
+    return { ready: true, schema: "chio.control.outcome.v1", continuation: publicContinuation(r), outcome: r.outcome, outcomeHash: r.outcomeHash, challenge: r.challenge };
+  }
+  async function acknowledge(id, input) {
+    if (closed || !options.acknowledge) throw new Error("parent outcome acknowledgement unavailable");
+    const r = readContinuation(id);
+    if (Object.keys(input).some((k) => !["outcomeHash", "challenge"].includes(k)) || r.state !== "completed" || !r.served || !r.outcome || input.outcomeHash !== r.outcomeHash || input.challenge !== r.challenge) throw new Error("exact served native-control outcome proof required");
+    const original = find(r.requestId);
+    if (!original.request || !verifyCompletedOutcome(r.outcome, access.config.execution, original.request) || digest(r.outcome) !== r.outcomeHash) throw new Error("output changed before acknowledgement");
+    if (r.delivery === "confirmed") return { acknowledged: true, requestId: r.requestId, channel: "native_control" };
+    privateSave(join3(continuations, r.id + ".ack-claim"), { requestId: r.requestId, outcomeHash: r.outcomeHash }, true);
+    privateSave(join3(continuations, r.id + ".json"), { ...r, receiptConfirmed: true });
+    const result = await options.acknowledge(r.outcome);
+    if (!result.acknowledged || result.requestId !== r.requestId) throw new Error("kernel delivery acknowledgement remains unresolved");
+    privateSave(join3(continuations, r.id + ".json"), { ...r, receiptConfirmed: true, delivery: "confirmed" });
+    return { acknowledged: true, requestId: r.requestId, channel: "native_control" };
+  }
+  async function propose(input) {
+    if (closed || !options.propose || !await access.live() || !uuid(input.id) || typeof input.tool !== "string" || !input.arguments || typeof input.arguments !== "object" || Array.isArray(input.arguments) || Object.keys(input).some((k) => !["id", "tool", "arguments"].includes(k))) throw new Error("bounded proposal requires a live parent transport");
+    if (!access.config.tools.some((t) => t.name === input.tool) || !access.config.approval?.requiredTools.includes(input.tool)) throw new Error("proposal tool must require exact review; no effect fallback");
+    const path = join3(proposals, input.id + ".json");
+    const revision = digest({ sessionId: access.config.sessionId, binding: access.binding, input });
+    if (existsSync(path)) {
+      const prior = privateRead(path);
+      if (prior.revision !== revision) throw new Error("proposal id conflicts with original arguments");
+      if (!["submitted", "awaiting_approval", "unknown"].includes(prior.state)) throw new Error("corrupt retained proposal");
+      return { ...prior, ...prior.requestId ? { state: access.view(find(prior.requestId)).state } : {}, dispatchPerformed: false };
+    }
+    privateSave(path, { revision, state: "submitted" }, true);
+    try {
+      const result = await options.propose(input.id, input.tool, input.arguments);
+      if (result.state !== "awaiting_approval" || access.view(find(result.requestId)).review?.decision !== "required") throw new Error("proposal was not retained for exact review");
+      const retained2 = { revision, state: "awaiting_approval", requestId: result.requestId };
+      privateSave(path, retained2);
+      return { ...retained2, dispatchPerformed: false };
+    } catch {
+      privateSave(path, { revision, state: "unknown" });
+      throw new Error("proposal unresolved; inspect original id without resubmission");
+    }
+  }
+  function selectTemplate(input) {
+    if (!options.catalogPath || !uuid(input.id) || typeof input.templateId !== "string" || Object.keys(input).some((k) => !["id", "templateId", "revision"].includes(k))) throw new Error("invalid task selection");
+    const template = readCatalog(options.catalogPath).find((t) => t.id === input.templateId);
+    if (!template || templateView(template).revision !== input.revision) throw new Error("task template changed");
+    const path = join3(taskRequests, input.id + ".json");
+    privateSave(path, { schema: "chio.task.request.v1", sessionId: access.config.sessionId, binding: access.binding, ...input, state: "requested", createdAt: Date.now() }, true);
+    return { id: input.id, state: "requested", templateId: template.id, authorityAccepted: false, dispatchPerformed: false };
+  }
+  function explain(requestId) {
+    const r = find(requestId), view = access.view(r);
+    const receipt = r.outcome && "receipt" in r.outcome ? r.outcome.receipt : void 0;
+    const verified = !!r.request && !!receipt && verifyBoundReceipt(receipt, { ...access.config.execution, tool: r.request.tool, parameters: r.request.arguments, requestId: r.requestId });
+    const signedReason = verified ? receipt.decision?.reason : void 0;
+    return {
+      requestId: r.requestId,
+      state: view.state,
+      reason: signedReason?.slice(0, 4096) ?? r.outcome?.reason?.slice(0, 4096) ?? "No structured denial reason was retained.",
+      source: signedReason ? "verified_kernel_receipt" : "retained_gateway",
+      ...verified ? { receiptId: receipt.id } : {},
+      policyRehearsal: "unavailable",
+      resourcePreview: "unavailable",
+      informationFlow: "unknown"
+    };
+  }
+  return {
+    project: project2,
+    retained,
+    startContinuation,
+    outcome,
+    acknowledge,
+    propose,
+    selectTemplate,
+    explain,
+    async close() {
+      closed = true;
+      await Promise.allSettled([...jobs]);
+    }
+  };
+}
+
 // src/control/service.ts
 var LIMIT = 1024 * 1024;
 var kinds = ["approve", "decline", "alternative", "revoke"];
 function hash(value) {
-  return createHash3("sha256").update(canonicalizeJson(value)).digest("hex");
+  return createHash4("sha256").update(canonicalizeJson(value)).digest("hex");
 }
 function privateJson2(path) {
   privatePath(path, false);
-  if (lstatSync3(path).size > LIMIT) throw new Error("private record exceeds projection limit");
-  return JSON.parse(readFileSync3(path, "utf8"));
+  if (lstatSync4(path).size > LIMIT) throw new Error("private record exceeds projection limit");
+  return JSON.parse(readFileSync4(path, "utf8"));
 }
 function syncDirectory3(path) {
-  const fd = openSync3(path, "r");
+  const fd = openSync4(path, "r");
   try {
-    fsyncSync3(fd);
+    fsyncSync4(fd);
   } finally {
-    closeSync3(fd);
+    closeSync4(fd);
   }
 }
 function save(path, value, exclusive = false) {
-  const output = exclusive ? path : `${path}.${randomUUID()}.tmp`;
-  const fd = openSync3(output, "wx", 384);
+  const output = exclusive ? path : `${path}.${randomUUID3()}.tmp`;
+  const fd = openSync4(output, "wx", 384);
   try {
-    writeFileSync3(fd, JSON.stringify(value));
-    fsyncSync3(fd);
+    writeFileSync4(fd, JSON.stringify(value));
+    fsyncSync4(fd);
   } finally {
-    closeSync3(fd);
+    closeSync4(fd);
   }
-  if (!exclusive) renameSync2(output, path);
-  syncDirectory3(resolve3(path, ".."));
+  if (!exclusive) renameSync3(output, path);
+  syncDirectory3(resolve5(path, ".."));
 }
 function intentDirectory(config) {
-  const path = join3(config.journalDir, "control-intents");
-  mkdirSync3(path, { recursive: true, mode: 448 });
+  const path = join4(config.journalDir, "control-intents");
+  mkdirSync4(path, { recursive: true, mode: 448 });
   privatePath(path, true);
   return path;
 }
 function intentRecords(config) {
   const dir = intentDirectory(config);
-  const names = readdirSync3(dir).filter((name) => name.endsWith(".json"));
+  const names = readdirSync4(dir).filter((name) => name.endsWith(".json"));
   if (names.length > 1e3) throw new Error("control intent retention requires operator maintenance");
   return names.map((name) => {
-    const r = privateJson2(join3(dir, name));
+    const r = privateJson2(join4(dir, name));
     if (r.schema !== "chio.control.intent.v1" || r.sessionId !== config.sessionId || r.binding !== hash(gatewayBinding(config))) throw new Error("control intent binding changed");
     return r;
   });
@@ -8927,10 +9244,10 @@ function publicIntent({ id, kind, state, sessionId, requestId, expiresAt }) {
 }
 function records(config) {
   gatewayStatus(config);
-  const names = readdirSync3(config.journalDir).filter((name) => name.endsWith(".json"));
+  const names = readdirSync4(config.journalDir).filter((name) => name.endsWith(".json"));
   if (names.length > 1e3) throw new Error("operation projection bound exceeded");
   return names.sort().map((name) => {
-    const r = privateJson2(join3(config.journalDir, name));
+    const r = privateJson2(join4(config.journalDir, name));
     if (name !== `${operationKey(r.requestId)}.json` || !r.digest) throw new Error("operation identity changed");
     return r;
   });
@@ -8938,7 +9255,7 @@ function records(config) {
 function approval(config, record) {
   if (!record.proposal) return void 0;
   const path = gatewayApprovalPath(config, record.requestId);
-  if (!readdirSync3(resolve3(path, "..")).includes(`${operationKey(record.requestId)}.json`)) return void 0;
+  if (!readdirSync4(resolve5(path, "..")).includes(`${operationKey(record.requestId)}.json`)) return void 0;
   const artifact = privateJson2(path);
   return verifyApprovalToolCall(artifact.toolCallParams, {
     ...config.execution,
@@ -8956,10 +9273,10 @@ function project(config, record) {
   const state = record.state === "completed" && !verified ? "unknown" : record.state;
   let decision = "required";
   if (record.proposal) {
-    mkdirSync3(join3(config.journalDir, "approvals"), { recursive: true, mode: 448 });
+    mkdirSync4(join4(config.journalDir, "approvals"), { recursive: true, mode: 448 });
     const approved = approval(config, record);
     if (approved) decision = approved.decision === "approved" ? "granted" : "declined";
-    else if (readdirSync3(join3(config.journalDir, "approvals")).includes(`${operationKey(record.requestId)}.json`)) decision = "expired";
+    else if (readdirSync4(join4(config.journalDir, "approvals")).includes(`${operationKey(record.requestId)}.json`)) decision = "expired";
   }
   const nextAction = state === "pending" || state === "unknown" ? "reconcile_original" : state === "denied" ? "linked_continuation" : state === "awaiting_approval" ? decision === "granted" ? "explicit_resume" : decision === "required" ? "review" : "linked_continuation" : state === "completed" && (!record.acknowledged || record.hostDeliveryRequired !== false && !record.hostDeliveryConfirmed) ? "acknowledge_delivery" : "none";
   const view = {
@@ -9001,6 +9318,22 @@ async function controlStatus(options) {
     } catch {
     }
   }
+  const workflow = options.workflow;
+  for (const [field, path] of [["task", workflow?.taskPath], ["catalog", workflow?.catalogPath]]) {
+    if (path && resolve5(path) !== join4(config.journalDir, "workflow", field + ".json")) throw new Error("foreign workflow path");
+  }
+  const task = workflow?.taskPath ? await projectTask(readTask(workflow.taskPath, config.sessionId, hash(gatewayBinding(config)))) : void 0;
+  const templates = workflow?.catalogPath ? readCatalog(workflow.catalogPath).map(templateView) : [];
+  const taskRequestDir = join4(config.journalDir, "workflow", "task-requests");
+  const requestNames = existsSync2(taskRequestDir) ? readdirSync4(taskRequestDir).filter((name) => name.endsWith(".json")) : [];
+  if (requestNames.length > 1e3) throw new Error("task request retention requires maintenance");
+  const requests = requestNames.map((name) => {
+    const r = privateJson2(join4(taskRequestDir, name));
+    if (r.schema !== "chio.task.request.v1" || name !== r.id + ".json" || !/^[0-9a-f-]{36}$/.test(r.id) || r.sessionId !== config.sessionId || r.binding !== hash(gatewayBinding(config)) || typeof r.templateId !== "string" || !/^[0-9a-f]{64}$/.test(r.revision) || !Number.isSafeInteger(r.createdAt) || r.createdAt > Date.now() + 5e3) throw new Error("invalid or foreign task request");
+    const template = templates.find((t) => t.id === r.templateId);
+    const state = !template || template.revision !== r.revision ? "stale" : Date.now() >= r.createdAt + Math.min(9e4, template.ttlSeconds * 1e3) ? "expired" : "requested";
+    return { id: r.id, templateId: r.templateId, state, createdAt: r.createdAt };
+  });
   const unresolved = operations.filter((op) => op.state === "pending" || op.state === "unknown" || op.state === "completed" && op.nextAction !== "none").length;
   return {
     schema: "chio.control.status.v1",
@@ -9015,7 +9348,8 @@ async function controlStatus(options) {
     unresolved,
     fenced: gatewayStatus(config).fenced,
     operations,
-    intents
+    intents,
+    workflow: { ...task ? { task } : {}, templates, requests, continuation: !!workflow?.resume && !!workflow?.acknowledge, proposals: !!workflow?.propose }
   };
 }
 function requestIntent(options, input) {
@@ -9034,7 +9368,7 @@ function requestIntent(options, input) {
   if (existing.some((intent) => intent.requestId === input.requestId && intent.revision === input.revision)) throw new Error("review intent already recorded; inspect its original outcome");
   const record = {
     schema: "chio.control.intent.v1",
-    id: randomUUID(),
+    id: randomUUID3(),
     kind,
     state: "requested",
     sessionId: config.sessionId,
@@ -9044,7 +9378,7 @@ function requestIntent(options, input) {
     createdAt: Date.now(),
     expiresAt: Math.min(Date.now() + 9e4, options.authorityExpiresAt * 1e3)
   };
-  save(join3(intentDirectory(config), `${record.id}.json`), record, true);
+  save(join4(intentDirectory(config), `${record.id}.json`), record, true);
   return publicIntent(record);
 }
 function reply(response, code, value) {
@@ -9067,17 +9401,25 @@ async function body(request) {
 async function startControlServer(options) {
   const pinned = { ...options, config: JSON.parse(JSON.stringify(options.config)) };
   records(pinned.config);
-  const token = randomBytes(32).toString("hex");
+  const workflow = createWorkflowControl({
+    config: pinned.config,
+    binding: hash(gatewayBinding(pinned.config)),
+    read: () => records(pinned.config),
+    view: (record) => project(pinned.config, record),
+    live: async () => (await controlStatus(pinned)).authority === "live"
+  }, pinned.workflow);
+  const token2 = randomBytes2(32).toString("hex");
   let statusReads = 0;
   let sessionMismatch = false;
+  let closing;
   const server = createServer((request, response) => {
     void (async () => {
       const got = Buffer.from(request.headers.authorization ?? "");
-      const expected = Buffer.from(`Bearer ${token}`);
+      const expected = Buffer.from(`Bearer ${token2}`);
       if (request.headers.origin || got.length !== expected.length || !timingSafeEqual(got, expected)) return reply(response, 401, { error: "unauthorized" });
       if (pinned.authorityExpiresAt <= Math.floor(Date.now() / 1e3)) return reply(response, 401, { error: "scoped credential expired" });
       const root = `/sessions/${encodeURIComponent(pinned.config.sessionId)}`;
-      if (pinned.onSessionMismatch && /^\/sessions\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/(status|intents)$/.test(request.url ?? "") && request.url !== root + "/status" && request.url !== root + "/intents") {
+      if (pinned.onSessionMismatch && /^\/sessions\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\//.test(request.url ?? "") && !request.url?.startsWith(root + "/")) {
         if (!sessionMismatch) {
           sessionMismatch = true;
           pinned.onSessionMismatch();
@@ -9088,11 +9430,29 @@ async function startControlServer(options) {
       if (request.method === "GET" && request.url === root + "/status") {
         const status = await controlStatus(pinned);
         statusReads += 1;
-        return reply(response, 200, status);
+        const continuations = workflow.retained();
+        for (const operation of status.operations) {
+          if (operation.hostDeliveryConfirmed) operation.deliveryChannel = continuations.some((c) => c.requestId === operation.requestId && c.receiptConfirmed === true) ? "native_control" : pinned.modelDeliveryConfirmed?.(operation.requestId) ? "model_tool_result" : "unclassified";
+        }
+        return reply(response, 200, { ...status, continuations });
       }
       if (request.method === "POST" && request.url === root + "/intents") return reply(response, 202, { intent: requestIntent(pinned, await body(request)), authorityAccepted: false, dispatchPerformed: false });
+      if (request.method === "POST" && request.url === root + "/continuations") return reply(response, 202, { continuation: await workflow.startContinuation(await body(request)) });
+      if (request.method === "POST" && request.url === root + "/proposals") return reply(response, 202, await workflow.propose(await body(request)));
+      if (request.method === "POST" && request.url === root + "/task-requests") return reply(response, 202, workflow.selectTemplate(await body(request)));
+      const continuationRoute = request.url?.startsWith(root + "/continuations/") ? request.url.slice((root + "/continuations/").length).split("/") : [];
+      if (continuationRoute.length === 2 && request.method === "GET" && continuationRoute[1] === "outcome") {
+        let result = workflow.outcome(continuationRoute[0]);
+        if (!result.ready && result.continuation.state === "submitted") {
+          await new Promise((resolveWait) => setTimeout(resolveWait, 200));
+          result = workflow.outcome(continuationRoute[0]);
+        }
+        return reply(response, result.ready ? 200 : 202, result);
+      }
+      if (continuationRoute.length === 2 && request.method === "POST" && continuationRoute[1] === "ack") return reply(response, 200, await workflow.acknowledge(continuationRoute[0], await body(request)));
+      if (request.method === "GET" && request.url?.startsWith(root + "/explanations/")) return reply(response, 200, workflow.explain(decodeURIComponent(request.url.slice((root + "/explanations/").length))));
       return reply(response, 404, { error: "no route for this session" });
-    })().catch(() => reply(response, 409, { error: "control request unavailable, stale, or invalid; no action dispatched" }));
+    })().catch(() => reply(response, 409, { error: "control request unavailable, stale, or unresolved; inspect the original operation without automatic retry" }));
   });
   server.requestTimeout = 5e3;
   server.headersTimeout = 5e3;
@@ -9106,31 +9466,34 @@ async function startControlServer(options) {
   return {
     url: `http://127.0.0.1:${address.port}`,
     port: address.port,
-    token,
+    token: token2,
     get statusReads() {
       return statusReads;
     },
     get sessionMismatch() {
       return sessionMismatch;
     },
-    close: () => new Promise((resolveClose, reject) => {
-      server.close((error) => error ? reject(error) : resolveClose());
-      server.closeAllConnections();
-    })
+    close: () => closing ??= (async () => {
+      await workflow.close();
+      await new Promise((resolveClose, reject) => {
+        server.close((error) => error ? reject(error) : resolveClose());
+        server.closeAllConnections();
+      });
+    })()
   };
 }
 async function confirmControlIntent(config, operator, id) {
   if (!/^[0-9a-f-]{36}$/.test(id)) throw new Error("invalid intent id");
   records(config);
-  const path = join3(intentDirectory(config), `${id}.json`);
+  const path = join4(intentDirectory(config), `${id}.json`);
   const intent = privateJson2(path);
   if (intent.id !== id || intent.schema !== "chio.control.intent.v1" || intent.sessionId !== config.sessionId || intent.binding !== hash(gatewayBinding(config)) || intent.state !== "requested" || intent.expiresAt <= Date.now() || intent.kind === "alternative") throw new Error("intent cannot be confirmed; inspect the original or create a permitted linked action");
   if (!operator.adminToken || operator.adminToken === config.execution.bearerToken) throw new Error("distinct operator-only credential required");
   const endpoint = new URL(config.execution.endpoint);
   if (endpoint.pathname !== "/" || endpoint.username || endpoint.password || endpoint.search || endpoint.hash || endpoint.protocol !== "https:" && !(endpoint.protocol === "http:" && endpoint.hostname === "127.0.0.1")) throw new Error("invalid authority endpoint");
-  const lockPath = join3(intentDirectory(config), `${id}.lock`);
-  const lock = openSync3(lockPath, "wx", 384);
-  closeSync3(lock);
+  const lockPath = join4(intentDirectory(config), `${id}.lock`);
+  const lock = openSync4(lockPath, "wx", 384);
+  closeSync4(lock);
   const record = intent.requestId ? records(config).find((record2) => record2.requestId === intent.requestId) : void 0;
   if (intent.kind === "revoke" ? intent.revision !== hash(gatewayBinding(config)) : !record || record.state !== "awaiting_approval" || reviewRevision(config, record) !== intent.revision || project(config, record).review?.decision !== "required") throw new Error("intent action changed after review");
   intent.state = "submitted";
@@ -9162,7 +9525,7 @@ async function confirmControlIntent(config, operator, id) {
       const verified = verifyApprovalToolCall(artifact.toolCallParams, { ...config.execution, sessionId: config.execution.sessionId, requestId: record.requestId, tool: proposal2.tool_name, arguments: proposal2.arguments });
       if (!binds(artifact) || !verified || verified.decision !== (intent.kind === "approve" ? "approved" : "denied")) throw new Error("kernel decision lacks the exact trusted signature");
       if (reviewRevision(config, records(config).find((r) => r.requestId === record.requestId)) !== intent.revision) throw new Error("operation changed while authority was submitted");
-      mkdirSync3(join3(config.journalDir, "approvals"), { recursive: true, mode: 448 });
+      mkdirSync4(join4(config.journalDir, "approvals"), { recursive: true, mode: 448 });
       save(gatewayApprovalPath(config, record.requestId), artifact, true);
       intent.state = intent.kind === "approve" ? "granted" : "declined";
     }

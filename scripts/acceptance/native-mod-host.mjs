@@ -4,10 +4,14 @@
 import { createServer } from "node:http";
 import { spawn } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { nativeModIdentity } from "../mod-profile.mjs";
+import { signer, signedDecision, signedOutcome } from "../../test/workflow-fixture.mjs";
+import { gatewayApprovalPath, gatewayBinding } from "../../dist/gateway.js";
+import { privateDirectory, privateSave, digest as valueDigest } from "../../dist/workflow/store.js";
+import { createTask, collectRequirement } from "../../dist/workflow/tasks.js";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const host = process.env.CHIO_CLAUDE_HOST;
 if (process.platform !== "darwin" || !host) throw new Error("macOS and CHIO_CLAUDE_HOST are required");
@@ -15,22 +19,36 @@ const output = resolve(process.argv[2] ?? "/tmp/chio-native-host-evidence"); mkd
 const digest = path => createHash("sha256").update(readFileSync(path)).digest("hex");
 const write = (path, value) => writeFileSync(path, JSON.stringify(value, null, 2) + "\n", { mode: 0o600 });
 const results = [];
-const scenarios = ["review", "native-bypass", "status-command", "native-routes", "disconnected-mod", "interactive", "interactive-clear"];
+const scenarios = ["review", "native-bypass", "status-command", "native-routes", "disconnected-mod", "interactive", "interactive-clear", "interactive-workflow"];
 if (process.argv[3] && !scenarios.includes(process.argv[3])) throw new Error("unknown native host scenario");
 for (const scenario of process.argv[3] ? [process.argv[3]] : scenarios) {
   const interactive = scenario.startsWith("interactive");
+  const workflowFixture = scenario === "interactive-workflow";
+  let effects = 0, charges = 0, kernelAcks = 0;
   const runtime = mkdtempSync("/private/tmp/chio-native-host-"); mkdirSync(join(runtime, "workspace"));
   const sessionId = randomUUID(); const kernelSessionId = randomUUID(); const now = Math.floor(Date.now() / 1000);
   const credential = { schema: "chio.mcp.session-credential.v1", sessionId: kernelSessionId, subjectKey: "b".repeat(64), capabilityIds: ["fixture-capability"], serverId: "fixture-resource", endpointPath: "/mcp", allowedTools: ["write_file"], issuedAt: now, expiresAt: now + 600 };
   const methods = [];
   const kernel = createServer(async (req, res) => {
+    if (workflowFixture && req.method === "GET" && req.url.startsWith("/evidence/")) {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ artifact: "e".repeat(64), state: req.url.endsWith("local") ? "passed" : "running" })); return;
+    }
     const chunks = []; for await (const chunk of req) chunks.push(chunk);
     const rpc = JSON.parse(Buffer.concat(chunks).toString()); methods.push(rpc.method);
     const valid = req.headers.authorization === "Bearer delegated-fixture" && req.headers["mcp-session-id"] === kernelSessionId;
-    const result = { schema: "chio.mcp.execution-context.v1", evidenceVersion: "1", deliveryAcknowledgementVersion: "1", subjectKey: credential.subjectKey,
+    let result = { schema: "chio.mcp.execution-context.v1", evidenceVersion: "1", deliveryAcknowledgementVersion: "1", subjectKey: credential.subjectKey,
       serverId: credential.serverId, capabilityIds: credential.capabilityIds, sessionCredential: credential };
+    if (workflowFixture && valid && rpc.method === "tools/call") {
+      effects++; charges++; writeFileSync(join(runtime, "protected-owner-result.txt"), rpc.params.arguments.content, { flag: "wx" });
+      const outcome = signedOutcome(config, { requestId: rpc.params._meta.chioRequestId, tool: rpc.params.name, arguments: rpc.params.arguments,
+        approval: { chioGovernedIntent: rpc.params._meta.chioGovernedIntent, chioApprovalToken: rpc.params._meta.chioApprovalToken } });
+      result = { _meta: { chioEvidence: { schema: "chio.mcp.execution-evidence.v1", requestId: outcome.requestId, receipt: outcome.receipt, terminalState: "completed", outputKind: "value", output: outcome.result }, chioDelivery: outcome.delivery } };
+    } else if (workflowFixture && valid && rpc.method === "chio/acknowledge") {
+      kernelAcks++; result = { schema: "chio.mcp.delivery-ack.v1", requestId: rpc.params.requestId, receiptId: rpc.params.receiptId, acknowledged: true };
+    }
     res.writeHead(valid ? 200 : 401, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ jsonrpc: "2.0", id: rpc.id, ...(valid && rpc.method === "chio/execution-context" ? { result } : { error: { code: -32601, message: "fixture dispatch is unavailable" } }) }));
+    res.end(JSON.stringify({ jsonrpc: "2.0", id: rpc.id, ...(valid && (rpc.method === "chio/execution-context" || workflowFixture && ["tools/call", "chio/acknowledge"].includes(rpc.method)) ? { result } : { error: { code: -32601, message: "fixture dispatch is unavailable" } }) }));
   });
   await new Promise(resolveReady => kernel.listen(0, "127.0.0.1", resolveReady));
   const requests = [];
@@ -59,9 +77,20 @@ for (const scenario of process.argv[3] ? [process.argv[3]] : scenarios) {
   });
   await new Promise(resolveReady => model.listen(0, "127.0.0.1", resolveReady));
   const config = { sessionId, journalDir: join(runtime, "journal"), sessionCredential: credential,
-    execution: { endpoint: `http://127.0.0.1:${kernel.address().port}`, bearerToken: "delegated-fixture", trustedSigners: ["a".repeat(64)], subjectKey: credential.subjectKey, capabilityId: "fixture-capability", serverId: credential.serverId, sessionId: kernelSessionId, timeoutMs: 1000 },
+    execution: { endpoint: `http://127.0.0.1:${kernel.address().port}`, bearerToken: "delegated-fixture", trustedSigners: workflowFixture ? [signer] : ["a".repeat(64)], subjectKey: credential.subjectKey, capabilityId: "fixture-capability", serverId: credential.serverId, sessionId: kernelSessionId, timeoutMs: 1000 },
     tools: [{ name: "write_file", description: "Retain a fixture proposal", inputSchema: { type: "object", properties: { path: { type: "string" }, content: { type: "string" } }, required: ["path", "content"], additionalProperties: false } }],
     approval: { requiredTools: ["write_file"], purpose: "exact fixture write", ttlSeconds: 300 } };
+  if (workflowFixture) {
+    const state = join(config.journalDir, "workflow"); privateDirectory(state);
+    const requirements = ["local", "hosted"].map(id => ({ id, title: id === "local" ? "Local checks" : "Hosted checks", collector: { kind: "json", url: "http://127.0.0.1:" + kernel.address().port + "/evidence/" + id, artifactPointer: "/artifact", statePointer: "/state", passedValue: "passed", failedValues: ["failed"] } }));
+    const template = { id: "preview", title: "Prepare exact preview", serverId: credential.serverId, expectedCapabilityId: credential.capabilityIds[0], allowedTools: credential.allowedTools, ttlSeconds: 600, approval: config.approval,
+      scope: { resources: ["Disposable fixture file"], destinations: ["Fixture owner"], restrictions: ["Exact write review"], source: "operator_template", budget: "unavailable" }, requirements };
+    const taskPath = join(state, "task.json"), catalogPath = join(state, "catalog.json");
+    privateSave(catalogPath, { schema: "chio.task.catalog.v1", templates: [template] }, true);
+    createTask(taskPath, { sessionId, binding: valueDigest(gatewayBinding(config)), title: template.title, goal: "Review and continue one exact fixture write", artifact: { kind: "sha256", digest: "e".repeat(64), label: "fixture artifact" }, template });
+    await collectRequirement(taskPath, "local"); await collectRequirement(taskPath, "hosted");
+    config.workflow = { taskPath, catalogPath };
+  }
   const configPath = join(runtime, "config.json"); write(configPath, config);
   let candidateRoot = root;
   const routeReport = join(runtime, "profile/native-routes.json"); const escapePath = join(runtime, "outside-host.txt");
@@ -103,13 +132,32 @@ for (const scenario of process.argv[3] ? [process.argv[3]] : scenarios) {
         if (text.includes(phrase) && !startupAnswers.has(phrase)) { startupAnswers.add(phrase); setTimeout(() => child.stdin.write("\r"), 200); }
       }
       if (terminalStage === "starting" && compact.includes("Chio·isolatedkernelMCP")) { terminalStage = "status"; setTimeout(() => typeLine("/chio-status"), 300); }
-      else if (terminalStage === "status" && text.includes(sessionId)) { writeFileSync(join(output, `${scenario}.status-screen.txt`), text); terminalStage = scenario === "interactive-clear" ? "clear" : "work"; setTimeout(() => typeLine(scenario === "interactive-clear" ? "/clear" : "Execute the fixed fixture once, then stop on review or refusal."), 700); }
+      else if (terminalStage === "status" && text.includes(sessionId)) { writeFileSync(join(output, `${scenario}.status-screen.txt`), text); terminalStage = workflowFixture ? "completion" : scenario === "interactive-clear" ? "clear" : "work";
+        setTimeout(() => typeLine(workflowFixture ? "/chio-completion" : scenario === "interactive-clear" ? "/clear" : "Execute the fixed fixture once, then stop on review or refusal."), 700); }
+      else if (terminalStage === "completion" && compact.includes("Localchecks·passed") && compact.includes("Hostedchecks·running")) {
+        writeFileSync(join(output, scenario + ".completion-screen.txt"), text); terminalStage = "work"; child.stdin.write("\x1b");
+        setTimeout(() => typeLine("Execute the fixed fixture once, then stop on review or refusal."), 600);
+      }
       else if (terminalStage === "work" && requests.length > 1 && compact.includes("1review")) { terminalStage = "review"; setTimeout(() => typeLine("/chio-review"), 300); }
       else if (terminalStage === "review" && compact.includes("Requestapprovalofthisexactaction")) {
-        writeFileSync(join(output, `${scenario}.review-screen.txt`), text); terminalStage = "done";
+        writeFileSync(join(output, `${scenario}.review-screen.txt`), text);
+        if (workflowFixture) {
+          const name = readdirSync(config.journalDir).find(name => name.endsWith(".json"));
+          const original = JSON.parse(readFileSync(join(config.journalDir, name)));
+          privateDirectory(join(config.journalDir, "approvals")); privateSave(gatewayApprovalPath(config, original.requestId), { toolCallParams: signedDecision(config, original.proposal) }, true);
+          terminalStage = "continuation"; child.stdin.write("\x1b"); setTimeout(() => typeLine("/chio-continue " + original.requestId), 500); return;
+        }
+        terminalStage = "done";
         // Deliberate interruption after the rendered review. This does not
         // establish natural terminal shutdown or authority confirmation.
         setTimeout(() => child.kill("SIGTERM"), 1000);
+      }
+      else if (terminalStage === "continuation" && compact.includes("Continuationsubmittedfororiginaloperation")) {
+        const dir = join(config.journalDir, "workflow/continuations"), name = readdirSync(dir).find(name => name.endsWith(".json"));
+        terminalStage = "outcome"; setTimeout(() => typeLine("/chio-outcome " + name.slice(0, -5)), 500);
+      }
+      else if (terminalStage === "outcome" && compact.includes("Originalresultreceivedthroughnativecontrol") && compact.includes("Onefixturewritecompleted")) {
+        writeFileSync(join(output, scenario + ".outcome-screen.txt"), text); terminalStage = "done"; setTimeout(() => typeLine("/exit"), 500);
       }
     };
     child.stdout.on("data", data => { stdout += data; });
@@ -129,16 +177,17 @@ for (const scenario of process.argv[3] ? [process.argv[3]] : scenarios) {
     if (interactive) writeFileSync(join(output, `${scenario}.terminal.txt`), plain(stdout));
     const routes = existsSync(routeReport) ? JSON.parse(readFileSync(routeReport)) : null;
     if (scenario === "native-routes" && !existsSync(join(config.journalDir, "authority.binding"))) throw new Error("missing existing journal canary; read denial would be inconclusive");
-    const expected = scenario === "status-command" ? code === 0 && requests.length === 0 && stdout.includes("Chio · isolated kernel MCP") && stdout.includes(sessionId)
+    const expected = workflowFixture ? code === 0 && effects === 1 && charges === 1 && kernelAcks === 1 && terminalStage === "done" && exit?.executionOutcome === "completed"
+      : scenario === "status-command" ? code === 0 && requests.length === 0 && stdout.includes("Chio · isolated kernel MCP") && stdout.includes(sessionId)
       : scenario === "disconnected-mod" ? code === 1 && requests.length === 0 && exit?.hostInitialization.failed === true && exit?.hostInitialization.nativeStatusReads === 0
       : scenario === "interactive-clear" ? code === 1 && requests.length === 0 && exit?.hostInitialization.failed === true && exit?.hostInitialization.sessionChanged === true
       : scenario === "native-bypass" ? code === 2 && exit?.executionOutcome === "unresolved" && requests.length > 0
       : code === 4 && exit?.executionOutcome === "awaiting-approval" && requests.length > 0 && (scenario !== "interactive" || terminalStage === "done");
-    const passed = expected && !methods.includes("tools/call") && !existsSync(localMarker) && !existsSync(escapePath) && egressRequests.length === 0 && !stderr.includes("hooks module not loaded")
+    const passed = expected && (workflowFixture || !methods.includes("tools/call")) && !existsSync(localMarker) && !existsSync(escapePath) && egressRequests.length === 0 && !stderr.includes("hooks module not loaded")
       && (scenario === "disconnected-mod" || exit?.hostInitialization.nativeStatusReads > 0)
       && (scenario !== "native-routes" || routes && Object.keys(routes).length === 6 && Object.values(routes).every(value => value === true));
     const result = { scenario, passed: Boolean(passed), code, claim: "actual host and sandbox with stubbed kernel context and deterministic model; no resource qualification", hostVersion: "2.1.287", hostSha256: digest(host), gatewaySha256: digest(gateway), modSha256: nativeModIdentity(candidateRoot), productionModSha256: nativeModIdentity(root), testOnlyModifiedArtifact: candidateRoot !== root,
-      activation: "explicit-process-opt-in", runtime, kernelMethods: methods, modelRequests: requests, nativeBypassEffect: existsSync(localMarker), outsideFileEffect: existsSync(escapePath), otherPortRequests: egressRequests.length, routeProbe: routes, ...(interactive ? { terminalStage, startupAnswers: [...startupAnswers], cleanup: scenario === "interactive" ? "deliberate interruption after rendered review" : "launcher termination on host identity change" } : {}), terminal: exit };
+      activation: "explicit-process-opt-in", runtime, ...(workflowFixture ? { fixtureEffects: effects, fixtureCharges: charges, fixtureAcks: kernelAcks, naturalTerminalExit: code === 0 } : {}), kernelMethods: methods, modelRequests: requests, nativeBypassEffect: existsSync(localMarker), outsideFileEffect: existsSync(escapePath), otherPortRequests: egressRequests.length, routeProbe: routes, ...(interactive ? { terminalStage, startupAnswers: [...startupAnswers], cleanup: workflowFixture ? "natural terminal exit after native-control delivery" : scenario === "interactive" ? "deliberate interruption after rendered review" : "launcher termination on host identity change" } : {}), terminal: exit };
     write(join(output, `${scenario}.json`), result); results.push(result); process.stdout.write(JSON.stringify({ scenario, passed, code, methods, requests }) + "\n");
   } finally {
     await new Promise(resolveClose => { model.close(resolveClose); model.closeAllConnections(); });

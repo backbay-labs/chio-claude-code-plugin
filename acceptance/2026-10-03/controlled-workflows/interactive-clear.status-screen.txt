@@ -1,0 +1,40 @@
+                                                                                                              
+▟███▟      Claude Code v2.1.287                                                                               
+█████▀     Sonnet 5.5 · API Usage Billing                                                                     
+   ▝▝      /private/tmp/chio-native-host-JeG4vL/workspace                                                     
+                                                                                                              
+▎ Debug mode enabled · logging to /private/tmp/chio-native-host-JeG4vL/profile/host-debug.log                 
+                                                                                                              
+❯ /chio-status                                                                                                
+  ⎿  chio: Chio · isolated kernel MCP · authority 10m · 0 review · 0 unresolved                               
+     Session: ae1eac82-4a6b-49fe-80d9-fa7e4ebbb389                                                            
+     Protected tools: write_file                                                                              
+     Dispatch fence: clear                                                                                    
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+Chio · isolated kernel MCP · authority 10m · 0 review · 0 unresolved                                       [-]
+                                                                                          ◐ medium · /effort  
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯                                                                                                             
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ don't ask on (shift+tab to cycle) · ← for agents                                                         

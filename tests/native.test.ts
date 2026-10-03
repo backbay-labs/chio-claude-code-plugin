@@ -24,6 +24,56 @@ function stub(on: On, getSession: () => string, getStatus: () => ControlStatus, 
     return { value: { status: 200, ok: true, headers: {}, text: JSON.stringify(getStatus()) } };
   });
 }
+function taskProjection(): ControlStatus {
+  const value = projection();
+  const scope = { resources: ["Disposable protected repository"], destinations: ["Preview only"], restrictions: ["No release"], source: "operator_template" as const, budget: "unavailable" as const };
+  value.workflow = { continuation: true, proposals: true, templates: [{ id: "fix", title: "Fix regression", revision: "d".repeat(64), allowedTools: ["write_file"], ttlSeconds: 600, scope }],
+    task: { id: "task-a", sessionId: value.sessionId, revision: "e".repeat(64), title: "Fix regression", goal: "Prove the exact artifact", artifact: { kind: "git_commit", digest: "f".repeat(40), label: "fixture commit" }, readiness: "outstanding", scope,
+      requirements: [{ id: "local", title: "Local checks", state: "passed", evidenceClass: "trusted_collector_observation" }, { id: "hosted", title: "Hosted checks", state: "running", evidenceClass: "trusted_collector_observation" }, { id: "production", title: "Production check", state: "outstanding", evidenceClass: "none" }] } };
+  return value;
+}
+test("completion separates local, hosted and production evidence for the exact artifact", { options }, async ($, on) => {
+  stub(on, () => "session-a", () => taskProjection());
+  const answer = await $.command.run(command("chio-completion"));
+  expect(answer.text).toContain("Local checks · passed"); expect(answer.text).toContain("Hosted checks · running"); expect(answer.text).toContain("Production check · outstanding");
+  expect(answer.text).toContain("f".repeat(40)); expect(answer.text).toContain("does not admit or perform a release");
+  const ui = await $.ui.mount({ plugin: "chio", surface: "terminal", component: "Pane", requestId: "chio", props: paneProps });
+  expect(await ui.find({ type: "Text", text: "Preview only" })).toBeDefined(); expect(await ui.find({ key: "task-fix" })).toBeDefined(); await ui.unmount();
+});
+test("task selection sends a revision-bound request without granting authority", { options }, async ($, on) => {
+  let posted: Record<string, unknown> | undefined;
+  stub(on, () => "session-a", () => taskProjection(), body => { posted = JSON.parse(body); return { status: 202, ok: true, headers: {}, text: '{"state":"requested","authorityAccepted":false,"dispatchPerformed":false}' }; });
+  const answer = await $.command.run(command("chio-task", "fix"));
+  expect(posted?.templateId).toBe("fix"); expect(posted?.revision).toBe("d".repeat(64));
+  expect(answer.text).toContain("no authority granted or action dispatched");
+});
+test("the typed namespace powers session status without starting a model turn", { options }, async ($, on) => {
+  stub(on, () => "session-a", () => taskProjection());
+  const answer = await $.command.run(command("chio-status"));
+  expect(answer.text).toContain("session-a"); expect(answer.text).toContain("kernel MCP tools only");
+});
+test("only an exact granted action exposes deterministic continuation", { options }, async ($, on) => {
+  let value = taskProjection(), posts = 0;
+  const continuationId = "12345678-1234-4123-8123-123456789abc";
+  stub(on, () => "session-a", () => value, body => {
+    const request = JSON.parse(body); posts++;
+    expect(request).toEqual({ requestId: "request-a", revision: "c".repeat(64) });
+    return { status: 202, ok: true, headers: {}, text: JSON.stringify({ continuation: { id: continuationId, requestId: "request-a", state: "submitted", delivery: "pending" } }) };
+  });
+  await $.command.run(command("chio-review", "request-a"));
+  const ui = await $.ui.mount({ plugin: "chio", surface: "terminal", component: "Pane", requestId: "chio", props: paneProps });
+  expect(await ui.find({ key: "continue" })).toBeUndefined();
+  value.operations[0]!.review!.decision = "granted"; value.operations[0]!.nextAction = "explicit_resume";
+  await $.command.run(command("chio-review", "request-a"));
+  expect(await ui.find({ key: "continue" })).toBeDefined();
+  await ui.press({ key: "continue" }); expect(posts).toBe(1);
+  expect(await ui.find({ type: "Text", text: "Continuation submitted" })).toBeDefined(); await ui.unmount();
+});
+test("foreign task evidence is rejected while completion remains scoped to the host", { options }, async ($, on) => {
+  const value = taskProjection(); value.workflow!.task!.sessionId = "foreign";
+  stub(on, () => "session-a", () => value);
+  expect((await $.command.run(command("chio-status"))).text).toContain("disconnected");
+});
 test("native status reports kernel MCP scope and actual session without a model", { options }, async ($, on) => {
   stub(on, () => "session-a", () => projection());
   const answer = await $.command.run(command("chio-status"));

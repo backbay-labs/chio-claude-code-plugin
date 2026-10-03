@@ -1,0 +1,40 @@
+     008d5212-001c-420b-bc98-b558c1df00c3:e17c13bf71f3166712660bbbfe358d9243759c8b2016154b570ade2958006cd0    
+     State: awaiting_approval · evidence: unverified                                                          
+     requested → awaiting review                                                                              
+     Kernel acknowledgement: unconfirmed                                                                      
+     Host delivery: unconfirmed                                                                               
+     Purpose: exact fixture write                                                                             
+     Requested capability: fixture-capability                                                                 
+     Grant TTL: 300s · decision: required                                                                     
+     Restrictions: kernel policy applies · budget impact unavailable                                          
+     Exact arguments:                                                                                         
+     {                                                                                                        
+       "content": "exact fixture payload",                                                                    
+       "path": "/protected/test.txt"                                                                          
+     }                                                                                                        
+     Review the exact retained action.                                                                        
+                                                                                                              
+❯ /chio-continue                                                                                              
+008d5212-001c-420b-bc98-b558c1df00c3:e17c13bf71f3166712660bbbfe358d9243759c8b2016154b570ade2958006cd0         
+  ⎿  chio: Continuation submitted for original operation                                                      
+     008d5212-001c-420b-bc98-b558c1df00c3:e17c13bf71f3166712660bbbfe358d9243759c8b2016154b570ade2958006cd0.   
+     Receive its result with /chio-outcome b5d9345f-65a4-4adf-8a2f-9afedbc78753. No planning turn was started.
+                                                                                                              
+❯ /chio-outcome b5d9345f-65a4-4adf-8a2f-9afedbc78753                                                          
+  ⎿  chio: Original result received through native control. This does not claim delivery to the model.        
+     {                                                                                                        
+       "content": [                                                                                           
+         {                                                                                                    
+           "type": "text",                                                                                    
+           "text": "One fixture write completed."                                                             
+         }                                                                                                    
+       ],                                                                                                     
+       "isError": false                                                                                       
+     }                                                                                                        
+     Receipt: 0f81bceae13dc69cc8f686fb9b560690e6004b5d671271a004750fd0fb96d9fb                                
+Chio · isolated kernel MCP · authority 10m · 0 review · 1 unresolved                                       [-]
+                                                                                          ◐ medium · /effort  
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯                                                                                                             
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ don't ask on (shift+tab to cycle) · esc to interrupt · ← for agents                                      

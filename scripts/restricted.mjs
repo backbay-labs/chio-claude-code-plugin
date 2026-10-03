@@ -10,6 +10,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const scriptDirectory=dirname(realpathSync(fileURLToPath(import.meta.url)));
 const {buildSandboxPolicy,requireSessionCredential}=await import(pathToFileURL(join(scriptDirectory,"sandbox.mjs")).href);
 const {startModelRelay}=await import(pathToFileURL(join(scriptDirectory,"model-relay.mjs")).href);
+const {createControlTransport}=await import(pathToFileURL(join(scriptDirectory,"control-transport.mjs")).href);
 const {stageNativeMod}=await import(pathToFileURL(join(scriptDirectory,"mod-profile.mjs")).href);
 
 export function canonicalLocation(path) {
@@ -129,6 +130,8 @@ async function main() {
   let hostReady=false,hostInitializationFailed=false;
   let hostedChild;
   const hostPendingRequests=new Set();
+  const nativeDeliveredRequests=new Set();
+  const modelDeliveredRequests=new Set();
   let acknowledgements=Promise.resolve();
   const confirmed=new Set();
   function retainUnresolvedHostResult() {
@@ -157,7 +160,7 @@ async function main() {
           if(confirmed.has(proof))return;
           const receipt=await transport.acknowledgeReceivedOutcome(outcome);
           if(!receipt.acknowledged){deliveryFailed=true;throw new Error("Host delivery remains unresolved");}
-          confirmed.add(proof);delivered++;
+          confirmed.add(proof);modelDeliveredRequests.add(outcome.requestId);delivered++;
         });
       }
     }
@@ -182,7 +185,10 @@ async function main() {
     transport=await startGatewayHttp(config);
     if (native) {
       const { startControlServer } = await import(pathToFileURL(join(scriptDirectory, "..", "dist", "control", "service.js")).href);
-      controlServer = await startControlServer({ config, authorityExpiresAt: config.sessionCredential.expiresAt, scope: "isolated_kernel_mcp", onSessionMismatch: () => {
+      controlServer = await startControlServer({ config, authorityExpiresAt: config.sessionCredential.expiresAt, scope: "isolated_kernel_mcp", modelDeliveryConfirmed: requestId => modelDeliveredRequests.has(requestId), workflow: { ...(config.workflow ?? {}), ...createControlTransport(transport, config, outcome => {
+        hostPendingRequests.delete(outcome.requestId); nativeDeliveredRequests.add(outcome.requestId);
+        if (outcome.result?.isError === true) hostWorkIncomplete = true;
+      }) }, onSessionMismatch: () => {
         hostInitializationFailed = true;
         void transport.close().catch(() => { deliveryFailed = true; });
         hostedChild?.kill("SIGTERM");
@@ -225,9 +231,9 @@ async function main() {
         try{
           const event=JSON.parse(line);
           if(event.type==="system"&&event.subtype==="init"){
-            const nativeCommands = ["chio", "chio-status", "chio-review", "chio-evidence", "chio-revoke"];
+            const nativeCommands = ["chio", "chio-status", "chio-review", "chio-evidence", "chio-revoke", "chio-task", "chio-completion", "chio-continue", "chio-outcome", "chio-why"];
             const nativeReady = !native || event.claude_code_version === "2.1.287" && nativeCommands.every(name=>event.slash_commands?.includes(name))
-              && event.plugins?.some(plugin=>plugin.name==="chio"&&plugin.path===mod.root&&plugin.version==="0.4.0-rc.1") && controlServer.statusReads>0;
+              && event.plugins?.some(plugin=>plugin.name==="chio"&&plugin.path===mod.root&&plugin.version==="0.4.0-rc.2") && controlServer.statusReads>0;
             if((hostReady && !native)||!hasExactHostTools(event,toolNames)||!nativeReady){
               hostInitializationFailed=true;child.kill("SIGTERM");
               process.stderr.write("[chio restricted] native host did not activate the exact Chio MCP tools\n");
@@ -259,7 +265,7 @@ async function main() {
     const initializationFailed=hostInitializationFailed||!hostReady&&!nativeControlOnly;
     const executionOutcome=unresolved?"unresolved":initializationFailed?"host-initialization-failed":pending?"awaiting-approval":unsuccessful?"protected-work-incomplete":state.code===0?"completed":"host-failed";
     const exitCode=unresolved?2:initializationFailed?1:pending?4:unsuccessful?3:state.code??1;
-    writeFileSync(join(profile,"exit.json"),JSON.stringify({...state,exitCode,hostInitialization:{ready:hostReady||nativeControlOnly,failed:initializationFailed,...(native?{nativeStatusReads:controlServer.statusReads,controlOnly:nativeControlOnly,sessionChanged:controlServer.sessionMismatch}:{})},hostDelivery:{confirmed:delivered,failed:deliveryFailed},modelWorkFailed,executionOutcome,retry:"never-automatic"}),{mode:0o600});
+    writeFileSync(join(profile,"exit.json"),JSON.stringify({...state,exitCode,hostInitialization:{ready:hostReady||nativeControlOnly,failed:initializationFailed,...(native?{nativeStatusReads:controlServer.statusReads,controlOnly:nativeControlOnly,sessionChanged:controlServer.sessionMismatch}:{})},hostDelivery:{confirmed:delivered,failed:deliveryFailed},nativeControlDelivery:{confirmed:nativeDeliveredRequests.size,modelDeliveryClaimed:false},modelWorkFailed,executionOutcome,retry:"never-automatic"}),{mode:0o600});
     process.exitCode=exitCode;
   } finally {
     await controlServer?.close();

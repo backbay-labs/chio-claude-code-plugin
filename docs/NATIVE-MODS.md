@@ -1,9 +1,9 @@
 # Native Chio interface
 
-The 0.4.0-rc.1 candidate adds native session status, exact-action review, evidence,
+The 0.4.0-rc.2 candidate adds native session status, exact-action review, evidence,
 recovery requirements and immediate commands. The kernel and trusted gateway
 retain execution authority. A control in Claude records review intent; trusted
-operator confirmation happens outside the host.
+operator confirmation happens outside the host. The [controlled-task runbook](./CONTROLLED-TASKS.md) covers guided setup, completion evidence, continuation, the typed namespace and handoffs.
 
 ## Host contract
 
@@ -48,6 +48,11 @@ its live claim and review controls; disconnection clears the projection.
 | `/chio-review [request-id]` | Inspect an exact retained proposal |
 | `/chio-evidence [request-id]` | Inspect outcome, evidence and recovery requirements |
 | `/chio-revoke` | Request revocation of this exact kernel session; arguments refused |
+| `/chio-task [template-id]` | Inspect task scope and request a new operator-defined task |
+| `/chio-completion` | Inspect evidence tied to the current task's exact artifact |
+| `/chio-continue request-id` | Continue an exact granted original operation without a planning turn |
+| `/chio-outcome continuation-id` | Receive and acknowledge an original native-control result |
+| `/chio-why request-id` | Inspect a retained decision reason and its provenance |
 
 Commands register as immediate and do not start a model turn. Existing
 `/chio:...` compatibility commands have different names and are excluded from
@@ -119,7 +124,7 @@ Intent expires within 90 seconds or at delegated-credential expiry. Duplicate
 and conflicting intent for one revision is refused. Submitted or uncertain
 intent retains an exclusive submission fence: inspect its original authority
 outcome before further action. The command dispatches no protected effect; a
-grant still requires explicit `chio_resume` through the existing gateway.
+grant does not dispatch. Use the native **Continue this exact action** control or `/chio-continue REQUEST_ID` to submit the original `chio_resume` through the existing gateway; direct MCP resume remains available.
 The pane displays retained intent and hides repeated decision controls. Expired
 or uncertain requests require operator inspection; this candidate does not
 automatically renew them or resubmit an authority decision.
@@ -239,4 +244,4 @@ above. Python and the terminal emulator are acceptance-driver dependencies and
 are excluded from the delivered runtime. To fetch the selected host into a new
 separate path, use `node scripts/fetch-host.mjs --output /absolute/new/claude`.
 The current evidence and remaining gates are in the
-[native acceptance report](../acceptance/2026-10-03/native-mods/REPORT.md).
+[native acceptance report](../acceptance/2026-10-03/controlled-workflows/REPORT.md).
