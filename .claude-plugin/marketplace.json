@@ -1,6 +1,6 @@
 {
   "name": "chio",
-  "description": "Chio diagnostics for Claude Code. Kernel MCP access requires the separate restricted launcher; integration acceptance pending.",
+  "description": "Native Chio session status, review requests and retained evidence. Kernel execution uses a separately qualified operator launcher.",
   "owner": {
     "name": "Backbay Industries"
   },
@@ -8,7 +8,7 @@
     {
       "name": "chio",
       "source": "./",
-      "description": "Chio diagnostics for Claude Code. Kernel MCP access requires the separate restricted launcher; integration acceptance pending."
+      "description": "Native Chio session status, review requests and retained evidence. Kernel execution uses a separately qualified operator launcher."
     }
   ]
 }

@@ -1,13 +1,13 @@
 {
   "name": "chio",
-  "version": "0.3.1-rc.1",
-  "description": "Chio diagnostics for Claude Code. Kernel MCP access requires the separate restricted launcher; integration acceptance pending.",
+  "version": "0.4.0-rc.1",
+  "description": "Native Chio session status, exact review, evidence and revocation requests for Claude Code. Execution authority remains in the kernel.",
   "author": {
     "name": "Backbay Industries",
     "url": "https://github.com/backbay-industries"
   },
   "homepage": "https://chio.world/plugins/claude-code",
-  "repository": "https://github.com/backbay-industries/chio-claude-code-plugin",
+  "repository": "https://github.com/backbay-labs/chio-claude-code-plugin",
   "license": "Apache-2.0",
   "keywords": [
     "chio",
@@ -21,6 +21,18 @@
   ],
   "hooks": "./hooks/hooks.json",
   "userConfig": {
+    "control_url": {
+      "type": "string",
+      "title": "Scoped Chio control origin",
+      "description": "Exact http://127.0.0.1:PORT origin issued by the trusted operator for this session.",
+      "sensitive": false
+    },
+    "control_token": {
+      "type": "string",
+      "title": "Session control credential",
+      "description": "Session-scoped viewer and intent credential. Never enter an operator or kernel administrator credential.",
+      "sensitive": true
+    },
     "policy_path": {
       "type": "file",
       "title": "Policy path",

@@ -1,5 +1,5 @@
 import { buildBridge } from "../state/bridge.js";
-import { getSoleBond, upsertBond } from "../state/store.js";
+import { requireSessionBond, upsertBond } from "../state/store.js";
 
 /**
  * Express a guard-pause as a scope attenuation. Arc's trust plane does not
@@ -21,10 +21,7 @@ export async function guardPause(args: string[]): Promise<string> {
   const [guard, duration = "10m"] = args;
   if (!guard) throw new Error("usage: /chio:guard-pause <guard-id> [duration]");
 
-  const bond = getSoleBond();
-  if (!bond) {
-    throw new Error("no active bond; run /chio:bond first");
-  }
+  const bond = requireSessionBond();
 
   const bridge = buildBridge();
   const token = await bridge.attenuate(bond.passport.capabilityId, {

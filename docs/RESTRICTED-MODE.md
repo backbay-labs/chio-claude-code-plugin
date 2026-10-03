@@ -1,5 +1,10 @@
 # Candidate MCP-only operator runbook
 
+The default print profile below retains its original contract. Version 0.4.0-rc.1
+also adds separately gated `interactive` and `mod-print` native profiles; see
+[the native interface runbook](./NATIVE-MODS.md). Historical 2.1.267 acceptance
+does not qualify those profiles or the selected 2.1.287 host.
+
 Status: unaccepted. Node >=22 and the exact qualified Claude binary are
 required. Gate I08 is open until the tested combination is published and the
 complete installation and recovery procedures pass.

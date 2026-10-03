@@ -54,6 +54,19 @@ export function getBond(sessionId: string | undefined): SessionBond | undefined 
   return state.bonds[sessionId];
 }
 
+/** Controls must name a session, even when only one bond is retained. */
+export function requireSessionBond(explicitSessionId?: string): SessionBond {
+  const hostSessionId = process.env.CLAUDE_SESSION_ID;
+  if (explicitSessionId && hostSessionId && explicitSessionId !== hostSessionId) {
+    throw new Error("requested session differs from the current Claude session");
+  }
+  const sessionId = hostSessionId ?? explicitSessionId;
+  if (!sessionId) throw new Error("an exact session id is required; set CLAUDE_SESSION_ID or pass the session explicitly");
+  const bond = getBond(sessionId);
+  if (!bond || bond.sessionId !== sessionId) throw new Error(`no bond for session ${sessionId}`);
+  return bond;
+}
+
 /**
  * Fallback: if there is exactly one bond in state, use it. Used by slash
  * commands that run outside of a hook context (no session id on stdin).
@@ -66,10 +79,8 @@ export function getSoleBond(): SessionBond | undefined {
 }
 
 /**
- * Fallback of last resort: when there are multiple bonds in state (e.g. the
- * operator re-ran /chio:bond several times), pick the one with the most
- * recent `bondedAt`. Scoped operations like /chio:revoke and
- * /chio:receipt-export want the "current" bond.
+ * Historical discovery helper. Never use this to select an authority control
+ * or to claim that evidence belongs to the current session.
  */
 export function getMostRecentBond(): SessionBond | undefined {
   const state = readState();

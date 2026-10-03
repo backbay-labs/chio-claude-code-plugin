@@ -1,5 +1,5 @@
 import { buildBridge } from "../state/bridge.js";
-import { getSoleBond, upsertBond } from "../state/store.js";
+import { requireSessionBond, upsertBond } from "../state/store.js";
 
 /**
  * Post a budget attenuation to the trust plane. The bridge translates this
@@ -13,8 +13,7 @@ export async function budgetSet(args: string[]): Promise<string> {
     throw new Error(`invalid budget: "${usdArg}"`);
   }
 
-  const bond = getSoleBond();
-  if (!bond) throw new Error("no active bond; run /chio:bond first");
+  const bond = requireSessionBond();
 
   const bridge = buildBridge();
   const token = await bridge.attenuate(bond.passport.capabilityId, {

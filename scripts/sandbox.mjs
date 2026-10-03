@@ -1,4 +1,4 @@
-import { realpathSync, existsSync } from "node:fs";
+import { realpathSync, existsSync, statSync } from "node:fs";
 import { dirname, isAbsolute, join } from "node:path";
 import { execFileSync } from "node:child_process";
 
@@ -31,9 +31,11 @@ export function runtimeLibraries(executable) {
   return [...files];
 }
 
-export function buildSandboxPolicy({host,node,gateway,config,profile,journal,workspace,temporary,controlFiles,kernelPort,modelPort,operatorTransport=false}) {
+export function buildSandboxPolicy({host,node,gateway,config,profile,journal,workspace,temporary,controlFiles,kernelPort,modelPort,controlPort,modTypesDirectory,interactive=false,terminalPath,operatorTransport=false}) {
   if (process.platform!=="darwin" || !existsSync("/usr/bin/sandbox-exec")) throw new Error("qualified mode requires macOS sandbox-exec");
   for (const port of [kernelPort,modelPort]) if (!Number.isInteger(port) || port<1 || port>65535) throw new Error("exact loopback service ports required");
+  if (controlPort !== undefined && (!Number.isInteger(controlPort) || controlPort < 1 || controlPort > 65535)) throw new Error("exact loopback control port required");
+  if (interactive && (typeof terminalPath !== "string" || !/^\/dev\/ttys[A-Za-z0-9]+$/.test(terminalPath) || !statSync(terminalPath).isCharacterDevice())) throw new Error("exact interactive terminal device required");
   const executables=(operatorTransport?[host]:[host,node]).map(path=>realpathSync(path));
   const libraries=[...new Set(executables.flatMap(runtimeLibraries))];
   const files=[...(operatorTransport?[]:[gateway,config]),...controlFiles,...libraries].map(path=>realpathSync(path));
@@ -47,13 +49,15 @@ export function buildSandboxPolicy({host,node,gateway,config,profile,journal,wor
  (literal "/private/etc/localtime") (literal "/dev/null") (literal "/dev/random") (literal "/dev/urandom")
  ${files.map(path=>`(literal ${quote(path)})`).join("\n ")})
 (allow file-read* file-write* (subpath ${quote(profile)}) ${operatorTransport?"":`(subpath ${quote(journal)})`} (subpath ${quote(temporary)}) (literal "/dev/null"))
+${modTypesDirectory ? `(allow file-read* file-write* (subpath ${quote(modTypesDirectory)}))` : ""}
+${interactive ? `(allow file-read* file-write* (literal "/dev/tty") (literal ${quote(terminalPath)}) (literal "/dev/fd/0") (literal "/dev/fd/1") (literal "/dev/fd/2"))\n(allow file-ioctl (literal "/dev/tty") (literal ${quote(terminalPath)}) (literal "/dev/fd/0") (literal "/dev/fd/1") (literal "/dev/fd/2"))` : ""}
 (deny file-link)
 ${operatorTransport?"(deny process-fork)":"(allow process-fork)"}
 (allow process-exec ${executables.map(path=>`(literal ${quote(path)})`).join(" ")})
 (allow process-info* (target self))
 (allow signal (target children) (target self))
 (allow mach-lookup (global-name "com.apple.system.logger") (global-name "com.apple.system.opendirectoryd.libinfo"))
-(allow network-outbound (remote tcp "localhost:${kernelPort}") (remote tcp "localhost:${modelPort}"))
+(allow network-outbound (remote tcp "localhost:${kernelPort}") (remote tcp "localhost:${modelPort}") ${controlPort === undefined ? "" : `(remote tcp "localhost:${controlPort}")`})
 `;
 }
 

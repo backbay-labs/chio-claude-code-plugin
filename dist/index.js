@@ -10194,7 +10194,7 @@ import { homedir } from "node:os";
 import { join as join3 } from "node:path";
 var STATE_DIR = process.env.CHIO_STATE_DIR ?? join3(process.env.CLAUDE_CONFIG_DIR ?? join3(homedir(), ".claude"), "plugins", "chio");
 var STATE_PATH = join3(STATE_DIR, "state.json");
-var KEYSTORE_DIR = join3(homedir(), ".chio", "keys");
+var KEYSTORE_DIR = process.env.CHIO_KEYSTORE_DIR ?? join3(homedir(), ".chio", "keys");
 var PENDING_DIR = join3(STATE_DIR, "pending");
 var RECEIPT_CACHE_DIR = join3(STATE_DIR, "receipts");
 
@@ -10226,6 +10226,17 @@ function getBond(sessionId) {
   if (!sessionId) return void 0;
   const state = readState();
   return state.bonds[sessionId];
+}
+function requireSessionBond(explicitSessionId) {
+  const hostSessionId = process.env.CLAUDE_SESSION_ID;
+  if (explicitSessionId && hostSessionId && explicitSessionId !== hostSessionId) {
+    throw new Error("requested session differs from the current Claude session");
+  }
+  const sessionId = hostSessionId ?? explicitSessionId;
+  if (!sessionId) throw new Error("an exact session id is required; set CLAUDE_SESSION_ID or pass the session explicitly");
+  const bond2 = getBond(sessionId);
+  if (!bond2 || bond2.sessionId !== sessionId) throw new Error(`no bond for session ${sessionId}`);
+  return bond2;
 }
 function getSoleBond() {
   const state = readState();
@@ -10289,7 +10300,7 @@ async function bond(args) {
 
 // src/commands/policy-show.ts
 async function policyShow() {
-  const bond2 = getSoleBond();
+  const bond2 = getBond(process.env.CLAUDE_SESSION_ID);
   const policyPath = bond2?.policyPath ?? getPolicyPath();
   if (!policyPath) {
     throw new Error(
@@ -10347,10 +10358,7 @@ ${indent(formatted, 2)}`;
 async function guardPause(args) {
   const [guard, duration = "10m"] = args;
   if (!guard) throw new Error("usage: /chio:guard-pause <guard-id> [duration]");
-  const bond2 = getSoleBond();
-  if (!bond2) {
-    throw new Error("no active bond; run /chio:bond first");
-  }
+  const bond2 = requireSessionBond();
   const bridge = buildBridge();
   const token = await bridge.attenuate(bond2.passport.capabilityId, {
     scope: scopeForPausedGuard(guard)
@@ -10398,8 +10406,7 @@ async function budgetSet(args) {
   if (!Number.isFinite(usd) || usd < 0) {
     throw new Error(`invalid budget: "${usdArg}"`);
   }
-  const bond2 = getSoleBond();
-  if (!bond2) throw new Error("no active bond; run /chio:bond first");
+  const bond2 = requireSessionBond();
   const bridge = buildBridge();
   const token = await bridge.attenuate(bond2.passport.capabilityId, {
     budget: { maxUsd: usd }
@@ -10694,7 +10701,9 @@ function signJsonStringEd255192(input, seedHex) {
 // src/commands/approve.ts
 async function approve(args) {
   const [receiptId] = args;
-  if (!receiptId) throw new Error("usage: /chio:approve <receipt-id>");
+  if (args.length !== 1 || !receiptId || !/^[A-Za-z0-9_-]{1,128}$/.test(receiptId)) {
+    throw new Error("usage: /chio:approve <receipt-id> (letters, digits, underscores and hyphens only)");
+  }
   const bridge = buildBridge();
   const receipt = await loadReceipt(bridge, receiptId);
   if (!receipt) throw new Error(`no receipt ${receiptId} in local cache or trust plane`);
@@ -10729,7 +10738,9 @@ async function approve(args) {
   }
   return JSON.stringify(
     {
-      status: "approved",
+      status: propagated === "posted" ? "decision_submitted" : "signed_intent",
+      authority_accepted: false,
+      execution_verified: false,
       receipt_id: receiptId,
       signer: key.did,
       signature_hex: bundle.signature_hex,
@@ -10771,7 +10782,9 @@ async function postAuthority(bundle) {
       receipt_id: bundle.receipt_id,
       signer: bundle.signer,
       signature_hex: bundle.signature_hex
-    })
+    }),
+    redirect: "error",
+    signal: AbortSignal.timeout(1e4)
   });
   if (!res.ok) {
     throw new Error(`authority endpoint returned HTTP ${res.status}`);
@@ -10799,15 +10812,20 @@ function ensureOperatorKey() {
 }
 
 // src/commands/revoke.ts
-async function revoke() {
-  const bond2 = getSoleBond() ?? getMostRecentBond();
-  if (!bond2) throw new Error("no active bond to revoke");
+async function revoke(args = []) {
+  if (args.length > 1) throw new Error("usage: /chio:revoke [session-id]");
+  const bond2 = requireSessionBond(args[0]);
+  if (!bond2.passport.passportId) throw new Error("bond has no exact passport artifact id; refusing subject-based revocation");
   const bridge = buildBridge();
-  await bridge.revoke(bond2.passport.did);
+  await bridge.revoke(bond2.passport.passportId);
+  const confirmed = await bridge.status(bond2.passport.passportId);
+  if (confirmed.status !== "revoked") throw new Error("revocation was submitted but the passport lifecycle has not confirmed it; bond retained");
   clearBond(bond2.sessionId);
   return JSON.stringify(
     {
       status: "revoked",
+      scope: "passport_lifecycle",
+      passport_id: bond2.passport.passportId,
       session: bond2.sessionId,
       did: bond2.passport.did,
       capabilityId: bond2.passport.capabilityId
@@ -10858,7 +10876,9 @@ async function receiptExport(args) {
     {
       status: "exported",
       path: writtenPath,
-      since: since.toISOString()
+      since: since.toISOString(),
+      scope: "time_range",
+      session_filtered: false
     },
     null,
     2
@@ -10868,9 +10888,7 @@ function resolveSince(input) {
   const now = Date.now();
   if (input === "all") return /* @__PURE__ */ new Date(0);
   if (input === "session") {
-    const bond2 = getSoleBond() ?? getMostRecentBond();
-    if (bond2) return new Date(bond2.bondedAt);
-    return new Date(now - 36e5);
+    return new Date(requireSessionBond().bondedAt);
   }
   const m = input.match(/^(\d+)(s|m|h|d)$/);
   if (m && m[1] && m[2]) {
@@ -10908,6 +10926,7 @@ export {
   readState,
   receiptExport,
   receiptLast,
+  requireSessionBond,
   revoke,
   upsertBond,
   writeState

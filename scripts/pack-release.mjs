@@ -63,7 +63,7 @@ try {
   for (const file of listing.files) {
     // Qualification drivers are operator fixtures, not runtime dependencies.
     // Excluding them also prevents concurrent test development entering a release.
-    if (file.path.startsWith("scripts/acceptance/")) continue;
+    if (file.path.startsWith("scripts/acceptance/") || file.path === "scripts/test-mods.mjs") continue;
     const target = join(stage, file.path);
     if (!contained(stage, target) || file.path.startsWith("node_modules/")) throw new Error(`unexpected source pack entry ${file.path}`);
     mkdirSync(dirname(target), {recursive: true});

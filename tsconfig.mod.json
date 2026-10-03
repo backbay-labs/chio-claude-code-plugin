@@ -1,0 +1,14 @@
+{
+  "extends": "./types/host/tsconfig.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true
+  },
+  "include": [
+    "hooks/native",
+    "types",
+    "tests"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

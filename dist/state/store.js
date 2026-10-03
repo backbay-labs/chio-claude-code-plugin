@@ -10,7 +10,7 @@ import { homedir } from "node:os";
 import { join } from "node:path";
 var STATE_DIR = process.env.CHIO_STATE_DIR ?? join(process.env.CLAUDE_CONFIG_DIR ?? join(homedir(), ".claude"), "plugins", "chio");
 var STATE_PATH = join(STATE_DIR, "state.json");
-var KEYSTORE_DIR = join(homedir(), ".chio", "keys");
+var KEYSTORE_DIR = process.env.CHIO_KEYSTORE_DIR ?? join(homedir(), ".chio", "keys");
 var PENDING_DIR = join(STATE_DIR, "pending");
 var RECEIPT_CACHE_DIR = join(STATE_DIR, "receipts");
 
@@ -43,6 +43,17 @@ function getBond(sessionId) {
   const state = readState();
   return state.bonds[sessionId];
 }
+function requireSessionBond(explicitSessionId) {
+  const hostSessionId = process.env.CLAUDE_SESSION_ID;
+  if (explicitSessionId && hostSessionId && explicitSessionId !== hostSessionId) {
+    throw new Error("requested session differs from the current Claude session");
+  }
+  const sessionId = hostSessionId ?? explicitSessionId;
+  if (!sessionId) throw new Error("an exact session id is required; set CLAUDE_SESSION_ID or pass the session explicitly");
+  const bond = getBond(sessionId);
+  if (!bond || bond.sessionId !== sessionId) throw new Error(`no bond for session ${sessionId}`);
+  return bond;
+}
 function getSoleBond() {
   const state = readState();
   const entries = Object.values(state.bonds);
@@ -62,6 +73,7 @@ export {
   getMostRecentBond,
   getSoleBond,
   readState,
+  requireSessionBond,
   upsertBond,
   writeState
 };

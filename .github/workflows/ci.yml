@@ -79,10 +79,10 @@ jobs:
           execFileSync(process.execPath, ['--check', target], { stdio: 'inherit' });
         }
         await import(process.env.PACKAGE_NAME);
-        for (const entry of ['dist/gateway.js', 'scripts/restricted.mjs']) {
+        for (const entry of ['dist/gateway.js', 'dist/control/service.js', 'scripts/restricted.mjs', 'scripts/control.mjs', 'scripts/mod-profile.mjs', 'scripts/fetch-host.mjs']) {
           execFileSync(process.execPath, ['--check', resolve(root, entry)], {stdio:'inherit'});
         }
-        for (const entry of ['docs/RESTRICTED-MODE.md', 'acceptance/2026-09-09/ACCEPTANCE.json']) {
+        for (const entry of ['docs/RESTRICTED-MODE.md', 'docs/NATIVE-MODS.md', 'docs/host-contract.json', 'hooks/native/register.ts', 'types/host/PROVENANCE.json', 'acceptance/2026-09-09/ACCEPTANCE.json']) {
           if (!existsSync(resolve(root, entry))) throw new Error(`missing supported-mode artifact ${entry}`);
         }
         NODE
@@ -93,3 +93,21 @@ jobs:
         name: source-package
         path: ${{ runner.temp }}/chio-release
         if-no-files-found: error
+  native-mod-contract:
+    # This loader/event harness uses stubbed calls and is not resource acceptance.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      with:
+        ref: ${{ github.sha }}
+        persist-credentials: false
+    - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      with:
+        node-version: 22.19.0
+    - name: Fetch the separate pinned Claude host
+      run: node scripts/fetch-host.mjs --output "${RUNNER_TEMP}/chio-mod-contract-host"
+    - name: Validate and exercise native module with stubbed event calls
+      env:
+        CHIO_CLAUDE_HOST: ${{ runner.temp }}/chio-mod-contract-host
+      run: npm run test:mods

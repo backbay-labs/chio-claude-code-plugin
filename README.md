@@ -33,8 +33,11 @@ Run Claude Code against tools and data controlled by the [Chio kernel](https://g
 - **Scoped access.** The kernel checks the prepared session's delegated authority before protected work.
 - **Bound results.** The gateway verifies the receipt signer, caller, request and returned output before accepting an execution result.
 - **Recoverable uncertainty.** Unknown outcomes remain in the private journal and block new dispatch until the operator resolves them.
+- **Native session interface.** Inspect scope, exact action reviews, retained evidence and session-specific revocation requests while Claude works.
 
-**Status:** A source-build candidate for macOS, with [bounded real-host evidence](acceptance/2026-09-10/final-static-continuation/README.md). Complete I01-I08 acceptance and a compatible published release remain open. The marketplace plugin provides diagnostics; protected execution uses the separate restricted launcher below.
+**Status:** Version 0.4.0-rc.1 adds the [native mod interface](docs/NATIVE-MODS.md) against pinned Claude Code 2.1.287. The trusted operator service supplies session-scoped status and accepts review intent; kernel authority and protected execution remain outside the host. The interactive protected profile remains a qualification candidate. Earlier [bounded real-host evidence](acceptance/2026-09-10/final-static-continuation/README.md) pins a different host and does not qualify this version.
+
+Native commands are `/chio`, `/chio-status`, `/chio-review`, `/chio-evidence` and `/chio-revoke`. See the [native interface runbook](docs/NATIVE-MODS.md) for activation, scoped credentials and operator confirmation. An ordinary session displays **kernel MCP tools only**; a mod does not confer protection on native Bash or file tools.
 
 ## Build from source
 
@@ -47,7 +50,7 @@ npm ci --ignore-scripts --no-audit --no-fund
 npm run build
 ```
 
-The lockfile and checked-in `vendor/` archives supply the Chio bridge and SDK. No sibling checkout is required. The build produces the bundled runtime in `dist/`.
+The npm lockfile and checked-in `vendor/` archives supply the Chio bridge and SDK. No sibling checkout is required. The build produces the bundled runtime in `dist/`. npm is the supported source-install path; the obsolete Bun lockfile referenced a sibling bridge and an unavailable registry dependency.
 
 Building the plugin does not prepare a kernel session. Protected execution also requires macOS, a qualified Claude executable, a compatible running kernel and an isolated resource server. Follow the [operator preparation guide](docs/RESTRICTED-MODE.md#boundary-and-preparation) before launching work.
 

@@ -113,6 +113,15 @@ jobs:
           npm run typecheck
           npm run build
           npm test
+      - name: Validate the pinned native mod contract
+        env:
+          CHIO_CLAUDE_HOST: ${{ runner.temp }}/chio-release-mod-host
+        run: |
+          node scripts/fetch-host.mjs --output "${CHIO_CLAUDE_HOST}"
+          npm run test:mods
+      - name: Enforce live native acceptance before tag publication
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+        run: node scripts/verify-native-qualification.mjs
       - name: Build staged release artifact
         working-directory: ${{ env.PACKAGE_DIRECTORY }}
         run: |
@@ -152,10 +161,10 @@ jobs:
             execFileSync(process.execPath, ['--check', target], { stdio: 'inherit' });
           }
           await import(process.env.PACKAGE_NAME);
-          for (const entry of ['dist/gateway.js', 'scripts/restricted.mjs']) {
+          for (const entry of ['dist/gateway.js', 'dist/control/service.js', 'scripts/restricted.mjs', 'scripts/control.mjs', 'scripts/mod-profile.mjs']) {
             execFileSync(process.execPath, ['--check', resolve(root, entry)], {stdio:'inherit'});
           }
-          for (const entry of ['docs/RESTRICTED-MODE.md', 'acceptance/2026-09-09/ACCEPTANCE.json']) {
+          for (const entry of ['docs/RESTRICTED-MODE.md', 'docs/NATIVE-MODS.md', 'hooks/native/register.ts', 'types/host/PROVENANCE.json', 'acceptance/2026-09-09/ACCEPTANCE.json', 'acceptance/2026-10-03/native-mods/ACCEPTANCE.json']) {
             if (!existsSync(resolve(root, entry))) throw new Error(`missing supported-mode artifact ${entry}`);
           }
           NODE

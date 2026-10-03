@@ -7,6 +7,6 @@ import { join } from "node:path";
  */
 export const STATE_DIR = process.env.CHIO_STATE_DIR ?? join(process.env.CLAUDE_CONFIG_DIR ?? join(homedir(), ".claude"), "plugins", "chio");
 export const STATE_PATH = join(STATE_DIR, "state.json");
-export const KEYSTORE_DIR = join(homedir(), ".chio", "keys");
+export const KEYSTORE_DIR = process.env.CHIO_KEYSTORE_DIR ?? join(homedir(), ".chio", "keys");
 export const PENDING_DIR = join(STATE_DIR, "pending");
 export const RECEIPT_CACHE_DIR = join(STATE_DIR, "receipts");

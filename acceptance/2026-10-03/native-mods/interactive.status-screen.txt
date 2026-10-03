@@ -1,0 +1,40 @@
+
+           Claude Code v2.1.287
+           Sonnet 5.5 · API Usage Billing
+           /private/tmp/chio-native-host-pVdoVo/workspace
+
+▎ Debug mode enabled · logging to /private/tmp/chio-native-host-pVdoVo/profile/host-debug.log
+
+❯ /chio-status
+  ⎿  chio: Chio · isolated kernel MCP · authority 10m · 0 review · 0 unresolved
+     Session: b21b27ff-3466-4b40-a878-05d5d20301db
+     Protected tools: write_file
+     Dispatch fence: clear
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Chio · isolated kernel MCP · authority 10m · 0 review · 0 unresolved                                       [-]
+                                                                                          ◐ medium · /effort
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ don't ask on (shift+tab to cycle) · ← for agents
