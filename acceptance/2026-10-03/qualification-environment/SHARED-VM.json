@@ -1,0 +1,13 @@
+{
+  "schema": "chio.shared-vm-recovery-observation.v1",
+  "context": "colima",
+  "containerCount": 6,
+  "allOriginalContainerIdsRetained": true,
+  "allOriginalImagesRetained": true,
+  "allOriginalMountBindingsRetained": true,
+  "allOriginalContainersRunning": true,
+  "postgresHealthy": true,
+  "redisHealthy": true,
+  "filesystemIntegrity": "offline check recommended; original filesystem not repaired",
+  "applicationFunctionalAcceptance": "not claimed"
+}

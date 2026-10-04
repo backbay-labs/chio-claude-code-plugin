@@ -1,0 +1,97 @@
+{
+  "schema": "chio.native-owner-enforcement-observation.v1",
+  "classification": "actual native cage receipts, separate exact-file profile",
+  "writerSha256": "ce7c20d1b72d2e0dafa0bf0187de66326f60730d41b6ea13181c2e9c3f9e6b86",
+  "records": [
+    {
+      "receiptId": "c3e317d259bbe2fbc79ad969afaaa6ce28111b2fd74ca68ae73d555ecfbeea1c",
+      "stage": "enforcement",
+      "state": "fully_enforced",
+      "admittedPolicyDigest": "8134ce81c998cdf16728e958e8f23adba6aab42744a0a3a142a87aaaacdf1fbb",
+      "fullyEnforcedRecordPresent": true,
+      "statusObservations": {},
+      "exit": null
+    },
+    {
+      "receiptId": "b581ae967afbd98ecc43f306684a1e8f3ea05ef367bad9a3726f2c32121fb90b",
+      "stage": "terminal_exit",
+      "state": "exited",
+      "admittedPolicyDigest": "8134ce81c998cdf16728e958e8f23adba6aab42744a0a3a142a87aaaacdf1fbb",
+      "fullyEnforcedRecordPresent": true,
+      "statusObservations": {},
+      "exit": {
+        "processId": 13341,
+        "signal": 15,
+        "exitCode": null
+      }
+    },
+    {
+      "receiptId": "e15d88753b0505e421eb1edadb6a1e80d0969f7b355e53da8dda05ddf5ec99e2",
+      "stage": "enforcement",
+      "state": "fully_enforced",
+      "admittedPolicyDigest": "8134ce81c998cdf16728e958e8f23adba6aab42744a0a3a142a87aaaacdf1fbb",
+      "fullyEnforcedRecordPresent": true,
+      "statusObservations": {},
+      "exit": null
+    },
+    {
+      "receiptId": "a75f9bd2b1a0eafca2eccb6151fe464bc32586f1a67ce62fa3f1c4431f2da73b",
+      "stage": "terminal_exit",
+      "state": "exited",
+      "admittedPolicyDigest": "8134ce81c998cdf16728e958e8f23adba6aab42744a0a3a142a87aaaacdf1fbb",
+      "fullyEnforcedRecordPresent": true,
+      "statusObservations": {},
+      "exit": {
+        "processId": 13519,
+        "signal": 15,
+        "exitCode": null
+      }
+    },
+    {
+      "receiptId": "e0f1b0eb935206db16c596ff0f0da00dc0c333d92e357706fbc92358bc054f0b",
+      "stage": "enforcement",
+      "state": "fully_enforced",
+      "admittedPolicyDigest": "8134ce81c998cdf16728e958e8f23adba6aab42744a0a3a142a87aaaacdf1fbb",
+      "fullyEnforcedRecordPresent": true,
+      "statusObservations": {},
+      "exit": null
+    },
+    {
+      "receiptId": "53ac088ad5f11e58e04b7d9b2a65c55e86619a995a8d4f5f4507086278afacfe",
+      "stage": "terminal_exit",
+      "state": "exited",
+      "admittedPolicyDigest": "8134ce81c998cdf16728e958e8f23adba6aab42744a0a3a142a87aaaacdf1fbb",
+      "fullyEnforcedRecordPresent": true,
+      "statusObservations": {},
+      "exit": {
+        "processId": 13531,
+        "signal": 15,
+        "exitCode": null
+      }
+    },
+    {
+      "receiptId": "8a7f8dc55852f5e65c3cf26bd3ab142b95cc75cc0947f7ce77f8cda59e12f84a",
+      "stage": "enforcement",
+      "state": "fully_enforced",
+      "admittedPolicyDigest": "8134ce81c998cdf16728e958e8f23adba6aab42744a0a3a142a87aaaacdf1fbb",
+      "fullyEnforcedRecordPresent": true,
+      "statusObservations": {},
+      "exit": null
+    },
+    {
+      "receiptId": "86ad5288a4c5bc1e70a8b955f8a97df1881762d56eae4d183f10b50ed1bd25a9",
+      "stage": "terminal_exit",
+      "state": "exited",
+      "admittedPolicyDigest": "8134ce81c998cdf16728e958e8f23adba6aab42744a0a3a142a87aaaacdf1fbb",
+      "fullyEnforcedRecordPresent": true,
+      "statusObservations": {},
+      "exit": {
+        "processId": 14256,
+        "signal": 31,
+        "exitCode": null
+      }
+    }
+  ],
+  "originalResultQualified": false,
+  "productionQualified": false
+}

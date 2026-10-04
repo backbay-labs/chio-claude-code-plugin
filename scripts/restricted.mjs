@@ -231,9 +231,9 @@ async function main() {
         try{
           const event=JSON.parse(line);
           if(event.type==="system"&&event.subtype==="init"){
-            const nativeCommands = ["chio", "chio-status", "chio-review", "chio-evidence", "chio-revoke", "chio-task", "chio-completion", "chio-continue", "chio-outcome", "chio-why"];
+            const nativeCommands = ["chio", "chio-status", "chio-doctor", "chio-review", "chio-evidence", "chio-revoke", "chio-task", "chio-completion", "chio-continue", "chio-outcome", "chio-why"];
             const nativeReady = !native || event.claude_code_version === "2.1.287" && nativeCommands.every(name=>event.slash_commands?.includes(name))
-              && event.plugins?.some(plugin=>plugin.name==="chio"&&plugin.path===mod.root&&plugin.version==="0.4.0-rc.2") && controlServer.statusReads>0;
+              && event.plugins?.some(plugin=>plugin.name==="chio"&&plugin.path===mod.root&&plugin.version==="0.4.0-rc.3") && controlServer.statusReads>0;
             if((hostReady && !native)||!hasExactHostTools(event,toolNames)||!nativeReady){
               hostInitializationFailed=true;child.kill("SIGTERM");
               process.stderr.write("[chio restricted] native host did not activate the exact Chio MCP tools\n");

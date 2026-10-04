@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { lstatSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 const sourceFiles = ["hooks/native/register.ts", "hooks/native/projection.ts", "hooks/native/workflow.ts", "types/control.d.ts", "types/workflow.d.ts", "types/chio.d.ts"];
-const nativeManifest = { name: "chio", types: "./types/chio.d.ts", version: "0.4.0-rc.2", description: "Native Chio session interface; execution authority remains in the kernel." };
+const nativeManifest = { name: "chio", types: "./types/chio.d.ts", version: "0.4.0-rc.3", description: "Native Chio session interface; execution authority remains in the kernel." };
 const nativeHooks = { modules: ["./native/register.ts"] };
 export function nativeModIdentity(root) {
   const files = sourceFiles.map(path => {

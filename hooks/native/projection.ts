@@ -84,3 +84,27 @@ export function outcomeRequestId(output: unknown): string | null {
     return typeof outcome.requestId === "string" && outcome.requestId.length <= 256 ? outcome.requestId : null;
   } catch { return null; }
 }
+
+/** Read-only diagnosis keeps infrastructure, authority and uncertain effects distinct. */
+export function diagnosticText(status: ControlStatus | null, sessionId: string, now: number): string {
+  const lines = [`Session: ${safeText(sessionId)}`, statusLine(status, now)];
+  if (!status) return [...lines, "Control infrastructure unavailable or session binding refused.",
+    "Authority: unconfirmed. Check the trusted control service and exact session binding.",
+    "Guest execution and storage: unchecked. Run the operator doctor outside Claude.",
+    "Preserve retained operations; reconnect does not authorize redispatch."].join("\n");
+  const fresh = now - status.checkedAt <= 10_000 && status.checkedAt <= now + 5000;
+  const live = fresh && status.authority === "live" && now < status.authorityExpiresAt * 1000;
+  lines.push("Control infrastructure: reachable for this exact session.",
+    `Authority: ${live ? "live" : !fresh ? "stale, unconfirmed" : status.authority === "live" ? "expired" : status.authority}.`,
+    "Guest execution and storage: unchecked. The operator doctor checks those separately.");
+  const uncertain = status.operations.filter(op => op.state === "unknown" || op.state === "pending");
+  const denied = status.operations.filter(op => op.state === "denied");
+  const review = status.operations.filter(op => op.nextAction === "review");
+  lines.push(`Uncertain original outcomes: ${uncertain.length}.`, `Retained denials: ${denied.length}.`, `Actions awaiting review: ${review.length}.`);
+  if (uncertain.length) lines.push("Reconcile original outcomes with the trusted operator. Keep dispatch fences intact; do not retry the effect.");
+  if (denied.length) lines.push("Inspect /chio-why REQUEST_ID. A denial is an authority decision, not evidence of infrastructure failure.");
+  if (review.length) lines.push("Inspect /chio-review REQUEST_ID. Review intent requires trusted operator confirmation.");
+  if (!live) lines.push("Obtain a confirmed current authority binding before new protected effects. Preserve the original session's uncertain work.");
+  lines.push(`Dispatch fence: ${status.fenced ? "retained" : "clear"}. No control intent or protected action was submitted by this check.`);
+  return lines.join("\n");
+}

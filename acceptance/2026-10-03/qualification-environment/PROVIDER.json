@@ -1,0 +1,42 @@
+{
+  "schema": "chio.provider-qualification-observations.v1",
+  "auth": {
+    "recordedAt": "2026-10-04T01:48:59.046214+00:00",
+    "authStatusExitCode": 0,
+    "loggedIn": true,
+    "authMethod": "claude.ai",
+    "apiProvider": "firstParty",
+    "inferenceDispatched": false,
+    "explicitConfigDirectory": null,
+    "selectedHost": "2.1.287"
+  },
+  "nativeCredentialObserved": true,
+  "selectedModel": "claude-sonnet-5-5",
+  "selectedHost": "2.1.287",
+  "probe": {
+    "classification": "actual selected host and delivered print arguments through selected live relay; empty tools, no kernel or resource qualification",
+    "liveConversationRequestCount": 8,
+    "providerStatuses": [
+      429,
+      429,
+      429,
+      429,
+      429,
+      429,
+      429,
+      429
+    ],
+    "hostExitCode": 143,
+    "deadlineSeconds": 90,
+    "successfulModelResult": false,
+    "retryCampaignStopped": true,
+    "protectedDispatchPerformed": false
+  },
+  "earlierSafeModeProbe": {
+    "forwardedToProvider": false,
+    "reason": "safeguards field outside selected relay contract",
+    "nativeCredentialObserved": true
+  },
+  "providerBehaviorQualified": false,
+  "productionQualified": false
+}

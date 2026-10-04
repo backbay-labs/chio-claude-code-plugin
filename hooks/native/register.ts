@@ -3,7 +3,7 @@ import type { ControlStatus, IntentKind, OperationView } from "../../types/contr
 import type { Chio } from "../../types/chio.js";
 import type { ExplanationView, ContinuationView } from "../../types/workflow.js";
 import { controlOrigin, outcomeHash, taskText } from "./workflow.ts";
-import { operationText, outcomeRequestId, parseStatus, safeText, statusLine } from "./projection.ts";
+import { diagnosticText, operationText, outcomeRequestId, parseStatus, safeText, statusLine } from "./projection.ts";
 
 let sessionId = "";
 let status: ControlStatus | null = null;
@@ -118,6 +118,7 @@ export const register: Register = (on, options) => {
     for (const command of [
       { name: "chio", description: "Inspect Chio scope and retained work" },
       { name: "chio-status", description: "Read this session's protection and authority status" },
+      { name: "chio-doctor", description: "Diagnose control availability, authority and uncertain work without dispatch" },
       { name: "chio-review", description: "Review a retained exact action", argumentHint: "[request-id]" },
       { name: "chio-evidence", description: "Inspect original operation evidence", argumentHint: "[request-id]" },
       { name: "chio-revoke", description: "Request this session's revocation" },
@@ -147,6 +148,11 @@ export const register: Register = (on, options) => {
     const current = await refresh($, options);
     return { text: `${statusLine(current, Date.now())}\nSession: ${safeText(sessionId)}${current ? `\nProtected tools: ${current.protectedTools.join(", ")}\nDispatch fence: ${current.fenced ? "retained" : "clear"}` : ""}`, exitCode: current ? 0 : 1 };
   }).catch(() => ({ text: "Chio status unavailable. Authority remains unconfirmed.", exitCode: 1 }));
+  on("command.run", { command: "chio-doctor" }, async ($, e) => {
+    if (e.args.trim()) return { text: "Doctor checks the current session; arguments are refused.", exitCode: 1 };
+    const current = await refresh($, options);
+    return { text: diagnosticText(current, sessionId, Date.now()), exitCode: current ? 0 : 1 };
+  }).catch(() => ({ text: "Chio diagnosis unavailable. Authority remains unconfirmed; preserve original operation fences.", exitCode: 1 }));
   on("command.run", { command: "chio-review" }, async ($, e) => ({ text: await open($, options, e.args.trim() || undefined) }))
     .catch(() => ({ text: "Chio review unavailable for this exact session and action.", exitCode: 1 }));
   on("command.run", { command: "chio-evidence" }, async ($, e) => ({ text: await open($, options, e.args.trim() || undefined) }))

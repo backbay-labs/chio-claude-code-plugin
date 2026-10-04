@@ -1,0 +1,15 @@
+{
+  "schema": "chio.native-seccomp-observation.v1",
+  "architecture": "x86_64",
+  "signal": 31,
+  "signalName": "SIGSYS",
+  "syscallNumber": 74,
+  "syscallName": "fsync",
+  "mappingSource": "https://raw.githubusercontent.com/torvalds/linux/v6.8/arch/x86/entry/syscalls/syscall_64.tbl",
+  "auditRecord": "audit: type=1326 audit(1791077117.363:117): auid=501 uid=501 gid=1000 ses=2 subj=unconfined pid=14256 comm=\"chio-tool-artif\" exe=\"/opt/chio/native-reference-tools-20261003/chio-tool-artifact-writer\" sig=31 arch=c000003e syscall=74 compat=0 ip=0x75977df80b4c code=0x80000000",
+  "writerSha256": "ce7c20d1b72d2e0dafa0bf0187de66326f60730d41b6ea13181c2e9c3f9e6b86",
+  "observedWriteCount": 1,
+  "stableStorageCommitVerified": false,
+  "originalResultVerified": false,
+  "productionQualified": false
+}

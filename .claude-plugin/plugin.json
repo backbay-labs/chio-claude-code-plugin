@@ -1,6 +1,6 @@
 {
   "name": "chio",
-  "version": "0.4.0-rc.2",
+  "version": "0.4.0-rc.3",
   "description": "Native Chio session status, exact review, evidence and revocation requests for Claude Code. Execution authority remains in the kernel.",
   "author": {
     "name": "Backbay Industries",

@@ -79,6 +79,26 @@ test("native status reports kernel MCP scope and actual session without a model"
   const answer = await $.command.run(command("chio-status"));
   expect(answer.text).toContain("kernel MCP tools only"); expect(answer.text).toContain("Session: session-a"); expect(answer.text).toContain("1 review");
 });
+test("doctor distinguishes denial and uncertain effects without submitting an intent", { options }, async ($, on) => {
+  const value = projection();
+  value.operations.push({ requestId: "uncertain", state: "unknown", evidence: "unverified", acknowledged: false, hostDeliveryConfirmed: false, nextAction: "reconcile_original" },
+    { requestId: "denied", state: "denied", evidence: "verified", acknowledged: false, hostDeliveryConfirmed: false, nextAction: "linked_continuation" });
+  stub(on, () => "session-a", () => value);
+  const result = await $.command.run(command("chio-doctor"));
+  expect(result.text).toContain("Uncertain original outcomes: 1");
+  expect(result.text).toContain("Retained denials: 1");
+  expect(result.text).toContain("Guest execution and storage: unchecked");
+  expect(result.text).toContain("do not retry the effect");
+  expect(result.text).toContain("No control intent or protected action was submitted");
+});
+test("doctor reports disconnection and expired authority separately", { options }, async ($, on) => {
+  let value = projection("foreign"); stub(on, () => "session-a", () => value);
+  const disconnected = await $.command.run(command("chio-doctor"));
+  expect(disconnected.exitCode).toBe(1); expect(disconnected.text).toContain("Control infrastructure unavailable");
+  value = projection(); value.authorityExpiresAt = Math.floor(Date.now() / 1000) - 1;
+  const expired = await $.command.run(command("chio-doctor"));
+  expect(expired.text).toContain("Authority: expired"); expect(expired.text).toContain("Control infrastructure: reachable");
+});
 test("clear, resume and fork rebind to the host session and discard foreign evidence", { options }, async ($, on) => {
   let session = "session-a"; stub(on, () => session, () => projection());
   on("classic.SessionStart", () => ({}));

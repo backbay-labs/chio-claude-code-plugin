@@ -22,10 +22,10 @@ function run(command, args, cwd = runtime, env = process.env, expectedCode = 0) 
 const installation = run("npm", ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", cache, artifact]);
 writeFileSync(join(evidence, "install.txt"), installation.stdout + installation.stderr);
 const installed = join(runtime, "node_modules/@chio/claude-code-plugin"); const pkg = JSON.parse(readFileSync(join(installed, "package.json")));
-assert.equal(pkg.version, "0.4.0-rc.2"); assert.equal(pkg.scripts, undefined);
+assert.equal(pkg.version, "0.4.0-rc.3"); assert.equal(pkg.scripts, undefined);
 for (const version of Object.values(pkg.dependencies ?? {})) assert.equal(/^(file:|link:|workspace:)/.test(version), false);
 await import(pathToFileURL(join(installed, pkg.main)).href);
-for (const path of ["dist/control/service.js", "scripts/control.mjs", "scripts/restricted.mjs", "scripts/mod-profile.mjs", "scripts/fetch-host.mjs", "scripts/task.mjs", "scripts/control-transport.mjs", "dist/workflow/tasks.js", "dist/workflow/handoff.js", "dist/workflow/prepare.js"]) run(process.execPath, ["--check", join(installed, path)]);
+for (const path of ["dist/control/service.js", "scripts/control.mjs", "scripts/doctor.mjs", "scripts/restricted.mjs", "scripts/mod-profile.mjs", "scripts/fetch-host.mjs", "scripts/task.mjs", "scripts/control-transport.mjs", "dist/workflow/tasks.js", "dist/workflow/handoff.js", "dist/workflow/prepare.js"]) run(process.execPath, ["--check", join(installed, path)]);
 for (const path of ["hooks/native/register.ts", "hooks/native/projection.ts", "types/control.d.ts", "types/host/PROVENANCE.json", "docs/host-contract.json", "docs/NATIVE-MODS.md", "docs/CONTROLLED-TASKS.md", "hooks/native/workflow.ts", "types/workflow.d.ts", "types/chio.d.ts"]) assert.equal(existsSync(join(installed, path)), true);
 const pin = JSON.parse(readFileSync(join(installed, "docs/host-contract.json"))); assert.equal(hash(process.env.CHIO_CLAUDE_HOST), pin.platforms[`${process.platform}-${process.arch}`].checksum);
 const clone = join(runtime, "marketplace-tree"); mkdirSync(join(clone, ".claude-plugin"), { recursive: true });
@@ -46,6 +46,9 @@ const env = { PATH: process.env.PATH, LANG: "en_US.UTF-8", HOME: runtime, CLAUDE
 const validation = run(process.env.CHIO_CLAUDE_HOST, ["plugin", "validate", clone, "--strict"], clone, env); writeFileSync(join(evidence, "validation.txt"), validation.stdout + validation.stderr);
 const command = run(process.env.CHIO_CLAUDE_HOST, ["--print", "/chio-status", "--plugin-dir", clone, "--tools", "", "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}', "--setting-sources", "", "--no-session-persistence", "--no-chrome"], clone, env, 1);
 assert.match(command.stdout, /Chio · disconnected · protection scope unavailable/); writeFileSync(join(evidence, "status-command.txt"), command.stdout + command.stderr);
+const doctor = run(process.env.CHIO_CLAUDE_HOST, ["--print", "/chio-doctor", "--plugin-dir", clone, "--tools", "", "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}', "--setting-sources", "", "--no-session-persistence", "--no-chrome"], clone, env, 1);
+assert.match(doctor.stdout, /Control infrastructure unavailable/); assert.match(doctor.stdout, /Guest execution and storage: unchecked/);
+writeFileSync(join(evidence, "doctor-command.txt"), doctor.stdout + doctor.stderr);
 const summary = { schema: "chio.claude.native-package-check.v1", passed: true, artifactSha256: hash(artifact), version: pkg.version,
-  classification: "offline install and disconnected native command; no kernel resource qualification", dependencyFreeMarketplaceRuntime: true, pinnedHostVersion: pin.version, statusCommandExitCode: command.code, runtime };
+  classification: "offline install and disconnected native status and doctor commands; no kernel resource qualification", dependencyFreeMarketplaceRuntime: true, pinnedHostVersion: pin.version, statusCommandExitCode: command.code, doctorCommandExitCode: doctor.code, runtime };
 writeFileSync(join(evidence, "SUMMARY.json"), JSON.stringify(summary, null, 2) + "\n"); process.stdout.write(JSON.stringify(summary) + "\n");

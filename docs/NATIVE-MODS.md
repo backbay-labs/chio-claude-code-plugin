@@ -1,6 +1,6 @@
 # Native Chio interface
 
-The 0.4.0-rc.2 candidate adds native session status, exact-action review, evidence,
+The 0.4.0-rc.3 candidate adds native session status, exact-action review, evidence,
 recovery requirements and immediate commands. The kernel and trusted gateway
 retain execution authority. A control in Claude records review intent; trusted
 operator confirmation happens outside the host. The [controlled-task runbook](./CONTROLLED-TASKS.md) covers guided setup, completion evidence, continuation, the typed namespace and handoffs.
@@ -45,6 +45,7 @@ its live claim and review controls; disconnection clears the projection.
 | --- | --- |
 | `/chio` | Open scope, retained work and controls |
 | `/chio-status` | Print exact session identity, protected tools and dispatch fence |
+| `/chio-doctor` | Distinguish control disconnection, expired authority, retained denial and uncertain original outcomes without submitting work |
 | `/chio-review [request-id]` | Inspect an exact retained proposal |
 | `/chio-evidence [request-id]` | Inspect outcome, evidence and recovery requirements |
 | `/chio-revoke` | Request revocation of this exact kernel session; arguments refused |
@@ -61,6 +62,25 @@ panes open only in interactive sessions. Session identity is re-resolved on
 every request and after clear, resume or fork. The compact review puts the exact
 payload before its decision controls; a separate control expands evidence and
 authority details. Panes scroll when an exact payload exceeds the viewport.
+
+The native doctor reads only the authorized session projection. It cannot inspect
+the VM or prove storage integrity. In the trusted operator terminal, use the
+separate infrastructure probe with an explicit profile, matching Docker context
+and immutable image identity:
+
+```sh
+node scripts/doctor.mjs \
+  --profile chio-native-qualification-x86 \
+  --docker-context colima-chio-native-qualification-x86 \
+  --image sha256:REPLACE_WITH_SELECTED_IMAGE_ID
+```
+
+It checks guest execution, root and Docker storage space, inodes, retained kernel
+storage warnings, daemon identity and actual image inspection. Each probe has a
+15-second bound. It returns `degraded` for retained filesystem repair warnings,
+and `unavailable` for a failed probe. No image pull, container launch, disk repair
+or protected action occurs. Passing these probes establishes current availability,
+not filesystem integrity or workflow qualification.
 
 The review shows the tool, full retained arguments, purpose, requested capability,
 grant lifetime and decision state. Detailed information restrictions and budget
@@ -245,3 +265,7 @@ are excluded from the delivered runtime. To fetch the selected host into a new
 separate path, use `node scripts/fetch-host.mjs --output /absolute/new/claude`.
 The current evidence and remaining gates are in the
 [native acceptance report](../acceptance/2026-10-03/controlled-workflows/REPORT.md).
+The [dedicated environment and recovery report](../acceptance/2026-10-03/qualification-environment/REPORT.md)
+records explicit context binding, actual enforcing-owner failures and shared
+service preservation. Infrastructure recovery does not qualify those open
+execution and durability contracts.

@@ -1,6 +1,6 @@
 # Controlled native workflow candidate
 
-**Version: 0.4.0-rc.3. Production qualification: incomplete.**
+**Version: 0.4.0-rc.2. Production qualification: incomplete.**
 
 The candidate joins guided task preparation, artifact-bound completion evidence,
 exact review, native continuation and verified original-result receipt. The
@@ -12,9 +12,6 @@ Confidence is **high** in the recorded source and bounded host-fixture results,
 **moderate** in the wider native integration, and **unknown** for production
 resource recovery on this profile. The [earlier rc.1 record](../native-mods/REPORT.md)
 is preserved; it does not qualify the new artifacts.
-The [rc.2 report](./REPORT.rc2.md) and [rc.2 record](./ACCEPTANCE.rc2.json) remain
-historical evidence. The [dedicated environment report](../qualification-environment/REPORT.md)
-records shared VM recovery and the new candidate's live enforcing failures.
 
 ## Delivered behavior
 
@@ -31,7 +28,7 @@ records shared VM recovery and the new candidate's live enforcing failures.
 | Decision explanation | Signed receipt reasons retain kernel provenance; gateway reasons remain gateway observations. Policy rehearsal, versioned resource previews and authoritative information lineage are unavailable. |
 
 The native commands add `/chio-task`, `/chio-completion`, `/chio-continue`,
-`/chio-outcome`, `/chio-why` and read-only `/chio-doctor`. Command registration failures are isolated, so
+`/chio-outcome` and `/chio-why`. Command registration failures are isolated, so
 a name collision does not prevent later startup work and status refresh. The
 complete compatibility inspector remains future work.
 
@@ -54,8 +51,8 @@ separate result.
 | Check | Result | Evidence boundary |
 | --- | --- | --- |
 | Typecheck and build | Passed | Source, retained host declarations and self-contained runtime bundles |
-| Node regressions | 76 passed | Compatibility, exact signed decisions, task provisioning, artifact changes, continuation, result proof, unconfirmed ACK, restart fences and operator diagnostics |
-| Native event/drawing harness | 18 passed | Actual selected harness with stubbed APIs, including task readiness, scope requests, continuation controls and session diagnosis |
+| Node regressions | 70 passed | Compatibility, exact signed decisions, task provisioning, artifact changes, continuation, result proof, unconfirmed ACK and restart fences |
+| Native event/drawing harness | 16 passed | Actual selected harness with stubbed APIs, including task readiness, scope requests and continuation controls |
 | Middleware control-flow experiments | 4 passed | Actual selected harness with stubbed dispatch; failed uncaught mod hook is skipped |
 | Actual host and macOS sandbox | 8 passed | Deterministic local model and stubbed kernel/resource owner, including natural workflow exit |
 | Cold consumer | Exact tarball sidecar | Offline install and marketplace tree without dependencies; complete live activation remains open |
@@ -108,20 +105,12 @@ and continuation remain fenced with one effect and one charge. It does **not**
 reconcile a real resource's original result. That separate acceptance experiment
 still requires a qualified Chio owner.
 
-[OWNER-PREFLIGHT.json](./OWNER-PREFLIGHT.json) preserves the earlier containerd
-and guest-shell I/O failure. The shared VM recovered availability after preserved
-checkpoints and a controlled restart; all six services and volume bindings were
-retained. Its original filesystem still needs offline inspection. Database and
-Redis backups were restored independently without network access.
-
-The dedicated x86 Linux owner now provides actual negative qualification
-evidence. An exact kernel-confirmed native write occurred once, then seccomp
-killed the writer's `fsync` before a result returned. Restart retained the
-original unknown operation and one captured invocation without redispatch.
-The Docker resource profile separately fails enforcing MCP initialization.
-These experiments do not establish verified original-outcome recovery. The
-selected provider's login and bounded live check are recorded separately from
-protected-resource qualification. See [the complete follow-up](../qualification-environment/REPORT.md).
+[OWNER-PREFLIGHT.json](./OWNER-PREFLIGHT.json) records the current blocker:
+inspection of the selected immutable resource image fails with containerd blob
+I/O, and the VM shell fails with `/bin/bash: Input/output error`. Existing
+containers, services, volumes and VM state were preserved. A dedicated qualified
+owner needs Linux custody, an immutable image, pinned signed manifest and cage
+policy, a private resume keyring and the selected kernel build.
 
 Live kernel decisions, resource custody, provider behavior, complete
 reload/resume/branch/reconnect lifecycle, original-outcome recovery and supported

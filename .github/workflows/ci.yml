@@ -79,10 +79,10 @@ jobs:
           execFileSync(process.execPath, ['--check', target], { stdio: 'inherit' });
         }
         await import(process.env.PACKAGE_NAME);
-        for (const entry of ['dist/gateway.js', 'dist/control/service.js', 'scripts/restricted.mjs', 'scripts/control.mjs', 'scripts/mod-profile.mjs', 'scripts/fetch-host.mjs', 'scripts/task.mjs', 'scripts/control-transport.mjs', 'dist/workflow/tasks.js', 'dist/workflow/handoff.js', 'dist/workflow/prepare.js']) {
+        for (const entry of ['dist/gateway.js', 'dist/control/service.js', 'scripts/restricted.mjs', 'scripts/control.mjs', 'scripts/doctor.mjs', 'scripts/mod-profile.mjs', 'scripts/fetch-host.mjs', 'scripts/task.mjs', 'scripts/control-transport.mjs', 'dist/workflow/tasks.js', 'dist/workflow/handoff.js', 'dist/workflow/prepare.js']) {
           execFileSync(process.execPath, ['--check', resolve(root, entry)], {stdio:'inherit'});
         }
-        for (const entry of ['docs/RESTRICTED-MODE.md', 'docs/NATIVE-MODS.md', 'docs/CONTROLLED-TASKS.md', 'types/chio.d.ts', 'hooks/native/workflow.ts', 'docs/host-contract.json', 'hooks/native/register.ts', 'types/host/PROVENANCE.json', 'acceptance/2026-09-09/ACCEPTANCE.json']) {
+        for (const entry of ['docs/RESTRICTED-MODE.md', 'docs/NATIVE-MODS.md', 'docs/CONTROLLED-TASKS.md', 'types/chio.d.ts', 'hooks/native/workflow.ts', 'docs/host-contract.json', 'hooks/native/register.ts', 'types/host/PROVENANCE.json', 'acceptance/2026-09-09/ACCEPTANCE.json', 'acceptance/2026-10-03/qualification-environment/REPORT.md']) {
           if (!existsSync(resolve(root, entry))) throw new Error(`missing supported-mode artifact ${entry}`);
         }
         NODE

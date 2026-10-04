@@ -1,6 +1,7 @@
 {
+  "schema": "chio.claude.native-host-fixtures.v1",
   "passed": true,
-  "classification": "host fixture only",
+  "classification": "actual selected host and macOS sandbox; deterministic local model and stubbed kernel/resource owner; no live resource qualification",
   "cases": [
     {
       "scenario": "review",
@@ -10,8 +11,8 @@
       "hostVersion": "2.1.287",
       "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
       "gatewaySha256": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
-      "modSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
-      "productionModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "modSha256": "7189fa8ddaf5c0c44990978ffd618a82f1c5b4a5a0338f97e1f16f9559808f1c",
+      "productionModSha256": "7189fa8ddaf5c0c44990978ffd618a82f1c5b4a5a0338f97e1f16f9559808f1c",
       "testOnlyModifiedArtifact": false,
       "activation": "explicit-process-opt-in",
       "kernelMethods": [
@@ -72,8 +73,8 @@
       "hostVersion": "2.1.287",
       "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
       "gatewaySha256": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
-      "modSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
-      "productionModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "modSha256": "7189fa8ddaf5c0c44990978ffd618a82f1c5b4a5a0338f97e1f16f9559808f1c",
+      "productionModSha256": "7189fa8ddaf5c0c44990978ffd618a82f1c5b4a5a0338f97e1f16f9559808f1c",
       "testOnlyModifiedArtifact": false,
       "activation": "explicit-process-opt-in",
       "kernelMethods": [
@@ -127,8 +128,8 @@
       "hostVersion": "2.1.287",
       "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
       "gatewaySha256": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
-      "modSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
-      "productionModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "modSha256": "7189fa8ddaf5c0c44990978ffd618a82f1c5b4a5a0338f97e1f16f9559808f1c",
+      "productionModSha256": "7189fa8ddaf5c0c44990978ffd618a82f1c5b4a5a0338f97e1f16f9559808f1c",
       "testOnlyModifiedArtifact": false,
       "activation": "explicit-process-opt-in",
       "kernelMethods": [
@@ -174,8 +175,8 @@
       "hostVersion": "2.1.287",
       "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
       "gatewaySha256": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
-      "modSha256": "e8aa7037979f57bb94a426ffb32c1f392ebe02944ad52dcf0f91b78b1609c7cf",
-      "productionModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "modSha256": "138b27ad110776ec33b501671cf5a52c3cccff466d27c7bea2662c1107f2a3cd",
+      "productionModSha256": "7189fa8ddaf5c0c44990978ffd618a82f1c5b4a5a0338f97e1f16f9559808f1c",
       "testOnlyModifiedArtifact": true,
       "activation": "explicit-process-opt-in",
       "kernelMethods": [
@@ -243,8 +244,8 @@
       "hostVersion": "2.1.287",
       "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
       "gatewaySha256": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
-      "modSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
-      "productionModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "modSha256": "7189fa8ddaf5c0c44990978ffd618a82f1c5b4a5a0338f97e1f16f9559808f1c",
+      "productionModSha256": "7189fa8ddaf5c0c44990978ffd618a82f1c5b4a5a0338f97e1f16f9559808f1c",
       "testOnlyModifiedArtifact": true,
       "activation": "explicit-process-opt-in",
       "kernelMethods": [
@@ -287,8 +288,8 @@
       "hostVersion": "2.1.287",
       "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
       "gatewaySha256": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
-      "modSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
-      "productionModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "modSha256": "7189fa8ddaf5c0c44990978ffd618a82f1c5b4a5a0338f97e1f16f9559808f1c",
+      "productionModSha256": "7189fa8ddaf5c0c44990978ffd618a82f1c5b4a5a0338f97e1f16f9559808f1c",
       "testOnlyModifiedArtifact": false,
       "activation": "explicit-process-opt-in",
       "kernelMethods": [
@@ -355,8 +356,8 @@
       "hostVersion": "2.1.287",
       "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
       "gatewaySha256": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
-      "modSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
-      "productionModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "modSha256": "7189fa8ddaf5c0c44990978ffd618a82f1c5b4a5a0338f97e1f16f9559808f1c",
+      "productionModSha256": "7189fa8ddaf5c0c44990978ffd618a82f1c5b4a5a0338f97e1f16f9559808f1c",
       "testOnlyModifiedArtifact": false,
       "activation": "explicit-process-opt-in",
       "kernelMethods": [
@@ -405,8 +406,8 @@
       "hostVersion": "2.1.287",
       "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
       "gatewaySha256": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
-      "modSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
-      "productionModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "modSha256": "7189fa8ddaf5c0c44990978ffd618a82f1c5b4a5a0338f97e1f16f9559808f1c",
+      "productionModSha256": "7189fa8ddaf5c0c44990978ffd618a82f1c5b4a5a0338f97e1f16f9559808f1c",
       "testOnlyModifiedArtifact": false,
       "activation": "explicit-process-opt-in",
       "fixtureEffects": 1,

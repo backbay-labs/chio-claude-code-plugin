@@ -1,0 +1,16 @@
+{
+  "source": "actual pinned resource tools/list",
+  "selectedTools": [
+    "edit_file",
+    "list_directory",
+    "read_text_file",
+    "write_file"
+  ],
+  "omittedMetadata": {
+    "execution": {
+      "taskSupport": "forbidden"
+    }
+  },
+  "reason": "signed manifest cannot bind MCP execution metadata; reviewed synchronous surface only; no task methods admitted",
+  "qualification": "enforcing launch experiment only, not live resource acceptance"
+}
