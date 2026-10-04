@@ -7,6 +7,7 @@ import type { OperationView } from "../../types/control.js";
 import type { ContinuationView, ExplanationView, WorkflowView } from "../../types/workflow.js";
 import { digest, privateDirectory, privateRead, privateSave } from "./store.js";
 import { projectTask, readCatalog, readTask, templateView } from "./tasks.js";
+import { verifiedOriginal } from "./outcome.js";
 
 export interface WorkflowOptions {
   taskPath?: string;
@@ -42,7 +43,7 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
   for (const [field, path] of [["task", options.taskPath], ["catalog", options.catalogPath]] as const) {
     if (path && resolve(path) !== join(directory, field + ".json")) throw new Error("workflow file must be in this journal's private workflow directory");
   }
-  const jobs = new Set<Promise<void>>();
+  const jobs = new Map<string, Promise<void>>();
   let closed = false;
   function find(requestId: unknown): StoredOperation {
     if (typeof requestId !== "string" || !requestId || requestId.length > 256) throw new Error("invalid retained operation id");
@@ -52,10 +53,28 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
   }
   function readContinuation(id: unknown): ContinuationRecord {
     if (!uuid(id)) throw new Error("invalid continuation id");
-    const r = privateRead<ContinuationRecord>(join(continuations, id + ".json"));
+    const path = join(continuations, id + ".json");
+    let r = privateRead<ContinuationRecord>(path);
     if (r.schema !== "chio.control.continuation.v1" || r.id !== id || r.binding !== access.binding || r.sessionId !== access.config.sessionId
       || !["submitted", "completed", "unknown"].includes(r.state) || !["pending", "confirmed"].includes(r.delivery)
       || !/^[0-9a-f]{64}$/.test(r.revision)) throw new Error("foreign or invalid continuation");
+    const original = find(r.requestId);
+    const verified = verifiedOriginal(access.config, original);
+    // A controller crash may interrupt its projection after the gateway has
+    // durably retained the exact result. Recover that result, never its effect.
+    if (r.state !== "completed" && !jobs.has(id) && verified) {
+      r = { ...r, state: "completed", outcome: original.outcome as ExecutionOutcome, outcomeHash: digest(original.outcome), challenge: randomBytes(32).toString("hex") };
+      privateSave(path, r);
+    }
+    if (r.state === "completed") {
+      if (!verified || !r.outcome || digest(r.outcome) !== digest(original.outcome) || digest(r.outcome) !== r.outcomeHash
+        || !/^[0-9a-f]{64}$/.test(r.challenge ?? "")) throw new Error("continuation does not bind the verified original result");
+      // Receiving native proof and kernel ACK precedes the final continuation
+      // save. A restart can recognize those retained facts without another ACK.
+      if (r.delivery !== "confirmed" && r.served && r.receiptConfirmed === true && original.hostDeliveryConfirmed === true && original.acknowledged === true) {
+        r = { ...r, delivery: "confirmed" }; privateSave(path, r);
+      }
+    }
     return r;
   }
   function retained(): ContinuationView[] {
@@ -88,11 +107,11 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
         const result = await options.resume!(id, original.requestId, original.proposal.tool_name, original.proposal.arguments);
         const stored = find(original.requestId);
         if (result.state !== "completed" || result.evidence !== "verified" || !stored.request || !verifyCompletedOutcome(result, access.config.execution, stored.request)
-          || stored.state !== "completed" || digest(result) !== digest(stored.outcome)) throw new Error("continuation outcome remains unresolved");
+          || !verifiedOriginal(access.config, stored) || digest(result) !== digest(stored.outcome)) throw new Error("continuation outcome remains unresolved");
         privateSave(path, { ...pending, state: "completed", outcome: result, outcomeHash: digest(result), challenge: randomBytes(32).toString("hex") });
       } catch { privateSave(path, { ...pending, state: "unknown" }); }
     })();
-    jobs.add(job); void job.finally(() => jobs.delete(job)).catch(() => {});
+    jobs.set(id, job); void job.finally(() => jobs.delete(id)).catch(() => {});
     return publicContinuation(pending);
   }
   function outcome(id: unknown) {
@@ -158,5 +177,5 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
       policyRehearsal: "unavailable", resourcePreview: "unavailable", informationFlow: "unknown" };
   }
   return { project, retained, startContinuation, outcome, acknowledge, propose, selectTemplate, explain,
-    async close() { closed = true; await Promise.allSettled([...jobs]); } };
+    async close() { closed = true; await Promise.allSettled([...jobs.values()]); } };
 }

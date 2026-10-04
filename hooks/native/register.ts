@@ -13,6 +13,7 @@ let interactive = false;
 let notice = "";
 let generation = 0;
 let pane: "operations" | "task" = "operations";
+let refreshRead: { sessionId: string; generation: number; promise: Promise<ControlStatus | null> } | null = null;
 
 function endpoint(base: string): string {
   const url = new URL(base);
@@ -25,19 +26,23 @@ async function refresh($: EngineInterface, options: PluginOptions): Promise<Cont
     sessionId = actual; pane = "operations"; status = null; selectedId = null; showDetails = false; notice = ""; generation += 1;
     await $.ui.close({ id: "chio" });
   }
-  const thisGeneration = ++generation;
-  let stage = "configuration";
-  try {
-    stage = "transport";
-    const received = await $.chio.status();
-    if (thisGeneration !== generation || await $.session.id() !== actual) return null;
-    status = received;
-  } catch {
-    $.ui.log(`Chio control refresh unavailable at ${stage}`, { to: "debug" });
-    if (thisGeneration === generation) { status = null; notice = "Control service disconnected. No authority decision was inferred."; }
-  }
-  $.ui.invalidate("ui.render");
-  return thisGeneration === generation ? status : null;
+  const thisGeneration = generation;
+  if (refreshRead?.sessionId === actual && refreshRead.generation === thisGeneration) return refreshRead.promise;
+  const pending = { sessionId: actual, generation: thisGeneration, promise: (async () => {
+    try {
+      const received = await $.chio.status();
+      if (thisGeneration !== generation || await $.session.id() !== actual) return null;
+      status = received;
+    } catch {
+      $.ui.log("Chio control refresh unavailable at transport", { to: "debug" });
+      if (thisGeneration === generation) { status = null; notice = "Control service disconnected. No authority decision was inferred."; }
+    }
+    if (thisGeneration !== generation) return null;
+    $.ui.invalidate("ui.render"); return status;
+  })() };
+  refreshRead = pending;
+  try { return await pending.promise; }
+  finally { if (refreshRead === pending) refreshRead = null; }
 }
 async function request($: EngineInterface, options: PluginOptions, kind: IntentKind, operation?: OperationView): Promise<string> {
   const capturedSession = sessionId;
@@ -248,11 +253,10 @@ export const register: Register = (on, options) => {
     const rows = [Text({ children: statusLine(status, Date.now()) }), Text({ dimColor: true, children: `Session ${safeText(sessionId)}` }),
       Text({ children: summary }), Text({ children: safeText(notice) })];
     for (const intent of intents) rows.push(Text({ children: `${intent.kind} ${intent.state} · ${safeText(intent.id)}${Date.now() >= intent.expiresAt ? " · request expired; inspect its original outcome" : ""}` }));
-    if (fresh && operation?.review?.decision === "required" && intents.length === 0) {
+    if (fresh && operation?.review?.decision === "required" && !intents.some(intent => intent.kind !== "alternative")) {
       rows.push(Text({ dimColor: true, children: "These controls request a decision. Authority requires confirmation outside Claude." }));
       rows.push(Button({ key: "approve", label: "Request approval of this exact action", onPress: async () => { try { await request($, options, "approve", operation); } catch { notice = "Approval unconfirmed; refresh the original action."; $.ui.invalidate("ui.render"); } } }));
       rows.push(Button({ key: "decline", label: "Request decline", onPress: async () => { try { await request($, options, "decline", operation); } catch { notice = "Decline unconfirmed; refresh the original action."; $.ui.invalidate("ui.render"); } } }));
-      rows.push(Button({ key: "alternative", label: "Request a permitted alternative", onPress: async () => { try { await request($, options, "alternative", operation); } catch { notice = "Alternative request unconfirmed."; $.ui.invalidate("ui.render"); } } }));
     }
     const continuation = status?.continuations?.find(c => c.requestId === operation?.requestId);
     if (fresh && operation?.review?.decision === "granted" && status?.workflow?.continuation && !continuation) rows.push(Button({ key: "continue", label: "Continue this exact action", onPress: async () => {

@@ -1,0 +1,200 @@
+{
+  "schema": "chio.claude.native-acceptance.v1",
+  "recordedAt": "2026-10-04T01:58:18.067995+00:00",
+  "version": "0.4.0-rc.3",
+  "productionQualified": false,
+  "sourceBaseline": "ad023ce75f8f2aa470ec2d43d8370d2479aaf270",
+  "hostVersion": "2.1.287",
+  "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
+  "nativeModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+  "artifacts": {
+    "hooks/native/register.ts": "8361cc33362735727b87623c097cf81bab3e746f8d7732dc79fe4cba6461ff43",
+    "hooks/native/projection.ts": "67d8ef0cb36db8bfdd689db637a98afe968cd8600cccd728a0797e49ee11cdfe",
+    "hooks/native/workflow.ts": "308eeb9ccb50e8e5952ce4a70a2d7fa39bac902e1b6c629d11246eff946e831c",
+    "types/control.d.ts": "d84b75e1f0fb32c571850036ae66eb0e8063cf14558aa5788f8b6ece2d570309",
+    "types/workflow.d.ts": "906bcdf85ccf288569a531aa1611baeb40f17469274e5f769b98425432dc0b6c",
+    "types/chio.d.ts": "4f059e11a418010c7e229effc9d44a322bcec045fada1e8d8d96907ffb8c822b",
+    "dist/control/service.js": "fa6a0d4c2a197a8042f5d83d8e7d9d0b07a23932aba4af99bbbe3a4dca8a28a8",
+    "dist/gateway-http.js": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
+    "dist/workflow/tasks.js": "3aaf4f5730455b57030aaf20bde1208b6dffdd05e0adc7cf8cd4686da063c16e",
+    "dist/workflow/handoff.js": "56fa8c10ba4bbfe6ab58a6d357725664991740a5a73e3e6dd8513f581782e65b",
+    "dist/workflow/prepare.js": "fb06bf81c4d2352d40eaec167d34ba1bc3ab34aa61b9aca112030a71f9fa5ebe",
+    "dist/workflow/store.js": "c22ae10132ae26c13189395b0540653913456fd36f37a7c4d513ec5a780cdad3",
+    "scripts/control-transport.mjs": "1caded8ea886d079a535515eda685c071cbb8685cd2119dd735113011674cb2d",
+    "scripts/gateway-http.mjs": "fc3c18df4afe513c4dec05cf0fd12fac01b2f1ca6b76e0d424f57f9ee7a1684f",
+    "scripts/task.mjs": "66d2cf5d443412294cd61cb16f3aef0d3e6ea0ff12b739c96442ce389991c228",
+    "scripts/restricted.mjs": "6645dd81c8cc651bcb43c8f174921fcd64bfef856c4ed1c25622d662351cecdb",
+    "scripts/model-relay.mjs": "25a09317a847aeda582b59ef985a51dd53827addeff6d258535d18c4d69dba75",
+    "scripts/sandbox.mjs": "7ab4b1072cd8007e0634d0aa41e37e6e98329a2b67260c5ee2f07d1ba85e08d9",
+    "scripts/mod-profile.mjs": "be6a339c2a2f0d4daeeb685b49bd3779b129803ea8309b5655339d2203c964c9",
+    "scripts/control.mjs": "5b957f3f607423862fed9216b1954b862ab11454e9713c97d628c1f73eecf41a",
+    "scripts/host-supervisor.mjs": "07ec66143bf1276217e7a240eef39156e656c2dd7e3ec210810807809d979155",
+    "scripts/doctor.mjs": "0eacc97009842566c3e925fa1df979e57ee48ca8c371bdc806c53691a31c7431"
+  },
+  "localToolchain": {
+    "node": "v25.5.0",
+    "npm": "11.8.0",
+    "python": "3.11.4",
+    "platform": "darwin-arm64",
+    "terminalEmulator": {
+      "pyte": "0.8.2",
+      "wcwidth": "0.9.1"
+    }
+  },
+  "checks": {
+    "typecheck": "passed",
+    "build": "passed",
+    "unit": {
+      "passed": 76,
+      "failed": 0,
+      "evidenceClass": "local regressions and signed deterministic fixtures"
+    },
+    "nativeModHarness": {
+      "passed": 18,
+      "failed": 0,
+      "evidenceClass": "selected host event/drawing harness; stubbed APIs"
+    },
+    "middlewareContract": {
+      "passed": 4,
+      "failed": 0,
+      "evidenceClass": "selected host harness; stubbed dispatch"
+    },
+    "hostFixtures": {
+      "passed": 8,
+      "failed": 0,
+      "evidence": "HOST-FIXTURES.json",
+      "evidenceClass": "actual selected host and macOS sandbox; deterministic local model and stubbed kernel/resource owner; no live resource qualification"
+    },
+    "cleanConsumer": {
+      "evidenceLocation": "exact tarball and offline-install sidecar retained outside package; no self-referential digest"
+    },
+    "publicationGate": {
+      "result": "rejected as required",
+      "exitCode": 1,
+      "reason": "productionQualified is false"
+    },
+    "workflowSyntax": "both YAML workflows parsed",
+    "localDocumentLinks": {
+      "checked": 70,
+      "missing": 0,
+      "scope": "current changed public Markdown and current and historical controlled-workflow reports"
+    },
+    "companionPython": {
+      "passed": 77,
+      "failed": 0,
+      "evidenceClass": "local companion helper and required-agent Python regressions; Rust workspace release qualification not claimed",
+      "commit": "cf378e457bc9714977c698457695bd466800793e"
+    },
+    "liveEnforcingOwner": {
+      "evidence": "../qualification-environment/REPORT.md",
+      "exactApprovalAccepted": true,
+      "missingApprovalPrevented": true,
+      "observedDisposableWrites": 1,
+      "capturedInvocations": 1,
+      "originalUnknownRetainedAfterRestart": true,
+      "originalResultRecovered": false,
+      "productionQualified": false
+    },
+    "provider": {
+      "evidence": "../qualification-environment/PROVIDER.json",
+      "loggedIn": true,
+      "authMethod": "claude.ai",
+      "nativeCredentialObserved": true,
+      "liveConversationRequests": 8,
+      "statuses": [
+        429,
+        429,
+        429,
+        429,
+        429,
+        429,
+        429,
+        429
+      ],
+      "successfulModelResult": false,
+      "productionQualified": false
+    }
+  },
+  "gates": {
+    "hostContract": {
+      "qualified": true,
+      "evidenceClass": "live-host-contract",
+      "scope": "selected darwin-arm64 loader, event and bounded actual-host cases"
+    },
+    "sessionLifecycle": {
+      "qualified": false,
+      "evidenceClass": "partial-host-and-stubbed-harness",
+      "reason": "Initial session, clear and natural terminal exit observed in actual-host fixtures. A retained native credential received HTTP 401 after owner restart before expiry. Full reload/resume/branch/reconnect remains unqualified."
+    },
+    "kernelDecisions": {
+      "qualified": false,
+      "evidenceClass": "partial-live-kernel",
+      "reason": "Exact live approval and missing-approval prevention observed on separate native file sessions. Full live expiry, revocation and supported Docker profile remain unqualified."
+    },
+    "interactiveProtection": {
+      "qualified": false,
+      "evidenceClass": "partial-live-host-and-owner",
+      "reason": "Actual host fixtures passed. Docker owner fails enforcing initialization; separate native writer fails its durability syscall. No joined protected live-provider workflow."
+    },
+    "nativeRecovery": {
+      "qualified": false,
+      "evidenceClass": "live-negative-owner-experiment",
+      "reason": "One real write and one captured invocation persist after restart with original unknown operation and fences. fsync SIGSYS prevented a verified original result. Original-outcome recovery remains unqualified."
+    },
+    "coldInstall": {
+      "qualified": false,
+      "evidenceClass": "artifact-check-separate",
+      "reason": "Offline package behavior is recorded separately. Complete supported live-kernel activation remains open."
+    }
+  },
+  "qualificationBlockers": [
+    {
+      "code": "signed-tool-metadata-contract",
+      "evidence": "../qualification-environment/TOOLS-PROJECTION.json",
+      "detail": "Actual fourteen-tool discovery includes execution.taskSupport forbidden metadata rejected by selected manifest provisioner; projected four-tool surface is only a launch probe."
+    },
+    {
+      "code": "docker-cage-sigsys",
+      "evidence": "../qualification-environment/DOCKER-LAUNCH.json",
+      "detail": "Fully enforced Docker client exits on SIGSYS before authenticated MCP initialization. First rejected syscall not retained."
+    },
+    {
+      "code": "native-writer-fsync-sigsys",
+      "evidence": "../qualification-environment/NATIVE-SYSCALL.json",
+      "detail": "Actual approved writer is killed at x86_64 fsync after one observed effect. Verified original result unavailable; unknown fence and one captured invocation retained after restart."
+    },
+    {
+      "code": "retained-credential-revalidation",
+      "evidence": "../qualification-environment/NATIVE-CREDENTIAL.json",
+      "detail": "Read-only delegated context received HTTP 401 after restart with an unexpired credential. Lifecycle contract remains unqualified; no replacement execution session or redispatch attempted."
+    },
+    {
+      "code": "live-provider-429",
+      "evidence": "../qualification-environment/PROVIDER.json",
+      "detail": "Selected host sees claude.ai login and native subscription credential. Actual print-argument requests reached Anthropic through relay and returned HTTP 429; no successful model result."
+    }
+  ],
+  "featureBoundaries": {
+    "completion": "read-only artifact-bound observations; no evidence-gated admission",
+    "taskScope": "operator templates, native request and trusted provisioning; no UI grant",
+    "continuation": "same gateway queue and original operation; native delivery distinguished from model delivery",
+    "typedApi": "candidate namespace; expanded connector profile remains unqualified",
+    "policyRehearsal": "unavailable",
+    "resourceVersionPreview": "unavailable",
+    "informationFlow": "unknown",
+    "reviewInbox": "trusted CLI; remote UI and reviewer roles remain future work",
+    "handoff": "operator-signed advisory snapshot; no authority or budget transfer",
+    "multiOperationPlans": "deferred",
+    "budgetedDelegation": "deferred",
+    "suspendAndDrain": "deferred",
+    "doctor": "read-only exact-session projection plus separate trusted operator infrastructure probe; no repair, protected dispatch or automatic qualification"
+  },
+  "resolvedInfrastructureBlocker": {
+    "historicalEvidence": "OWNER-PREFLIGHT.json",
+    "currentEvidence": "../qualification-environment/SHARED-VM.json",
+    "sharedVmAvailabilityRecovered": true,
+    "originalFilesystemRepaired": false,
+    "sixOriginalContainersAndBindingsRetained": true,
+    "applicationFunctionalAcceptance": false
+  }
+}

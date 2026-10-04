@@ -24,17 +24,18 @@ export interface TaskRecord {
   observations: { requirementId: string; revision: string; artifact: ArtifactRef; state: RequirementView["state"]; observedAt: number; source: string }[];
 }
 const token = /^[a-zA-Z0-9_.-]{1,128}$/;
+function identifier(value: unknown): value is string { return typeof value === "string" && token.test(value); }
 export function artifactValid(value: ArtifactRef): boolean {
   return !!value && typeof value.label === "string" && value.label.length <= 256
     && (value.kind === "git_commit" ? /^[0-9a-f]{40}$/.test(value.digest) : value.kind === "sha256" && /^[0-9a-f]{64}$/.test(value.digest));
 }
 export function validateTemplate(value: Template): Template {
-  if (!value || !token.test(value.id) || typeof value.title !== "string" || value.title.length > 256
-    || !token.test(value.serverId) || typeof value.expectedCapabilityId !== "string" || !value.expectedCapabilityId || value.expectedCapabilityId.length > 512
+  if (!value || !identifier(value.id) || typeof value.title !== "string" || value.title.length > 256
+    || !identifier(value.serverId) || typeof value.expectedCapabilityId !== "string" || !value.expectedCapabilityId || value.expectedCapabilityId.length > 512
     || !Array.isArray(value.allowedTools) || !value.allowedTools.length || value.allowedTools.length > 64
-    || value.allowedTools.some(v => !token.test(v)) || new Set(value.allowedTools).size !== value.allowedTools.length
+    || value.allowedTools.some(v => !identifier(v) || v === "chio_resume") || new Set(value.allowedTools).size !== value.allowedTools.length
     || !Number.isSafeInteger(value.ttlSeconds) || value.ttlSeconds < 1 || value.ttlSeconds > 3600
-    || !value.approval || !Array.isArray(value.approval.requiredTools) || value.approval.requiredTools.some(v => !value.allowedTools.includes(v))
+    || !value.approval || !Array.isArray(value.approval.requiredTools) || !value.approval.requiredTools.length || value.approval.requiredTools.some(v => !value.allowedTools.includes(v))
     || typeof value.approval.purpose !== "string" || value.approval.purpose.length > 1024
     || !Number.isSafeInteger(value.approval.ttlSeconds) || value.approval.ttlSeconds < 1 || value.approval.ttlSeconds > value.ttlSeconds
     || !value.scope || value.scope.source !== "operator_template" || value.scope.budget !== "unavailable"
@@ -42,7 +43,7 @@ export function validateTemplate(value: Template): Template {
     || !Array.isArray(value.requirements) || !value.requirements.length || value.requirements.length > 32
     || new Set(value.requirements.map(r => r.id)).size !== value.requirements.length) throw new Error("invalid operator task template");
   for (const r of value.requirements) {
-    if (!token.test(r.id) || typeof r.title !== "string" || r.title.length > 256) throw new Error("invalid completion requirement");
+    if (!r || !identifier(r.id) || typeof r.title !== "string" || r.title.length > 256) throw new Error("invalid completion requirement");
     const c = r.collector;
     if (c?.kind === "command") {
       if (typeof c.cwd !== "string" || resolve(c.cwd) !== c.cwd || !Array.isArray(c.argv) || !c.argv.length || c.argv.length > 64
@@ -91,18 +92,31 @@ export function createTask(path: string, value: Omit<TaskRecord, "schema" | "id"
   privateSave(path, task, true); return readTask(path);
 }
 async function run(argv: string[], cwd: string, timeoutMs: number): Promise<{ code: number; stdout: string }> {
-  const child = spawn(argv[0]!, argv.slice(1), { cwd, shell: false, env: { PATH: process.env.PATH ?? "", LANG: "C.UTF-8", GIT_CONFIG_NOSYSTEM: "1", GIT_CONFIG_GLOBAL: "/dev/null" }, stdio: ["ignore", "pipe", "pipe"] });
-  let stdout = "", size = 0, overflow = false;
-  const capture = (data: Buffer) => { size += data.length; if (size > 1024 * 1024) { overflow = true; child.kill("SIGTERM"); } };
+  const grouped = process.platform !== "win32";
+  const child = spawn(argv[0]!, argv.slice(1), { cwd, shell: false, detached: grouped, env: { PATH: process.env.PATH ?? "", LANG: "C.UTF-8", GIT_CONFIG_NOSYSTEM: "1", GIT_CONFIG_GLOBAL: "/dev/null" }, stdio: ["ignore", "pipe", "pipe"] });
+  let stdout = "", size = 0, overflow = false, timedOut = false;
+  let kill: ReturnType<typeof setTimeout> | undefined;
+  const signal = (value: NodeJS.Signals) => {
+    if (!child.pid) return;
+    try { if (grouped) process.kill(-child.pid, value); else child.kill(value); }
+    catch (error) { if ((error as NodeJS.ErrnoException).code !== "ESRCH") throw error; }
+  };
+  const stop = () => { signal("SIGTERM"); kill ??= setTimeout(() => signal("SIGKILL"), 1000); };
+  const capture = (data: Buffer) => { size += data.length; if (size > 1024 * 1024 && !overflow) { overflow = true; stop(); } };
   child.stdout.on("data", (data: Buffer) => { capture(data); if (!overflow) stdout += data.toString(); });
   child.stderr.on("data", capture);
-  const timeout = setTimeout(() => child.kill("SIGTERM"), timeoutMs);
-  const kill = setTimeout(() => child.kill("SIGKILL"), timeoutMs + 1000);
+  const timeout = setTimeout(() => { timedOut = true; stop(); }, timeoutMs);
   try {
     const code = await new Promise<number>((done, reject) => { child.once("error", reject); child.once("close", code => done(code ?? -1)); });
     if (overflow) throw new Error("collector output exceeds limit");
+    if (timedOut) throw new Error("collector deadline exceeded; no completion evidence recorded");
     return { code, stdout };
-  } finally { clearTimeout(timeout); clearTimeout(kill); }
+  } finally {
+    clearTimeout(timeout);
+    // Closing the parent's pipes does not mean its process group is gone.
+    // Finish cancellation even when a descendant has redirected its output.
+    if (kill) { clearTimeout(kill); signal("SIGKILL"); }
+  }
 }
 async function checkoutMatches(task: TaskRecord, requireClean: boolean): Promise<boolean> {
   if (!task.checkout) return true;

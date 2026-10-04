@@ -151,7 +151,7 @@ general Bash confinement remain outside this candidate.
 The package uses npm's locked and vendored dependencies and self-contained
 runtime bundles. The obsolete Bun lock referenced an unrelated local bridge
 checkout and was removed. The
-[cold-consumer driver](../../../scripts/acceptance/package-native.mjs) checks a
+[cold-consumer driver](https://github.com/backbay-labs/chio-claude-code-plugin/blob/e5919d13488bef0382efb934895f42f8d1d36106/scripts/acceptance/package-native.mjs) checks a
 new offline cache, an installed runtime, a marketplace-style tree without
 `node_modules`, strict selected-host validation and a disconnected native
 command. Final tarball digests and consumer results belong in external candidate

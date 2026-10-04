@@ -124,6 +124,14 @@ test("expired scoped credential and expired decision intent refuse controls", as
   const expired = await startControlServer({ ...f.options, authorityExpiresAt: 1 }); t.after(() => expired.close());
   const response = await fetch(expired.url + "/sessions/host-session-a/status", { headers: { Authorization: `Bearer ${expired.token}` } }); assert.equal(response.status, 401);
 });
+
+test("unsupported alternatives cannot consume the original exact review", async t => {
+  const f = await fixture(t); const op = (await (await f.get()).json()).operations[0];
+  const input = { requestId: op.requestId, revision: op.review.revision };
+  assert.equal((await f.post({ ...input, kind: "alternative" })).status, 409);
+  assert.equal((await (await f.get()).json()).intents.length, 0);
+  assert.equal((await f.post({ ...input, kind: "approve" })).status, 202); assert.equal(f.effects(), 0);
+});
 test("control server refuses an existing credential output without deleting its owner's file", async t => {
   const f = await fixture(t); const now = Math.floor(Date.now() / 1000);
   const prepared = { ...f.config, sessionCredential: { schema: "chio.mcp.session-credential.v1", sessionId: f.config.execution.sessionId,

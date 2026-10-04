@@ -3,7 +3,7 @@ import { createHash, randomBytes, randomUUID, timingSafeEqual } from "node:crypt
 import { closeSync, existsSync, fsyncSync, lstatSync, mkdirSync, openSync, readFileSync, readdirSync, renameSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { canonicalizeJson } from "@chio-protocol/sdk/invariants";
-import { createMcpExecutionClient, verifyCompletedOutcome } from "@chio/bridge";
+import { createMcpExecutionClient } from "@chio/bridge";
 // Internal bridge contracts are pinned by the vendored archive and bundled at release.
 import { gatewayApprovalPath, gatewayBinding, operationKey, privatePath, type GatewayConfig, type StoredOperation } from "../../node_modules/@chio/bridge/dist/gateway.js";
 import { gatewayStatus } from "../../node_modules/@chio/bridge/dist/gateway-operator.js";
@@ -12,9 +12,10 @@ import type { ControlStatus, IntentKind, IntentState, IntentView, OperationView 
 
 import { createWorkflowControl, type WorkflowOptions } from "../workflow/control.js";
 import { projectTask, readCatalog, readTask, templateView } from "../workflow/tasks.js";
+import { verifiedOriginal } from "../workflow/outcome.js";
 
 const LIMIT = 1024 * 1024;
-const kinds: IntentKind[] = ["approve", "decline", "alternative", "revoke"];
+const kinds: IntentKind[] = ["approve", "decline", "revoke"];
 interface IntentRecord extends IntentView { schema: "chio.control.intent.v1"; binding: string; revision: string; createdAt: number }
 export interface ControlOptions {
   config: GatewayConfig;
@@ -81,7 +82,7 @@ function reviewRevision(config: GatewayConfig, record: StoredOperation): string 
   return hash({ binding: gatewayBinding(config), requestId: record.requestId, digest: record.digest, state: record.state, proposal: record.proposal ?? null });
 }
 function project(config: GatewayConfig, record: StoredOperation): OperationView {
-  const verified = record.state === "completed" && !!record.request && record.outcome?.state === "completed" && verifyCompletedOutcome(record.outcome, config.execution, record.request);
+  const verified = verifiedOriginal(config, record);
   const state = record.state === "completed" && !verified ? "unknown" : record.state;
   let decision: "required" | "granted" | "declined" | "expired" = "required";
   if (record.proposal) {
@@ -95,7 +96,7 @@ function project(config: GatewayConfig, record: StoredOperation): OperationView 
     : state === "awaiting_approval" ? decision === "granted" ? "explicit_resume" : decision === "required" ? "review" : "linked_continuation"
     : state === "completed" && (!record.acknowledged || record.hostDeliveryRequired !== false && !record.hostDeliveryConfirmed) ? "acknowledge_delivery" : "none";
   const view: OperationView = { requestId: record.requestId, state, evidence: verified ? "verified" : "unverified",
-    acknowledged: record.acknowledged === true, hostDeliveryConfirmed: record.hostDeliveryConfirmed === true, nextAction,
+    acknowledged: verified && record.acknowledged === true, hostDeliveryConfirmed: verified && record.hostDeliveryConfirmed === true, nextAction,
     ...(record.request?.tool || record.proposal?.tool_name ? { tool: record.request?.tool ?? record.proposal!.tool_name } : {}),
     ...(verified && record.outcome?.state === "completed" && record.outcome.receipt ? { receiptId: record.outcome.receipt.id } : {}) };
   if (record.proposal && state === "awaiting_approval") {
@@ -140,7 +141,7 @@ export async function controlStatus(options: ControlOptions): Promise<ControlSta
   return { schema: "chio.control.status.v1", sessionId: config.sessionId, checkedAt: Date.now(), scope: options.scope ?? "kernel_mcp", authority,
     authorityExpiresAt: options.authorityExpiresAt, protectedTools: config.tools.map(tool => tool.name), revision: hash(gatewayBinding(config)),
     awaitingReview: operations.filter(op => op.review?.decision === "required").length, unresolved,
-    fenced: gatewayStatus(config).fenced, operations, intents,
+    fenced: gatewayStatus(config).fenced || operations.some(op => op.state === "pending" || op.state === "unknown"), operations, intents,
     workflow: { ...(task ? { task } : {}), templates, requests, continuation: !!workflow?.resume && !!workflow?.acknowledge, proposals: !!workflow?.propose } };
 }
 function requestIntent(options: ControlOptions, input: Record<string, unknown>): IntentView {
@@ -156,7 +157,7 @@ function requestIntent(options: ControlOptions, input: Record<string, unknown>):
     if (!record || record.state !== "awaiting_approval" || project(config, record).review?.decision !== "required" || reviewRevision(config, record) !== input.revision) throw new Error("review is stale, already decided, or belongs to another action");
   }
   const existing = intentRecords(config);
-  if (existing.some(intent => intent.requestId === input.requestId && intent.revision === input.revision)) throw new Error("review intent already recorded; inspect its original outcome");
+  if (existing.some(intent => intent.kind !== "alternative" && intent.requestId === input.requestId && intent.revision === input.revision)) throw new Error("review intent already recorded; inspect its original outcome");
   const record: IntentRecord = { schema: "chio.control.intent.v1", id: randomUUID(), kind, state: "requested", sessionId: config.sessionId,
     ...(typeof input.requestId === "string" ? { requestId: input.requestId } : {}), revision: input.revision, binding: hash(gatewayBinding(config)),
     createdAt: Date.now(), expiresAt: Math.min(Date.now() + 90_000, options.authorityExpiresAt * 1000) };

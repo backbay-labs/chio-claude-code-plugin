@@ -1,6 +1,6 @@
 # Native Chio interface
 
-The 0.4.0-rc.3 candidate adds native session status, exact-action review, evidence,
+The 0.4.0-rc.4 candidate adds native session status, exact-action review, evidence,
 recovery requirements and immediate commands. The kernel and trusted gateway
 retain execution authority. A control in Claude records review intent; trusted
 operator confirmation happens outside the host. The [controlled-task runbook](./CONTROLLED-TASKS.md) covers guided setup, completion evidence, continuation, the typed namespace and handoffs.
@@ -88,10 +88,13 @@ impact are **unavailable** in the pinned gateway projection; kernel policy still
 applies. Revision binds the exact retained operation and frozen gateway authority
 and configuration. This is not an independently verified policy-file revision.
 
-Buttons request exact approval, decline or a permitted alternative. The service
+Buttons request exact approval or decline. Alternative requests remain unavailable
+until a linked-action contract is qualified, so they cannot consume an exact
+review without a supported continuation. The service
 returns `requested`, `authorityAccepted: false` and `dispatchPerformed: false`.
-Alternative requests are retained for the operator; semantic remedy generation
-and validation are not implemented.
+Previously recorded alternative requests remain visible to the operator and do
+not block supported exact decisions. Semantic remedy generation and validation
+are not implemented.
 
 ## Operator service and ordinary sessions
 

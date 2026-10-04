@@ -31,7 +31,7 @@ Manifest and module checks are static validation. The four [control-flow tests](
 
 No sample mod was loaded into a live session, and no new protected-host test was performed. Public declarations are older than the documented API baseline. Generate declarations from the exact host selected for implementation rather than copying the public file as the authoritative contract.
 
-The existing [qualification record](../../acceptance/2026-09-10/final-static-continuation/README.md) is retained historical evidence. It does not transfer to a newer binary. The separate release-qualification worktree was inspected only for status; its work remains independent.
+The existing [qualification record](https://github.com/backbay-labs/chio-claude-code-plugin/blob/65ac8390c57a5292c055fba50caa1aafbd915848/acceptance/2026-09-10/final-static-continuation/README.md) is retained historical evidence. It does not transfer to a newer binary. The separate release-qualification worktree was inspected only for status; its work remains independent.
 
 ## What the new platform actually provides
 

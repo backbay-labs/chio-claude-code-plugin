@@ -1,40 +1,40 @@
      Restrictions: Exact write review                                 │Chio · isolated kernel MCP · authority✕
-     Scope descriptions come from the operator template. Kernel       │10m · 1 review · 0 unresolved          
-     authority is checked separately. Budget detail unavailable.      │Session                                
-     Readiness covers this contract's observed requirements; it does  │008d5212-001c-420b-bc98-b558c1df00c3   
-     not admit or perform a release action.                           │write_file · awaiting_approval         
-                                                                      │requested → awaiting review            
-❯ Execute the fixed fixture once, then stop on review or refusal.     │Purpose: exact fixture write           
-                                                                      │Requested capability:                  
-  Called chio                                                         │fixture-capability                     
-                                                                      │Grant TTL: 300s · decision: required   
-⏺ Fixture stopped. Operator review is required.                       │Kernel policy applies. Budget impact   
-                                                                      │unavailable.                           
-✻ Worked for 0s · done 6:17 PM                                        │Exact arguments:                       
-                                                                      │{                                      
-❯ /chio-review                                                        │  "content": "exact fixture payload",  
-  ⎿  chio: Chio · isolated kernel MCP · authority 10m · 1 review · 0  │  "path": "/protected/test.txt"        
-     unresolved                                                       │}                                      
-     Session: 008d5212-001c-420b-bc98-b558c1df00c3                    │These controls request a decision.     
-     write_file · 008d5212-001c-420b-bc98-b558c1df00c3:e17c13bf71f3166│Authority requires confirmation outside
-     712660bbbfe358d9243759c8b2016154b570ade2958006cd0                │Claude.                                
+     Scope descriptions come from the operator template. Kernel       │10m · 1 review · 0 unresolved
+     authority is checked separately. Budget detail unavailable.      │Session
+     Readiness covers this contract's observed requirements; it does  │84e72661-ffb7-444d-8a3e-3d4bce785727
+     not admit or perform a release action.                           │write_file · awaiting_approval
+                                                                      │requested → awaiting review
+❯ Execute the fixed fixture once, then stop on review or refusal.     │Purpose: exact fixture write
+                                                                      │Requested capability:
+  Called chio                                                         │fixture-capability
+                                                                      │Grant TTL: 300s · decision: required
+⏺ Fixture stopped. Operator review is required.                       │Kernel policy applies. Budget impact
+                                                                      │unavailable.
+✻ Brewed for 0s · done 2:13 AM                                        │Exact arguments:
+                                                                      │{
+❯ /chio-review                                                        │  "content": "exact fixture payload",
+  ⎿  chio: Chio · isolated kernel MCP · authority 10m · 1 review · 0  │  "path": "/protected/test.txt"
+     unresolved                                                       │}
+     Session: 84e72661-ffb7-444d-8a3e-3d4bce785727                    │These controls request a decision.
+     write_file · 84e72661-ffb7-444d-8a3e-3d4bce785727:7d9de1712cc6228│Authority requires confirmation outside
+     c2d65406ccf25c6c70d622d9b2ce14c304278425a0d4c4609                │Claude.
      State: awaiting_approval · evidence: unverified                  │[ Request approval of this exact action
-     requested → awaiting review                                      │]                                      
-     Kernel acknowledgement: unconfirmed                              │[ Request decline ]                    
-     Host                                                             │                                       
-  Called chio                                                         │                                       
-                                                                      │                                       
-⏺ Fixture stopped. Operator review is required.                       │                                       
-                                                                      │                                       
-✻ Worked for 0s · done 6:17 PM                                        │                                       
-                                                                      │                                       
-❯ /chio-review                                                        │                                       
-                                                                      │                                       
-✽ Boondoggling…                                                       │                                       
-  ⎿  Tip: Use /memory to view and manage Claude memory                │                                       
-Chio · isolated kernel MCP · authority 10m · 1 review · 0 unresolve[-]│                                       
-                                                  ◐ medium · /effort  │                                       
+     requested → awaiting review                                      │]
+     Kernel acknowledgement: unconfirmed                              │[ Request decline ]
+     Ho                                                               │
+  Called chio                                                         │
+                                                                      │
+⏺ Fixture stopped. Operator review is required.                       │
+                                                                      │
+✻ Brewed for 0s · done 2:13 AM                                        │
+                                                                      │
+❯ /chio-review                                                        │
+                                                                      │
+✽ Percolating…                                                        │
+  ⎿  Tip: Use /memory to view and manage Claude memory                │
+Chio · isolated kernel MCP · authority 10m · 1 review · 0 unresolve[-]│
+                                                  ◐ medium · /effort  │
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
-❯                                                                                                             
+❯ 
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
-  ⏵⏵ don't ask on (shift+tab to cycle) · esc to interrupt · ← for agents                                      
+  ⏵⏵ don't ask on (shift+tab to cycle) · esc to interrupt · ← for agents

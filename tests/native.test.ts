@@ -1,4 +1,4 @@
-import { expect, test } from "claude-code/testing";
+import { expect, mock, test } from "claude-code/testing";
 import type { On, CommandRunInput, HttpResponse } from "claude-code";
 import type { ControlStatus } from "../types/control.js";
 
@@ -193,4 +193,45 @@ test("a retained unknown decision shows its original state and cannot submit ano
   const ui = await $.ui.mount({ plugin: "chio", surface: "terminal", component: "Pane", requestId: "chio", props: paneProps });
   expect(await ui.find({ type: "Text", text: "approve unknown" })).toBeDefined(); expect(await ui.find({ key: "approve" })).toBeUndefined();
   expect(await ui.find({ key: "decline" })).toBeUndefined(); await ui.unmount();
+});
+
+test("overlapping status refreshes share one read and both return the current projection", { options }, async ($, on) => {
+  const clock = mock.clock(on);
+  let reads = 0;
+  let release!: () => void;
+  const remote = new Promise<void>(resolve => { release = resolve; });
+  on("session.id", () => ({ value: "session-a" }));
+  on("ui.close", () => ({ value: undefined }));
+  on("http.fetch", async () => {
+    reads++; await remote;
+    return { value: { status: 200, ok: true, headers: {}, text: JSON.stringify(projection()) } };
+  });
+  const answers = Promise.all([$.command.run(command("chio-status")), $.command.run(command("chio-status"))]);
+  await clock.settle(); release();
+  for (const answer of await answers) { expect(answer.exitCode).toBe(0); expect(answer.text).toContain("authority 10m"); }
+  expect(reads).toBe(1);
+});
+
+test("review does not expose an alternative that has no supported continuation contract", { options }, async ($, on) => {
+  stub(on, () => "session-a", () => projection());
+  await $.command.run(command("chio-review", "request-a"));
+  const ui = await $.ui.mount({ plugin: "chio", surface: "terminal", component: "Pane", requestId: "chio", props: paneProps });
+  expect(await ui.find({ key: "alternative" })).toBeUndefined();
+  expect(await ui.find({ key: "approve" })).toBeDefined(); await ui.unmount();
+});
+
+test("a session change during a shared refresh cannot overwrite the new session's evidence", { options }, async ($, on) => {
+  const clock = mock.clock(on); let actual = "session-a";
+  let release!: () => void; const oldResponse = new Promise<void>(resolve => { release = resolve; });
+  on("session.id", () => ({ value: actual })); on("ui.close", () => ({ value: undefined }));
+  on("http.fetch", async ($, e) => {
+    const session = e.url.includes("/sessions/session-a/") ? "session-a" : "session-b";
+    if (session === "session-a") await oldResponse;
+    return { value: { status: 200, ok: true, headers: {}, text: JSON.stringify(projection(session)) } };
+  });
+  const original = $.command.run(command("chio-status")); await clock.settle();
+  actual = "session-b";
+  const current = await $.command.run(command("chio-status")); expect(current.exitCode).toBe(0); expect(current.text).toContain("Session: session-b");
+  release(); expect((await original).exitCode).toBe(1);
+  const final = await $.command.run(command("chio-status")); expect(final.exitCode).toBe(0); expect(final.text).toContain("Session: session-b");
 });

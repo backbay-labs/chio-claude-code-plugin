@@ -8922,13 +8922,16 @@ import { spawn } from "node:child_process";
 import { realpathSync as realpathSync3 } from "node:fs";
 import { resolve as resolve3 } from "node:path";
 var token = /^[a-zA-Z0-9_.-]{1,128}$/;
+function identifier(value) {
+  return typeof value === "string" && token.test(value);
+}
 function artifactValid(value) {
   return !!value && typeof value.label === "string" && value.label.length <= 256 && (value.kind === "git_commit" ? /^[0-9a-f]{40}$/.test(value.digest) : value.kind === "sha256" && /^[0-9a-f]{64}$/.test(value.digest));
 }
 function validateTemplate(value) {
-  if (!value || !token.test(value.id) || typeof value.title !== "string" || value.title.length > 256 || !token.test(value.serverId) || typeof value.expectedCapabilityId !== "string" || !value.expectedCapabilityId || value.expectedCapabilityId.length > 512 || !Array.isArray(value.allowedTools) || !value.allowedTools.length || value.allowedTools.length > 64 || value.allowedTools.some((v) => !token.test(v)) || new Set(value.allowedTools).size !== value.allowedTools.length || !Number.isSafeInteger(value.ttlSeconds) || value.ttlSeconds < 1 || value.ttlSeconds > 3600 || !value.approval || !Array.isArray(value.approval.requiredTools) || value.approval.requiredTools.some((v) => !value.allowedTools.includes(v)) || typeof value.approval.purpose !== "string" || value.approval.purpose.length > 1024 || !Number.isSafeInteger(value.approval.ttlSeconds) || value.approval.ttlSeconds < 1 || value.approval.ttlSeconds > value.ttlSeconds || !value.scope || value.scope.source !== "operator_template" || value.scope.budget !== "unavailable" || [value.scope.resources, value.scope.destinations, value.scope.restrictions].some((a) => !Array.isArray(a) || a.length > 64 || a.some((s) => typeof s !== "string" || s.length > 1024)) || !Array.isArray(value.requirements) || !value.requirements.length || value.requirements.length > 32 || new Set(value.requirements.map((r) => r.id)).size !== value.requirements.length) throw new Error("invalid operator task template");
+  if (!value || !identifier(value.id) || typeof value.title !== "string" || value.title.length > 256 || !identifier(value.serverId) || typeof value.expectedCapabilityId !== "string" || !value.expectedCapabilityId || value.expectedCapabilityId.length > 512 || !Array.isArray(value.allowedTools) || !value.allowedTools.length || value.allowedTools.length > 64 || value.allowedTools.some((v) => !identifier(v) || v === "chio_resume") || new Set(value.allowedTools).size !== value.allowedTools.length || !Number.isSafeInteger(value.ttlSeconds) || value.ttlSeconds < 1 || value.ttlSeconds > 3600 || !value.approval || !Array.isArray(value.approval.requiredTools) || !value.approval.requiredTools.length || value.approval.requiredTools.some((v) => !value.allowedTools.includes(v)) || typeof value.approval.purpose !== "string" || value.approval.purpose.length > 1024 || !Number.isSafeInteger(value.approval.ttlSeconds) || value.approval.ttlSeconds < 1 || value.approval.ttlSeconds > value.ttlSeconds || !value.scope || value.scope.source !== "operator_template" || value.scope.budget !== "unavailable" || [value.scope.resources, value.scope.destinations, value.scope.restrictions].some((a) => !Array.isArray(a) || a.length > 64 || a.some((s) => typeof s !== "string" || s.length > 1024)) || !Array.isArray(value.requirements) || !value.requirements.length || value.requirements.length > 32 || new Set(value.requirements.map((r) => r.id)).size !== value.requirements.length) throw new Error("invalid operator task template");
   for (const r of value.requirements) {
-    if (!token.test(r.id) || typeof r.title !== "string" || r.title.length > 256) throw new Error("invalid completion requirement");
+    if (!r || !identifier(r.id) || typeof r.title !== "string" || r.title.length > 256) throw new Error("invalid completion requirement");
     const c = r.collector;
     if (c?.kind === "command") {
       if (typeof c.cwd !== "string" || resolve3(c.cwd) !== c.cwd || !Array.isArray(c.argv) || !c.argv.length || c.argv.length > 64 || c.argv.some((a) => typeof a !== "string" || a.length > 4096) || !c.argv[0]?.startsWith("/") || !Number.isSafeInteger(c.timeoutMs) || c.timeoutMs < 1 || c.timeoutMs > 6e4) throw new Error("invalid operator command collector");
@@ -8968,13 +8971,28 @@ function readTask(path, sessionId, binding) {
   return task;
 }
 async function run(argv, cwd, timeoutMs) {
-  const child = spawn(argv[0], argv.slice(1), { cwd, shell: false, env: { PATH: process.env.PATH ?? "", LANG: "C.UTF-8", GIT_CONFIG_NOSYSTEM: "1", GIT_CONFIG_GLOBAL: "/dev/null" }, stdio: ["ignore", "pipe", "pipe"] });
-  let stdout = "", size = 0, overflow = false;
+  const grouped = process.platform !== "win32";
+  const child = spawn(argv[0], argv.slice(1), { cwd, shell: false, detached: grouped, env: { PATH: process.env.PATH ?? "", LANG: "C.UTF-8", GIT_CONFIG_NOSYSTEM: "1", GIT_CONFIG_GLOBAL: "/dev/null" }, stdio: ["ignore", "pipe", "pipe"] });
+  let stdout = "", size = 0, overflow = false, timedOut = false;
+  let kill;
+  const signal = (value) => {
+    if (!child.pid) return;
+    try {
+      if (grouped) process.kill(-child.pid, value);
+      else child.kill(value);
+    } catch (error) {
+      if (error.code !== "ESRCH") throw error;
+    }
+  };
+  const stop = () => {
+    signal("SIGTERM");
+    kill ??= setTimeout(() => signal("SIGKILL"), 1e3);
+  };
   const capture = (data) => {
     size += data.length;
-    if (size > 1024 * 1024) {
+    if (size > 1024 * 1024 && !overflow) {
       overflow = true;
-      child.kill("SIGTERM");
+      stop();
     }
   };
   child.stdout.on("data", (data) => {
@@ -8982,18 +9000,24 @@ async function run(argv, cwd, timeoutMs) {
     if (!overflow) stdout += data.toString();
   });
   child.stderr.on("data", capture);
-  const timeout = setTimeout(() => child.kill("SIGTERM"), timeoutMs);
-  const kill = setTimeout(() => child.kill("SIGKILL"), timeoutMs + 1e3);
+  const timeout = setTimeout(() => {
+    timedOut = true;
+    stop();
+  }, timeoutMs);
   try {
     const code = await new Promise((done, reject) => {
       child.once("error", reject);
       child.once("close", (code2) => done(code2 ?? -1));
     });
     if (overflow) throw new Error("collector output exceeds limit");
+    if (timedOut) throw new Error("collector deadline exceeded; no completion evidence recorded");
     return { code, stdout };
   } finally {
     clearTimeout(timeout);
-    clearTimeout(kill);
+    if (kill) {
+      clearTimeout(kill);
+      signal("SIGKILL");
+    }
   }
 }
 async function checkoutMatches(task, requireClean) {
@@ -9024,6 +9048,11 @@ async function projectTask(task) {
   return { id: task.id, sessionId: task.sessionId, revision, title: task.title, goal: task.goal, artifact: task.artifact, readiness, requirements, scope: task.template.scope };
 }
 
+// src/workflow/outcome.ts
+function verifiedOriginal(config, record) {
+  return record.state === "completed" && !!record.request && record.request.requestId === record.requestId && record.outcome?.state === "completed" && record.outcome.requestId === record.requestId && record.digest === digest({ name: record.request.tool, args: record.request.arguments }) && verifyCompletedOutcome(record.outcome, config.execution, record.request);
+}
+
 // src/workflow/control.ts
 function uuid(value) {
   return typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(value);
@@ -9043,7 +9072,7 @@ function createWorkflowControl(access, options = {}) {
   for (const [field, path] of [["task", options.taskPath], ["catalog", options.catalogPath]]) {
     if (path && resolve4(path) !== join3(directory, field + ".json")) throw new Error("workflow file must be in this journal's private workflow directory");
   }
-  const jobs = /* @__PURE__ */ new Set();
+  const jobs = /* @__PURE__ */ new Map();
   let closed = false;
   function find(requestId) {
     if (typeof requestId !== "string" || !requestId || requestId.length > 256) throw new Error("invalid retained operation id");
@@ -9053,8 +9082,22 @@ function createWorkflowControl(access, options = {}) {
   }
   function readContinuation(id) {
     if (!uuid(id)) throw new Error("invalid continuation id");
-    const r = privateRead(join3(continuations, id + ".json"));
+    const path = join3(continuations, id + ".json");
+    let r = privateRead(path);
     if (r.schema !== "chio.control.continuation.v1" || r.id !== id || r.binding !== access.binding || r.sessionId !== access.config.sessionId || !["submitted", "completed", "unknown"].includes(r.state) || !["pending", "confirmed"].includes(r.delivery) || !/^[0-9a-f]{64}$/.test(r.revision)) throw new Error("foreign or invalid continuation");
+    const original = find(r.requestId);
+    const verified = verifiedOriginal(access.config, original);
+    if (r.state !== "completed" && !jobs.has(id) && verified) {
+      r = { ...r, state: "completed", outcome: original.outcome, outcomeHash: digest(original.outcome), challenge: randomBytes(32).toString("hex") };
+      privateSave(path, r);
+    }
+    if (r.state === "completed") {
+      if (!verified || !r.outcome || digest(r.outcome) !== digest(original.outcome) || digest(r.outcome) !== r.outcomeHash || !/^[0-9a-f]{64}$/.test(r.challenge ?? "")) throw new Error("continuation does not bind the verified original result");
+      if (r.delivery !== "confirmed" && r.served && r.receiptConfirmed === true && original.hostDeliveryConfirmed === true && original.acknowledged === true) {
+        r = { ...r, delivery: "confirmed" };
+        privateSave(path, r);
+      }
+    }
     return r;
   }
   function retained() {
@@ -9096,14 +9139,14 @@ function createWorkflowControl(access, options = {}) {
         if (closed || !await access.live() || current.review?.decision !== "granted" || current.review.revision !== pending.revision || !original.proposal) throw new Error("grant or action changed before dispatch");
         const result = await options.resume(id, original.requestId, original.proposal.tool_name, original.proposal.arguments);
         const stored = find(original.requestId);
-        if (result.state !== "completed" || result.evidence !== "verified" || !stored.request || !verifyCompletedOutcome(result, access.config.execution, stored.request) || stored.state !== "completed" || digest(result) !== digest(stored.outcome)) throw new Error("continuation outcome remains unresolved");
+        if (result.state !== "completed" || result.evidence !== "verified" || !stored.request || !verifyCompletedOutcome(result, access.config.execution, stored.request) || !verifiedOriginal(access.config, stored) || digest(result) !== digest(stored.outcome)) throw new Error("continuation outcome remains unresolved");
         privateSave(path, { ...pending, state: "completed", outcome: result, outcomeHash: digest(result), challenge: randomBytes(32).toString("hex") });
       } catch {
         privateSave(path, { ...pending, state: "unknown" });
       }
     })();
-    jobs.add(job);
-    void job.finally(() => jobs.delete(job)).catch(() => {
+    jobs.set(id, job);
+    void job.finally(() => jobs.delete(id)).catch(() => {
     });
     return publicContinuation(pending);
   }
@@ -9187,14 +9230,14 @@ function createWorkflowControl(access, options = {}) {
     explain,
     async close() {
       closed = true;
-      await Promise.allSettled([...jobs]);
+      await Promise.allSettled([...jobs.values()]);
     }
   };
 }
 
 // src/control/service.ts
 var LIMIT = 1024 * 1024;
-var kinds = ["approve", "decline", "alternative", "revoke"];
+var kinds = ["approve", "decline", "revoke"];
 function hash(value) {
   return createHash4("sha256").update(canonicalizeJson(value)).digest("hex");
 }
@@ -9269,7 +9312,7 @@ function reviewRevision(config, record) {
   return hash({ binding: gatewayBinding(config), requestId: record.requestId, digest: record.digest, state: record.state, proposal: record.proposal ?? null });
 }
 function project(config, record) {
-  const verified = record.state === "completed" && !!record.request && record.outcome?.state === "completed" && verifyCompletedOutcome(record.outcome, config.execution, record.request);
+  const verified = verifiedOriginal(config, record);
   const state = record.state === "completed" && !verified ? "unknown" : record.state;
   let decision = "required";
   if (record.proposal) {
@@ -9283,8 +9326,8 @@ function project(config, record) {
     requestId: record.requestId,
     state,
     evidence: verified ? "verified" : "unverified",
-    acknowledged: record.acknowledged === true,
-    hostDeliveryConfirmed: record.hostDeliveryConfirmed === true,
+    acknowledged: verified && record.acknowledged === true,
+    hostDeliveryConfirmed: verified && record.hostDeliveryConfirmed === true,
     nextAction,
     ...record.request?.tool || record.proposal?.tool_name ? { tool: record.request?.tool ?? record.proposal.tool_name } : {},
     ...verified && record.outcome?.state === "completed" && record.outcome.receipt ? { receiptId: record.outcome.receipt.id } : {}
@@ -9346,7 +9389,7 @@ async function controlStatus(options) {
     revision: hash(gatewayBinding(config)),
     awaitingReview: operations.filter((op) => op.review?.decision === "required").length,
     unresolved,
-    fenced: gatewayStatus(config).fenced,
+    fenced: gatewayStatus(config).fenced || operations.some((op) => op.state === "pending" || op.state === "unknown"),
     operations,
     intents,
     workflow: { ...task ? { task } : {}, templates, requests, continuation: !!workflow?.resume && !!workflow?.acknowledge, proposals: !!workflow?.propose }
@@ -9365,7 +9408,7 @@ function requestIntent(options, input) {
     if (!record2 || record2.state !== "awaiting_approval" || project(config, record2).review?.decision !== "required" || reviewRevision(config, record2) !== input.revision) throw new Error("review is stale, already decided, or belongs to another action");
   }
   const existing = intentRecords(config);
-  if (existing.some((intent) => intent.requestId === input.requestId && intent.revision === input.revision)) throw new Error("review intent already recorded; inspect its original outcome");
+  if (existing.some((intent) => intent.kind !== "alternative" && intent.requestId === input.requestId && intent.revision === input.revision)) throw new Error("review intent already recorded; inspect its original outcome");
   const record = {
     schema: "chio.control.intent.v1",
     id: randomUUID3(),

@@ -1,12 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
-import { mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, readdirSync, rmSync, renameSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { createGateway, gatewayApprovalPath } from "../dist/gateway.js";
+import { createGateway, gatewayApprovalPath, operationKey } from "../dist/gateway.js";
 import { verifyCompletedOutcome } from "@chio/bridge";
-import { startControlServer } from "../dist/control/service.js";
+import { startControlServer, controlStatus } from "../dist/control/service.js";
 import { privateSave, privateDirectory } from "../dist/workflow/store.js";
 import { signer, signedDecision, signedOutcome } from "./workflow-fixture.mjs";
 
@@ -128,4 +128,50 @@ test("native receipt remains distinct from an unconfirmed kernel acknowledgement
   assert.equal(current.operations[0].hostDeliveryConfirmed, true); assert.equal(current.operations[0].acknowledged, false);
   assert.equal(current.continuations[0].receiptConfirmed, true); assert.equal(current.continuations[0].delivery, "pending"); assert.equal(current.fenced, true);
   assert.deepEqual(f.counts(), { effects: 1, charges: 1, acks: 1 });
+});
+
+for (const interruptedState of ["submitted", "unknown"]) test("restart recovers an original verified result after continuation persistence was interrupted: " + interruptedState, async t => {
+  const f = await fixture(t); f.approve(); const op = (await f.status()).operations[0];
+  const input = { requestId: op.requestId, revision: op.review.revision };
+  const { continuation } = await (await f.request("/continuations", input)).json();
+  const original = await (await f.request("/continuations/" + continuation.id + "/outcome")).json();
+  assert.equal(original.ready, true);
+  const path = join(f.config.journalDir, "workflow/continuations", continuation.id + ".json");
+  const record = JSON.parse(readFileSync(path));
+  delete record.outcome; delete record.outcomeHash; delete record.challenge; delete record.served;
+  record.state = interruptedState; privateSave(path, record);
+  await f.restart();
+  const recovered = await (await f.request("/continuations/" + continuation.id + "/outcome")).json();
+  assert.equal(recovered.ready, true); assert.equal(recovered.outcome.requestId, op.requestId);
+  assert.deepEqual(recovered.outcome, original.outcome); assert.equal((await f.status()).fenced, true);
+  assert.equal((await f.request("/continuations", input)).status, 409);
+  assert.equal((await f.request("/continuations/" + continuation.id + "/ack", { outcomeHash: recovered.outcomeHash, challenge: recovered.challenge })).status, 200);
+  assert.deepEqual(f.counts(), { effects: 1, charges: 1, acks: 1 });
+});
+
+test("restart recognizes an already retained kernel ACK without sending a second acknowledgement", async t => {
+  const f = await fixture(t); f.approve(); const op = (await f.status()).operations[0];
+  const { continuation } = await (await f.request("/continuations", { requestId: op.requestId, revision: op.review.revision })).json();
+  const original = await (await f.request("/continuations/" + continuation.id + "/outcome")).json();
+  const proof = { outcomeHash: original.outcomeHash, challenge: original.challenge };
+  assert.equal((await f.request("/continuations/" + continuation.id + "/ack", proof)).status, 200);
+  const path = join(f.config.journalDir, "workflow/continuations", continuation.id + ".json");
+  const record = JSON.parse(readFileSync(path)); record.delivery = "pending"; privateSave(path, record);
+  await f.restart();
+  assert.equal((await f.request("/continuations/" + continuation.id + "/ack", proof)).status, 200);
+  assert.equal((await f.status()).continuations[0].delivery, "confirmed");
+  assert.deepEqual(f.counts(), { effects: 1, charges: 1, acks: 1 });
+});
+
+test("a signed completion cannot be projected as evidence for a different retained operation", async t => {
+  const f = await fixture(t); f.approve(); const op = (await f.status()).operations[0];
+  const { continuation } = await (await f.request("/continuations", { requestId: op.requestId, revision: op.review.revision })).json();
+  await f.request("/continuations/" + continuation.id + "/outcome");
+  const path = join(f.config.journalDir, operationKey(op.requestId) + ".json");
+  const record = JSON.parse(readFileSync(path)); record.requestId = "substituted-operation"; record.acknowledged = true; record.hostDeliveryConfirmed = true;
+  privateSave(path, record); renameSync(path, join(f.config.journalDir, operationKey(record.requestId) + ".json"));
+  const status = await controlStatus({ config: f.config, authorityExpiresAt: Math.floor(Date.now() / 1000) + 600, validateAuthority: async () => true });
+  assert.equal(status.operations[0].state, "unknown"); assert.equal(status.operations[0].evidence, "unverified");
+  assert.equal(status.operations[0].receiptId, undefined); assert.equal(status.fenced, true);
+  assert.equal(status.operations[0].acknowledged, false); assert.equal(status.operations[0].hostDeliveryConfirmed, false);
 });

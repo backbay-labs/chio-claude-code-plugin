@@ -1,40 +1,40 @@
   ⎿  chio: Chio · isolated kernel MCP · authority 10m · 0 review · 0  │Chio · isolated kernel MCP · authority✕
-     unresolved                                                       │10m · 1 review · 0 unresolved          
-     Session: b18419e5-1216-4ab5-8a86-938681494ca3                    │Session                                
-     Protected tools: write_file                                      │b18419e5-1216-4ab5-8a86-938681494ca3   
-     Dispatch fence: clear                                            │write_file · awaiting_approval         
-                                                                      │requested → awaiting review            
-❯ Execute the fixed fixture once, then stop on review or refusal.     │Purpose: exact fixture write           
-                                                                      │Requested capability:                  
-  Called chio                                                         │fixture-capability                     
-                                                                      │Grant TTL: 300s · decision: required   
-⏺ Fixture stopped. Operator review is required.                       │Kernel policy applies. Budget impact   
-                                                                      │unavailable.                           
-✻ Crunched for 0s · done 6:17 PM                                      │Exact arguments:                       
-                                                                      │{                                      
-❯ /chio-review                                                        │  "content": "exact fixture payload",  
-  ⎿  chio: Chio · isolated kernel MCP · authority 10m · 1 review · 0  │  "path": "/protected/test.txt"        
-     unresolved                                                       │}                                      
-     Session: b18419e5-1216-4ab5-8a86-938681494ca3                    │These controls request a decision.     
-     write_file · b18419e5-1216-4ab5-8a86-938681494ca3:10c765105be043f│Authority requires confirmation outside
-     0baf8ed33eae1c4ddb5d04a7e6c4bb674b0bcf913436f80a2                │Claude.                                
+     unresolved                                                       │10m · 1 review · 0 unresolved
+     Session: dcf1bf36-320d-4a0c-a2cd-8b86cecead2d                    │Session
+     Protected tools: write_file                                      │dcf1bf36-320d-4a0c-a2cd-8b86cecead2d
+     Dispatch fence: clear                                            │write_file · awaiting_approval
+                                                                      │requested → awaiting review
+❯ Execute the fixed fixture once, then stop on review or refusal.     │Purpose: exact fixture write
+                                                                      │Requested capability:
+  Called chio                                                         │fixture-capability
+                                                                      │Grant TTL: 300s · decision: required
+⏺ Fixture stopped. Operator review is required.                       │Kernel policy applies. Budget impact
+                                                                      │unavailable.
+✻ Baked for 0s · done 2:13 AM                                         │Exact arguments:
+                                                                      │{
+❯ /chio-review                                                        │  "content": "exact fixture payload",
+  ⎿  chio: Chio · isolated kernel MCP · authority 10m · 1 review · 0  │  "path": "/protected/test.txt"
+     unresolved                                                       │}
+     Session: dcf1bf36-320d-4a0c-a2cd-8b86cecead2d                    │These controls request a decision.
+     write_file · dcf1bf36-320d-4a0c-a2cd-8b86cecead2d:2e2a8f8ef918ede│Authority requires confirmation outside
+     b6549d42ecf523780e4e5a41bc5f00d38e2f4d576a4f96fca                │Claude.
      State: awaiting_approval · evidence: unverified                  │[ Request approval of this exact action
-     requested → awaiting review                                      │]                                      
-     Kernel acknowledgement: unconfirmed                              │[ Request decline ]                    
-     Host delivery: unconfirmed                                       │[ Request a permitted alternative ]    
-     Purpose: exact fixture write                                     │[ Evidence and authority details ]     
-     Requested capability: fixture-capability                         │[ Task and completion evidence ]       
-     Grant TTL: 300s · decision: required                             │[ Refresh ]                            
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-✢ Combobulating…                                                                                              
-  ⎿  Tip: Use Plan Mode to prepare for a complex request before making changes. Press shift+tab twice to      
-     enable.                                                                                                  
-Chio · isolated kernel MCP · authority 10m · 1 review · 0 unresolved                                       [-]
-                                                                                          ◐ medium · /effort  
+     requested → awaiting review                                      │]
+     Kernel acknowledgement: unconfirmed                              │[ Request decline ]
+     Host delivery: unconfirmed                                       │[ Evidence and authority details ]
+     Purpose: exact fixture write                                     │[ Task and completion evidence ]
+     Requested capability: fixture-capability                         │[ Refresh ]
+                                                                      │
+                                                                      │
+                                                                      │
+                                                                      │
+                                                                      │
+✢ Gesticulating…                                                      │
+  ⎿  Tip: Use Plan Mode to prepare for a complex request before making│
+     changes. Press shift+tab twice to enable.                        │
+Chio · isolated kernel MCP · authority 10m · 1 review · 0 unresolve[-]│
+                                                  ◐ medium · /effort  │
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
-❯                                                                                                             
+❯ 
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
-  ⏵⏵ don't ask on (shift+tab to cycle) · esc to interrupt · ← for agents                                      
+  ⏵⏵ don't ask on (shift+tab to cycle) · esc to interrupt · ← for agents

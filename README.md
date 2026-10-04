@@ -35,7 +35,7 @@ Run Claude Code against tools and data controlled by the [Chio kernel](https://g
 - **Recoverable uncertainty.** Unknown outcomes remain in the private journal and block new dispatch until the operator resolves them.
 - **Native session interface.** Inspect scope, exact action reviews, retained evidence and session-specific revocation requests while Claude works.
 
-**Status:** Version 0.4.0-rc.3 adds the [native mod interface](docs/NATIVE-MODS.md) against pinned Claude Code 2.1.287. The [controlled-task workflow](docs/CONTROLLED-TASKS.md) adds artifact-bound completion evidence, guided scopes, exact continuation and the typed `$.chio` interface. The trusted operator service supplies session-scoped status and accepts review intent; kernel authority and protected execution remain outside the host. The interactive protected profile remains a qualification candidate. Earlier [bounded real-host evidence](acceptance/2026-09-10/final-static-continuation/README.md) pins a different host and does not qualify this version.
+**Status:** Version 0.4.0-rc.4 adds the [native mod interface](docs/NATIVE-MODS.md) against pinned Claude Code 2.1.287. The [controlled-task workflow](docs/CONTROLLED-TASKS.md) adds artifact-bound completion evidence, guided scopes, exact continuation and the typed `$.chio` interface. The trusted operator service supplies session-scoped status and accepts review intent; kernel authority and protected execution remain outside the host. The interactive protected profile remains a qualification candidate. Earlier [bounded real-host evidence](https://github.com/backbay-labs/chio-claude-code-plugin/blob/65ac8390c57a5292c055fba50caa1aafbd915848/acceptance/2026-09-10/final-static-continuation/README.md) pins a different host and does not qualify this version.
 
 The [dedicated-environment report](acceptance/2026-10-03/qualification-environment/REPORT.md) records shared VM recovery, restored backups and live enforcing failures. `/chio-doctor` diagnoses the exact session without submitting work; the separate operator probe checks guest and image availability. An observed native write remains fenced after its durability syscall failed. Production qualification is still incomplete.
 
@@ -137,7 +137,7 @@ After interruption, retain the profile, original request IDs, gateway configurat
 
 - [Failure and recovery](docs/RESTRICTED-MODE.md#failure-and-recovery): inspect retained state, recover dead-process locks and preserve unresolved effects.
 - [Upgrade and removal](docs/RESTRICTED-MODE.md#upgrade-and-removal): retain evidence, revoke old authority and qualify the replacement.
-- [Pinned qualification records](acceptance/2026-09-10/final-static-continuation/README.md): exact versions, executed cases and remaining scope.
+- [Pinned qualification records](https://github.com/backbay-labs/chio-claude-code-plugin/blob/65ac8390c57a5292c055fba50caa1aafbd915848/acceptance/2026-09-10/final-static-continuation/README.md): exact versions, executed cases and remaining scope.
 
 ## Development
 

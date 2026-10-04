@@ -1,6 +1,6 @@
 # Controlled native workflow candidate
 
-**Version: 0.4.0-rc.4. Production qualification: incomplete.**
+**Version: 0.4.0-rc.3. Production qualification: incomplete.**
 
 The candidate joins guided task preparation, artifact-bound completion evidence,
 exact review, native continuation and verified original-result receipt. The
@@ -13,12 +13,8 @@ Confidence is **high** in the recorded source and bounded host-fixture results,
 resource recovery on this profile. The [earlier rc.1 record](../native-mods/REPORT.md)
 is preserved; it does not qualify the new artifacts.
 The [rc.2 report](./REPORT.rc2.md) and [rc.2 record](./ACCEPTANCE.rc2.json) remain
-historical evidence. The [rc.3 report](./REPORT.rc3.md), [rc.3 record](./ACCEPTANCE.rc3.json)
-and [rc.3 host fixtures](./HOST-FIXTURES.rc3.json) are also preserved.
-The [code review](./CODE-REVIEW.md) records the revised candidate's fixes.
-The [dedicated environment report](../qualification-environment/REPORT.md)
-records shared VM recovery and the earlier live enforcing failures.
-Those resource/provider experiments were not repeated or promoted by this review.
+historical evidence. The [dedicated environment report](../qualification-environment/REPORT.md)
+records shared VM recovery and the new candidate's live enforcing failures.
 
 ## Delivered behavior
 
@@ -58,8 +54,8 @@ separate result.
 | Check | Result | Evidence boundary |
 | --- | --- | --- |
 | Typecheck and build | Passed | Source, retained host declarations and self-contained runtime bundles |
-| Node regressions | 88 passed | Compatibility, exact signed decisions, task provisioning, artifact changes, continuation, result proof, unconfirmed ACK, restart fences, collector cancellation and operator diagnostics |
-| Native event/drawing harness | 21 passed | Actual selected harness with stubbed APIs, including task readiness, scope requests, continuation controls and session diagnosis |
+| Node regressions | 76 passed | Compatibility, exact signed decisions, task provisioning, artifact changes, continuation, result proof, unconfirmed ACK, restart fences and operator diagnostics |
+| Native event/drawing harness | 18 passed | Actual selected harness with stubbed APIs, including task readiness, scope requests, continuation controls and session diagnosis |
 | Middleware control-flow experiments | 4 passed | Actual selected harness with stubbed dispatch; failed uncaught mod hook is skipped |
 | Actual host and macOS sandbox | 8 passed | Deterministic local model and stubbed kernel/resource owner, including natural workflow exit |
 | Cold consumer | Exact tarball sidecar | Offline install and marketplace tree without dependencies; complete live activation remains open |
@@ -106,12 +102,7 @@ surfaces are component tests, not actual mobile or VS Code pane support.
 
 ## Recovery and remaining gates
 
-The new controller restart checks recover a gateway-retained verified completion
-and recognize a retained ACK after interrupted projection writes, without a second
-effect, charge or ACK. A substituted journal operation cannot inherit another
-request's signed completion, delivery flags or a clear fence.
-
-The uncertain-resource restart regression commits a simulated effect, loses its response, closes
+The restart regression commits a simulated effect, loses its response, closes
 and reopens the controller/gateway, then confirms that the original unknown ID
 and continuation remain fenced with one effect and one charge. It does **not**
 reconcile a real resource's original result. That separate acceptance experiment

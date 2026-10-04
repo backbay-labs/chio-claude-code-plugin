@@ -1,6 +1,6 @@
 # Controlled tasks in Claude Code
 
-Version **0.4.0-rc.3** connects task scope, artifact-bound completion evidence,
+Version **0.4.0-rc.4** connects task scope, artifact-bound completion evidence,
 exact review and deterministic continuation to the native session interface.
 The kernel admits and executes protected operations. The mod presents authorized
 projections and requests; operator credentials and the authoritative execution
@@ -101,6 +101,9 @@ Collectors execute only through this operator command; the host control API and
 buttons do not run collectors. A command collector requires the exact clean Git
 checkout and an absolute executable, uses no shell, receives a limited
 environment without operator credentials, and has bounded time and output.
+Exceeding either bound records no completion evidence, even if the process exits
+zero after cancellation. On supported POSIX hosts, cancellation also terminates
+the collector's process group, including descendants that redirect their output.
 It still executes with the operator's filesystem access. Use command collectors
 only for trusted code in a separately qualified check environment; the plugin
 does not confine them or prove they have no effects. JSON reports are the
@@ -156,6 +159,13 @@ service verifies the original outcome again before acknowledging receipt through
 the gateway. Result receipt and kernel acknowledgement remain distinct when an
 ACK is unconfirmed. The dispatch fence stays intact until the original result
 and acknowledgement satisfy the gateway contract.
+
+After a controller restart, a continuation can reconstruct its result only from
+the gateway's verified original completion, including its operation ID, exact
+arguments and signed output. A kernel ACK already retained by the gateway is
+recognized without sending another acknowledgement. Pending or unknown resource
+outcomes remain fenced; current resource contents cannot substitute for a missing
+verified original result.
 
 The native-control channel is retained separately from model tool-result
 delivery. A native result does not establish that a model read it. The launcher
