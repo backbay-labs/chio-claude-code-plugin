@@ -9473,7 +9473,7 @@ async function startControlServer(options) {
       if (request.method === "GET" && request.url === root + "/status") {
         const status = await controlStatus(pinned);
         statusReads += 1;
-        const continuations = workflow.retained();
+        const continuations = workflow.retained().map((c) => c.delivery === "confirmed" && pinned.modelContextConfirmed?.(c.requestId) ? { ...c, modelContext: "confirmed" } : c);
         for (const operation of status.operations) {
           if (operation.hostDeliveryConfirmed) operation.deliveryChannel = continuations.some((c) => c.requestId === operation.requestId && c.receiptConfirmed === true) ? "native_control" : pinned.modelDeliveryConfirmed?.(operation.requestId) ? "model_tool_result" : "unclassified";
         }
@@ -9510,6 +9510,7 @@ async function startControlServer(options) {
     url: `http://127.0.0.1:${address.port}`,
     port: address.port,
     token: token2,
+    retainedContinuations: () => workflow.retained(),
     get statusReads() {
       return statusReads;
     },

@@ -22,6 +22,8 @@ export interface ControlOptions {
   workflow?: WorkflowOptions;
   /** Launcher observations of exact model tool results; never inferred from ACK alone. */
   modelDeliveryConfirmed?: (requestId: string) => boolean;
+  /** Launcher observation that a forwarded model request carried this continuation's exact outcome hash. */
+  modelContextConfirmed?: (requestId: string) => boolean;
   authorityExpiresAt: number;
   scope?: ControlStatus["scope"];
   /** Test seam. Production uses the kernel's delegated-session validation. */
@@ -198,7 +200,7 @@ export async function startControlServer(options: ControlOptions) {
     if (sessionMismatch) return reply(response, 409, { error: "host session changed; launch a newly bound host" });
     if (request.method === "GET" && request.url === root + "/status") {
       const status = await controlStatus(pinned); statusReads += 1;
-      const continuations = workflow.retained();
+      const continuations = workflow.retained().map(c => c.delivery === "confirmed" && pinned.modelContextConfirmed?.(c.requestId) ? { ...c, modelContext: "confirmed" as const } : c);
       for (const operation of status.operations) {
         if (operation.hostDeliveryConfirmed) operation.deliveryChannel = continuations.some(c => c.requestId === operation.requestId && c.receiptConfirmed === true) ? "native_control" : pinned.modelDeliveryConfirmed?.(operation.requestId) ? "model_tool_result" : "unclassified";
       }
@@ -225,6 +227,7 @@ export async function startControlServer(options: ControlOptions) {
   await new Promise<void>((resolveReady, reject) => { server.once("error", reject); server.listen(0, "127.0.0.1", resolveReady); });
   const address = server.address(); if (!address || typeof address === "string") throw new Error("missing control listener");
   return { url: `http://127.0.0.1:${address.port}`, port: address.port, token,
+    retainedContinuations: () => workflow.retained(),
     get statusReads() { return statusReads; },
     get sessionMismatch() { return sessionMismatch; },
     close: () => closing ??= (async () => { await workflow.close(); await new Promise<void>((resolveClose, reject) => { server.close(error => error ? reject(error) : resolveClose()); server.closeAllConnections(); }); })() };
