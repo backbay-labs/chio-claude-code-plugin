@@ -3,8 +3,8 @@ const require = __chioCreateRequire(import.meta.url);
 
 // src/demo/fixture.ts
 import { createServer } from "node:http";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, isAbsolute, relative, resolve } from "node:path";
+import { lstatSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
+import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 
 // node_modules/@chio-protocol/sdk/dist/invariants/errors.js
 var ChioInvariantError = class extends Error {
@@ -243,15 +243,22 @@ function signedOutcome(config, request, seed, result = { content: [{ type: "text
 var MAX_BODY = 1024 * 1024;
 async function readBody(req) {
   const chunks = [];
-  let size = 0;
+  let size = 0, tooLarge = false;
   for await (const chunk of req) {
     size += chunk.length;
-    if (size > MAX_BODY) throw new Error("body too large");
-    chunks.push(chunk);
+    if (size > MAX_BODY) {
+      tooLarge = true;
+      chunks.length = 0;
+      continue;
+    }
+    if (!tooLarge) chunks.push(chunk);
   }
+  if (tooLarge) throw new Error("body too large");
   const text = Buffer.concat(chunks).toString();
   return text ? JSON.parse(text) : {};
 }
+var Refusal = class extends Error {
+};
 async function startDemoKernel(options) {
   const { owner, seed, adminToken, bearerToken, credential } = options;
   const ownerRoot = resolve(owner);
@@ -261,19 +268,62 @@ async function startDemoKernel(options) {
     res.writeHead(status, { "Content-Type": "application/json" });
     res.end(JSON.stringify(body));
   };
-  const confine = (path) => {
-    if (typeof path !== "string" || path === "" || path.includes("\0") || isAbsolute(path)) throw new Error("path is not allowed");
+  mkdirSync(ownerRoot, { recursive: true });
+  const ownerReal = realpathSync(ownerRoot);
+  const inside = (real) => real === ownerReal || real.startsWith(ownerReal + sep);
+  const outside = () => new Refusal("path is outside the owner directory");
+  const exists = (p) => {
+    try {
+      lstatSync(p);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+  const realInside = (p) => {
+    let real;
+    try {
+      real = realpathSync(p);
+    } catch {
+      throw outside();
+    }
+    if (!inside(real)) throw outside();
+  };
+  const confine = (path, create) => {
+    if (typeof path !== "string" || path === "" || path.includes("\0") || isAbsolute(path)) throw outside();
     const full = resolve(ownerRoot, path);
     const rel = relative(ownerRoot, full);
-    if (rel === "" || rel.startsWith("..") || isAbsolute(rel)) throw new Error("path escapes the owner directory");
+    if (rel === "" || rel === ".." || rel.startsWith(".." + sep) || isAbsolute(rel)) throw outside();
+    const missing = [];
+    let ancestor = dirname(full);
+    while (!exists(ancestor)) {
+      missing.unshift(ancestor);
+      ancestor = dirname(ancestor);
+    }
+    realInside(ancestor);
+    if (missing.length && !create) throw outside();
+    for (const level of missing) {
+      mkdirSync(level);
+      realInside(level);
+    }
     return full;
   };
-  const server = createServer(async (req, res) => {
+  const server = createServer((req, res) => {
+    handle(req, res).catch(() => {
+      if (!res.headersSent) send(res, 500, { jsonrpc: "2.0", id: null, error: { code: -32603, message: "internal error" } });
+      else res.end();
+    });
+  });
+  const handle = async (req, res) => {
     let body;
     try {
       body = await readBody(req);
     } catch {
       send(res, 400, { jsonrpc: "2.0", id: null, error: { code: -32700, message: "invalid request body" } });
+      return;
+    }
+    if (body === null || typeof body !== "object" || Array.isArray(body)) {
+      send(res, 400, { jsonrpc: "2.0", id: null, error: { code: -32600, message: "request body must be an object" } });
       return;
     }
     const path = (req.url ?? "").split("?")[0] ?? "";
@@ -332,16 +382,23 @@ async function startDemoKernel(options) {
     if (body?.method === "tools/call" && (params.name === "write_file" || params.name === "read_text_file")) {
       let text;
       try {
-        const full = confine(params.arguments?.path);
+        const args = params.arguments;
+        if (args === null || typeof args !== "object" || Array.isArray(args)) throw new Refusal("refused: arguments are required");
+        if (!params._meta?.chioRequestId || !params._meta.chioGovernedIntent || !params._meta.chioApprovalToken) throw new Refusal("refused: approval envelope is required");
         if (params.name === "write_file") {
-          if (typeof params.arguments.content !== "string") throw new Error("content must be a string");
-          mkdirSync(dirname(full), { recursive: true });
-          writeFileSync(full, params.arguments.content, { flag: "wx" });
+          if (typeof args.content !== "string") throw new Refusal("refused: content must be a string");
+          const full = confine(args.path, true);
+          if (exists(full)) throw new Refusal("refused: target already exists");
+          writeFileSync(full, args.content, { flag: "wx" });
           writes++;
-          text = `Wrote ${params.arguments.path} in the demo owner directory.`;
-        } else text = readFileSync(full, "utf8");
+          text = `Wrote ${args.path} in the demo owner directory.`;
+        } else {
+          const full = confine(args.path, false);
+          if (!exists(full) || !lstatSync(full).isFile()) throw new Refusal("refused: not a regular file in the owner directory");
+          text = readFileSync(full, "utf8");
+        }
       } catch (error) {
-        fail(error instanceof Error ? error.message : "tool call refused");
+        fail(error instanceof Refusal ? error.message : "refused: tool call failed");
         return;
       }
       const outcome = signedOutcome(
@@ -363,7 +420,7 @@ async function startDemoKernel(options) {
       return;
     }
     send(res, 200, { jsonrpc: "2.0", id, error: { code: -32601, message: "method is not available in the demo fixture" } });
-  });
+  };
   await new Promise((ready) => server.listen(0, "127.0.0.1", ready));
   const address = server.address();
   const port = typeof address === "object" && address ? address.port : 0;

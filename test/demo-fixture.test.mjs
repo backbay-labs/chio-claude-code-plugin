@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync, readdirSync, readFileSync, existsSync } from "node:fs";
+import { mkdtempSync, rmSync, readdirSync, readFileSync, existsSync, mkdirSync, writeFileSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { randomBytes, randomUUID } from "node:crypto";
@@ -32,4 +32,71 @@ test("writes are confined to the owner directory", async t => {
     assert.ok((await response.json()).error, path);
   }
   assert.equal(kernel.writes(), 0); assert.equal(existsSync(join(f.root, "escape.txt")), false);
+});
+const REFUSAL = /outside the owner directory|refused/;
+async function boot(t) {
+  const f = setup(t); f.owner = join(f.root, "owner");
+  f.kernel = await startDemoKernel({ owner: f.owner, seed: f.seed, adminToken: "demo-admin", bearerToken: "demo-bearer", credential: f.credential, config: () => f.config });
+  t.after(() => f.kernel.close());
+  f.headers = { Authorization: "Bearer demo-bearer", "mcp-session-id": f.credential.sessionId };
+  f.call = async (name, args) => (await rpc(f.kernel.url, "tools/call", { name, arguments: args, _meta: { chioRequestId: "r-1", chioGovernedIntent: { a: 1 }, chioApprovalToken: { b: 2 } } }, f.headers)).json();
+  return f;
+}
+test("a valid write creates exactly the file and a repeat is refused", async t => {
+  const f = await boot(t);
+  const first = await f.call("write_file", { path: "sub/a.txt", content: "one" });
+  assert.ok(first.result._meta.chioEvidence); assert.equal(f.kernel.writes(), 1);
+  assert.equal(readFileSync(join(f.owner, "sub/a.txt"), "utf8"), "one");
+  const second = await f.call("write_file", { path: "sub/a.txt", content: "two" });
+  assert.match(second.error.message, REFUSAL); assert.equal(f.kernel.writes(), 1);
+  assert.equal(readFileSync(join(f.owner, "sub/a.txt"), "utf8"), "one");
+  const read = await f.call("read_text_file", { path: "sub/a.txt" });
+  assert.equal(read.result._meta.chioEvidence.output.content[0].text, "one");
+  assert.match((await f.call("write_file", { path: "x.txt" })).error.message, REFUSAL);
+  assert.match((await f.call("write_file", undefined)).error.message, REFUSAL);
+});
+test("symlinks inside the owner directory cannot escape it", async t => {
+  const f = await boot(t); const outside = join(f.root, "outside");
+  mkdirSync(outside); writeFileSync(join(outside, "secret.txt"), "secret");
+  symlinkSync(outside, join(f.owner, "link")); symlinkSync(join(outside, "secret.txt"), join(f.owner, "leaf.txt"));
+  assert.match((await f.call("write_file", { path: "link/x.txt", content: "x" })).error.message, REFUSAL);
+  assert.match((await f.call("write_file", { path: "link/new/x.txt", content: "x" })).error.message, REFUSAL);
+  assert.match((await f.call("read_text_file", { path: "link/secret.txt" })).error.message, REFUSAL);
+  assert.match((await f.call("read_text_file", { path: "leaf.txt" })).error.message, REFUSAL);
+  assert.match((await f.call("write_file", { path: "leaf.txt", content: "x" })).error.message, REFUSAL);
+  assert.deepEqual(readdirSync(outside), ["secret.txt"]); assert.equal(readFileSync(join(outside, "secret.txt"), "utf8"), "secret");
+  assert.equal(f.kernel.writes(), 0);
+  for (const path of ["../escape.txt", "/etc/escape"]) assert.match((await f.call("write_file", { path, content: "x" })).error.message, REFUSAL);
+});
+test("names that merely begin with two dots are allowed", async t => {
+  const f = await boot(t);
+  assert.ok((await f.call("write_file", { path: "..notes/x.txt", content: "ok" })).result);
+  assert.equal(readFileSync(join(f.owner, "..notes/x.txt"), "utf8"), "ok");
+});
+test("admin routes require the admin token and mint signed decisions and revocation", async t => {
+  const f = await boot(t); const admin = { Authorization: "Bearer demo-admin" };
+  const post = (path, body, headers = admin) => fetch(f.kernel.url + path, { method: "POST", headers: { "Content-Type": "application/json", ...headers }, body: JSON.stringify(body) });
+  assert.ok([401, 403].includes((await post("/admin/approvals", {}, {})).status));
+  assert.ok([401, 403].includes((await post("/admin/approvals", {}, { Authorization: "Bearer demo-bearer" })).status));
+  assert.equal((await post("/admin/approvals", [1])).status, 400);
+  const proposal = { request_id: "req-1", tool_name: "write_file", arguments: { path: "a.txt", content: "x" } };
+  const created = await (await post("/admin/approvals", proposal)).json();
+  assert.equal(created.dispatchPerformedByThisEndpoint, false);
+  const decided = await (await post(`/admin/approvals/${created.record.id}/decision`, { decision: "approved" })).json();
+  assert.equal(decided.dispatchPerformedByThisEndpoint, false);
+  assert.equal(decided.record.request_id, "req-1"); assert.equal(decided.record.session_id, f.config.execution.sessionId); assert.equal(decided.record.capability_id, "demo-capability");
+  assert.equal(decided.toolCallParams._meta.chioApprovalToken.approver, signerFor(f.seed));
+  const ctx = () => rpc(f.kernel.url, "chio/execution-context", {}, f.headers);
+  assert.equal((await ctx()).status, 200);
+  const revoked = await (await post(`/admin/sessions/${f.config.execution.sessionId}/trust`, {})).json();
+  assert.equal(revoked.revoked, true); assert.equal(revoked.capabilities[0].capabilityId, "demo-capability");
+  assert.equal((await ctx()).status, 401);
+});
+test("oversize and invalid bodies get a 400 JSON-RPC error and the server keeps answering", async t => {
+  const f = await boot(t);
+  const raw = body => fetch(f.kernel.url, { method: "POST", headers: { "Content-Type": "application/json", ...f.headers }, body });
+  for (const body of ["{not json", JSON.stringify({ pad: "x".repeat(1024 * 1024 + 10) })]) {
+    const response = await raw(body); assert.equal(response.status, 400); assert.ok((await response.json()).error);
+  }
+  assert.equal((await rpc(f.kernel.url, "chio/execution-context", {}, f.headers)).status, 200);
 });

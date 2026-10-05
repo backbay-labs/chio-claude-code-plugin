@@ -1,7 +1,7 @@
 // Local demo fixture. Not a kernel, resource owner or qualified boundary. Keys come from each run's own seed.
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, isAbsolute, relative, resolve } from "node:path";
+import { lstatSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
+import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { canonicalizeJson, sha256Hex, signUtf8MessageEd25519, receiptSigningBodyCanonicalJson } from "@chio-protocol/sdk/invariants";
 
 // Gateway config and proposal shapes are loose here on purpose: this fixture only reads a few fields.
@@ -47,15 +47,18 @@ export interface DemoKernel { url: string; port: number; writes: () => number; c
 const MAX_BODY = 1024 * 1024;
 
 async function readBody(req: IncomingMessage): Promise<any> {
-  const chunks: Buffer[] = []; let size = 0;
+  const chunks: Buffer[] = []; let size = 0, tooLarge = false;
   for await (const chunk of req) {
     size += (chunk as Buffer).length;
-    if (size > MAX_BODY) throw new Error("body too large");
-    chunks.push(chunk as Buffer);
+    if (size > MAX_BODY) { tooLarge = true; chunks.length = 0; continue; } // drain so the client can read the 400
+    if (!tooLarge) chunks.push(chunk as Buffer);
   }
+  if (tooLarge) throw new Error("body too large");
   const text = Buffer.concat(chunks).toString();
   return text ? JSON.parse(text) : {};
 }
+
+class Refusal extends Error {}
 
 export async function startDemoKernel(options: DemoKernelOptions): Promise<DemoKernel> {
   const { owner, seed, adminToken, bearerToken, credential } = options;
@@ -64,18 +67,35 @@ export async function startDemoKernel(options: DemoKernelOptions): Promise<DemoK
   let counter = 0, writes = 0, revoked = false;
   const send = (res: ServerResponse, status: number, body: unknown) => { res.writeHead(status, { "Content-Type": "application/json" }); res.end(JSON.stringify(body)); };
 
-  // Returns the confined absolute path, or throws.
-  const confine = (path: unknown): string => {
-    if (typeof path !== "string" || path === "" || path.includes("\u0000") || isAbsolute(path)) throw new Error("path is not allowed");
+  mkdirSync(ownerRoot, { recursive: true });
+  const ownerReal = realpathSync(ownerRoot);
+  const inside = (real: string) => real === ownerReal || real.startsWith(ownerReal + sep);
+  const outside = () => new Refusal("path is outside the owner directory");
+  const exists = (p: string) => { try { lstatSync(p); return true; } catch { return false; } };
+  const realInside = (p: string) => { let real: string; try { real = realpathSync(p); } catch { throw outside(); } if (!inside(real)) throw outside(); };
+
+  // Lexical check, then a realpath check of the deepest existing ancestor. With create, missing
+  // parent levels are made one at a time and each is re-verified. Returns the confined path.
+  const confine = (path: unknown, create: boolean): string => {
+    if (typeof path !== "string" || path === "" || path.includes("\u0000") || isAbsolute(path)) throw outside();
     const full = resolve(ownerRoot, path);
     const rel = relative(ownerRoot, full);
-    if (rel === "" || rel.startsWith("..") || isAbsolute(rel)) throw new Error("path escapes the owner directory");
+    if (rel === "" || rel === ".." || rel.startsWith(".." + sep) || isAbsolute(rel)) throw outside();
+    const missing: string[] = []; let ancestor = dirname(full);
+    while (!exists(ancestor)) { missing.unshift(ancestor); ancestor = dirname(ancestor); }
+    realInside(ancestor);
+    if (missing.length && !create) throw outside();
+    for (const level of missing) { mkdirSync(level); realInside(level); }
     return full;
   };
 
-  const server = createServer(async (req, res) => {
+  const server = createServer((req, res) => {
+    handle(req, res).catch(() => { if (!res.headersSent) send(res, 500, { jsonrpc: "2.0", id: null, error: { code: -32603, message: "internal error" } }); else res.end(); });
+  });
+  const handle = async (req: IncomingMessage, res: ServerResponse): Promise<void> => {
     let body: any;
     try { body = await readBody(req); } catch { send(res, 400, { jsonrpc: "2.0", id: null, error: { code: -32700, message: "invalid request body" } }); return; }
+    if (body === null || typeof body !== "object" || Array.isArray(body)) { send(res, 400, { jsonrpc: "2.0", id: null, error: { code: -32600, message: "request body must be an object" } }); return; }
     const path = (req.url ?? "").split("?")[0] ?? "";
     const config = options.config();
     if (path.startsWith("/admin/")) {
@@ -111,14 +131,21 @@ export async function startDemoKernel(options: DemoKernelOptions): Promise<DemoK
     if (body?.method === "tools/call" && (params.name === "write_file" || params.name === "read_text_file")) {
       let text: string;
       try {
-        const full = confine(params.arguments?.path);
+        const args = params.arguments;
+        if (args === null || typeof args !== "object" || Array.isArray(args)) throw new Refusal("refused: arguments are required");
+        if (!params._meta?.chioRequestId || !params._meta.chioGovernedIntent || !params._meta.chioApprovalToken) throw new Refusal("refused: approval envelope is required");
         if (params.name === "write_file") {
-          if (typeof params.arguments.content !== "string") throw new Error("content must be a string");
-          mkdirSync(dirname(full), { recursive: true });
-          writeFileSync(full, params.arguments.content, { flag: "wx" });
-          writes++; text = `Wrote ${params.arguments.path} in the demo owner directory.`;
-        } else text = readFileSync(full, "utf8");
-      } catch (error) { fail(error instanceof Error ? error.message : "tool call refused"); return; }
+          if (typeof args.content !== "string") throw new Refusal("refused: content must be a string");
+          const full = confine(args.path, true);
+          if (exists(full)) throw new Refusal("refused: target already exists");
+          writeFileSync(full, args.content, { flag: "wx" });
+          writes++; text = `Wrote ${args.path} in the demo owner directory.`;
+        } else {
+          const full = confine(args.path, false);
+          if (!exists(full) || !lstatSync(full).isFile()) throw new Refusal("refused: not a regular file in the owner directory");
+          text = readFileSync(full, "utf8");
+        }
+      } catch (error) { fail(error instanceof Refusal ? error.message : "refused: tool call failed"); return; }
       const outcome = signedOutcome(config, { requestId: params._meta?.chioRequestId, tool: params.name, arguments: params.arguments,
         approval: { chioGovernedIntent: params._meta?.chioGovernedIntent, chioApprovalToken: params._meta?.chioApprovalToken } }, seed,
         { content: [{ type: "text", text }], isError: false });
@@ -128,7 +155,7 @@ export async function startDemoKernel(options: DemoKernelOptions): Promise<DemoK
       ok({ schema: "chio.mcp.delivery-ack.v1", requestId: params.requestId, receiptId: params.receiptId, acknowledged: true }); return;
     }
     send(res, 200, { jsonrpc: "2.0", id, error: { code: -32601, message: "method is not available in the demo fixture" } });
-  });
+  };
   await new Promise<void>(ready => server.listen(0, "127.0.0.1", ready));
   const address = server.address(); const port = typeof address === "object" && address ? address.port : 0;
   return { url: `http://127.0.0.1:${port}`, port, writes: () => writes,
