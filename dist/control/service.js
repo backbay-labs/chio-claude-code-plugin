@@ -9068,15 +9068,15 @@ function uuid(value) {
 function publicContinuation(r) {
   return { id: r.id, requestId: r.requestId, state: r.state, delivery: r.delivery, receiptConfirmed: r.receiptConfirmed === true || r.delivery === "confirmed", ...r.outcomeHash ? { outcomeHash: r.outcomeHash } : {} };
 }
-function createWorkflowControl(access, options = {}) {
+function createWorkflowControl(access, options = {}, readOnly = false) {
   const directory = join3(access.config.journalDir, "workflow");
-  privateDirectory(directory);
   const continuations = join3(directory, "continuations");
-  privateDirectory(continuations);
   const proposals = join3(directory, "proposals");
-  privateDirectory(proposals);
   const taskRequests = join3(directory, "task-requests");
-  privateDirectory(taskRequests);
+  for (const path of [directory, continuations, proposals, taskRequests]) {
+    if (!readOnly) privateDirectory(path);
+    else if (existsSync(path)) privatePath(path, true);
+  }
   for (const [field, path] of [["task", options.taskPath], ["catalog", options.catalogPath]]) {
     if (path && resolve4(path) !== join3(directory, field + ".json")) throw new Error("workflow file must be in this journal's private workflow directory");
   }
@@ -9088,7 +9088,7 @@ function createWorkflowControl(access, options = {}) {
     if (!record) throw new Error("no original operation for this session");
     return record;
   }
-  function readContinuation(id, persist = true) {
+  function readContinuation(id, persist = !readOnly) {
     if (!uuid(id)) throw new Error("invalid continuation id");
     const path = join3(continuations, id + ".json");
     let r = privateRead(path);
@@ -9108,7 +9108,9 @@ function createWorkflowControl(access, options = {}) {
     }
     return r;
   }
-  function retained(persist = true) {
+  function retained(persist = !readOnly) {
+    if (readOnly && persist) throw new Error("read-only continuation projection");
+    if (!existsSync(continuations)) return [];
     const names = readdirSync3(continuations).filter((n) => n.endsWith(".json"));
     if (names.length > 1e3) throw new Error("continuation retention requires maintenance");
     return names.map((name) => publicContinuation(readContinuation(name.slice(0, -5), persist)));
@@ -9123,7 +9125,7 @@ function createWorkflowControl(access, options = {}) {
     };
   }
   async function startContinuation(input) {
-    if (closed || !options.resume || !options.acknowledge || !await access.live()) throw new Error("live parent continuation transport required");
+    if (readOnly || closed || !options.resume || !options.acknowledge || !await access.live()) throw new Error("live parent continuation transport required");
     if (Object.keys(input).some((k) => !["requestId", "revision"].includes(k))) throw new Error("continuation accepts an original id and revision only");
     const record = find(input.requestId), view = access.view(record);
     if (view.state !== "awaiting_approval" || view.review?.decision !== "granted" || input.revision !== view.review.revision || !record.proposal) throw new Error("no exact accepted grant for continuation");
@@ -9144,7 +9146,7 @@ function createWorkflowControl(access, options = {}) {
     const job = (async () => {
       try {
         const original = find(record.requestId), current = access.view(original);
-        if (closed || !await access.live() || current.review?.decision !== "granted" || current.review.revision !== pending.revision || !original.proposal) throw new Error("grant or action changed before dispatch");
+        if (readOnly || closed || !await access.live() || current.review?.decision !== "granted" || current.review.revision !== pending.revision || !original.proposal) throw new Error("grant or action changed before dispatch");
         const result = await options.resume(id, original.requestId, original.proposal.tool_name, original.proposal.arguments);
         const stored = find(original.requestId);
         if (result.state !== "completed" || result.evidence !== "verified" || !stored.request || !verifyCompletedOutcome(result, access.config.execution, stored.request) || !verifiedOriginal(access.config, stored) || digest(result) !== digest(stored.outcome)) throw new Error("continuation outcome remains unresolved");
@@ -9159,6 +9161,7 @@ function createWorkflowControl(access, options = {}) {
     return publicContinuation(pending);
   }
   function outcome(id) {
+    if (readOnly) throw new Error("read-only continuation projection");
     const r = readContinuation(id);
     if (r.state !== "completed") return { ready: false, continuation: publicContinuation(r) };
     const original = find(r.requestId);
@@ -9167,7 +9170,7 @@ function createWorkflowControl(access, options = {}) {
     return { ready: true, schema: "chio.control.outcome.v1", continuation: publicContinuation(r), outcome: r.outcome, outcomeHash: r.outcomeHash, challenge: r.challenge };
   }
   async function acknowledge(id, input) {
-    if (closed || !options.acknowledge) throw new Error("parent outcome acknowledgement unavailable");
+    if (readOnly || closed || !options.acknowledge) throw new Error("parent outcome acknowledgement unavailable");
     const r = readContinuation(id);
     if (Object.keys(input).some((k) => !["outcomeHash", "challenge"].includes(k)) || r.state !== "completed" || !r.served || !r.outcome || input.outcomeHash !== r.outcomeHash || input.challenge !== r.challenge) throw new Error("exact served native-control outcome proof required");
     const original = find(r.requestId);
@@ -9181,7 +9184,7 @@ function createWorkflowControl(access, options = {}) {
     return { acknowledged: true, requestId: r.requestId, channel: "native_control" };
   }
   async function propose(input) {
-    if (closed || !options.propose || !await access.live() || !uuid(input.id) || typeof input.tool !== "string" || !input.arguments || typeof input.arguments !== "object" || Array.isArray(input.arguments) || Object.keys(input).some((k) => !["id", "tool", "arguments"].includes(k))) throw new Error("bounded proposal requires a live parent transport");
+    if (readOnly || closed || !options.propose || !await access.live() || !uuid(input.id) || typeof input.tool !== "string" || !input.arguments || typeof input.arguments !== "object" || Array.isArray(input.arguments) || Object.keys(input).some((k) => !["id", "tool", "arguments"].includes(k))) throw new Error("bounded proposal requires a live parent transport");
     if (!access.config.tools.some((t) => t.name === input.tool) || !access.config.approval?.requiredTools.includes(input.tool)) throw new Error("proposal tool must require exact review; no effect fallback");
     const path = join3(proposals, input.id + ".json");
     const revision = digest({ sessionId: access.config.sessionId, binding: access.binding, input });
@@ -9204,7 +9207,7 @@ function createWorkflowControl(access, options = {}) {
     }
   }
   function selectTemplate(input) {
-    if (!options.catalogPath || !uuid(input.id) || typeof input.templateId !== "string" || Object.keys(input).some((k) => !["id", "templateId", "revision"].includes(k))) throw new Error("invalid task selection");
+    if (readOnly || !options.catalogPath || !uuid(input.id) || typeof input.templateId !== "string" || Object.keys(input).some((k) => !["id", "templateId", "revision"].includes(k))) throw new Error("invalid task selection");
     const template = readCatalog(options.catalogPath).find((t) => t.id === input.templateId);
     if (!template || templateView(template).revision !== input.revision) throw new Error("task template changed");
     const path = join3(taskRequests, input.id + ".json");
@@ -9361,7 +9364,9 @@ function intentDirectory(config) {
   return path;
 }
 function intentRecords(config) {
-  const dir = intentDirectory(config);
+  const dir = join4(config.journalDir, "control-intents");
+  if (!existsSync2(dir)) return [];
+  privatePath(dir, true);
   const names = readdirSync4(dir).filter((name) => name.endsWith(".json"));
   if (names.length > 1e3) throw new Error("control intent retention requires operator maintenance");
   return names.map((name) => {
@@ -9386,6 +9391,7 @@ function records(config) {
 function approval(config, record) {
   if (!record.proposal) return void 0;
   const path = gatewayApprovalPath(config, record.requestId);
+  if (!existsSync2(resolve5(path, ".."))) return void 0;
   if (!readdirSync4(resolve5(path, "..")).includes(`${operationKey(record.requestId)}.json`)) return void 0;
   const artifact = privateJson2(path);
   return verifyApprovalToolCall(artifact.toolCallParams, {
@@ -9404,10 +9410,9 @@ function project(config, record) {
   const state = record.state === "completed" && !verified ? "unknown" : record.state;
   let decision = "required";
   if (record.proposal) {
-    mkdirSync4(join4(config.journalDir, "approvals"), { recursive: true, mode: 448 });
     const approved = approval(config, record);
     if (approved) decision = approved.decision === "approved" ? "granted" : "declined";
-    else if (readdirSync4(join4(config.journalDir, "approvals")).includes(`${operationKey(record.requestId)}.json`)) decision = "expired";
+    else if (existsSync2(join4(config.journalDir, "approvals")) && readdirSync4(join4(config.journalDir, "approvals")).includes(`${operationKey(record.requestId)}.json`)) decision = "expired";
   }
   const nextAction = state === "pending" || state === "unknown" ? "reconcile_original" : state === "denied" ? "linked_continuation" : state === "awaiting_approval" ? decision === "granted" ? "explicit_resume" : decision === "required" ? "review" : "linked_continuation" : state === "completed" && (!record.acknowledged || record.hostDeliveryRequired !== false && !record.hostDeliveryConfirmed) ? "acknowledge_delivery" : "none";
   const view = {
@@ -9532,7 +9537,7 @@ async function body(request) {
 async function controlReport(options) {
   const status = await controlStatus(options);
   const config = options.config;
-  const workflow = createWorkflowControl({ config, binding: hash(gatewayBinding(config)), read: () => records(config), view: (record) => project(config, record), live: async () => false }, options.workflow);
+  const workflow = createWorkflowControl({ config, binding: hash(gatewayBinding(config)), read: () => records(config), view: (record) => project(config, record), live: async () => false }, options.workflow, true);
   try {
     return { status, continuations: workflow.retained(false) };
   } finally {
@@ -9668,6 +9673,7 @@ async function confirmControlIntent(config, operator, id) {
       if (!binds(artifact) || !verified || verified.decision !== (intent.kind === "approve" ? "approved" : "denied")) throw new Error("kernel decision lacks the exact trusted signature");
       if (reviewRevision(config, records(config).find((r) => r.requestId === record.requestId)) !== intent.revision) throw new Error("operation changed while authority was submitted");
       mkdirSync4(join4(config.journalDir, "approvals"), { recursive: true, mode: 448 });
+      privatePath(join4(config.journalDir, "approvals"), true);
       save(gatewayApprovalPath(config, record.requestId), artifact, true);
       intent.state = intent.kind === "approve" ? "granted" : "declined";
     }

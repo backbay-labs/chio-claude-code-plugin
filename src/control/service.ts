@@ -54,7 +54,9 @@ function intentDirectory(config: GatewayConfig): string {
   mkdirSync(path, { recursive: true, mode: 0o700 }); privatePath(path, true); return path;
 }
 function intentRecords(config: GatewayConfig): IntentRecord[] {
-  const dir = intentDirectory(config);
+  const dir = join(config.journalDir, "control-intents");
+  if (!existsSync(dir)) return [];
+  privatePath(dir, true);
   const names = readdirSync(dir).filter(name => name.endsWith(".json"));
   if (names.length > 1000) throw new Error("control intent retention requires operator maintenance");
   return names.map(name => {
@@ -79,6 +81,7 @@ function records(config: GatewayConfig): StoredOperation[] {
 function approval(config: GatewayConfig, record: StoredOperation) {
   if (!record.proposal) return undefined;
   const path = gatewayApprovalPath(config, record.requestId);
+  if (!existsSync(resolve(path, ".."))) return undefined;
   if (!readdirSync(resolve(path, "..")).includes(`${operationKey(record.requestId)}.json`)) return undefined;
   const artifact = privateJson<{ toolCallParams?: unknown }>(path);
   return verifyApprovalToolCall(artifact.toolCallParams, { ...config.execution, sessionId: config.execution.sessionId, requestId: record.requestId,
@@ -92,10 +95,9 @@ function project(config: GatewayConfig, record: StoredOperation): OperationView 
   const state = record.state === "completed" && !verified ? "unknown" : record.state;
   let decision: "required" | "granted" | "declined" | "expired" = "required";
   if (record.proposal) {
-    mkdirSync(join(config.journalDir, "approvals"), { recursive: true, mode: 0o700 });
     const approved = approval(config, record);
     if (approved) decision = approved.decision === "approved" ? "granted" : "declined";
-    else if (readdirSync(join(config.journalDir, "approvals")).includes(`${operationKey(record.requestId)}.json`)) decision = "expired";
+    else if (existsSync(join(config.journalDir, "approvals")) && readdirSync(join(config.journalDir, "approvals")).includes(`${operationKey(record.requestId)}.json`)) decision = "expired";
   }
   const nextAction = state === "pending" || state === "unknown" ? "reconcile_original"
     : state === "denied" ? "linked_continuation"
@@ -185,7 +187,7 @@ async function body(request: IncomingMessage): Promise<Record<string, unknown>> 
 export async function controlReport(options: ControlOptions): Promise<{ status: ControlStatus; continuations: ContinuationView[] }> {
   const status = await controlStatus(options);
   const config = options.config;
-  const workflow = createWorkflowControl({ config, binding: hash(gatewayBinding(config)), read: () => records(config), view: record => project(config, record), live: async () => false }, options.workflow);
+  const workflow = createWorkflowControl({ config, binding: hash(gatewayBinding(config)), read: () => records(config), view: record => project(config, record), live: async () => false }, options.workflow, true);
   try { return { status, continuations: workflow.retained(false) }; } finally { await workflow.close(); }
 }
 export async function startControlServer(options: ControlOptions) {
@@ -284,6 +286,7 @@ export async function confirmControlIntent(config: GatewayConfig, operator: { ad
       if (!binds(artifact) || !verified || verified.decision !== (intent.kind === "approve" ? "approved" : "denied")) throw new Error("kernel decision lacks the exact trusted signature");
       if (reviewRevision(config, records(config).find(r => r.requestId === record!.requestId)!) !== intent.revision) throw new Error("operation changed while authority was submitted");
       mkdirSync(join(config.journalDir, "approvals"), { recursive: true, mode: 0o700 });
+      privatePath(join(config.journalDir, "approvals"), true);
       save(gatewayApprovalPath(config, record!.requestId), artifact, true);
       intent.state = intent.kind === "approve" ? "granted" : "declined";
     }

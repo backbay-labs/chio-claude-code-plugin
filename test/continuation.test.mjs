@@ -206,3 +206,11 @@ test("the operator report projects a recoverable continuation without writing th
   assert.equal(recovered.ready, true);
   assert.equal((await f.request("/continuations/" + continuation.id + "/ack", { outcomeHash: recovered.outcomeHash, challenge: recovered.challenge })).status, 200);
 });
+test("a report on an unused workflow never creates journal directories", async t => {
+  const f = await fixture(t);
+  for (const dir of ["workflow", "control-intents", "approvals"]) rmSync(join(f.config.journalDir, dir), { recursive: true, force: true });
+  const before = readdirSync(f.config.journalDir).sort();
+  const report = await controlReport({ config: f.config, authorityExpiresAt: 0 });
+  assert.deepEqual(report.continuations, []);
+  assert.deepEqual(readdirSync(f.config.journalDir).sort(), before);
+});
