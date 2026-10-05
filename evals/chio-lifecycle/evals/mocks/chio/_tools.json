@@ -1,0 +1,46 @@
+{
+  "tools": [
+    {
+      "name": "write_file",
+      "description": "Protected write of a file through Chio.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "content"
+        ]
+      }
+    },
+    {
+      "name": "chio_resume",
+      "description": "Resume an operator-approved Chio request.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string"
+          },
+          "tool": {
+            "type": "string"
+          },
+          "arguments": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "requestId",
+          "tool",
+          "arguments"
+        ]
+      }
+    }
+  ]
+}
