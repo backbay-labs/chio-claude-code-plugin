@@ -21,6 +21,14 @@
   ],
   "hooks": "./hooks/hooks.json",
   "userConfig": {
+    "compatibility_hooks": {
+      "type": "string",
+      "title": "Compatibility hooks",
+      "description": "bonded: check only sessions bonded with /chio:bond. always: deny tools in unbonded sessions. off: no compatibility checks. These hooks are a precheck, not an execution boundary.",
+      "options": ["bonded", "always", "off"],
+      "default": "bonded",
+      "sensitive": false
+    },
     "control_url": {
       "type": "string",
       "title": "Scoped Chio control origin",

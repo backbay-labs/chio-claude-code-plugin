@@ -15,6 +15,7 @@ export {
   upsertBond,
   clearBond,
   getBond,
+  bondPresence,
   requireSessionBond,
   getSoleBond,
   getMostRecentBond,

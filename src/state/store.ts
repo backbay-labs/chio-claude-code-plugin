@@ -54,6 +54,24 @@ export function getBond(sessionId: string | undefined): SessionBond | undefined 
   return state.bonds[sessionId];
 }
 
+/**
+ * Compatibility-hook fast path. Separates "no bond" from unreadable state
+ * without loading the bridge. The enforcement path still validates a present
+ * entry's session, expiry and policy.
+ */
+export function bondPresence(sessionId: string): "absent" | "present" | "invalid" {
+  let raw: string;
+  try { raw = readFileSync(STATE_PATH, "utf8"); }
+  catch (error) { return (error as NodeJS.ErrnoException).code === "ENOENT" ? "absent" : "invalid"; }
+  let parsed: unknown;
+  try { parsed = JSON.parse(raw); } catch { return "invalid"; }
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return "invalid";
+  const bonds = (parsed as { bonds?: unknown }).bonds;
+  if (bonds === undefined) return "absent";
+  if (!bonds || typeof bonds !== "object" || Array.isArray(bonds)) return "invalid";
+  return Object.hasOwn(bonds, sessionId) ? "present" : "absent";
+}
+
 /** Controls must name a session, even when only one bond is retained. */
 export function requireSessionBond(explicitSessionId?: string): SessionBond {
   const hostSessionId = process.env.CLAUDE_SESSION_ID;

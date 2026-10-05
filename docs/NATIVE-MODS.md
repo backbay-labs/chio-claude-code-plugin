@@ -124,6 +124,9 @@ file tools and other mods do not gain protection from this interface. Kernel and
 operator credentials and the private journal stay outside Claude. The control
 credential can read this session's authorized projection and record intent; it
 cannot submit kernel authority decisions or dispatch a resource tool.
+The compatibility hooks stay inactive in a session that `/chio:bond` has not
+bonded, so loading the plugin does not deny native tools; see
+[compatibility hooks](./RESTRICTED-MODE.md#compatibility-hooks).
 
 ## Confirm a decision outside Claude
 

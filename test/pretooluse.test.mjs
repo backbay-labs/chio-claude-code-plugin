@@ -19,8 +19,12 @@ function fixture(t, opts = {}) {
   cpSync(join(root, "hooks"), join(tmp, "hooks"), { recursive: true });
   mkdirSync(join(tmp, "dist", "state"), { recursive: true });
   const verdict = Object.hasOwn(opts, "verdict") ? opts.verdict : { decision: "allow", receipt };
-  writeFileSync(join(tmp, "dist", "state", "bridge.js"), `export function buildBridge() { ${opts.buildThrow ? "throw new Error('build failure');" : ""} return { check: async () => { ${opts.checkThrow ? "throw new Error('connection refused');" : ""} return ${JSON.stringify(verdict)}; }, verifyReceipt: async () => ${opts.verify !== false} }; }`);
-  writeFileSync(join(tmp, "dist", "state", "store.js"), `export function getBond(id) { return ${JSON.stringify(Object.hasOwn(opts,"bond") ? opts.bond : bond)}; } export function getSoleBond() { return ${JSON.stringify(bond)}; }`);
+  const bridgeBody = `export function buildBridge() { ${opts.buildThrow ? "throw new Error('build failure');" : ""} return { check: async () => { ${opts.checkThrow ? "throw new Error('connection refused');" : ""} return ${JSON.stringify(verdict)}; }, verifyReceipt: async () => ${opts.verify !== false} }; }`;
+  // bridgeImportThrows proves a pass-through never loads the bridge.
+  writeFileSync(join(tmp, "dist", "state", "bridge.js"), (opts.bridgeImportThrows ? "throw new Error('bridge imported');\n" : "") + bridgeBody);
+  const retained = Object.hasOwn(opts, "bond") ? opts.bond : bond;
+  const presence = opts.presence ?? (retained ? "present" : "absent");
+  writeFileSync(join(tmp, "dist", "state", "store.js"), `export function getBond(id) { return ${JSON.stringify(retained)}; } export function getSoleBond() { return ${JSON.stringify(bond)}; } export function bondPresence(id) { return ${JSON.stringify(presence)}; }`);
   writeFileSync(join(tmp, "dist", "state", "paths.js"), `export const PENDING_DIR=${JSON.stringify(join(tmp,"pending"))}; export const RECEIPT_CACHE_DIR=${JSON.stringify(join(tmp,"receipts"))};`);
   const env = Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith("CHIO_") && !k.startsWith("CLAUDE_PLUGIN_OPTION_")));
   Object.assign(env, { CHIO_TRUSTED_RECEIPT_KEY: key }, opts.env);
@@ -44,7 +48,7 @@ test("matching explicit allow persists authorization before native dispatch", t 
 for (const decision of [undefined,"pending","ask","incomplete","cancelled","deny",true]) {
   test(`non-allow verdict ${decision} denies`, t => denied(fixture(t,{verdict:{decision}}).run()));
 }
-for (const opts of [{checkThrow:true},{buildThrow:true},{bond:null},{bond:{...bond,sessionId:"session-b"}},{bond:{...bond,passport:{...bond.passport,expiresAt:"2001-01-01T00:00:00Z"}}},{verify:false},{env:{CHIO_TRUSTED_RECEIPT_KEY:""}},{env:{CHIO_SERVICE_TOKEN:"fixture"}}]) {
+for (const opts of [{checkThrow:true},{buildThrow:true},{bond:{...bond,sessionId:"session-b"}},{bond:{...bond,passport:{...bond.passport,expiresAt:"2001-01-01T00:00:00Z"}}},{verify:false},{env:{CHIO_TRUSTED_RECEIPT_KEY:""}},{env:{CHIO_SERVICE_TOKEN:"fixture"}}]) {
   test(`failure denies: ${JSON.stringify(opts)}`, t => denied(fixture(t,opts).run()));
 }
 for (const changed of [{kernel_key:"b".repeat(64)},{capability_id:"wrong"},{tool_server:"wrong"},{tool_name:"Write"},{action:{parameters:{file_path:"/tmp/other"}}}]) {
@@ -67,3 +71,25 @@ test("post-tool observation stays unverified and request bound", t=>{
   assert.equal(record.executionState,"host-reported-success-unverified");
   denied(f.run(), /EEXIST/);
 });
+
+const mode = value => ({ CLAUDE_PLUGIN_OPTION_COMPATIBILITY_HOOKS: value });
+function passed(result) { assert.equal(result.status, 0, result.stderr); assert.equal(result.stdout, ""); }
+test("bonded mode passes an unbonded session through without loading the bridge", t => {
+  for (const env of [{}, mode(""), mode("bonded")]) {
+    const f = fixture(t, { bond: null, bridgeImportThrows: true, env });
+    passed(f.run()); const post = f.run({ ...input, tool_response: "ok" }, "posttooluse"); passed(post); assert.equal(post.stderr, "");
+  }
+});
+test("off mode drains the event and makes no decision even for a bonded session", t => {
+  const f = fixture(t, { bridgeImportThrows: true, env: mode("off") });
+  passed(f.run()); passed(f.run({ ...input, tool_response: "ok" }, "posttooluse"));
+});
+test("always mode keeps denying an unbonded session", t => denied(fixture(t, { bond: null, env: mode("always") }).run(), /no capability bonded/));
+test("bonded mode still enforces a bonded session", t => {
+  const f = fixture(t, { env: mode("bonded") }); assert.equal(f.run().stdout, ""); assert.equal(readdirSync(join(f.tmp, "pending")).length, 1);
+});
+for (const value of ["Off", " bonded", "enforce"]) {
+  test(`invalid option ${JSON.stringify(value)} denies and names the option`, t => denied(fixture(t, { bond: null, env: mode(value) }).run(), /compatibility_hooks/));
+}
+test("unreadable bond state denies in bonded mode", t => denied(fixture(t, { bond: null, presence: "invalid", bridgeImportThrows: true }).run(), /bond state is unreadable/));
+test("malformed hook input still denies in bonded mode", t => denied(fixture(t, { bond: null }).run({ ...input, session_id: undefined })));

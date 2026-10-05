@@ -10227,6 +10227,25 @@ function getBond(sessionId) {
   const state = readState();
   return state.bonds[sessionId];
 }
+function bondPresence(sessionId) {
+  let raw;
+  try {
+    raw = readFileSync2(STATE_PATH, "utf8");
+  } catch (error) {
+    return error.code === "ENOENT" ? "absent" : "invalid";
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return "invalid";
+  }
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return "invalid";
+  const bonds = parsed.bonds;
+  if (bonds === void 0) return "absent";
+  if (!bonds || typeof bonds !== "object" || Array.isArray(bonds)) return "invalid";
+  return Object.hasOwn(bonds, sessionId) ? "present" : "absent";
+}
 function requireSessionBond(explicitSessionId) {
   const hostSessionId = process.env.CLAUDE_SESSION_ID;
   if (explicitSessionId && hostSessionId && explicitSessionId !== hostSessionId) {
@@ -10914,6 +10933,7 @@ export {
   STATE_PATH,
   approve,
   bond,
+  bondPresence,
   budgetSet,
   buildBridge,
   clearBond,

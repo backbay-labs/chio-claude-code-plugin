@@ -180,6 +180,13 @@ claude plugin marketplace add backbay-labs/chio-claude-code-plugin
 claude plugin install chio@chio
 ```
 
+The `compatibility_hooks` option selects when these hooks check a tool call.
+`bonded` (default) checks only sessions that `/chio:bond` bonded; other sessions
+run without a compatibility decision. `always` denies tools in unbonded sessions,
+the behavior of 0.4.0-rc.4 and earlier. `off` disables both hooks. Unreadable bond state
+denies in `bonded` mode, and an unknown option value denies in every mode except
+`off`.
+
 `PreToolUse` requires an exact session bond, a nonexpired capability, an explicit
 allow decision, a receipt matching the request and capability, and an
 operator-pinned `CHIO_TRUSTED_RECEIPT_KEY`. Budgeted calls require a cost oracle;
