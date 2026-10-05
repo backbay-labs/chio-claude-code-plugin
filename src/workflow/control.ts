@@ -2,7 +2,7 @@ import { randomBytes, randomUUID } from "node:crypto";
 import { existsSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { verifyBoundReceipt, verifyCompletedOutcome, type ExecutionOutcome, type AcknowledgementResult } from "@chio/bridge";
-import type { GatewayConfig, GatewayOutcome, StoredOperation } from "../bridge-internals/gateway.js";
+import { privatePath, type GatewayConfig, type GatewayOutcome, type StoredOperation } from "../bridge-internals/gateway.js";
 import type { OperationView } from "../../types/control.js";
 import type { ContinuationView, ExplanationView, WorkflowView } from "../../types/workflow.js";
 import { assertRecordCapacity, digest, privateDirectory, privateRead, privateSave } from "./store.js";
@@ -35,11 +35,15 @@ function uuid(value: unknown): value is string { return typeof value === "string
 function publicContinuation(r: ContinuationRecord): ContinuationView {
   return { id: r.id, requestId: r.requestId, state: r.state, delivery: r.delivery, receiptConfirmed: r.receiptConfirmed === true || r.delivery === "confirmed", ...(r.outcomeHash ? { outcomeHash: r.outcomeHash } : {}) };
 }
-export function createWorkflowControl(access: Access, options: WorkflowOptions = {}) {
-  const directory = join(access.config.journalDir, "workflow"); privateDirectory(directory);
-  const continuations = join(directory, "continuations"); privateDirectory(continuations);
-  const proposals = join(directory, "proposals"); privateDirectory(proposals);
-  const taskRequests = join(directory, "task-requests"); privateDirectory(taskRequests);
+export function createWorkflowControl(access: Access, options: WorkflowOptions = {}, readOnly = false) {
+  const directory = join(access.config.journalDir, "workflow");
+  const continuations = join(directory, "continuations");
+  const proposals = join(directory, "proposals");
+  const taskRequests = join(directory, "task-requests");
+  for (const path of [directory, continuations, proposals, taskRequests]) {
+    if (!readOnly) privateDirectory(path);
+    else if (existsSync(path)) privatePath(path, true);
+  }
   for (const [field, path] of [["task", options.taskPath], ["catalog", options.catalogPath]] as const) {
     if (path && resolve(path) !== join(directory, field + ".json")) throw new Error("workflow file must be in this journal's private workflow directory");
   }
@@ -51,7 +55,7 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
     if (!record) throw new Error("no original operation for this session");
     return record;
   }
-  function readContinuation(id: unknown): ContinuationRecord {
+  function readContinuation(id: unknown, persist = !readOnly): ContinuationRecord {
     if (!uuid(id)) throw new Error("invalid continuation id");
     const path = join(continuations, id + ".json");
     let r = privateRead<ContinuationRecord>(path);
@@ -64,7 +68,7 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
     // durably retained the exact result. Recover that result, never its effect.
     if (r.state !== "completed" && !jobs.has(id) && verified) {
       r = { ...r, state: "completed", outcome: original.outcome as ExecutionOutcome, outcomeHash: digest(original.outcome), challenge: randomBytes(32).toString("hex") };
-      privateSave(path, r);
+      if (persist) privateSave(path, r);
     }
     if (r.state === "completed") {
       if (!verified || !r.outcome || digest(r.outcome) !== digest(original.outcome) || digest(r.outcome) !== r.outcomeHash
@@ -72,15 +76,17 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
       // Receiving native proof and kernel ACK precedes the final continuation
       // save. A restart can recognize those retained facts without another ACK.
       if (r.delivery !== "confirmed" && r.served && r.receiptConfirmed === true && original.hostDeliveryConfirmed === true && original.acknowledged === true) {
-        r = { ...r, delivery: "confirmed" }; privateSave(path, r);
+        r = { ...r, delivery: "confirmed" }; if (persist) privateSave(path, r);
       }
     }
     return r;
   }
-  function retained(): ContinuationView[] {
+  function retained(persist = !readOnly): ContinuationView[] {
+    if (readOnly && persist) throw new Error("read-only continuation projection");
+    if (!existsSync(continuations)) return [];
     const names = readdirSync(continuations).filter(n => n.endsWith(".json"));
     if (names.length > 1000) throw new Error("continuation retention requires maintenance");
-    return names.map(name => publicContinuation(readContinuation(name.slice(0, -5))));
+    return names.map(name => publicContinuation(readContinuation(name.slice(0, -5), persist)));
   }
   async function project(): Promise<WorkflowView> {
     const task = options.taskPath ? await projectTask(readTask(options.taskPath, access.config.sessionId, access.binding)) : undefined;
@@ -88,7 +94,7 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
       continuation: !!options.resume && !!options.acknowledge, proposals: !!options.propose };
   }
   async function startContinuation(input: Record<string, unknown>): Promise<ContinuationView> {
-    if (closed || !options.resume || !options.acknowledge || !await access.live()) throw new Error("live parent continuation transport required");
+    if (readOnly || closed || !options.resume || !options.acknowledge || !await access.live()) throw new Error("live parent continuation transport required");
     if (Object.keys(input).some(k => !["requestId", "revision"].includes(k))) throw new Error("continuation accepts an original id and revision only");
     const record = find(input.requestId), view = access.view(record);
     if (view.state !== "awaiting_approval" || view.review?.decision !== "granted" || input.revision !== view.review.revision || !record.proposal) throw new Error("no exact accepted grant for continuation");
@@ -104,7 +110,7 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
       try {
         // Read and verify again immediately before handing the retained arguments to the gateway.
         const original = find(record.requestId), current = access.view(original);
-        if (closed || !await access.live() || current.review?.decision !== "granted" || current.review.revision !== pending.revision || !original.proposal) throw new Error("grant or action changed before dispatch");
+        if (readOnly || closed || !await access.live() || current.review?.decision !== "granted" || current.review.revision !== pending.revision || !original.proposal) throw new Error("grant or action changed before dispatch");
         const result = await options.resume!(id, original.requestId, original.proposal.tool_name, original.proposal.arguments);
         const stored = find(original.requestId);
         if (result.state !== "completed" || result.evidence !== "verified" || !stored.request || !verifyCompletedOutcome(result, access.config.execution, stored.request)
@@ -116,6 +122,7 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
     return publicContinuation(pending);
   }
   function outcome(id: unknown) {
+    if (readOnly) throw new Error("read-only continuation projection");
     const r = readContinuation(id);
     if (r.state !== "completed") return { ready: false as const, continuation: publicContinuation(r) };
     const original = find(r.requestId);
@@ -125,7 +132,7 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
     return { ready: true as const, schema: "chio.control.outcome.v1", continuation: publicContinuation(r), outcome: r.outcome, outcomeHash: r.outcomeHash!, challenge: r.challenge! };
   }
   async function acknowledge(id: unknown, input: Record<string, unknown>) {
-    if (closed || !options.acknowledge) throw new Error("parent outcome acknowledgement unavailable");
+    if (readOnly || closed || !options.acknowledge) throw new Error("parent outcome acknowledgement unavailable");
     const r = readContinuation(id);
     if (Object.keys(input).some(k => !["outcomeHash", "challenge"].includes(k)) || r.state !== "completed" || !r.served || !r.outcome
       || input.outcomeHash !== r.outcomeHash || input.challenge !== r.challenge) throw new Error("exact served native-control outcome proof required");
@@ -140,7 +147,7 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
     return { acknowledged: true, requestId: r.requestId, channel: "native_control" };
   }
   async function propose(input: Record<string, unknown>) {
-    if (closed || !options.propose || !await access.live() || !uuid(input.id) || typeof input.tool !== "string"
+    if (readOnly || closed || !options.propose || !await access.live() || !uuid(input.id) || typeof input.tool !== "string"
       || !input.arguments || typeof input.arguments !== "object" || Array.isArray(input.arguments)
       || Object.keys(input).some(k => !["id", "tool", "arguments"].includes(k))) throw new Error("bounded proposal requires a live parent transport");
     if (!access.config.tools.some(t => t.name === input.tool) || !access.config.approval?.requiredTools.includes(input.tool)) throw new Error("proposal tool must require exact review; no effect fallback");
@@ -161,7 +168,7 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
     } catch { privateSave(path, { revision, state: "unknown" }); throw new Error("proposal unresolved; inspect original id without resubmission"); }
   }
   function selectTemplate(input: Record<string, unknown>) {
-    if (!options.catalogPath || !uuid(input.id) || typeof input.templateId !== "string" || Object.keys(input).some(k => !["id", "templateId", "revision"].includes(k))) throw new Error("invalid task selection");
+    if (readOnly || !options.catalogPath || !uuid(input.id) || typeof input.templateId !== "string" || Object.keys(input).some(k => !["id", "templateId", "revision"].includes(k))) throw new Error("invalid task selection");
     const template = readCatalog(options.catalogPath).find(t => t.id === input.templateId);
     if (!template || templateView(template).revision !== input.revision) throw new Error("task template changed");
     const path = join(taskRequests, input.id + ".json");

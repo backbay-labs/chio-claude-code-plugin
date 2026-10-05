@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { createGateway, gatewayApprovalPath, operationKey } from "../dist/gateway.js";
 import { verifyCompletedOutcome } from "@chio/bridge";
-import { startControlServer, controlStatus } from "../dist/control/service.js";
+import { startControlServer, controlStatus, controlReport } from "../dist/control/service.js";
 import { privateSave, privateDirectory } from "../dist/workflow/store.js";
 import { signer, signedDecision, signedOutcome } from "./workflow-fixture.mjs";
 
@@ -190,6 +190,29 @@ test("relay-observed model context is projected only for natively confirmed cont
   assert.deepEqual(f.counts(), { effects: 1, charges: 1, acks: 1 });
   f.setModelContext(() => false);
   assert.equal("modelContext" in (await f.status()).continuations[0], false);
+});
+test("the operator report projects a recoverable continuation without writing the journal", async t => {
+  const f = await fixture(t); f.approve(); const op = (await f.status()).operations[0];
+  const { continuation } = await (await f.request("/continuations", { requestId: op.requestId, revision: op.review.revision })).json();
+  let outcome; for (let i = 0; i < 5; i++) { outcome = await (await f.request("/continuations/" + continuation.id + "/outcome")).json(); if (outcome.ready) break; }
+  const path = join(f.config.journalDir, "workflow/continuations", continuation.id + ".json");
+  const record = JSON.parse(readFileSync(path));
+  delete record.outcome; delete record.outcomeHash; delete record.challenge; delete record.served; record.state = "submitted"; privateSave(path, record);
+  const before = readFileSync(path);
+  const report = await controlReport({ config: f.config, authorityExpiresAt: Math.floor(Date.now() / 1000) + 600 });
+  assert.equal(report.continuations.find(c => c.id === continuation.id).state, "completed");
+  assert.deepEqual(readFileSync(path), before);
+  const recovered = await (await f.request("/continuations/" + continuation.id + "/outcome")).json();
+  assert.equal(recovered.ready, true);
+  assert.equal((await f.request("/continuations/" + continuation.id + "/ack", { outcomeHash: recovered.outcomeHash, challenge: recovered.challenge })).status, 200);
+});
+test("a report on an unused workflow never creates journal directories", async t => {
+  const f = await fixture(t);
+  for (const dir of ["workflow", "control-intents", "approvals"]) rmSync(join(f.config.journalDir, dir), { recursive: true, force: true });
+  const before = readdirSync(f.config.journalDir).sort();
+  const report = await controlReport({ config: f.config, authorityExpiresAt: 0 });
+  assert.deepEqual(report.continuations, []);
+  assert.deepEqual(readdirSync(f.config.journalDir).sort(), before);
 });
 
 test("full proposal retention refuses a new host request before writing another record", async t => {

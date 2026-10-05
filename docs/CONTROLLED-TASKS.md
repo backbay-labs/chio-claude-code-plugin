@@ -88,6 +88,26 @@ CI status is an observation of the configured report, not independent proof of
 deployment behavior. Configure separate requirements for CI, deployment
 identity, preview behavior and production behavior.
 
+A `github` collector reads GitHub check runs for the task's exact commit:
+`{ "kind": "github", "repository": "owner/name", "checks": ["build", "test"], "tokenFile": "/operator/private/github-token.json" }`.
+Every returned run must name the exact commit. Named checks must each conclude
+`success`; without `checks`, every run must conclude `success`, `neutral` or
+`skipped` and at least one must succeed. Missing or unfinished runs are
+`running`. The optional token file is a private JSON file `{ "token": "..." }`
+read only at collection; the token is never stored in the task record. Only
+`git_commit` artifacts can use this collector.
+
+Named checks are requested one name at a time (latest run per name), so large
+commits work; each name is refused above 100 runs. Without `checks` the
+collector sees only the check runs registered at collection time: jobs waiting
+on `needs:`, later matrix legs or slower apps may not exist yet. Use named
+checks for completion gating. Unnamed mode refuses commits with more than 100
+runs. Checks reported only through GitHub commit statuses (some CircleCI,
+Jenkins or Vercel integrations) are not read; when named they stay `running`.
+An optional `apiBase` (for example GitHub Enterprise Server) receives the bearer
+token, so point it only at a host you trust; the recorded source names the API
+origin when it is not `https://api.github.com`.
+
 ```sh
 node scripts/task.mjs collect \
   --task /operator/private/new-preview-task/journal/workflow/task.json \

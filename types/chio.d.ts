@@ -49,7 +49,11 @@ export interface ChioControlStatus {
   intents: ChioIntentView[];
   workflow?: ChioWorkflowView;
   continuations?: ChioContinuationView[];
+  modelUsage?: ChioModelUsageView;
 }
+/** Provider-reported counts totalled by the launcher relay; not billing records. */
+export interface ChioModelUsageView { model: string; requests: number; inputTokens: number; outputTokens: number; cacheCreationInputTokens: number; cacheReadInputTokens: number; budget: number | null; budgetReached: boolean }
+
 /** Authorized projections. Collector commands, credentials and paths remain outside the host. */
 export interface ChioArtifactRef { kind: "git_commit" | "sha256"; digest: string; label: string }
 export interface ChioRequirementView {

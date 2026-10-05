@@ -159,7 +159,7 @@ export const register: Register = (on, options) => {
     .catch(() => ({ text: "Chio controls unavailable. Authority remains unconfirmed.", exitCode: 1 }));
   on("command.run", { command: "chio-status" }, async ($) => {
     const current = await refresh($, options);
-    return { text: `${statusLine(current, Date.now())}\nSession: ${safeText(sessionId)}${current ? `\nProtected tools: ${current.protectedTools.join(", ")}\nDispatch fence: ${current.fenced ? "retained" : "clear"}` : ""}`, exitCode: current ? 0 : 1 };
+    return { text: `${statusLine(current, Date.now())}\nSession: ${safeText(sessionId)}${current ? `\nProtected tools: ${current.protectedTools.join(", ")}\nDispatch fence: ${current.fenced ? "retained" : "clear"}` : ""}${current?.modelUsage ? modelUsageLine(current.modelUsage) : ""}`, exitCode: current ? 0 : 1 };
   }).catch(() => ({ text: "Chio status unavailable. Authority remains unconfirmed.", exitCode: 1 }));
   on("command.run", { command: "chio-doctor" }, async ($, e) => {
     if (e.args.trim()) return { text: "Doctor checks the current session; arguments are refused.", exitCode: 1 };
@@ -324,3 +324,7 @@ export const register: Register = (on, options) => {
     return Box({ flexDirection: "column", children: rows });
   }).catch(($, e, next) => next(e));
 };
+
+function modelUsageLine(u: NonNullable<ControlStatus["modelUsage"]>): string {
+  return `\nModel usage (relay-metered): ${u.requests} requests · ${u.inputTokens} in · ${u.outputTokens} out · ${u.cacheReadInputTokens} cache read · ${u.cacheCreationInputTokens} cache write tokens${u.budget !== null ? ` · budget ${u.budget}${u.budgetReached ? " reached" : ""}` : ""}`;
+}

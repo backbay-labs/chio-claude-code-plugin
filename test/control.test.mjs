@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
-import { mkdtempSync, readFileSync, readdirSync, writeFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, readdirSync, writeFileSync, rmSync, statSync, symlinkSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { createGateway, operationKey } from "../dist/gateway.js";
@@ -290,6 +290,54 @@ test("an action that already has an intent is not counted as awaiting a request"
   assert.match(tty.read(), /1 action awaiting a review request from Claude/);
   assert.match(tty.read(), /1 action needs inspection: an earlier request for the same revision was skipped, expired or unresolved/);
   tty.input.write("q"); await running;
+});
+test("control report writes a private Markdown report once and never includes credentials", async t => {
+  const f = await fixture(t); const now = Math.floor(Date.now() / 1000);
+  const prepared = { ...f.config, sessionCredential: { schema: "chio.mcp.session-credential.v1", sessionId: f.config.execution.sessionId,
+    subjectKey: f.config.execution.subjectKey, capabilityIds: [f.config.execution.capabilityId], serverId: f.config.execution.serverId,
+    endpointPath: "/mcp", allowedTools: ["write_file"], issuedAt: now, expiresAt: now + 600 } };
+  const configPath = join(f.root, "report-config.json"); const outPath = join(f.root, "report.md");
+  writeFileSync(configPath, JSON.stringify(prepared), { mode: 0o600 });
+  await operatorMain(["report", "--gateway-config", configPath, "--output", outPath]);
+  assert.equal(statSync(outPath).mode & 0o777, 0o600);
+  const text = readFileSync(outPath, "utf8");
+  assert.ok(text.includes("# Chio session report")); assert.ok(text.includes(f.config.sessionId)); assert.ok(!text.includes(f.config.execution.bearerToken));
+  await assert.rejects(operatorMain(["report", "--gateway-config", configPath, "--output", outPath]), /EEXIST/);
+});
+test("control report relay-events and option scoping", async t => {
+  const f = await fixture(t); const now = Math.floor(Date.now() / 1000);
+  const prepared = { ...f.config, sessionCredential: { schema: "chio.mcp.session-credential.v1", sessionId: f.config.execution.sessionId,
+    subjectKey: f.config.execution.subjectKey, capabilityIds: [f.config.execution.capabilityId], serverId: f.config.execution.serverId,
+    endpointPath: "/mcp", allowedTools: ["write_file"], issuedAt: now, expiresAt: now + 600 } };
+  const configPath = join(f.root, "scoped-config.json"); writeFileSync(configPath, JSON.stringify(prepared), { mode: 0o600 });
+  const good = join(f.root, "events.json"), bad = join(f.root, "events-bad.json");
+  writeFileSync(good, JSON.stringify([{ requestClass: "conversation", forwarded: true, model: "claude-sonnet-5-5", usage: { input_tokens: 1, output_tokens: 2 } }])); writeFileSync(bad, "{}");
+  const withEvents = join(f.root, "with-events.md"); await operatorMain(["report", "--gateway-config", configPath, "--output", withEvents, "--relay-events", good]);
+  assert.ok(readFileSync(withEvents, "utf8").includes("## Model usage"));
+  const refused = join(f.root, "refused.md");
+  await assert.rejects(operatorMain(["report", "--gateway-config", configPath, "--output", refused, "--relay-events", bad]), /JSON array/);
+  assert.throws(() => statSync(refused));
+  await assert.rejects(operatorMain(["report", "--gateway-config", configPath, "--output", refused, "--credential-output", join(f.root, "c.json")]), /credential-output/);
+  await assert.rejects(operatorMain(["status", "--gateway-config", configPath, "--output", refused]), /only for report/);
+});
+
+test("the control status passes the relay model usage through when configured and omits it otherwise", async t => {
+  const f = await fixture(t);
+  assert.equal("modelUsage" in await (await f.get()).json(), false);
+  const usage = { model: "claude-sonnet-5-5", requests: 2, inputTokens: 10, outputTokens: 5, cacheCreationInputTokens: 1, cacheReadInputTokens: 3, budget: 100, budgetReached: false };
+  const second = await startControlServer({ ...f.options, modelUsage: () => usage });
+  t.after(() => second.close());
+  const body = await (await fetch(`${second.url}/sessions/${f.config.sessionId}/status`, { headers: { Authorization: `Bearer ${second.token}` } })).json();
+  assert.deepEqual(body.modelUsage, usage);
+});
+test("control report refuses a symlinked relay events file", async t => {
+  const f = await fixture(t); const now = Math.floor(Date.now() / 1000);
+  const prepared = { ...f.config, sessionCredential: { schema: "chio.mcp.session-credential.v1", sessionId: f.config.execution.sessionId,
+    subjectKey: f.config.execution.subjectKey, capabilityIds: [f.config.execution.capabilityId], serverId: f.config.execution.serverId,
+    endpointPath: "/mcp", allowedTools: ["write_file"], issuedAt: now, expiresAt: now + 600 } };
+  const configPath = join(f.root, "link-config.json"); writeFileSync(configPath, JSON.stringify(prepared), { mode: 0o600 });
+  const real = join(f.root, "real-events.json"), link = join(f.root, "link-events.json"); writeFileSync(real, "[]"); symlinkSync(real, link);
+  await assert.rejects(operatorMain(["report", "--gateway-config", configPath, "--output", join(f.root, "l.md"), "--relay-events", link]), /relay events must be a regular file/);
 });
 test("Ctrl-C during confirmation survives the next card flush", async () => {
   const tty = terminal(); let release, entered = false, done = false;

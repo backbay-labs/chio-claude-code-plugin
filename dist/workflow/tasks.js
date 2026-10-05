@@ -1366,6 +1366,14 @@ function validateTemplate(value) {
       const url = new URL(c.url);
       if (url.protocol !== "https:" && !(url.protocol === "http:" && url.hostname === "127.0.0.1")) throw new Error("collector requires HTTPS or exact loopback");
       if (url.username || url.password || url.hash || url.search || !c.artifactPointer.startsWith("/") || !c.statePointer.startsWith("/") || typeof c.passedValue !== "string" || !Array.isArray(c.failedValues) || c.failedValues.some((v) => typeof v !== "string")) throw new Error("invalid JSON collector");
+    } else if (c?.kind === "github") {
+      let base;
+      try {
+        base = new URL(c.apiBase ?? "https://api.github.com");
+      } catch {
+        base = void 0;
+      }
+      if (!base || typeof c.repository !== "string" || !/^[A-Za-z0-9-]{1,39}\/(?!\.\.?$)[A-Za-z0-9._-]{1,100}$/.test(c.repository) || base.protocol !== "https:" && !(base.protocol === "http:" && base.hostname === "127.0.0.1") || base.username || base.password || base.search || base.hash || c.checks !== void 0 && (!Array.isArray(c.checks) || !c.checks.length || c.checks.length > 64 || c.checks.some((name) => typeof name !== "string" || !name || name.length > 256)) || c.tokenFile !== void 0 && (typeof c.tokenFile !== "string" || resolve2(c.tokenFile) !== c.tokenFile)) throw new Error("invalid GitHub collector");
     } else throw new Error("unsupported evidence collector");
   }
   return value;
@@ -1490,6 +1498,43 @@ function pointer(value, path) {
   }
   return current;
 }
+async function boundedJson(url, headers = {}) {
+  const response = await fetch(url, { headers, redirect: "error", signal: AbortSignal.timeout(5e3) });
+  if (!response.ok) throw new Error("evidence source unavailable");
+  const reader = response.body?.getReader();
+  if (!reader) throw new Error("missing evidence response");
+  const chunks = [];
+  let size = 0;
+  try {
+    for (; ; ) {
+      const r = await reader.read();
+      if (r.done) break;
+      size += r.value.length;
+      if (size > 1024 * 1024) throw new Error("evidence response exceeds limit");
+      chunks.push(r.value);
+    }
+  } finally {
+    await reader.cancel();
+  }
+  return JSON.parse(Buffer.concat(chunks).toString());
+}
+var GITHUB_FAILED = /* @__PURE__ */ new Set(["failure", "timed_out", "cancelled", "action_required", "startup_failure", "stale"]);
+function githubState(value, commit, required) {
+  const v = value;
+  if (!v || typeof v.total_count !== "number" || !Array.isArray(v.check_runs)) throw new Error("invalid GitHub check-runs response");
+  if (v.total_count > 100) throw new Error("more than 100 check runs; name the required checks");
+  if (v.check_runs.length !== v.total_count) throw new Error("incomplete GitHub check-runs page");
+  const runs = v.check_runs.map((r) => ({ id: r?.id, name: r?.name, head_sha: r?.head_sha, status: r?.status, conclusion: r?.conclusion }));
+  if (runs.some((r) => r.head_sha !== commit)) throw new Error("source evidence belongs to another artifact");
+  const considered = required ? runs.filter((r) => required.includes(String(r.name))) : runs;
+  const missing = required ? required.some((name) => !runs.some((r) => r.name === name)) : !runs.length;
+  let state;
+  if (considered.some((r) => GITHUB_FAILED.has(String(r.conclusion)) || r.status === "completed" && !(required ? ["success"] : ["success", "neutral", "skipped"]).includes(String(r.conclusion)))) state = "failed";
+  else if (missing || considered.some((r) => r.status !== "completed")) state = "running";
+  else if (required) state = considered.every((r) => r.conclusion === "success") ? "passed" : "failed";
+  else state = considered.every((r) => ["success", "neutral", "skipped"].includes(String(r.conclusion))) && considered.some((r) => r.conclusion === "success") ? "passed" : "failed";
+  return { state, considered };
+}
 async function collectRequirement(path, id) {
   const task = readTask(path);
   const revision = taskRevision(task);
@@ -1503,25 +1548,36 @@ async function collectRequirement(path, id) {
     const result = await run(c.argv, c.cwd, c.timeoutMs);
     state = result.code === 0 ? "passed" : "failed";
     source = "operator command \xB7 " + digest({ argv: c.argv, stdout: result.stdout, code: result.code });
-  } else {
-    const response = await fetch(c.url.replaceAll("{artifact}", task.artifact.digest), { redirect: "error", signal: AbortSignal.timeout(5e3) });
-    if (!response.ok) throw new Error("evidence source unavailable");
-    const reader = response.body?.getReader();
-    if (!reader) throw new Error("missing evidence response");
-    const chunks = [];
-    let size = 0;
-    try {
-      for (; ; ) {
-        const r = await reader.read();
-        if (r.done) break;
-        size += r.value.length;
-        if (size > 1024 * 1024) throw new Error("evidence response exceeds limit");
-        chunks.push(r.value);
+  } else if (c.kind === "github") {
+    if (task.artifact.kind !== "git_commit") throw new Error("GitHub evidence requires a git commit artifact");
+    const headers = { Accept: "application/vnd.github+json", "User-Agent": "chio-claude-code-plugin", "X-GitHub-Api-Version": "2022-11-28" };
+    if (c.tokenFile) {
+      let token2;
+      try {
+        token2 = privateRead(c.tokenFile).token;
+      } catch {
+        throw new Error("invalid GitHub token file");
       }
-    } finally {
-      await reader.cancel();
+      if (typeof token2 !== "string" || !/^[\x21-\x7e]{1,1024}$/.test(token2)) throw new Error("invalid GitHub token file");
+      headers.Authorization = "Bearer " + token2;
     }
-    const value = JSON.parse(Buffer.concat(chunks).toString());
+    const base = new URL(c.apiBase ?? "https://api.github.com");
+    const root = base.pathname.replace(/\/$/, "");
+    const [owner = "", name = ""] = c.repository.split("/");
+    const page = async (checkName) => {
+      const url = new URL(`${root}/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}/commits/${encodeURIComponent(task.artifact.digest)}/check-runs`, base.origin);
+      if (checkName !== void 0) url.searchParams.set("check_name", checkName);
+      url.searchParams.set("filter", "latest");
+      url.searchParams.set("per_page", "100");
+      return boundedJson(url.toString(), headers);
+    };
+    const parts = c.checks ? [] : [githubState(await page(), task.artifact.digest)];
+    for (const check of c.checks ?? []) parts.push(githubState(await page(check), task.artifact.digest, [check]));
+    const considered = parts.flatMap((p) => p.considered);
+    state = parts.some((p) => p.state === "failed") ? "failed" : parts.some((p) => p.state === "running") ? "running" : "passed";
+    source = `github check-runs \xB7 ${base.origin === "https://api.github.com" ? "" : base.origin + " \xB7 "}${c.repository} \xB7 ${considered.length} checks \xB7 ${digest(considered)}`;
+  } else if (c.kind === "json") {
+    const value = await boundedJson(c.url.replaceAll("{artifact}", task.artifact.digest));
     if (pointer(value, c.artifactPointer) !== task.artifact.digest) throw new Error("source evidence belongs to another artifact");
     const reported = pointer(value, c.statePointer);
     state = reported === c.passedValue ? "passed" : c.failedValues.includes(String(reported)) ? "failed" : reported === "running" ? "running" : "outstanding";
@@ -1538,6 +1594,7 @@ export {
   artifactValid,
   collectRequirement,
   createTask,
+  githubState,
   projectTask,
   readCatalog,
   readTask,

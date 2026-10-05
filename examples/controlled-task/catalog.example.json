@@ -16,7 +16,7 @@
     }, {
       "id": "hosted",
       "title": "Hosted checks",
-      "collector": { "kind": "json", "url": "http://127.0.0.1:9440/artifacts/{artifact}/hosted", "artifactPointer": "/artifact", "statePointer": "/state", "passedValue": "passed", "failedValues": ["failed"] }
+      "collector": { "kind": "github", "repository": "replace-owner/replace-repo", "checks": ["build", "test"], "tokenFile": "/operator/private/github-token.json" }
     }, {
       "id": "preview",
       "title": "Preview behavior",

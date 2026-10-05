@@ -4,14 +4,14 @@ import { readFileSync, writeFileSync, unlinkSync, realpathSync, lstatSync } from
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readGatewayConfig, privatePath } from "../dist/gateway.js";
-import { confirmControlIntent, controlStatus, startControlServer } from "../dist/control/service.js";
+import { confirmControlIntent, controlReport, controlStatus, renderSessionReport, startControlServer } from "../dist/control/service.js";
 import { requireSessionCredential } from "./sandbox.mjs";
 import { watch } from "./control-watch.mjs";
 
 export async function main(args = process.argv.slice(2)) {
   const [action, ...rest] = args;
   const options = {};
-  const allowed = new Set(["--gateway-config", "--credential-output", "--operator-file", "--intent"]);
+  const allowed = new Set(["--gateway-config", "--credential-output", "--operator-file", "--intent", "--output", "--relay-events"]);
   for (let i = 0; i < rest.length; i += 2) {
     if (!allowed.has(rest[i]) || !rest[i + 1] || Object.hasOwn(options, rest[i])) throw new Error("expected unique named control options");
     options[rest[i]] = rest[i + 1];
@@ -19,6 +19,7 @@ export async function main(args = process.argv.slice(2)) {
   if (!options["--gateway-config"]) throw new Error("--gateway-config is required");
   const configPath = resolve(options["--gateway-config"]);
   const config = readGatewayConfig(configPath);
+  if (action !== "report" && (options["--output"] || options["--relay-events"])) throw new Error("--output and --relay-events are accepted only for report");
   if (action === "confirm") {
     if (!options["--intent"] || !options["--operator-file"] || options["--credential-output"]) throw new Error("confirm requires --intent and --operator-file");
     const path = resolve(options["--operator-file"]); privatePath(path, false);
@@ -27,9 +28,26 @@ export async function main(args = process.argv.slice(2)) {
     process.stdout.write(JSON.stringify({ intent: await confirmControlIntent(config, operator, options["--intent"]), dispatchPerformed: false }) + "\n");
     return;
   }
-  if (!["serve", "status", "inbox", "watch"].includes(action) || action !== "watch" && options["--operator-file"] || options["--intent"]) throw new Error("usage: control.mjs serve|status|inbox --gateway-config CONFIG [--credential-output NEW_FILE]; watch --gateway-config CONFIG --operator-file PRIVATE_FILE; confirm --gateway-config CONFIG --intent ID --operator-file PRIVATE_FILE");
+  if (!["serve", "status", "inbox", "watch", "report"].includes(action) || action !== "watch" && options["--operator-file"] || options["--intent"]) throw new Error("usage: control.mjs serve|status|inbox --gateway-config CONFIG [--credential-output NEW_FILE]; report --gateway-config CONFIG --output NEW_FILE.md [--relay-events model-relay.json]; watch --gateway-config CONFIG --operator-file PRIVATE_FILE; confirm --gateway-config CONFIG --intent ID --operator-file PRIVATE_FILE");
   const prepared = requireSessionCredential(JSON.parse(readFileSync(configPath, "utf8")));
   const authorityExpiresAt = prepared.sessionCredential.expiresAt;
+  if (action === "report") {
+    if (options["--credential-output"]) throw new Error("report does not accept --credential-output");
+    if (!options["--output"]) throw new Error("report requires a new --output file");
+    const result = await controlReport({ config, authorityExpiresAt, workflow: prepared.workflow });
+    let relayEvents;
+    if (options["--relay-events"]) {
+      const eventsPath = resolve(options["--relay-events"]);
+      const stat = lstatSync(eventsPath);
+      if (!stat.isFile()) throw new Error("relay events must be a regular file");
+      if (stat.size > 16 * 1024 * 1024) throw new Error("relay events file exceeds its bound");
+      relayEvents = JSON.parse(readFileSync(eventsPath, "utf8"));
+      if (!Array.isArray(relayEvents)) throw new Error("relay events must be a JSON array (model-relay.json)");
+    }
+    writeFileSync(resolve(options["--output"]), renderSessionReport({ ...result, generatedAt: Date.now(), relayEvents }), { mode: 0o600, flag: "wx" });
+    process.stdout.write(JSON.stringify({ report: resolve(options["--output"]), dispatchPerformed: false }) + "\n");
+    return;
+  }
   if (action === "watch") {
     if (!options["--operator-file"] || options["--credential-output"] || options["--intent"]) throw new Error("watch requires --operator-file");
     if (!process.stdin.isTTY || !process.stdout.isTTY) throw new Error("watch requires an interactive terminal");

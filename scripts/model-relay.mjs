@@ -55,11 +55,55 @@ export function validateModelRequest(body,model,toolNames,betaHeaders=[]) {
   // These values cannot authorize remote tools, references, files or background work.
   if (body.metadata!==undefined && (!object(body.metadata)||!keys(body.metadata,["user_id"]))) throw new Error("unsupported metadata");
 }
-export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.com",apiKey,oauth,model,toolNames,onToolResults,onModelRequest,onModelForwarded,pinnedHostEffortBeta=false}) {
+/** Operator token budget from a command-line string: a positive safe integer, or undefined when absent. */
+export function parseTokenBudget(value) {
+  if (value===undefined) return undefined;
+  if (!/^[0-9]{1,16}$/.test(value) || !Number.isSafeInteger(Number(value)) || Number(value)<1) throw new Error("--model-token-budget must be a positive integer");
+  return Number(value);
+}
+const usageKeys=["input_tokens","output_tokens","cache_creation_input_tokens","cache_read_input_tokens"];
+/** Provider-reported usage read as response bytes pass through. Never changes the response. */
+export function usageMeter(contentType) {
+  const streaming=/text\/event-stream/.test(contentType??"");
+  const decoder=new TextDecoder();
+  let pending="",body="",overflow=false,seen=false,discardLine=false;
+  const maxLine=64*1024;
+  const usage=Object.fromEntries(usageKeys.map(key=>[key,0]));
+  const take=source=>{ if(!object(source)) return; for(const key of usageKeys) if(Number.isSafeInteger(source[key])&&source[key]>=0){usage[key]=source[key];seen=true;} };
+  const line=text=>{ if(!text.startsWith("data:")) return; try { const event=JSON.parse(text.slice(5).trim()); if(event?.type==="message_start") take(event.message?.usage); else if(event?.type==="message_delta") take(event.usage); } catch { /* not usage */ } };
+  return {
+    feed(chunk){
+      const text=typeof chunk==="string"?chunk:decoder.decode(chunk,{stream:true});
+      if(streaming){
+        let start=0;
+        while(start<text.length){
+          const newline=text.indexOf("\n",start), end=newline<0?text.length:newline;
+          if(!discardLine){
+            if(pending.length+end-start>maxLine){ pending=""; discardLine=true; }
+            else pending+=text.slice(start,end);
+          }
+          if(newline<0) break;
+          if(!discardLine) line(pending.replace(/\r$/,""));
+          pending=""; discardLine=false; start=newline+1;
+        }
+      }
+      else if(!overflow){ body+=text; if(body.length>8*1024*1024){ overflow=true; body=""; } }
+    },
+    end(){
+      if(streaming){ if(pending) line(pending); }
+      else if(!overflow){ try { take(JSON.parse(body)?.usage); } catch { /* no usage */ } }
+      return seen?usage:null;
+    },
+  };
+}
+export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.com",apiKey,oauth,model,toolNames,onToolResults,onModelRequest,onModelForwarded,pinnedHostEffortBeta=false,tokenBudget}) {
   const upstream=new URL(upstreamBaseUrl);
   if (oauth && upstream.origin!=="https://api.anthropic.com") throw new Error("Native subscription authentication requires the fixed Anthropic origin");
   if ((!apiKey && !oauth) || (apiKey && oauth) || (oauth && (!oauth.authorization?.startsWith("Bearer ") || !oauth.beta)) || upstream.username || upstream.password || upstream.search || upstream.hash || upstream.pathname!=="/" || !(upstream.origin==="https://api.anthropic.com" || upstream.protocol==="http:"&&upstream.hostname==="127.0.0.1"&&upstream.port)) throw new Error("explicit API or native subscription credential and qualified provider or localhost fixture origin required");
+  if (tokenBudget!==undefined && (!Number.isSafeInteger(tokenBudget) || tokenBudget<1)) throw new Error("token budget must be a positive integer");
   const token=randomBytes(32).toString("hex"),events=[];
+  const totals={requests:0,input_tokens:0,output_tokens:0,cache_creation_input_tokens:0,cache_read_input_tokens:0};
+  const spent=()=>usageKeys.reduce((sum,key)=>sum+totals[key],0);
   const server=createServer(async (request,response)=>{
     const controller=new AbortController();response.on("close",()=>controller.abort());
     if (events.length >= 1024) {
@@ -68,6 +112,8 @@ export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.co
       response.end(JSON.stringify({ type: "error", error: { type: "permission_error", message: "Operator model relay request limit reached" } })); return;
     }
     const event={method:request.method,path:request.url?.slice(0,2048),forwarded:false};events.push(event);
+    let meter=null,counted=false;
+    const count=complete=>{ if(!meter||counted) return; counted=true; try { event.usage=meter.end(); } catch { event.usage=null; } event.usageComplete=complete; totals.requests++; if(event.usage) for(const key of usageKeys) totals[key]+=event.usage[key]; };
     try {
       const target=new URL(request.url,"http://127.0.0.1");
       if (request.method!=="POST" || !["/v1/messages","/v1/messages/count_tokens"].includes(target.pathname) || [...target.searchParams].some(([key,value])=>key!=="beta"||value!=="true") || request.headers["x-api-key"]!==token) throw new Error("model route refused");
@@ -95,6 +141,7 @@ export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.co
       event.messageEfforts=Array.isArray(body.messages)?body.messages.slice(0,128).filter(message=>message.output_config!==undefined).map(message=>effort(message.output_config)?message.output_config.effort:"invalid"):[];
       event.thinkingType=typeof body.thinking?.type==="string"&&/^[a-z_]{1,32}$/.test(body.thinking.type)?body.thinking.type:undefined;
       validateModelRequest(body,model,new Set(toolNames),betaHeaders);
+      if (tokenBudget!==undefined && event.requestClass==="conversation" && spent()>=tokenBudget) { if(onToolResults) await onToolResults(body.messages); const error=new Error("Operator model token budget reached"); error.budget=true; throw error; }
       if(onModelRequest && target.pathname==="/v1/messages") await onModelRequest(body);
       if(onToolResults) await onToolResults(body.messages);
       event.topLevelKeys=Object.keys(body);event.toolNames=body.tools?.map(tool=>tool.name)??[];event.forwarded=true;
@@ -111,15 +158,19 @@ export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.co
       if (onModelForwarded && target.pathname === "/v1/messages") {
         try { await onModelForwarded(body); } catch { /* Read-only observation never changes forwarding. */ }
       }
+      meter=target.pathname==="/v1/messages"&&event.requestClass==="conversation"?usageMeter(result.headers.get("content-type")):null;
       response.writeHead(result.status,{"content-type":result.headers.get("content-type")??"application/json"});
-      if(result.body) for await(const data of result.body) { if(!response.write(data)) await once(response,"drain",{signal:controller.signal}); }
+      if(result.body) for await(const data of result.body){ try { meter?.feed(data); } catch { /* metering never affects the response */ } if(!response.write(data)) await once(response,"drain",{signal:controller.signal}); }
       response.end();
+      if(meter){ event.model=body.model; count(true); }
     } catch(error) {
+      // An interrupted forwarded stream still spent what the provider reported so far.
+      if(meter&&event.forwarded){ event.model=model; count(false); }
       event.failure=error.message;
       if(!response.headersSent) response.writeHead(403,{"content-type":"application/json"});
-      response.end(JSON.stringify({type:"error",error:{type:"permission_error",message:"Operator model relay refused or failed"}}));
+      response.end(JSON.stringify({type:"error",error:{type:"permission_error",message:error.budget?"Operator model token budget reached":"Operator model relay refused or failed"}}));
     }
   });
   await new Promise((resolve,reject)=>{server.once("error",reject);server.listen(0,"127.0.0.1",resolve);});
-  return {port:server.address().port,token,events,fixture:upstream.protocol==="http:",async close(){server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}};
+  return {port:server.address().port,token,events,fixture:upstream.protocol==="http:",usage(){return {model,requests:totals.requests,inputTokens:totals.input_tokens,outputTokens:totals.output_tokens,cacheCreationInputTokens:totals.cache_creation_input_tokens,cacheReadInputTokens:totals.cache_read_input_tokens,budget:tokenBudget??null,budgetReached:tokenBudget!==undefined&&spent()>=tokenBudget};},async close(){server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}};
 }

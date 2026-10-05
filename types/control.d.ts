@@ -49,4 +49,8 @@ export interface ControlStatus {
   intents: IntentView[];
   workflow?: WorkflowView;
   continuations?: ContinuationView[];
+  modelUsage?: ModelUsageView;
 }
+/** Provider-reported counts totalled by the launcher relay; not billing records. */
+export interface ModelUsageView { model: string; requests: number; inputTokens: number; outputTokens: number; cacheCreationInputTokens: number; cacheReadInputTokens: number; budget: number | null; budgetReached: boolean }
+

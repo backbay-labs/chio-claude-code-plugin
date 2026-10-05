@@ -464,6 +464,20 @@ test("attaching a share replaces the not-yet-confirmed notice", { options }, asy
   const text = (await $.command.run(command("chio", ""))).text;
   expect(text).toContain("Original result attached to your message for Claude."); expect(text).not.toContain("not yet confirmed");
 });
+test("status prints relay-metered model usage when the projection carries it", { options }, async ($, on) => {
+  const value = projection();
+  value.modelUsage = { model: "claude-sonnet-5-5", requests: 3, inputTokens: 1200, outputTokens: 340, cacheCreationInputTokens: 0, cacheReadInputTokens: 800, budget: null, budgetReached: false };
+  stub(on, () => "session-a", () => value);
+  expect((await $.command.run(command("chio-status"))).text).toContain("Model usage (relay-metered): 3 requests · 1200 in · 340 out · 800 cache read · 0 cache write tokens");
+});
+
+test("status rejects a malformed model usage projection", { options }, async ($, on) => {
+  const value = projection();
+  (value as any).modelUsage = { model: "m", requests: -1, inputTokens: 1, outputTokens: 1, cacheCreationInputTokens: 0, cacheReadInputTokens: 0, budget: null, budgetReached: false };
+  stub(on, () => "session-a", () => value);
+  const text = (await $.command.run(command("chio-status"))).text;
+  expect(text).not.toContain("Model usage");
+});
 test("guidance cache is invalidated when connection or protected scope changes", { options }, async ($, on) => {
   let live = false, value = projection(); const invalidated: string[] = [];
   stub(on, () => "session-a", () => { if (!live) throw new Error("offline"); return value; });
