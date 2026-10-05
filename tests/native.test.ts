@@ -388,3 +388,77 @@ test("a result received as the session changes is never shared with the new sess
   await $.command.run(command("chio-outcome", continuationId));
   expect((await $.prompt.submit(submit("next"))).context ?? []).toEqual([]);
 });
+
+function opWith(state: string): ControlStatus {
+  const value = projection(); value.awaitingReview = 0;
+  value.operations = [{ requestId: "request-p", tool: "write_file", state: state as "pending", evidence: "unverified", acknowledged: false, hostDeliveryConfirmed: false, nextAction: "none" }]; return value;
+}
+function emptyStatus(): ControlStatus { const value = projection(); value.awaitingReview = 0; value.operations = []; return value; }
+test("a pending op seen mid-call never toasts, and neither does its completed refresh", { options }, async ($, on) => {
+  const toasts: string[] = []; let value = emptyStatus();
+  stub(on, () => "session-a", () => value);
+  on("ui.toast", ($, e) => { toasts.push(e.text); return { value: undefined }; });
+  let release = () => {}; const gate = new Promise<void>(resolve => { release = resolve; });
+  on("tool.call", async () => { value = opWith("pending"); await gate; return { result: "ok" }; });
+  await $.session.start({ cwd: "/tmp", surface: null, isInteractive: true });
+  await $.command.run(command("chio-status"));
+  const call = $.tool.call({ tool: "mcp__chio__write_file", path: "/protected/out.txt" });
+  for (let i = 0; i < 200 && value.operations[0]?.state !== "pending"; i++) await Promise.resolve();
+  await $.command.run(command("chio-status")); expect(toasts).toEqual([]);
+  value = opWith("completed"); release(); expect((await call).result).toBe("ok");
+  expect(toasts).toEqual([]);
+  value = opWith("completed"); await $.command.run(command("chio-status"));
+  expect(toasts).toEqual([]);
+});
+test("a pending op that remains after the call toasts once on the next refresh", { options }, async ($, on) => {
+  const toasts: string[] = []; let value = emptyStatus();
+  stub(on, () => "session-a", () => value);
+  on("ui.toast", ($, e) => { toasts.push(e.text); return { value: undefined }; });
+  let release = () => {}; const gate = new Promise<void>(resolve => { release = resolve; });
+  on("tool.call", async () => { value = opWith("pending"); await gate; return { result: "ok" }; });
+  await $.session.start({ cwd: "/tmp", surface: null, isInteractive: true });
+  await $.command.run(command("chio-status"));
+  const call = $.tool.call({ tool: "mcp__chio__write_file", path: "/protected/out.txt" });
+  for (let i = 0; i < 200 && value.operations[0]?.state !== "pending"; i++) await Promise.resolve();
+  await $.command.run(command("chio-status")); expect(toasts).toEqual([]);
+  release(); await call;
+  await $.command.run(command("chio-status"));
+  expect(toasts).toEqual(["Chio · original outcome unresolved · /chio-doctor"]);
+});
+test("transitions can ignore pending ops and remember the stored uncertain count", () => {
+  const now = Date.now(), quiet = emptyStatus(), pending = opWith("pending"), unknown = opWith("unknown");
+  const state: { authorityWarned: boolean; uncertain?: number } = { authorityWarned: true };
+  expect(transitions(quiet, pending, now, state, true)).toEqual([]); expect(state.uncertain).toBe(0);
+  expect(transitions(pending, pending, now, state)).toEqual(["Chio · original outcome unresolved · /chio-doctor"]); expect(state.uncertain).toBe(1);
+  expect(transitions(pending, pending, now, state)).toEqual([]);
+  expect(transitions(null, unknown, now, state)).toEqual([]); expect(state.uncertain).toBe(1);
+  expect(transitions(quiet, unknown, now, { authorityWarned: true })).toEqual(["Chio · original outcome unresolved · /chio-doctor"]);
+});
+test("a throwing toast never nulls live status", { options }, async ($, on) => {
+  let value = emptyStatus();
+  stub(on, () => "session-a", () => value);
+  on("ui.toast", () => { throw new Error("toast failed"); });
+  await $.session.start({ cwd: "/tmp", surface: null, isInteractive: true });
+  await $.command.run(command("chio-status"));
+  value = projection();
+  const answer = await $.command.run(command("chio-status"));
+  expect(answer.text).not.toContain("disconnected"); expect(answer.exitCode).toBe(0);
+});
+test("a compact SessionStart keeps a queued share while clear drops it", { options }, async ($, on) => {
+  outcomeStub(on, () => "session-a", await readyOutcome({ ok: true }));
+  on("classic.SessionStart", () => ({}));
+  await $.command.run(command("chio-outcome", continuationId));
+  await $.classic.SessionStart({ source: "compact" });
+  const kept = await $.prompt.submit(submit("next"));
+  expect(kept.context?.length).toBe(1);
+  await $.command.run(command("chio-outcome", continuationId));
+  await $.classic.SessionStart({ source: "clear" });
+  expect((await $.prompt.submit(submit("later"))).context ?? []).toEqual([]);
+});
+test("attaching a share replaces the not-yet-confirmed notice", { options }, async ($, on) => {
+  outcomeStub(on, () => "session-a", await readyOutcome({ ok: true }));
+  await $.command.run(command("chio-outcome", continuationId));
+  await $.prompt.submit(submit("next"));
+  const text = (await $.command.run(command("chio", ""))).text;
+  expect(text).toContain("Original result attached to your message for Claude."); expect(text).not.toContain("not yet confirmed");
+});

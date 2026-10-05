@@ -174,7 +174,9 @@ delivery. After the result is received, the mod attaches it, with its receipt
 id and outcome hash, to the user's next message as context, once per session.
 In a protected launch the parent relay records the delivery only when a
 forwarded model request carries the exact hash of a continuation whose native
-delivery is confirmed; the pane then shows "relay-confirmed". Ordinary sessions
+delivery is confirmed; the pane then shows "relay-confirmed". That means a
+forwarded model request carried the exact hash, not that the model read or acted
+on it. Ordinary sessions
 have no relay and never show that label. A lost response, repeated button press
 or unconfirmed ACK cannot create another protected effect. Unknown operations
 retain their original IDs and require trusted resource reconciliation; no

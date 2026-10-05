@@ -13,6 +13,7 @@ let interactive = false;
 let notice = "";
 let generation = 0;
 let notices: NoticeState = { authorityWarned: false };
+let inFlight = 0;
 let shareQueue: ShareRecord[] = [];
 let pane: "operations" | "task" = "operations";
 let refreshRead: { sessionId: string; generation: number; promise: Promise<ControlStatus | null> } | null = null;
@@ -21,23 +22,25 @@ const PANE_OPERATIONS = 12;
 async function refresh($: EngineInterface, options: PluginOptions): Promise<ControlStatus | null> {
   const actual = await $.session.id();
   if (actual !== sessionId) {
-    sessionId = actual; pane = "operations"; status = null; selectedId = null; showDetails = false; notice = ""; generation += 1; notices = { authorityWarned: false }; shareQueue = [];
+    sessionId = actual; pane = "operations"; status = null; selectedId = null; showDetails = false; notice = ""; generation += 1; notices = { authorityWarned: false }; shareQueue = []; inFlight = 0;
     await $.ui.close({ id: "chio" });
   }
   const thisGeneration = generation;
   if (refreshRead?.sessionId === actual && refreshRead.generation === thisGeneration) return refreshRead.promise;
   const pending = { sessionId: actual, generation: thisGeneration, promise: (async () => {
+    let toasts: string[] = [];
     try {
       const received = await $.chio.status();
       if (thisGeneration !== generation || await $.session.id() !== actual) return null;
       const previous = status;
       status = received;
-      if (interactive) for (const text of transitions(previous, received, Date.now(), notices)) $.ui.toast(text);
+      toasts = interactive ? transitions(previous, received, Date.now(), notices, inFlight > 0) : [];
     } catch {
       $.ui.log("Chio control refresh unavailable at transport", { to: "debug" });
       if (thisGeneration === generation) { status = null; notice = "Control service disconnected. No authority decision was inferred."; }
     }
     if (thisGeneration !== generation) return null;
+    for (const text of toasts) { try { await $.ui.toast(text); } catch { $.ui.log("Chio notice toast unavailable", { to: "debug" }); } }
     $.ui.invalidate("ui.render"); return status;
   })() };
   refreshRead = pending;
@@ -144,6 +147,7 @@ export const register: Register = (on, options) => {
 
   on("classic.SessionStart", async ($, e, next) => {
     // /clear, resume and fork do not fire session.start; always re-resolve the host id.
+    if (e.source === "compact") { await refresh($, options); return next(e); }
     status = null; selectedId = null; showDetails = false; generation += 1; notices = { authorityWarned: false }; shareQueue = [];
     await refresh($, options); return next(e);
   }).catch(($, e, next) => next(e));
@@ -207,8 +211,11 @@ export const register: Register = (on, options) => {
     return { text: safeText(reason.reason) + "\nSource: " + reason.source + "\nPolicy rehearsal: unavailable · resource preview: unavailable · information lineage: unknown" };
   }).catch(() => ({ text: "Retained explanation unavailable for this exact operation.", exitCode: 1 }));
 
-  on("tool.call", { tool: "mcp__chio__*" }, async ($, e, next) => {
-    const result = await next(e); await refresh($, options); return result;
+  on("tool.call", { tool: /^mcp__chio__/ }, async ($, e, next) => {
+    inFlight += 1;
+    let result;
+    try { result = await next(e); } finally { inFlight = Math.max(0, inFlight - 1); }
+    await refresh($, options); return result;
   }).catch(($, e, next) => next(e)); // Observation only; replay-safe preservation after next.
   on("turn.complete", async ($, e, next) => { await refresh($, options); return next(e); })
     .catch(($, e, next) => next(e));
@@ -223,6 +230,7 @@ export const register: Register = (on, options) => {
     const current = await $.session.id();
     const shared = shareQueue.filter(record => record.sessionId === current); shareQueue = [];
     if (!shared.length) return next(e);
+    notice = "Original result attached to your message for Claude.";
     return next({ ...e, context: [...(e.context ?? []), ...shared.map(shareText)] });
   }).catch(($, e, next) => next(e));
 

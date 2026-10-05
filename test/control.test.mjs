@@ -172,10 +172,10 @@ test("watch shows the exact requested action and confirms it once on y", async t
   const op = (await (await f.get()).json()).operations[0];
   await f.post({ kind: "approve", requestId: op.requestId, revision: op.review.revision });
   const tty = terminal();
-  const running = watch({ statusOptions: f.options, operator: { adminToken: "operator" }, input: tty.input, output: tty.output, intervalMs: 20 });
+  const running = watch({ statusOptions: f.options, operator: { adminToken: "operator" }, input: tty.input, output: tty.output, intervalMs: 20, guardMs: 10 });
   await until(() => tty.read().includes("Confirm this exact decision?"));
   assert.match(tty.read(), /Requested decision: approve/); assert.match(tty.read(), /exact payload/); assert.match(tty.read(), /\x07/);
-  tty.input.write("y");
+  await new Promise(r => setTimeout(r, 60)); tty.input.write("y");
   await until(() => tty.read().includes("Retained intent state: granted"));
   tty.input.write("q"); await running;
   assert.deepEqual(calls, ["/admin/approvals", "/admin/approvals/approval-a/decision"]); assert.equal(f.effects(), 0);
@@ -185,9 +185,9 @@ test("watch skip makes no kernel call and the intent is not prompted again", asy
   const op = (await (await f.get()).json()).operations[0];
   await f.post({ kind: "approve", requestId: op.requestId, revision: op.review.revision });
   const tty = terminal();
-  const running = watch({ statusOptions: f.options, operator: { adminToken: "operator" }, input: tty.input, output: tty.output, intervalMs: 20 });
+  const running = watch({ statusOptions: f.options, operator: { adminToken: "operator" }, input: tty.input, output: tty.output, intervalMs: 20, guardMs: 10 });
   await until(() => tty.read().includes("Confirm this exact decision?"));
-  tty.input.write("n"); await until(() => tty.read().includes("Skipped"));
+  await new Promise(r => setTimeout(r, 60)); tty.input.write("n"); await until(() => tty.read().includes("Skipped"));
   await new Promise(r => setTimeout(r, 100));
   assert.equal(tty.read().split("Confirm this exact decision?").length - 1, 1);
   tty.input.write("q"); await running; assert.deepEqual(calls, []);
@@ -199,7 +199,7 @@ test("watch refuses a non-terminal and does not prompt an expired intent", async
   const op = (await (await f.get()).json()).operations[0];
   await f.post({ kind: "approve", requestId: op.requestId, revision: op.review.revision });
   const tty = terminal();
-  const running = watch({ statusOptions: f.options, operator: { adminToken: "operator" }, input: tty.input, output: tty.output, intervalMs: 20, now: () => Date.now() + 120_000 });
+  const running = watch({ statusOptions: f.options, operator: { adminToken: "operator" }, input: tty.input, output: tty.output, intervalMs: 20, guardMs: 10, now: () => Date.now() + 120_000 });
   await new Promise(r => setTimeout(r, 150)); tty.input.write("q"); await running;
   assert.equal(tty.read().includes("Confirm this exact decision?"), false);
 });
@@ -212,11 +212,11 @@ const stubIntent = (n, extra = {}) => ({ id: `1234567${n}-1234-4123-8123-1234567
 const stubOp = n => ({ requestId: `req-${n}`, tool: "Bash", review: { decision: "required", purpose: "p", capabilityId: "c", ttlSeconds: 60, arguments: { n } } });
 test("a doubled y confirms only the first card and the second awaits a key", async () => {
   const tty = terminal(); let confirms = 0;
-  const running = watch({ statusOptions: { config: {} }, operator: {}, input: tty.input, output: tty.output, intervalMs: 20,
+  const running = watch({ statusOptions: { config: {} }, operator: {}, input: tty.input, output: tty.output, intervalMs: 20, guardMs: 10,
     readStatus: stubStatus([stubOp(1), stubOp(2)], [stubIntent(1), stubIntent(2, { expiresAt: Date.now() + 90_000 })]),
     confirm: async () => { confirms++; return { state: "granted" }; } });
   await until(() => tty.read().includes("Confirm this exact decision?"));
-  tty.input.write("yy");
+  await new Promise(r => setTimeout(r, 60)); tty.input.write("yy");
   await until(() => tty.read().split("Confirm this exact decision?").length - 1 === 2);
   await new Promise(r => setTimeout(r, 100));
   assert.equal(confirms, 1);
@@ -224,7 +224,7 @@ test("a doubled y confirms only the first card and the second awaits a key", asy
 });
 test("a y typed before any card exists is not applied to the card that appears", async () => {
   const tty = terminal(); let confirms = 0; let intents = [];
-  const running = watch({ statusOptions: { config: {} }, operator: {}, input: tty.input, output: tty.output, intervalMs: 20,
+  const running = watch({ statusOptions: { config: {} }, operator: {}, input: tty.input, output: tty.output, intervalMs: 20, guardMs: 10,
     readStatus: async () => ({ sessionId: "s", authority: "active", operations: [stubOp(1)], intents }),
     confirm: async () => { confirms++; return { state: "granted" }; } });
   await until(() => tty.read().includes("Chio watch"));
@@ -243,7 +243,7 @@ test("a non-revoke intent without a displayable action refuses confirmation", as
     assert.equal(card.includes("[y]"), false);
   }
   const tty = terminal(); let confirms = 0;
-  const running = watch({ statusOptions: { config: {} }, operator: {}, input: tty.input, output: tty.output, intervalMs: 20,
+  const running = watch({ statusOptions: { config: {} }, operator: {}, input: tty.input, output: tty.output, intervalMs: 20, guardMs: 10,
     readStatus: stubStatus([], [intent]), confirm: async () => { confirms++; return { state: "granted" }; } });
   await until(() => tty.read().includes("confirmation refused"));
   tty.input.write("y"); await new Promise(r => setTimeout(r, 100));
@@ -255,4 +255,39 @@ test("terminal control and bidi characters in projection values are neutralized"
   const card = intentCard(stubIntent(1), op, Date.now());
   assert.equal(/[\u001b\u202e\u2028]/.test(card), false);
   assert.match(card, /Purpose: a.\[2Jb.c.d/);
+});
+test("a held or double-pressed key cannot confirm the next card unseen", async () => {
+  const tty = terminal(); let confirms = 0;
+  const running = watch({ statusOptions: { config: {} }, operator: {}, input: tty.input, output: tty.output, intervalMs: 20, guardMs: 300,
+    readStatus: stubStatus([stubOp(1), stubOp(2)], [stubIntent(1), stubIntent(2, { expiresAt: Date.now() + 90_000 })]),
+    confirm: async () => { confirms++; return { state: "granted" }; } });
+  await until(() => tty.read().includes("Confirm this exact decision?"));
+  await new Promise(r => setTimeout(r, 350)); tty.input.write("y");
+  await until(() => tty.read().split("Confirm this exact decision?").length - 1 === 2);
+  await new Promise(r => setTimeout(r, 20)); tty.input.write("y");
+  await new Promise(r => setTimeout(r, 100)); assert.equal(confirms, 1);
+  await new Promise(r => setTimeout(r, 350)); tty.input.write("y");
+  await until(() => confirms === 2);
+  tty.input.write("q"); await running;
+});
+test("zero-width and tag characters never render in a card", () => {
+  const op = stubOp(1); op.review.purpose = "a\u200bb\u{E0041}c";
+  const card = intentCard(stubIntent(1), op, Date.now());
+  assert.equal(/[\u200b\u{E0041}]/u.test(card), false); assert.match(card, /Purpose: a.b.c/u);
+});
+test("an intent that expires while its card waits is reported and the watch continues", async () => {
+  const tty = terminal(); let confirms = 0;
+  const running = watch({ statusOptions: { config: {} }, operator: {}, input: tty.input, output: tty.output, intervalMs: 20, guardMs: 10,
+    readStatus: stubStatus([stubOp(1)], [stubIntent(1, { expiresAt: Date.now() + 300 })]), confirm: async () => { confirms++; return { state: "granted" }; } });
+  await until(() => tty.read().includes("Intent expired before a decision; nothing was confirmed."));
+  assert.equal(confirms, 0); tty.input.write("q"); await running;
+});
+test("an action that already has an intent is not counted as awaiting a request", async () => {
+  const tty = terminal();
+  const running = watch({ statusOptions: { config: {} }, operator: {}, input: tty.input, output: tty.output, intervalMs: 20, guardMs: 10,
+    readStatus: stubStatus([stubOp(1), stubOp(2)], [stubIntent(1, { state: "expired", expiresAt: Date.now() - 1000 })]) });
+  await until(() => tty.read().includes("Chio watch"));
+  assert.match(tty.read(), /1 action awaiting a review request from Claude/);
+  assert.match(tty.read(), /1 action needs inspection: an earlier request for the same revision was skipped, expired or unresolved/);
+  tty.input.write("q"); await running;
 });

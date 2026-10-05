@@ -68,15 +68,6 @@ review, a new original outcome becomes uncertain, live authority has five
 minutes or less left (once per session), or a continued result is ready to
 receive. The first projection after start or reconnect is a silent baseline.
 
-### Guidance for Claude
-
-When a projection lists protected tools, the mod adds a `chio` context block to
-the conversation's first message (and again after `/clear` or compaction). It
-names the protected tools and tells Claude to stop at `awaiting_approval`,
-never repeat a `pending` or `unknown` call, not repeat a denied call, and not
-call `chio_resume` unless the user says the operator granted it. Guidance shapes
-model behavior only; the kernel and gateway still enforce every decision.
-
 The native doctor reads only the authorized session projection. It cannot inspect
 the VM or prove storage integrity. In the trusted operator terminal, use the
 separate infrastructure probe with an explicit profile, matching Docker context
@@ -109,6 +100,15 @@ returns `requested`, `authorityAccepted: false` and `dispatchPerformed: false`.
 Previously recorded alternative requests remain visible to the operator and do
 not block supported exact decisions. Semantic remedy generation and validation
 are not implemented.
+
+### Guidance for Claude
+
+When a projection lists protected tools, the mod adds a `chio` context block to
+the conversation's first message (and again after `/clear` or compaction). It
+names the protected tools and tells Claude to stop at `awaiting_approval`,
+never repeat a `pending` or `unknown` call, not repeat a denied call, and not
+call `chio_resume` unless the user says the operator granted it. Guidance shapes
+model behavior only; the kernel and gateway still enforce every decision.
 
 ## Operator service and ordinary sessions
 

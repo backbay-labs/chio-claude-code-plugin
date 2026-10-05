@@ -10,12 +10,13 @@ function lastUserText(body) {
   if (typeof message.content === "string") return message.content;
   return Array.isArray(message.content) ? message.content.filter(block => block?.type === "text" && typeof block.text === "string").map(block => block.text).join("\n") : "";
 }
+export const extractMarkers = body => new Set([...lastUserText(body).matchAll(MARKER)].map(match => match[1]));
 export function confirmedModelContext(body, continuations) {
-  const hashes = new Set([...lastUserText(body).matchAll(MARKER)].map(match => match[1]));
+  const hashes = extractMarkers(body);
   if (!hashes.size) return [];
   return continuations.filter(c => c?.delivery === "confirmed" && typeof c.outcomeHash === "string" && hashes.has(c.outcomeHash)).map(c => c.requestId);
 }
 export function observeModelContext(body, read, record) {
-  try { for (const requestId of confirmedModelContext(body, read())) record(requestId); }
+  try { if (!extractMarkers(body).size) return; for (const requestId of confirmedModelContext(body, read())) record(requestId); }
   catch { /* Observation only: a journal read failure never refuses model work. */ }
 }

@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { confirmedModelContext, observeModelContext } from "../scripts/model-context.mjs";
+import { confirmedModelContext, extractMarkers, observeModelContext } from "../scripts/model-context.mjs";
 const hash = "a".repeat(64), other = "b".repeat(64);
 const confirmed = { id: "c1", requestId: "request-a", state: "completed", delivery: "confirmed", outcomeHash: hash };
 const user = content => ({ messages: [{ role: "user", content: "earlier" }, { role: "assistant", content: "ok" }, { role: "user", content }] });
@@ -23,4 +23,10 @@ test("malformed bodies and failing journal reads never throw", () => {
   assert.deepEqual(recorded, []);
   observeModelContext(user(`[chio-outcome sha256:${hash}]`), () => [confirmed], id => recorded.push(id));
   assert.deepEqual(recorded, ["request-a"]);
+});
+test("a body without a marker never reads the journal", () => {
+  let reads = 0; const recorded = [];
+  observeModelContext(user("plain question"), () => { reads++; return [confirmed]; }, id => recorded.push(id));
+  assert.equal(reads, 0); assert.deepEqual(recorded, []);
+  assert.deepEqual([...extractMarkers(user(`x [chio-outcome sha256:${hash}]`))], [hash]);
 });

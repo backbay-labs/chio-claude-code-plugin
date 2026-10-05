@@ -40,3 +40,11 @@ for (const name of cases) {
     else assert.equal(block, expected);
   });
 }
+test("every terse mock carries only state, evidence and requestId", () => {
+  const terse = cases.filter(c => c.includes("-terse-"));
+  assert.equal(terse.length, 6);
+  for (const name of terse) {
+    const value = JSON.parse(readFileSync(join(casesDir, name, "mocks/chio/write_file.md"), "utf8"));
+    assert.deepEqual(Object.keys(value).sort(), ["evidence", "requestId", "state"], name);
+  }
+});

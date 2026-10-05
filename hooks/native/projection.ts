@@ -123,14 +123,18 @@ export function guidanceText(status: ControlStatus | null): string | null {
   ].join("\n");
 }
 
-export interface NoticeState { authorityWarned: boolean }
-function uncertainCount(status: ControlStatus): number { return status.operations.filter(op => op.state === "pending" || op.state === "unknown").length; }
-/** Notices for changes between two projections of one session. A first projection or reconnect is a silent baseline. */
-export function transitions(previous: ControlStatus | null, next: ControlStatus | null, now: number, state: NoticeState): string[] {
-  if (!previous || !next || previous.sessionId !== next.sessionId) return [];
+export interface NoticeState { authorityWarned: boolean; uncertain?: number }
+function uncertainCount(status: ControlStatus, ignorePending = false): number { return status.operations.filter(op => op.state === "unknown" || (!ignorePending && op.state === "pending")).length; }
+/** Notices for changes between two projections of one session. A first projection or reconnect is a silent baseline.
+ * `ignorePending` is set while a protected call is in flight: the gateway records every dispatch as pending until the kernel answers. */
+export function transitions(previous: ControlStatus | null, next: ControlStatus | null, now: number, state: NoticeState, ignorePending = false): string[] {
+  if (next) { const count = uncertainCount(next, ignorePending); const before = state.uncertain ?? (previous && previous.sessionId === next.sessionId ? uncertainCount(previous, ignorePending) : count); state.uncertain = count; if (!previous || previous.sessionId !== next.sessionId) return []; return diff(previous, next, now, state, count > before); }
+  return [];
+}
+function diff(previous: ControlStatus, next: ControlStatus, now: number, state: NoticeState, moreUncertain: boolean): string[] {
   const notices: string[] = [];
   if (next.awaitingReview > previous.awaitingReview) notices.push(`Chio · ${next.awaitingReview} action${next.awaitingReview === 1 ? "" : "s"} awaiting review · /chio-review`);
-  if (uncertainCount(next) > uncertainCount(previous)) notices.push("Chio · original outcome unresolved · /chio-doctor");
+  if (moreUncertain) notices.push("Chio · original outcome unresolved · /chio-doctor");
   const remaining = next.authorityExpiresAt * 1000 - now;
   if (!state.authorityWarned && next.authority === "live" && remaining > 0 && remaining <= 5 * 60_000) {
     state.authorityWarned = true; notices.push(`Chio · authority expires in ${Math.max(1, Math.ceil(remaining / 60_000))}m`);
