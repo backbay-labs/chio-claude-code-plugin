@@ -66,14 +66,27 @@ const usageKeys=["input_tokens","output_tokens","cache_creation_input_tokens","c
 export function usageMeter(contentType) {
   const streaming=/text\/event-stream/.test(contentType??"");
   const decoder=new TextDecoder();
-  let pending="",body="",overflow=false,seen=false;
+  let pending="",body="",overflow=false,seen=false,discardLine=false;
+  const maxLine=64*1024;
   const usage=Object.fromEntries(usageKeys.map(key=>[key,0]));
   const take=source=>{ if(!object(source)) return; for(const key of usageKeys) if(Number.isSafeInteger(source[key])&&source[key]>=0){usage[key]=source[key];seen=true;} };
   const line=text=>{ if(!text.startsWith("data:")) return; try { const event=JSON.parse(text.slice(5).trim()); if(event?.type==="message_start") take(event.message?.usage); else if(event?.type==="message_delta") take(event.usage); } catch { /* not usage */ } };
   return {
     feed(chunk){
       const text=typeof chunk==="string"?chunk:decoder.decode(chunk,{stream:true});
-      if(streaming){ pending+=text; let end; while((end=pending.indexOf("\n"))>=0){ line(pending.slice(0,end).replace(/\r$/,"")); pending=pending.slice(end+1); } }
+      if(streaming){
+        let start=0;
+        while(start<text.length){
+          const newline=text.indexOf("\n",start), end=newline<0?text.length:newline;
+          if(!discardLine){
+            if(pending.length+end-start>maxLine){ pending=""; discardLine=true; }
+            else pending+=text.slice(start,end);
+          }
+          if(newline<0) break;
+          if(!discardLine) line(pending.replace(/\r$/,""));
+          pending=""; discardLine=false; start=newline+1;
+        }
+      }
       else if(!overflow){ body+=text; if(body.length>8*1024*1024){ overflow=true; body=""; } }
     },
     end(){

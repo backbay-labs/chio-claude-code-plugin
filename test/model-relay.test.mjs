@@ -179,3 +179,16 @@ test("host request flooding cannot grow the retained relay event log without bou
   assert.equal(relay.events.at(-1).failure, "model relay request limit reached");
   assert.equal(relay.events.at(-1).requestClass, "conversation");
 });
+
+test("usage metering discards oversized SSE lines and resumes at the next event", () => {
+  const meter = usageMeter("text/event-stream");
+  meter.feed('data: {"type":"message_start","message":{"usage":{"input_tokens":900}},"padding":"');
+  for (let i = 0; i < 128; i++) meter.feed("x".repeat(1024));
+  meter.feed('"}\n');
+  meter.feed('data: {"type":"message_delta","usage":{"output_tokens":7}}\n');
+  assert.deepEqual(meter.end(), { input_tokens: 0, output_tokens: 7, cache_creation_input_tokens: 0, cache_read_input_tokens: 0 });
+  const oneChunk = usageMeter("text/event-stream");
+  oneChunk.feed(`data: ${" ".repeat(128 * 1024)}{"type":"message_delta","usage":{"output_tokens":900}}\ndata: {"type":"message_start","message":{"usage":{"input_tokens":3}}}\n`);
+  assert.equal(oneChunk.end().output_tokens, 0);
+  assert.equal(oneChunk.end().input_tokens, 3);
+});
