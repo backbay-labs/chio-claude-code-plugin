@@ -157,6 +157,7 @@ function requestIntent(options: ControlOptions, input: Record<string, unknown>):
     if (!record || record.state !== "awaiting_approval" || project(config, record).review?.decision !== "required" || reviewRevision(config, record) !== input.revision) throw new Error("review is stale, already decided, or belongs to another action");
   }
   const existing = intentRecords(config);
+  if (existing.length >= 1000) throw new Error("control intent retention requires operator maintenance");
   if (existing.some(intent => intent.kind !== "alternative" && intent.requestId === input.requestId && intent.revision === input.revision)) throw new Error("review intent already recorded; inspect its original outcome");
   const record: IntentRecord = { schema: "chio.control.intent.v1", id: randomUUID(), kind, state: "requested", sessionId: config.sessionId,
     ...(typeof input.requestId === "string" ? { requestId: input.requestId } : {}), revision: input.revision, binding: hash(gatewayBinding(config)),
