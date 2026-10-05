@@ -1,6 +1,6 @@
 # Native Chio interface
 
-The 0.4.0-rc.4 candidate adds native session status, exact-action review, evidence,
+The 0.4.0-rc.5 candidate adds native session status, exact-action review, evidence,
 recovery requirements and immediate commands. The kernel and trusted gateway
 retain execution authority. A control in Claude records review intent; trusted
 operator confirmation happens outside the host. The [controlled-task runbook](./CONTROLLED-TASKS.md) covers guided setup, completion evidence, continuation, the typed namespace and handoffs.

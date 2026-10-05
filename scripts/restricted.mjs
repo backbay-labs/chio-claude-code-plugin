@@ -11,6 +11,7 @@ const scriptDirectory=dirname(realpathSync(fileURLToPath(import.meta.url)));
 const {buildSandboxPolicy,requireSessionCredential,refuseDemoConfig}=await import(pathToFileURL(join(scriptDirectory,"sandbox.mjs")).href);
 const {startModelRelay,parseTokenBudget}=await import(pathToFileURL(join(scriptDirectory,"model-relay.mjs")).href);
 const {observeModelContext}=await import(pathToFileURL(join(scriptDirectory,"model-context.mjs")).href);
+const {NATIVE_MOD_VERSION}=await import(pathToFileURL(join(scriptDirectory,"mod-profile.mjs")).href);
 const {createControlTransport}=await import(pathToFileURL(join(scriptDirectory,"control-transport.mjs")).href);
 const {stageNativeMod}=await import(pathToFileURL(join(scriptDirectory,"mod-profile.mjs")).href);
 
@@ -237,7 +238,7 @@ async function main() {
           if(event.type==="system"&&event.subtype==="init"){
             const nativeCommands = ["chio", "chio-status", "chio-doctor", "chio-review", "chio-evidence", "chio-revoke", "chio-task", "chio-completion", "chio-continue", "chio-outcome", "chio-why"];
             const nativeReady = !native || event.claude_code_version === "2.1.287" && nativeCommands.every(name=>event.slash_commands?.includes(name))
-              && event.plugins?.some(plugin=>plugin.name==="chio"&&plugin.path===mod.root&&plugin.version==="0.4.0-rc.4") && controlServer.statusReads>0;
+              && event.plugins?.some(plugin=>plugin.name==="chio"&&plugin.path===mod.root&&plugin.version===NATIVE_MOD_VERSION) && controlServer.statusReads>0;
             if((hostReady && !native)||!hasExactHostTools(event,toolNames)||!nativeReady){
               hostInitializationFailed=true;child.kill("SIGTERM");
               process.stderr.write("[chio restricted] native host did not activate the exact Chio MCP tools\n");

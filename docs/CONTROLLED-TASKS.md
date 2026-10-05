@@ -1,6 +1,6 @@
 # Controlled tasks in Claude Code
 
-Version **0.4.0-rc.4** connects task scope, artifact-bound completion evidence,
+Version **0.4.0-rc.5** connects task scope, artifact-bound completion evidence,
 exact review and deterministic continuation to the native session interface.
 The kernel admits and executes protected operations. The mod presents authorized
 projections and requests; operator credentials and the authoritative execution
