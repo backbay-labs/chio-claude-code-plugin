@@ -10186,7 +10186,8 @@ function getPolicyPath() {
 }
 
 // src/state/store.ts
-import { mkdirSync as mkdirSync2, readFileSync as readFileSync2, renameSync as renameSync2, writeFileSync as writeFileSync2 } from "node:fs";
+import { mkdirSync as mkdirSync2, readFileSync as readFileSync2, renameSync as renameSync2, rmSync, writeFileSync as writeFileSync2 } from "node:fs";
+import { randomUUID } from "node:crypto";
 import { dirname } from "node:path";
 
 // src/state/paths.ts
@@ -10210,9 +10211,13 @@ function readState() {
 }
 function writeState(state) {
   mkdirSync2(dirname(STATE_PATH), { recursive: true });
-  const tmp = `${STATE_PATH}.${process.pid}.tmp`;
-  writeFileSync2(tmp, JSON.stringify(state, null, 2), { mode: 384 });
-  renameSync2(tmp, STATE_PATH);
+  const tmp = `${STATE_PATH}.${randomUUID()}.tmp`;
+  try {
+    writeFileSync2(tmp, JSON.stringify(state, null, 2), { mode: 384, flag: "wx" });
+    renameSync2(tmp, STATE_PATH);
+  } finally {
+    rmSync(tmp, { force: true });
+  }
 }
 function upsertBond(bond2) {
   const state = readState();

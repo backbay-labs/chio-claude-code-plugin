@@ -2,7 +2,8 @@ import { createRequire as __chioCreateRequire } from 'node:module';
 const require = __chioCreateRequire(import.meta.url);
 
 // src/state/store.ts
-import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { randomUUID } from "node:crypto";
 import { dirname } from "node:path";
 
 // src/state/paths.ts
@@ -26,9 +27,13 @@ function readState() {
 }
 function writeState(state) {
   mkdirSync(dirname(STATE_PATH), { recursive: true });
-  const tmp = `${STATE_PATH}.${process.pid}.tmp`;
-  writeFileSync(tmp, JSON.stringify(state, null, 2), { mode: 384 });
-  renameSync(tmp, STATE_PATH);
+  const tmp = `${STATE_PATH}.${randomUUID()}.tmp`;
+  try {
+    writeFileSync(tmp, JSON.stringify(state, null, 2), { mode: 384, flag: "wx" });
+    renameSync(tmp, STATE_PATH);
+  } finally {
+    rmSync(tmp, { force: true });
+  }
 }
 function upsertBond(bond) {
   const state = readState();

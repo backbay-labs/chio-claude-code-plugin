@@ -1,4 +1,5 @@
-import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { randomUUID } from "node:crypto";
 import { dirname } from "node:path";
 import type { Passport } from "@chio/bridge";
 import { STATE_PATH } from "./paths.js";
@@ -36,9 +37,11 @@ export function readState(): PluginState {
 export function writeState(state: PluginState): void {
   mkdirSync(dirname(STATE_PATH), { recursive: true });
   // Atomic replace: a concurrent hook never reads a half-written file.
-  const tmp = `${STATE_PATH}.${process.pid}.tmp`;
-  writeFileSync(tmp, JSON.stringify(state, null, 2), { mode: 0o600 });
-  renameSync(tmp, STATE_PATH);
+  const tmp = `${STATE_PATH}.${randomUUID()}.tmp`;
+  try {
+    writeFileSync(tmp, JSON.stringify(state, null, 2), { mode: 0o600, flag: "wx" });
+    renameSync(tmp, STATE_PATH);
+  } finally { rmSync(tmp, { force: true }); }
 }
 
 export function upsertBond(bond: SessionBond): void {
