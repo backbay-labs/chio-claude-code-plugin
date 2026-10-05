@@ -310,3 +310,8 @@ limit record. Further requests are refused and the launch records incomplete
 work. Diagnostic field lists are bounded; response forwarding respects host
 backpressure. Start a newly bound launch after inspecting retained work if
 this per-launch request limit is reached.
+
+New workflow JSON records and review intents stop at 1,000 records per directory.
+Capacity refusal preserves original records, continuation claims, and acknowledgement
+updates. The operator must inspect retained work before preparing a new journal;
+repeated requests never delete evidence to make space.
