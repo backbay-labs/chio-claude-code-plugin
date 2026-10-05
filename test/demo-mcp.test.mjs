@@ -88,3 +88,17 @@ test("a NUL or dot-dot path with a full approval envelope is a refusal and write
   assert.deepEqual(readdirSync(d.owner), []);
   assert.equal((await status(d)).fenced, false);
 });
+
+test("a demo cannot grow its operation journal indefinitely through unreviewed reads", async t => {
+  const d = await demo(t); let refused = 0, original;
+  for (let i = 0; i < 130; i++) {
+    const response = await d.rpc(randomUUID(), "tools/call", { name: "read_text_file", arguments: { path: "../refused" } });
+    if (response.error) { assert.match(response.error.message, /demo call limit/); refused++; }
+    else original ??= JSON.parse(response.result.content[0].text);
+  }
+  assert.equal(refused, 2);
+  const retained = await d.tool("chio_resume", { requestId: original.requestId, tool: "read_text_file", arguments: { path: "../refused" } });
+  assert.equal(retained.state, "completed"); assert.equal(retained.requestId, original.requestId);
+  assert.equal(readdirSync(d.config.journalDir).filter(n => n.endsWith(".json")).length, 128);
+  assert.equal((await status(d)).fenced, false);
+});

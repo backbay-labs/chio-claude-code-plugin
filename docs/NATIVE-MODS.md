@@ -365,3 +365,9 @@ limit record. Further requests are refused and the launch records incomplete
 work. Diagnostic field lists are bounded; response forwarding respects host
 backpressure. Start a newly bound launch after inspecting retained work if
 this per-launch request limit is reached.
+
+The demo accepts at most 128 new gateway tool calls and retains at most 128 fixture
+approval proposals per run. Its fixture also caps executed tool requests at 128.
+Exact gateway resumption and retained outcome inspection remain available at the
+admission limit. Start a new demo directory after inspecting retained work. These
+limits bound fixture files and journals; they confer no protection.

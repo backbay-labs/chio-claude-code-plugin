@@ -65,7 +65,7 @@ export async function startDemoKernel(options: DemoKernelOptions): Promise<DemoK
   const { owner, seed, adminToken, bearerToken, credential } = options;
   const ownerRoot = resolve(owner);
   const proposals = new Map<string, Loose>();
-  let counter = 0, writes = 0, revoked = false;
+  let counter = 0, writes = 0, toolCalls = 0, revoked = false;
   const send = (res: ServerResponse, status: number, body: unknown) => { res.writeHead(status, { "Content-Type": "application/json" }); res.end(JSON.stringify(body)); };
 
   mkdirSync(ownerRoot, { recursive: true });
@@ -84,6 +84,7 @@ export async function startDemoKernel(options: DemoKernelOptions): Promise<DemoK
       if (req.headers.authorization !== `Bearer ${adminToken}`) { send(res, 401, { error: "unauthorized" }); return; }
       const record = (id: string, proposal: Loose) => ({ id, request_id: proposal.request_id, session_id: config.execution.sessionId, capability_id: config.execution.capabilityId });
       if (req.method === "POST" && path === "/admin/approvals") {
+        if (proposals.size >= 128) { send(res, 429, { error: "demo approval limit reached" }); return; }
         const id = `approval-${++counter}`; proposals.set(id, body);
         send(res, 200, { dispatchPerformedByThisEndpoint: false, record: record(id, body) }); return;
       }
@@ -110,6 +111,8 @@ export async function startDemoKernel(options: DemoKernelOptions): Promise<DemoK
         serverId: credential.serverId, capabilityIds: credential.capabilityIds, sessionCredential: credential }); return;
     }
     if (body?.method === "tools/call" && (params.name === "write_file" || params.name === "read_text_file")) {
+      if (toolCalls >= 128) { send(res, 429, { jsonrpc: "2.0", id, error: { code: -32000, message: "demo call limit reached" } }); return; }
+      toolCalls++;
       // After authentication a refusal is a completed tool error, not a JSON-RPC error: the gateway would record the latter as an unknown effect and fence.
       let text: string, isError = false;
       try {

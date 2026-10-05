@@ -328,7 +328,7 @@ async function startDemoKernel(options) {
   const { owner, seed, adminToken, bearerToken, credential } = options;
   const ownerRoot = resolve(owner);
   const proposals = /* @__PURE__ */ new Map();
-  let counter = 0, writes = 0, revoked = false;
+  let counter = 0, writes = 0, toolCalls = 0, revoked = false;
   const send = (res, status, body) => {
     res.writeHead(status, { "Content-Type": "application/json" });
     res.end(JSON.stringify(body));
@@ -362,6 +362,10 @@ async function startDemoKernel(options) {
       }
       const record = (id2, proposal) => ({ id: id2, request_id: proposal.request_id, session_id: config.execution.sessionId, capability_id: config.execution.capabilityId });
       if (req.method === "POST" && path === "/admin/approvals") {
+        if (proposals.size >= 128) {
+          send(res, 429, { error: "demo approval limit reached" });
+          return;
+        }
         const id2 = `approval-${++counter}`;
         proposals.set(id2, body);
         send(res, 200, { dispatchPerformedByThisEndpoint: false, record: record(id2, body) });
@@ -406,6 +410,11 @@ async function startDemoKernel(options) {
       return;
     }
     if (body?.method === "tools/call" && (params.name === "write_file" || params.name === "read_text_file")) {
+      if (toolCalls >= 128) {
+        send(res, 429, { jsonrpc: "2.0", id, error: { code: -32e3, message: "demo call limit reached" } });
+        return;
+      }
+      toolCalls++;
       let text, isError = false;
       try {
         const args = params.arguments, meta2 = params._meta ?? {};

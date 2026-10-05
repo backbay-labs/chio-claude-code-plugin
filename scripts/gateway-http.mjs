@@ -15,6 +15,8 @@ import { createMcpExecutionClient } from "../src/bridge-internals/execution.ts";
  */
 export async function startGatewayHttp(config, { requireHostAcknowledgement = true } = {}) {
     const demo = isDemoConfig(config);
+    let demoCalls = 0;
+    const admitDemoCall = name => { if (!demo || name === "chio_resume") return true; if (demoCalls >= 128) return false; demoCalls++; return true; };
     const displayResult = outcome => gatewayToolResult(demo ? { ...outcome, scope: "demo_fixture", notice: "DEMO fixture kernel · nothing protected" } : outcome);
     const executor = createMcpExecutionClient(config.execution);
     const validation = await executor.validateSession({ allowedTools: config.tools.map(tool => tool.name) });
@@ -134,6 +136,7 @@ export async function startGatewayHttp(config, { requireHostAcknowledgement = tr
             fail(-32602, "invalid tool arguments");
             return;
         }
+        if (!admitDemoCall(message.params.name)) { fail(-32600, "demo call limit reached; start a new demo after inspecting retained work"); return; }
         const key = JSON.stringify(message.id);
         if (active.has(key)) {
             fail(-32600, "request already in flight");
@@ -170,6 +173,7 @@ export async function startGatewayHttp(config, { requireHostAcknowledgement = tr
         controlCall(id, tool, args) {
             if (typeof id !== "string" || !/^[0-9a-f-]{36}$/.test(id) || typeof tool !== "string" || !args || typeof args !== "object" || Array.isArray(args)
                 || Buffer.byteLength(JSON.stringify(args)) > 4096) return Promise.reject(new Error("bounded parent control call required"));
+            if (!admitDemoCall(tool)) return Promise.reject(new Error("demo call limit reached; inspect retained work"));
             const result = queued.then(async () => {
                 if (closed) throw new Error("parent transport closed; original operation remains fenced");
                 return gateway.call("native-control:" + id, tool, args);
