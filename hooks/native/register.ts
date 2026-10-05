@@ -3,7 +3,7 @@ import type { ControlStatus, IntentKind, OperationView } from "../../types/contr
 import type { Chio } from "../../types/chio.js";
 import type { ExplanationView, ContinuationView } from "../../types/workflow.js";
 import { controlOrigin, outcomeHash, taskText } from "./workflow.ts";
-import { diagnosticText, operationText, outcomeRequestId, parseStatus, safeText, statusLine } from "./projection.ts";
+import { diagnosticText, operationText, outcomeRequestId, parseStatus, guidanceText, safeText, statusLine } from "./projection.ts";
 
 let sessionId = "";
 let status: ControlStatus | null = null;
@@ -197,6 +197,12 @@ export const register: Register = (on, options) => {
   }).catch(($, e, next) => next(e)); // Observation only; replay-safe preservation after next.
   on("turn.complete", async ($, e, next) => { await refresh($, options); return next(e); })
     .catch(($, e, next) => next(e));
+  on("prompt.context", async ($, e, next) => {
+    const result = await next(e);
+    const text = guidanceText(status);
+    if (!text) return result;
+    return { ...result, blocks: [...result.blocks.filter(block => block.name !== "chio"), { name: "chio", text }] };
+  }).catch(($, e, next) => next(e));
 
   on("ui.render", { component: "AbovePrompt" }, async ($, e, next) => {
     const existing = await next(e);

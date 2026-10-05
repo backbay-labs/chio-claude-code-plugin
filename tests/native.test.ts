@@ -16,6 +16,7 @@ function stub(on: On, getSession: () => string, getStatus: () => ControlStatus, 
   on("ui.close", () => ({ value: undefined }));
   on("command.register", ($, e) => ({ value: { command: e.name } }));
   on("session.start", ($, e) => ({ cwd: e.cwd }));
+  on("prompt.context", ($, e) => ({ blocks: e.blocks }));
   on("http.fetch", ($, e) => {
     if (e.init?.method === "POST") {
       if (!post) throw new Error("unexpected intent post");
@@ -267,4 +268,28 @@ test("exactly twelve retained operations need no overflow line", { options }, as
   expect(await ui.find({ key: "operation-11" })).toBeDefined();
   expect(await ui.find({ type: "Text", text: "more retained operations" })).toBeUndefined();
   await ui.unmount();
+});
+test("lifecycle guidance joins the first-message context once, naming the protected tools", { options }, async ($, on) => {
+  stub(on, () => "session-a", () => projection());
+  await $.command.run(command("chio-status"));
+  const result = await $.prompt.context({ blocks: [{ name: "chio", text: "stale" }, { name: "currentDate", text: "today" }] });
+  const chio = result.blocks.filter(block => block.name === "chio");
+  expect(chio.length).toBe(1);
+  expect(chio[0]!.text).toContain("Chio mediates these tools: write_file.");
+  expect(chio[0]!.text).toContain("Never repeat the call.");
+  expect(chio[0]!.text).toContain("Other tools in this session are not protected by Chio.");
+  expect(result.blocks.some(block => block.name === "currentDate")).toBe(true);
+});
+test("disconnected status adds no guidance", { options }, async ($, on) => {
+  stub(on, () => "session-a", () => projection("session-b"));
+  await $.command.run(command("chio-status"));
+  const result = await $.prompt.context({ blocks: [] });
+  expect(result.blocks.some(block => block.name === "chio")).toBe(false);
+});
+test("isolated scope guidance says the session has no other tools", { options }, async ($, on) => {
+  const value = projection(); value.scope = "isolated_kernel_mcp";
+  stub(on, () => "session-a", () => value);
+  await $.command.run(command("chio-status"));
+  const text = (await $.prompt.context({ blocks: [] })).blocks.find(block => block.name === "chio")?.text ?? "";
+  expect(text).toContain("This session has no other tools.");
 });

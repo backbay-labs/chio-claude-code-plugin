@@ -63,6 +63,15 @@ every request and after clear, resume or fork. The compact review puts the exact
 payload before its decision controls; a separate control expands evidence and
 authority details. Panes scroll when an exact payload exceeds the viewport.
 
+### Guidance for Claude
+
+When a projection lists protected tools, the mod adds a `chio` context block to
+the conversation's first message (and again after `/clear` or compaction). It
+names the protected tools and tells Claude to stop at `awaiting_approval`,
+never repeat a `pending` or `unknown` call, not repeat a denied call, and not
+call `chio_resume` unless the user says the operator granted it. Guidance shapes
+model behavior only; the kernel and gateway still enforce every decision.
+
 The native doctor reads only the authorized session projection. It cannot inspect
 the VM or prove storage integrity. In the trusted operator terminal, use the
 separate infrastructure probe with an explicit profile, matching Docker context

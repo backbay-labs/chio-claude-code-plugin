@@ -108,3 +108,17 @@ export function diagnosticText(status: ControlStatus | null, sessionId: string, 
   lines.push(`Dispatch fence: ${status.fenced ? "retained" : "clear"}. No control intent or protected action was submitted by this check.`);
   return lines.join("\n");
 }
+
+/** What Claude reads with the first message. Null without a projection or protected tools. */
+export function guidanceText(status: ControlStatus | null): string | null {
+  if (!status || !status.protectedTools.length) return null;
+  return [
+    `Chio mediates these tools: ${status.protectedTools.map(safeText).join(", ")}.`,
+    "Each result is a JSON outcome with a state and a requestId.",
+    "- awaiting_approval: the action was kept without running. Stop and tell the user it needs review (/chio-review REQUEST_ID). Do not call chio_resume unless the user says the operator granted it.",
+    "- denied: an authority decision. Do not repeat the same call; explain the reason or propose a different permitted action.",
+    "- pending or unknown: the effect may have happened. Never repeat the call. Tell the user to reconcile it (/chio-evidence REQUEST_ID).",
+    "- completed with evidence \"verified\": the result is bound to a signed receipt.",
+    status.scope === "isolated_kernel_mcp" ? "This session has no other tools." : "Other tools in this session are not protected by Chio.",
+  ].join("\n");
+}
