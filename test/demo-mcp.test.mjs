@@ -52,7 +52,13 @@ test("repeating a completed write is a completed refusal and the gateway stays u
   await approveAndContinue(d, first.requestId);
   const second = await d.tool("write_file", writeArgs("notes/hello.txt")); assert.equal(second.state, "awaiting_approval");
   const outcome = await approveAndContinue(d, second.requestId);
-  assert.equal(outcome.outcome?.state ?? outcome.continuation?.state ?? "completed", "completed");
+  const assertCompletedRefusal = value => {
+    assert.equal(value?.outcome?.state, "completed");
+    assert.equal(value.outcome.result.isError, true);
+    assert.match(value.outcome.result.content[0].text, /^Refused: .*exists/);
+  };
+  assert.throws(() => assertCompletedRefusal({}), assert.AssertionError);
+  assertCompletedRefusal(outcome);
   const s = await status(d);
   const op = s.operations.find(o => o.requestId === second.requestId);
   assert.equal(op.state, "completed");

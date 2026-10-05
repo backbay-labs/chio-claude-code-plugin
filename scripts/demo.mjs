@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Local demo: a fixture kernel, the real gateway and control service, and the operator watch. Nothing is protected.
 import { randomBytes, randomUUID } from "node:crypto";
-import { existsSync, mkdirSync, realpathSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { signerFor, startDemoKernel } from "../dist/demo/fixture.js";
@@ -63,13 +63,14 @@ async function main(args = process.argv.slice(2)) {
   if (args.length !== 2 || args[0] !== "--directory" || !args[1]) throw new Error("usage: demo.mjs --directory NEW_DIR");
   const d = await startDemo({ directory: args[1] });
   const credential = d.config.sessionCredential;
+  const hostVersion = JSON.parse(readFileSync(join(root, "docs/host-contract.json"), "utf8")).version;
   const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
   console.log(`Chio DEMO · fixture kernel · nothing is protected
 In another terminal:
   CHIO_CONTROL_URL=${d.control.url} CHIO_CONTROL_TOKEN=${d.control.token} \\
   CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1 claude --plugin-dir ${shellQuote(root)} \\
     --mcp-config ${shellQuote(join(d.directory, "mcp.json"))} --session-id ${d.sessionId}
-Tested with Claude Code 2.1.287; the control token in this command grants this session's view and review requests only and ends with the demo.
+Tested with Claude Code ${hostVersion}; the control token in this command grants this session's view and review requests only and ends with the demo.
 Then ask Claude: Use the chio write_file tool to write "hello" to notes/hello.txt.
 Approve here when the request appears. ${interactive ? "Press q to stop the demo." : "Stop the demo with Ctrl+C."}`);
   try {

@@ -68,6 +68,8 @@ test("the printed demo command quotes paths and tells a non-terminal how to stop
   let out = ""; child.stdout.on("data", data => { out += data; });
   await until(() => out.includes("Stop the demo with Ctrl+C."), 10000);
   assert.match(out, /--plugin-dir '[^']+'/); assert.ok(out.includes("--mcp-config '") && out.includes(`demo it'\\''s/mcp.json'`));
-  assert.ok(!out.includes("Press q")); assert.match(out, /Tested with Claude Code 2\.1\.287; the control token in this command grants this session's view and review requests only and ends with the demo\./);
+  assert.ok(!out.includes("Press q"));
+  const pin = JSON.parse(readFileSync(new URL("../docs/host-contract.json", import.meta.url), "utf8"));
+  assert.ok(out.includes(`Tested with Claude Code ${pin.version}; the control token in this command grants this session's view and review requests only and ends with the demo.`));
   const closed = new Promise(resolve => child.once("close", resolve)); child.kill("SIGINT"); await closed;
 });

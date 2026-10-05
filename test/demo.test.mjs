@@ -4,6 +4,9 @@ import { mkdtempSync, rmSync, readFileSync, existsSync, statSync } from "node:fs
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
+import { startGatewayHttp } from "../dist/gateway-http.js";
+import { verifyCompletedOutcome } from "@chio/bridge";
+import { signedOutcome } from "../dist/demo/fixture.js";
 import { startDemo } from "../scripts/demo.mjs";
 import { signerFor } from "../dist/demo/fixture.js";
 import { confirmControlIntent } from "../dist/control/service.js";
@@ -34,4 +37,19 @@ test("each demo trusts only its own run's key, keeps credentials private and ref
   for (const name of ["gateway.json", "operator.json", "mcp.json", "signing-seed.json"]) assert.equal(statSync(join(a.directory, name)).mode & 0o077, 0, name);
   const existing = mkdtempSync(join(tmpdir(), "chio-demo-existing-")); t.after(() => rmSync(existing, { recursive: true, force: true }));
   await assert.rejects(startDemo({ directory: existing }), /already exists/);
+});
+
+
+test("renaming a demo config cannot authenticate it as a different server", async t => {
+  const d = await demo(t), changed = structuredClone(d.config);
+  changed.execution.serverId = changed.sessionCredential.serverId = "production-owner";
+  await assert.rejects(startGatewayHttp(changed));
+});
+test("a demo receipt verifies only against the explicitly trusted per-run signer", async t => {
+  const a = await demo(t), b = await demo(t);
+  const seed = JSON.parse(readFileSync(join(a.directory, "signing-seed.json"), "utf8")).seed;
+  const request = { requestId: "a-original", tool: "read_text_file", arguments: { path: "a.txt" }, approval: {} };
+  const outcome = signedOutcome(a.config, request, seed);
+  assert.equal(verifyCompletedOutcome(outcome, a.config.execution, request), true);
+  assert.equal(verifyCompletedOutcome(outcome, { ...a.config.execution, trustedSigners: b.config.execution.trustedSigners }, request), false);
 });
