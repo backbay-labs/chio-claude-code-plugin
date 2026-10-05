@@ -338,12 +338,12 @@ async function readyOutcome(result: unknown) {
   const outcome = { state: "completed", evidence: "verified", requestId: "request-a", result, receipt: { id: "receipt-a" } };
   return { schema: "chio.control.outcome.v1", ready: true, continuation: { id: continuationId, requestId: "request-a", state: "completed", delivery: "pending" }, outcome, outcomeHash: await outcomeHash(outcome), challenge: "c".repeat(64) };
 }
-function outcomeStub(on: On, getSession: () => string, ready: Record<string, unknown>, onAck?: () => void) {
+function outcomeStub(on: On, getSession: () => string, ready: Record<string, unknown>, onAck?: () => void, onSubmit?: (e: { text: string; context?: readonly string[] }) => { text: string; context?: readonly string[] } | { drop: string }) {
   const value = projection(); value.continuations = [{ id: continuationId, requestId: "request-a", state: "completed", delivery: "pending" }];
   on("session.id", () => ({ value: getSession() }));
   on("ui.close", () => ({ value: undefined }));
   on("command.register", ($, e) => ({ value: { command: e.name } }));
-  on("prompt.submit", ($, e) => ({ text: e.text, ...(e.context ? { context: e.context } : {}) }));
+  on("prompt.submit", ($, e) => onSubmit ? onSubmit(e) : ({ text: e.text, ...(e.context ? { context: e.context } : {}) }));
   on("http.fetch", ($, e) => {
     if (e.url.endsWith("/outcome")) return { value: { status: 200, ok: true, headers: {}, text: JSON.stringify(ready) } };
     if (e.url.endsWith("/ack")) { onAck?.(); return { value: { status: 200, ok: true, headers: {}, text: JSON.stringify({ acknowledged: true, requestId: "request-a", channel: "native_control" }) } }; }
@@ -477,4 +477,25 @@ test("guidance cache is invalidated when connection or protected scope changes",
   expect(invalidated).toContain("prompt.context");
   const result = await $.prompt.context({ blocks: [{ name: "chio", text: "old authority" }, { name: "other", text: "keep" }] });
   expect(result.blocks).toEqual([{ name: "other", text: "keep" }]);
+});
+
+test("a refused prompt keeps its queued result and does not claim attachment", { options }, async ($, on) => {
+  let refuse = true;
+  outcomeStub(on, () => "session-a", await readyOutcome({ ok: true }), undefined,
+    e => refuse ? { drop: "fixture refusal" } : { text: e.text, context: e.context });
+  await $.command.run(command("chio-outcome", continuationId));
+  expect((await $.prompt.submit(submit("blocked"))).drop).toBe("fixture refusal");
+  expect((await $.command.run(command("chio"))).text).not.toContain("Original result attached");
+  refuse = false;
+  expect((await $.prompt.submit(submit("try again"))).context?.length).toBe(1);
+  expect((await $.prompt.submit(submit("later"))).context ?? []).toEqual([]);
+});
+test("context stripped downstream stays queued instead of claiming delivery", { options }, async ($, on) => {
+  let strip = true;
+  outcomeStub(on, () => "session-a", await readyOutcome({ ok: true }), undefined,
+    e => strip ? { text: e.text } : { text: e.text, context: e.context });
+  await $.command.run(command("chio-outcome", continuationId));
+  await $.prompt.submit(submit("stripped"));
+  expect((await $.command.run(command("chio"))).text).not.toContain("Original result attached");
+  strip = false; expect((await $.prompt.submit(submit("retained"))).context?.length).toBe(1);
 });

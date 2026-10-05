@@ -85,9 +85,9 @@ The user continued this exact action from the Chio interface after review. Treat
 <result as JSON, at most 8 KiB, then "… (truncated)">
 ```
 
-A session change clears the queue. A failed or refused prompt does not
-re-queue (the user can run `/chio-outcome` again; it returns the retained
-result without another acknowledgement because delivery is already confirmed).
+A session change clears the queue. A failed or refused prompt retains its queued results. A result is removed
+only when the host confirms that its context entered the prompt. Concurrent
+submissions reserve distinct queued records; a session change discards them.
 
 Protected launcher confirmation: `startControlServer` exposes
 `retainedContinuations()`. In native mode, the relay's `onModelRequest` scans
