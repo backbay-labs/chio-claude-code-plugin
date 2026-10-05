@@ -5,7 +5,11 @@ plan. It was not executed in this repository because each part either lives in
 another repository (`chio-conformance`, `chio-test-harness`, the sibling host
 plugins) or needs an environment this review did not touch (a Linux host, the
 real kernel binary in CI). Evidence comes from a read-only survey of the sibling
-repositories on 2026-10-04.
+repositories on 2026-10-04. The newer source paths below refer to Pi's
+`feat/pi-full-roadmap-20261004` at `3eae77fee648547bac31d752bacf414bda492b17`
+and OpenClaw's `codex/release-qualification-20260909` at
+`370fb1067ada7af07126aead598b2f9c0e2fc8a8`; they are not all on the sibling
+repositories' default branches.
 
 ## Why this matters for Claude Code
 
@@ -22,7 +26,10 @@ keeps the hosts from drifting.
 against the old daemon bond/check/receipt API (`src/runner.ts:94`,
 `ChioBridge.fromDaemon`). It tests the bridge, not host plugins, and covers no
 gateway, journal or continuation behavior. `chio-test-harness` (0.2.0) starts a
-trust plane, an MCP edge and a test server and is used only by bridge CI.
+trust plane, an MCP edge and a test server. CI definitions in the bridge,
+Codex, Cursor, OpenClaw and OpenCode repositories reference that harness;
+several use the placeholder checkout `owner/chio-test-harness`. A reference
+in a workflow does not establish a working hosted run.
 
 **Proposal.** Rebuild the suite around a per-host adapter:
 

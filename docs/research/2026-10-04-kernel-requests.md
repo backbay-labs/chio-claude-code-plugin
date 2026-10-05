@@ -4,7 +4,10 @@ Date: 2026-10-04. This lists the kernel and resource-owner work the Claude Code
 plugin needs next, with the evidence for each request. It proposes contracts;
 it does not implement or qualify any of them. Paths beginning `chio/` are in
 the kernel repository (`backbay-labs/chio`); they were checked on local `main`
-(2026-08-03), and the gaps were re-checked against `origin/main` (2026-09-02).
+(`eba8cdf3fb2e16501947c58415a4739a23cc12b3`, 2026-08-03), and the gaps
+were re-checked against `origin/main`
+(`5b8bec41d32f3838b880576fe6123c983ecebf8d`, 2026-09-02). These are source
+snapshots, not claims about the current deployed kernel.
 
 ## Summary
 
@@ -68,10 +71,14 @@ with a signed `incomplete` receipt and no path forward
 
 **What exists.** The admission saga has `DispatchCommitted`,
 `OutcomeUnknownAfterDispatch` and `CompensatedBeforeDispatch`
-(`chio/.../admission_operation.rs:163`), `dispatch_fence` in `tool_outcome.rs`,
+(`chio/crates/kernel/chio-kernel/src/admission_operation.rs:163`),
+`dispatch_fence` in `chio/crates/kernel/chio-kernel/src/tool_outcome.rs`,
 the `DispatchStatusProvider` trait and `reconcile_recoverable_admissions`.
-RFC-0003 is still Draft. Only `/v1/reconcile` and
-`/v1/budgets/holds/reconcile` are exposed; neither takes operator evidence.
+RFC-0003 is still Draft. `/v1/reconcile` accepts an execution nonce, exact
+arguments and trusted tool-server reported realized cost; `/v1/budgets/holds/reconcile`
+settles budget holds. Neither is a general operator settlement route for an
+unknown admission with a resource-owner outcome attestation. See
+`chio/crates/products/chio-api-protect/src/proxy/mediated.rs:572`.
 
 **Request.** An operator-authenticated settlement route:
 
@@ -103,7 +110,7 @@ before and after an action.
 **What exists.** `/v1/budgets/holds/{authorize,capture-spend,release,reverse,reconcile,cancel-captured}`,
 `authorize-exposure`, `release-exposure`, `capture-invocation`, `reconcile-spend`,
 hold states `Open/Released/Reversed/Reconciled/Expired`
-(`budget_store.rs:566`), units as minor currency units plus `CostDimension`
+(`chio/crates/kernel/chio-kernel/src/budget_store.rs:566`), units as minor currency units plus `CostDimension`
 (`chio/spec/METERING.md`). Unknown charges map to `OutcomeUnknownAfterDispatch`.
 
 **Request.** `GET /v1/sessions/{sessionId}/budget` readable with the delegated
