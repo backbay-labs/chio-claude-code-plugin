@@ -70,9 +70,12 @@ async function open($: EngineInterface, options: PluginOptions, requestId?: stri
   if (interactive) await $.ui.open({ id: "chio", title: "Chio", focus: true, closeOnEscape: true });
   return text;
 }
-function queueShare(continuationId: string, received: { requestId: string; result: unknown; receiptId: string; outcomeHash: string }) {
+/** Queues only when the host session is still the one the result was received in. */
+async function queueShare($: EngineInterface, session: string, continuationId: string, received: { requestId: string; result: unknown; receiptId: string; outcomeHash: string }): Promise<boolean> {
+  if (await $.session.id() !== session || sessionId !== session) return false;
   const tool = status?.operations.find(op => op.requestId === received.requestId)?.tool;
-  shareQueue = [...shareQueue.filter(record => record.continuationId !== continuationId), { continuationId, requestId: received.requestId, ...(tool ? { tool } : {}), receiptId: received.receiptId, outcomeHash: received.outcomeHash, result: received.result }];
+  shareQueue = [...shareQueue.filter(record => record.continuationId !== continuationId), { continuationId, sessionId: session, requestId: received.requestId, ...(tool ? { tool } : {}), receiptId: received.receiptId, outcomeHash: received.outcomeHash, result: received.result }];
+  return true;
 }
 const SHARE_NOTICE = "Original result received through native control. Claude receives it with your next message; model delivery is not yet confirmed.";
 export const register: Register = (on, options) => {
@@ -191,9 +194,12 @@ export const register: Register = (on, options) => {
     await refresh($, options); return { text: notice };
   }).catch(() => ({ text: "Continuation unavailable or unresolved. Inspect the original operation; do not retry its effect.", exitCode: 1 }));
   on("command.run", { command: "chio-outcome" }, async ($, e) => {
+    const session = await $.session.id();
     const result = await $.chio.receiveOutcome({ continuationId: e.args.trim() });
     if (!result.ready) return { text: "Original continuation " + result.continuation.state + ". Its fence remains intact." };
-    await refresh($, options); queueShare(e.args.trim(), result); notice = SHARE_NOTICE;
+    await refresh($, options);
+    if (!await queueShare($, session, e.args.trim(), result)) return { text: "Original result was received, but the session changed; it was not shared with Claude.", exitCode: 1 };
+    notice = SHARE_NOTICE;
     return { text: notice + "\n" + safeText(JSON.stringify(result.result, null, 2)) + "\nReceipt: " + safeText(result.receiptId) };
   }).catch(() => ({ text: "Original result or its delivery remains unresolved. Inspect retained evidence; do not dispatch again.", exitCode: 1 }));
   on("command.run", { command: "chio-why" }, async ($, e) => {
@@ -213,8 +219,10 @@ export const register: Register = (on, options) => {
     return { ...result, blocks: [...result.blocks.filter(block => block.name !== "chio"), { name: "chio", text }] };
   }).catch(($, e, next) => next(e));
   on("prompt.submit", async ($, e, next) => {
-    if (!shareQueue.length || await $.session.id() !== sessionId) return next(e);
-    const shared = shareQueue; shareQueue = [];
+    if (!shareQueue.length) return next(e);
+    const current = await $.session.id();
+    const shared = shareQueue.filter(record => record.sessionId === current); shareQueue = [];
+    if (!shared.length) return next(e);
     return next({ ...e, context: [...(e.context ?? []), ...shared.map(shareText)] });
   }).catch(($, e, next) => next(e));
 
@@ -274,7 +282,7 @@ export const register: Register = (on, options) => {
       $.ui.invalidate("ui.render");
     } }));
     if (continuation && continuation.state !== "unknown" && continuation.delivery !== "confirmed") rows.push(Button({ key: "outcome", label: "Receive original continuation result", onPress: async () => {
-      try { const result = await $.chio.receiveOutcome({ continuationId: continuation.id }); await refresh($, options); if (result.ready) queueShare(continuation.id, result); notice = result.ready ? SHARE_NOTICE + "\n" + safeText(JSON.stringify(result.result, null, 2)) : "Original continuation " + result.continuation.state + "; fence retained."; }
+      try { const session = await $.session.id(); const result = await $.chio.receiveOutcome({ continuationId: continuation.id }); await refresh($, options); const queued = result.ready && await queueShare($, session, continuation.id, result); notice = result.ready && !queued ? "Original result received, but the session changed; it was not shared with Claude." : result.ready ? SHARE_NOTICE + "\n" + safeText(JSON.stringify(result.result, null, 2)) : "Original continuation " + result.continuation.state + "; fence retained."; }
       catch { notice = "Original result delivery unresolved; do not dispatch again."; }
       $.ui.invalidate("ui.render");
     } }));
