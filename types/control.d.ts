@@ -37,7 +37,7 @@ export interface ControlStatus {
   schema: "chio.control.status.v1";
   sessionId: string;
   checkedAt: number;
-  scope: "kernel_mcp" | "isolated_kernel_mcp";
+  scope: "kernel_mcp" | "isolated_kernel_mcp" | "demo_fixture";
   authority: "live" | "expired" | "revoked" | "disconnected";
   authorityExpiresAt: number;
   protectedTools: string[];

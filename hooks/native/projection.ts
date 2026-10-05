@@ -5,7 +5,7 @@ export function parseStatus(text: string, sessionId: string): ControlStatus {
   if (text.length > 1024 * 1024) throw new Error("projection exceeds limit");
   const value = JSON.parse(text) as ControlStatus;
   if (value.schema !== "chio.control.status.v1" || value.sessionId !== sessionId
-    || !["kernel_mcp", "isolated_kernel_mcp"].includes(value.scope) || !["live", "expired", "revoked", "disconnected"].includes(value.authority)
+    || !["kernel_mcp", "isolated_kernel_mcp", "demo_fixture"].includes(value.scope) || !["live", "expired", "revoked", "disconnected"].includes(value.authority)
     || !Number.isSafeInteger(value.checkedAt) || !Number.isSafeInteger(value.authorityExpiresAt)
     || !Number.isSafeInteger(value.awaitingReview) || value.awaitingReview < 0 || !Number.isSafeInteger(value.unresolved) || value.unresolved < 0
     || !Array.isArray(value.operations) || value.operations.length > 1000 || !Array.isArray(value.intents) || value.intents.length > 1000
@@ -61,7 +61,7 @@ export function outsideText(counts: ReadonlyMap<string, number>): string | null 
 export function statusLine(status: ControlStatus | null, now: number, outsideCalls = 0): string {
   if (!status) return "Chio · disconnected · protection scope unavailable";
   const live = status.authority === "live" && now - status.checkedAt <= 10_000 && now < status.authorityExpiresAt * 1000;
-  const scope = status.scope === "isolated_kernel_mcp" ? "isolated kernel MCP" : "kernel MCP tools only";
+  const scope = status.scope === "isolated_kernel_mcp" ? "isolated kernel MCP" : status.scope === "demo_fixture" ? "DEMO fixture kernel · nothing protected" : "kernel MCP tools only";
   const authority = live ? `authority ${Math.max(1, Math.ceil((status.authorityExpiresAt * 1000 - now) / 60_000))}m`
     : status.authority === "live" ? "authority unconfirmed" : `authority ${status.authority}`;
   return `Chio · ${scope} · ${authority} · ${status.awaitingReview} review · ${status.unresolved} unresolved${outsideCalls > 0 ? ` · ${outsideCalls} call${outsideCalls === 1 ? "" : "s"} outside Chio` : ""}`;
@@ -106,6 +106,7 @@ export function diagnosticText(status: ControlStatus | null, sessionId: string, 
     "Preserve retained operations; reconnect does not authorize redispatch."].join("\n");
   const fresh = now - status.checkedAt <= 10_000 && status.checkedAt <= now + 5000;
   const live = fresh && status.authority === "live" && now < status.authorityExpiresAt * 1000;
+  if (status.scope === "demo_fixture") lines.push("Demo fixture kernel: nothing is protected.");
   lines.push("Control infrastructure: reachable for this exact session.",
     `Authority: ${live ? "live" : !fresh ? "stale, unconfirmed" : status.authority === "live" ? "expired" : status.authority}.`,
     "Guest execution and storage: unchecked. The operator doctor checks those separately.");
@@ -125,6 +126,7 @@ export function diagnosticText(status: ControlStatus | null, sessionId: string, 
 export function guidanceText(status: ControlStatus | null): string | null {
   if (!status || !status.protectedTools.length) return null;
   return [
+    ...(status.scope === "demo_fixture" ? ["This is a Chio demo with a fixture kernel; nothing is protected."] : []),
     `Chio mediates these tools: ${status.protectedTools.map(safeText).join(", ")}.`,
     "Each result is a JSON outcome with a state and a requestId.",
     "- awaiting_approval: the action was kept without running. Stop and tell the user it needs review (/chio-review REQUEST_ID). Do not call chio_resume unless the user says the operator granted it.",

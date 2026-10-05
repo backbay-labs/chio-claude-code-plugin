@@ -296,6 +296,16 @@ test("isolated scope guidance says the session has no other tools", { options },
   expect(text).toContain("This session has no other tools.");
 });
 
+test("a demo fixture projection is labeled DEMO and nothing protected everywhere", { options }, async ($, on) => {
+  const value = projection(); value.scope = "demo_fixture";
+  stub(on, () => "session-a", () => value);
+  const status = (await $.command.run(command("chio-status"))).text;
+  expect(status).toContain("Chio · DEMO fixture kernel · nothing protected ·");
+  expect((await $.command.run(command("chio-doctor"))).text).toContain("Demo fixture kernel: nothing is protected.");
+  const guidance = (await $.prompt.context({ blocks: [] })).blocks.find(b => b.name === "chio")?.text ?? "";
+  expect(guidance.startsWith("This is a Chio demo with a fixture kernel; nothing is protected.")).toBe(true);
+});
+
 function uncertain(value: ControlStatus): ControlStatus {
   value.operations = [{ requestId: "request-u", tool: "write_file", state: "unknown", evidence: "unverified", acknowledged: false, hostDeliveryConfirmed: false, nextAction: "reconcile_original" }];
   value.awaitingReview = 0; value.unresolved = 1; return value;
