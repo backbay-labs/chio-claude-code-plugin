@@ -73,3 +73,10 @@ test("policy-show ignores a revoked bond rather than reading its old policy path
   assert.equal(result.code, 1); assert.match(result.stderr, /no policy path known/);
   assert.doesNotMatch(result.stdout, /revoked-policy-sentinel/);
 });
+test("bond refuses malformed budgets before issuing an unbounded capability", async t => {
+  const f = fixture(t);
+  for (const budget of ["NaN", "Infinity", "-1", "", " ", "1e999"]) {
+    const result = await f.run("bond", ["/policy", "4h", budget], { CLAUDE_SESSION_ID: "a" });
+    assert.equal(result.code, 1); assert.match(result.stderr, /invalid budget/);
+  }
+});

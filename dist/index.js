@@ -10292,9 +10292,13 @@ async function bond(args) {
   }
   const sessionId = process.env.CLAUDE_SESSION_ID;
   if (!sessionId) throw new Error("CLAUDE_SESSION_ID is required; refusing to create an unbound capability");
+  if (args.length > 3) throw new Error("usage: /chio:bond <policy-path> [ttl] [budget-usd]");
+  const budgetUsd = budgetArg === void 0 ? void 0 : Number(budgetArg);
+  if (budgetArg !== void 0 && (!budgetArg.trim() || !Number.isFinite(budgetUsd) || budgetUsd < 0)) {
+    throw new Error("invalid budget: expected a finite nonnegative USD amount");
+  }
   const policyPath = resolve2(policyArg);
   const bridge = buildBridge();
-  const budgetUsd = budgetArg ? Number(budgetArg) : void 0;
   const bondArgs = { policyPath, ttl };
   if (budgetUsd !== void 0 && Number.isFinite(budgetUsd)) {
     bondArgs.budgetUsd = budgetUsd;
