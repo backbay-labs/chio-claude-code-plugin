@@ -41,6 +41,16 @@ The [dedicated-environment report](acceptance/2026-10-03/qualification-environme
 
 Native commands include `/chio`, `/chio-status`, `/chio-review`, `/chio-evidence`, `/chio-revoke`, `/chio-task`, `/chio-completion`, `/chio-continue`, `/chio-outcome` and `/chio-why`. See the [native interface runbook](docs/NATIVE-MODS.md) for activation, scoped credentials and operator confirmation. An ordinary session displays **kernel MCP tools only**; a mod does not confer protection on native Bash or file tools.
 
+## Try it locally
+
+`node scripts/demo.mjs --directory /tmp/new-chio-demo` starts a **demo** with a
+fixture kernel on this machine: the real gateway and control service, an
+operator watch screen in that terminal, and a throwaway owner directory. It
+prints the `claude` command to run in a second terminal. Ask Claude to write a
+file with the chio tool, approve it in the watch screen, then continue it from
+the Chio pane. Nothing is protected: the fixture kernel signs with a key made
+for that run only, and every Chio surface says DEMO.
+
 ## Build from source
 
 Install Node.js 22 or newer and Git, then build the public checkout:

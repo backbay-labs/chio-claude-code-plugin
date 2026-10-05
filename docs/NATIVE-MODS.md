@@ -331,3 +331,18 @@ The [dedicated environment and recovery report](../acceptance/2026-10-03/qualifi
 records explicit context binding, actual enforcing-owner failures and shared
 service preservation. Infrastructure recovery does not qualify those open
 execution and durability contracts.
+
+## Local demo
+
+`node scripts/demo.mjs --directory NEW_DIR` starts a **demo**: a fixture kernel
+on this machine, the real gateway and control service, and the operator watch
+screen in that terminal. It prints the `claude` command to run in a second
+terminal. Ask Claude to write a file with the chio tool, approve it in the watch
+screen, then continue it from the Chio pane. Nothing is protected: the fixture
+kernel signs with a key made for that run only, and every Chio surface says DEMO.
+
+- The demo reports scope `demo_fixture`.
+- It writes `gateway.json`, `operator.json`, `mcp.json` and `signing-seed.json`
+  (all mode 0600) to the new directory, which must not already exist.
+- The fixture kernel confines writes to the `owner/` subdirectory.
+- It is not a qualification environment.
