@@ -242,7 +242,8 @@ export async function main(argv = process.argv.slice(2), env = process.env) {
   } catch (error) {
     console.error(`chio-claude: ${error.message}`);
     if (error instanceof UsageError && !error.message.includes("Run:")) console.error("Run chio-claude --help for usage.");
-    return error instanceof UsageError ? 2 : 1;
+    // 64 (EX_USAGE) keeps a usage mistake apart from the launcher's outcome codes 1-4.
+    return error instanceof UsageError ? 64 : 1;
   }
 }
 

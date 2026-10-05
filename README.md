@@ -1,169 +1,164 @@
 <p align="center">
   <picture>
     <source media="(max-width: 600px)" srcset="docs/assets/readme-hero-mobile.svg" />
-    <img src="docs/assets/readme-hero.svg" alt="Chio for Claude Code" width="960" />
+    <img src="docs/assets/readme-hero.svg" alt="Chio for Claude Code. Claude's reasoning. Chio's authority. Restricted mode runs every Claude tool call through the Chio kernel." width="960" />
   </picture>
 </p>
 
 <p align="center">
-  <a href="LICENSE">Apache-2.0</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
-  <a href="package.json">Node.js 22+</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
-  <a href="docs/RESTRICTED-MODE.md">macOS restricted mode</a>
-</p>
-
-<p align="center">
-  <strong>Claude Code, with kernel-controlled tools.</strong>
-</p>
-
-<p align="center">
-  <a href="#what-it-does">Overview</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
-  <a href="#build-from-source">Build</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
-  <a href="#run-through-the-kernel">Run</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
-  <a href="#supported-boundary">Scope</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
-  <a href="#recovery">Recovery</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
-  <a href="#development">Develop</a>
+  <a href="#install">Install</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+  <a href="#quickstart">Quickstart</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+  <a href="#how-it-works">How it works</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+  <a href="docs/GETTING-STARTED.md">Guide</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+  <a href="https://www.chio.computer">chio.computer</a>
 </p>
 
 ---
 
-## What it does
+Chio for Claude Code puts [Claude Code](https://github.com/anthropics/claude-code)
+on a kernel. Claude reasons and calls tools. [Chio](https://github.com/backbay-labs/chio)
+decides what each call may do, performs it through an isolated resource server,
+and returns a signed receipt. Claude never holds kernel or provider credentials.
 
-Run Claude Code against tools and data controlled by the [Chio kernel](https://github.com/backbay-labs/chio). The restricted launcher gives Claude an explicit MCP tool inventory while the operator retains the kernel credentials, resource access and execution journal.
+- **Scoped authority.** The operator prepares the session, its capability and
+  its trusted signers before launch. Claude sees the declared kernel MCP tools,
+  and nothing else.
+- **Signed receipts.** Every result is bound to its signer, caller, request and
+  output, and verified before Claude sees it.
+- **Recoverable outcomes.** An unknown outcome stays in the private journal and
+  blocks new dispatch. Nothing is retried blindly.
 
-- **Scoped access.** The kernel checks the prepared session's delegated authority before protected work.
-- **Bound results.** The gateway verifies the receipt signer, caller, request and returned output before accepting an execution result.
-- **Recoverable uncertainty.** Unknown outcomes remain in the private journal and block new dispatch until the operator resolves them.
-- **Native session interface.** Inspect scope, exact action reviews, retained evidence and session-specific revocation requests while Claude works.
+## Install
 
-**Status:** Version 0.4.0-rc.5 adds the [native mod interface](docs/NATIVE-MODS.md) against pinned Claude Code 2.1.287. The [controlled-task workflow](docs/CONTROLLED-TASKS.md) adds artifact-bound completion evidence, guided scopes, exact continuation and the typed `$.chio` interface. The trusted operator service supplies session-scoped status and accepts review intent; kernel authority and protected execution remain outside the host. The interactive protected profile remains a qualification candidate. Earlier [bounded real-host evidence](https://github.com/backbay-labs/chio-claude-code-plugin/blob/65ac8390c57a5292c055fba50caa1aafbd915848/acceptance/2026-09-10/final-static-continuation/README.md) pins a different host and does not qualify this version.
+```sh
+npm install -g @chio-protocol/claude-code-plugin
+```
 
-The [dedicated-environment report](acceptance/2026-10-03/qualification-environment/REPORT.md) records shared VM recovery, restored backups and live enforcing failures. `/chio-doctor` diagnoses the exact session without submitting work; the separate operator probe checks guest and image availability. An observed native write remains fenced after its durability syscall failed. Production qualification is still incomplete.
+Requires Node.js 22 or newer. Protected runs require macOS. Until the first npm
+release, [build from source](docs/GETTING-STARTED.md#build-from-source).
 
-Native commands include `/chio`, `/chio-status`, `/chio-review`, `/chio-evidence`, `/chio-revoke`, `/chio-task`, `/chio-completion`, `/chio-continue`, `/chio-outcome` and `/chio-why`. See the [native interface runbook](docs/NATIVE-MODS.md) for activation, scoped credentials and operator confirmation. An ordinary session displays **kernel MCP tools only**; a mod does not confer protection on native Bash or file tools.
+## Quickstart
 
-## Try it locally
+```sh
+chio-claude demo
+```
 
-`node scripts/demo.mjs --directory /tmp/new-chio-demo` starts a **demo** with a
-fixture kernel on this machine: the real gateway and control service, an
-operator watch screen in that terminal, and a throwaway owner directory. It
-prints the `claude` command to run in a second terminal. Ask Claude to write a
-file with the chio tool, approve it in the watch screen, then continue it from
-the Chio pane. Nothing is protected: the fixture kernel signs with a key made
-for that run only, and every Chio surface says DEMO.
+That starts a fixture kernel and an operator watch screen. In a second terminal:
 
-## Build from source
+```sh
+chio-claude demo attach
+```
 
-Install Node.js 22 or newer and Git, then build the public checkout:
+Ask Claude to write a file with the chio tool, then approve it in the watch
+screen. Nothing is protected: the demo kernel signs with a throwaway key, and
+every Chio surface says DEMO.
+
+## Run with your kernel
+
+```sh
+chio-claude host
+chio-claude prepare request.json
+chio-claude run "Summarize /workspace/notes.md"
+```
+
+`host` downloads the pinned Claude Code and checks its SHA-256. `prepare` turns
+your kernel, policy and tools into a session. `run` starts Claude inside the
+sandbox, prints the transcript and ends with the recorded outcome. With no task,
+`run` opens Claude Code itself, with the Chio pane. The
+[guide](docs/GETTING-STARTED.md#run-through-the-kernel) covers the request file,
+the defaults and recovery.
+
+### Inside Claude Code
+
+The `chio` plugin adds diagnostic commands and compatibility hooks to an
+ordinary session. Install it the standard way:
+
+```text
+/plugin marketplace add backbay-labs/chio-claude-code-plugin
+/plugin install chio@chio
+```
+
+> [!WARNING]
+> **The plugin is not a boundary.** It loads inside Claude, and real-host probes
+> found hook failures that let an otherwise permitted native tool run.
+> Protection comes from `chio-claude run`, which starts Claude inside the
+> sandbox.
+
+## How it works
+
+<p align="center">
+  <picture>
+    <source media="(max-width: 600px)" srcset="docs/assets/readme-boundary-mobile.svg" />
+    <img src="docs/assets/readme-boundary.svg" alt="Claude Code, confined by sandbox-exec, calls declared kernel MCP tools. The trusted Chio launcher's gateway sends a scoped request to the Chio kernel, which checks authority and executes through the resource server. The outcome returns as a signed receipt and a verified result." width="960" />
+  </picture>
+</p>
+
+`chio-claude run` starts Claude Code under `sandbox-exec`, with its native Bash,
+file and web tools turned off. Claude can reach two local endpoints, both owned
+by the trusted launcher: the kernel gateway and a bounded Messages relay. The
+launcher holds the credentials and keeps the private journal. The kernel checks
+each call against the delegated authority and dispatches it to the resource
+server.
+
+## What ships
+
+| Entrypoint | What it is |
+| --- | --- |
+| `chio-claude` | The CLI: demo, pinned host, session preparation, runs and operator control |
+| `scripts/restricted.mjs` | The restricted launcher behind `run`: macOS sandbox, kernel gateway, model relay and host supervisor |
+| Chio pane | The native session interface: `/chio`, `/chio-status`, `/chio-review`, `/chio-why` and more, pinned by digest |
+| `chio` plugin | The Claude marketplace plugin: diagnostic `/chio:*` commands and compatibility hooks |
+| `@chio-protocol/claude-code-plugin` | The library behind the commands: bonds, approvals, revocation, receipts and plugin state |
+
+## Status
+
+`0.4.0-rc.5` is a candidate for Claude Code 2.1.287 on macOS. It is not on npm
+yet.
+
+- **Recorded.** Fixture-level acceptance: the Node and native harness suites,
+  and eight actual-host scenarios against a stubbed kernel and a local model,
+  in the [rc.5 record](acceptance/2026-10-05/rc5/REPORT.md).
+- **Not yet.** Production qualification. Live session lifecycle, kernel
+  decisions, interactive protection, native recovery and cold install remain open, and the
+  publication guard refuses until they pass.
+- **Open blockers.** Six, listed in the record, including the kernel source
+  revision for live runs.
+
+## Documentation
+
+| Guide | Covers |
+| --- | --- |
+| [Getting started](docs/GETTING-STARTED.md) | The full walkthrough: install, the demo, prepare, run, outcomes, the boundary and recovery |
+| [Native interface](docs/NATIVE-MODS.md) | The Chio pane: activation, scoped credentials and operator confirmation |
+| [Controlled tasks](docs/CONTROLLED-TASKS.md) | Artifact-bound completion evidence, guided scopes and exact continuation |
+| [Restricted mode](docs/RESTRICTED-MODE.md) | The operator runbook: preparation, launch, subscription login, results, failure and upgrade |
+| [Release qualification](docs/RELEASE-QUALIFICATION.md) | Packaging, the documented-install check and release prerequisites |
+| [Publishing](docs/PUBLISHING.md) | The npm trusted-publishing bootstrap and later releases |
+| [Host contract probes](SMOKE.md) | Native hook-contract tests and the bypasses they found |
+
+Qualification records: [rc.5 record](acceptance/2026-10-05/rc5/REPORT.md) and
+the [qualification environment report](acceptance/2026-10-03/qualification-environment/REPORT.md).
+
+## Development
 
 ```sh
 git clone https://github.com/backbay-labs/chio-claude-code-plugin.git
 cd chio-claude-code-plugin
 npm ci --ignore-scripts --no-audit --no-fund
-npm run build
-```
-
-The npm lockfile and checked-in `vendor/` archives supply the Chio bridge and SDK. No sibling checkout is required. The build produces the bundled runtime in `dist/`. npm is the supported source-install path; the obsolete Bun lockfile referenced a sibling bridge and an unavailable registry dependency.
-
-Building the plugin does not prepare a kernel session. Protected execution also requires macOS, a qualified Claude executable, a compatible running kernel and an isolated resource server. Follow the [operator preparation guide](docs/RESTRICTED-MODE.md#boundary-and-preparation) before launching work.
-
-## Run through the kernel
-
-### 1. Prepare authority
-
-The operator chooses the policy, trusted receipt signers and allowed tools, then prepares a retained kernel session. From this checkout, the bundled bridge dependency provides the preparation command:
-
-```sh
-node node_modules/@chio/bridge/dist/prepare-gateway.js \
-  /operator/private/claude-prepare.json \
-  /operator/private/new-claude-gateway.json
-```
-
-The [runbook](docs/RESTRICTED-MODE.md#boundary-and-preparation) describes the input fields and required kernel contract. Preparation pins the session and capability, exchanges operator authority for a scoped credential, and writes the private gateway configuration. It executes no protected tool.
-
-### 2. Launch a task
-
-Use paths and artifact pins from the selected qualification record. Set `CLAUDE_HOST_SHA256`, `CHIO_GATEWAY_SHA256` and `CHIO_MODEL` accordingly; the gateway hash identifies this build's `dist/gateway-http.js`. The profile must be new, and the local workspace must already exist. Keep the profile, gateway configuration and journal in separate locations outside the local workspace.
-
-```sh
-node scripts/restricted.mjs \
-  --host /absolute/path/to/claude \
-  --host-sha256 "$CLAUDE_HOST_SHA256" \
-  --gateway-sha256 "$CHIO_GATEWAY_SHA256" \
-  --gateway-config /operator/private/new-claude-gateway.json \
-  --profile /operator/new-claude-profile \
-  --workspace /operator/empty-workspace \
-  --model-auth claude-login \
-  --model "$CHIO_MODEL" < /operator/task.txt
-```
-
-For a filesystem owner exposing the corresponding read and write tools, a task could be:
-
-> Read `/workspace/notes.md`, write a concise summary to `/workspace/summary.md`, then read the summary back.
-
-Those paths belong to the resource owner. The launcher's local workspace does not give Claude direct access to that storage.
-
-`--model-auth claude-login` uses the operator's existing Claude subscription login through the trusted parent relay. API-key mode is also available. See [authentication setup](docs/RESTRICTED-MODE.md#existing-claude-subscription-login) and [launch requirements](docs/RESTRICTED-MODE.md#launch).
-
-### 3. Inspect the outcome
-
-The profile retains `launch.json` and `exit.json`; the private gateway journal retains request-bound outcomes. Treat `state: completed` with verified evidence and `result.isError: false` as a successful tool result. A model's summary alone is insufficient. Unknown results stay unresolved and must not be retried automatically.
-
-Output sanitization can mask a filename without invalidating a successful operation. Later authorized steps retain the original known path. See [result semantics](docs/RESTRICTED-MODE.md#result-semantics) for the distinction between output masking, receipt redaction and tool errors.
-
-## Supported boundary
-
-```mermaid
-flowchart LR
-  C[Sandboxed Claude Code] -->|Declared MCP tools| G[Operator gateway and journal]
-  G -->|Scoped authority| K[Chio kernel]
-  K -->|Mediated dispatch| T[Isolated tool server]
-  K -->|Signed evidence| G
-```
-
-The macOS sandbox restricts Claude to the operator's local MCP transport and bounded Messages relay. Kernel credentials, the authoritative journal, protected storage and resource credentials remain outside the host's access.
-
-| Available in restricted mode | Unavailable in this mode |
-| --- | --- |
-| Operator-declared Chio tools, including qualified filesystem workflows | Native Bash, file tools and direct web tools |
-| A fresh isolated host session with retained kernel authority | Arbitrary MCP servers, plugins, hooks and custom skills |
-| Operator-controlled recovery of retained outcomes | Delegation, background jobs and automatic session resume |
-
-The resource owner must enforce this boundary. A host-visible resource mount or an unguarded second endpoint would defeat it. Expanding the tool or host surface requires its own qualification.
-
-### Compatibility plugin
-
-For diagnostics and bounded hook-contract testing, this repository also remains a Claude marketplace:
-
-```sh
-claude plugin marketplace add backbay-labs/chio-claude-code-plugin
-claude plugin install chio@chio
-```
-
-This installation does not enable the restricted launcher. Real-host probes found that several hook failures let an otherwise permitted native tool execute. Hook configuration therefore does not establish complete mediation. See [compatibility-hook behavior and state](docs/RESTRICTED-MODE.md#compatibility-hooks) and the [host contract probes](SMOKE.md). By default the hooks check only sessions bonded with `/chio:bond`; set the plugin's `compatibility_hooks` option to `always` to deny tools in unbonded sessions, or `off` to disable them.
-
-## Recovery
-
-After interruption, retain the profile, original request IDs, gateway configuration and journal. Use the resource owner's independent record to determine what happened. Do not clear unknown operations to make a retry succeed.
-
-- [Failure and recovery](docs/RESTRICTED-MODE.md#failure-and-recovery): inspect retained state, recover dead-process locks and preserve unresolved effects.
-- [Upgrade and removal](docs/RESTRICTED-MODE.md#upgrade-and-removal): retain evidence, revoke old authority and qualify the replacement.
-- [Pinned qualification records](https://github.com/backbay-labs/chio-claude-code-plugin/blob/65ac8390c57a5292c055fba50caa1aafbd915848/acceptance/2026-09-10/final-static-continuation/README.md): exact versions, executed cases and remaining scope.
-
-## Development
-
-From the source checkout with dependencies installed:
-
-```sh
-npm run typecheck
-npm run build
-npm test
+npm run typecheck && npm run build && npm test
 npm run pack:release -- /absolute/new-candidate-directory
 ```
 
-`pack:release` stages the production dependencies into a self-contained tarball and writes its SHA-256. Direct `npm pack` refuses an unbundled candidate. The [source/package workflow](.github/workflows/ci.yml) additionally checks a fresh offline consumer installation. Build and component-test results do not establish real-host acceptance.
+`pack:release` writes a self-contained tarball and its SHA-256. Direct
+`npm pack` refuses. Build and test results do not establish real-host
+acceptance.
 
-For native host-contract tests, read [SMOKE.md](SMOKE.md) before using its isolated fixture. Its results include demonstrated hook bypasses and are separate from kernel qualification. See [packaging and release qualification](docs/RELEASE-QUALIFICATION.md) for consumer-install checks and the prerequisites enforced by the [release workflow](.github/workflows/release.yml).
+---
 
-## License
-
-[Apache-2.0](LICENSE).
+<p align="center">
+  <a href="LICENSE">Apache-2.0</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+  <a href="https://www.chio.computer">chio.computer</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+  <a href="https://github.com/backbay-labs/chio">Chio</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+  <a href="https://github.com/anthropics/claude-code">Claude Code</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+  <a href="https://github.com/backbay-labs/chio-bridge">Chio bridge</a>
+</p>

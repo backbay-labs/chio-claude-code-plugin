@@ -28,7 +28,7 @@ test("help, version and unknown commands", () => {
   const version = spawnSync(process.execPath, [cli, "--version"], { encoding: "utf8" });
   assert.equal(version.stdout.trim(), JSON.parse(readFileSync(join(root, "package.json"))).version);
   const unknown = spawnSync(process.execPath, [cli, "launch"], { encoding: "utf8" });
-  assert.equal(unknown.status, 2); assert.match(unknown.stderr, /unknown command launch/);
+  assert.equal(unknown.status, 64); assert.match(unknown.stderr, /unknown command launch/);
 });
 
 test("the CLI ships as an npm bin outside the plugin's bin directory", () => {
@@ -129,9 +129,9 @@ test("the transcript shows text, Chio tool calls and verified results", () => {
 test("prepare and control refuse before touching a session", t => {
   const h = home(t);
   const existing = spawnSync(process.execPath, [cli, "prepare", join(h.dir, "request.json")], { env: { ...process.env, CHIO_CLAUDE_HOME: h.dir }, encoding: "utf8" });
-  assert.equal(existing.status, 2); assert.match(existing.stderr, /already exists/);
-  assert.equal(spawnSync(process.execPath, [cli, "prepare"], { encoding: "utf8" }).status, 2);
-  assert.equal(spawnSync(process.execPath, [cli, "control"], { encoding: "utf8" }).status, 2);
+  assert.equal(existing.status, 64); assert.match(existing.stderr, /already exists/);
+  assert.equal(spawnSync(process.execPath, [cli, "prepare"], { encoding: "utf8" }).status, 64);
+  assert.equal(spawnSync(process.execPath, [cli, "control"], { encoding: "utf8" }).status, 64);
 });
 
 test("chio-claude demo prints the short attach command and removes attach.json when stopped", async t => {
