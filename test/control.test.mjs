@@ -8,6 +8,8 @@ import { createGateway, operationKey } from "../dist/gateway.js";
 import { startControlServer, controlStatus, confirmControlIntent } from "../dist/control/service.js";
 import { canonicalizeJson, sha256Hex, signUtf8MessageEd25519 } from "@chio-protocol/sdk/invariants";
 import { main as operatorMain } from "../scripts/control.mjs";
+import { PassThrough } from "node:stream";
+import { watch, intentCard } from "../scripts/control-watch.mjs";
 
 const seed = "a1".repeat(32);
 const signer = signUtf8MessageEd25519("identity", seed).public_key_hex;
@@ -152,4 +154,56 @@ test("a protected launch fences its original transport when the authenticated ho
   assert.equal((await fetch(url, { headers })).status, 404); assert.equal(fenced, 1); assert.equal(control.sessionMismatch, true);
   assert.equal((await fetch(control.url + "/sessions/host-session-a/status", { headers })).status, 409);
   assert.equal((await fetch(url, { headers })).status, 404); assert.equal(fenced, 1); assert.equal(f.effects(), 0);
+});
+
+function terminal() {
+  const input = new PassThrough(); input.isTTY = true; input.setRawMode = () => input;
+  const output = new PassThrough(); output.isTTY = true; let text = ""; output.on("data", data => { text += data; });
+  return { input, output, read: () => text };
+}
+async function until(predicate, ms = 3000) { const end = Date.now() + ms; while (!predicate()) { if (Date.now() > end) throw new Error("timed out"); await new Promise(r => setTimeout(r, 10)); } }
+test("watch shows the exact requested action and confirms it once on y", async t => {
+  let config, proposal; const calls = [];
+  const f = await fixture(t, (path, body) => {
+    calls.push(path); if (path === "/admin/approvals") proposal = body;
+    return { dispatchPerformedByThisEndpoint: false, record: { id: "approval-a", request_id: proposal.request_id, session_id: config.execution.sessionId, capability_id: config.execution.capabilityId },
+      ...(path.endsWith("/decision") ? { toolCallParams: signedDecision(config, proposal, body.decision) } : {}) };
+  }); config = f.config;
+  const op = (await (await f.get()).json()).operations[0];
+  await f.post({ kind: "approve", requestId: op.requestId, revision: op.review.revision });
+  const tty = terminal();
+  const running = watch({ statusOptions: f.options, operator: { adminToken: "operator" }, input: tty.input, output: tty.output, intervalMs: 20 });
+  await until(() => tty.read().includes("Confirm this exact decision?"));
+  assert.match(tty.read(), /Requested decision: approve/); assert.match(tty.read(), /exact payload/); assert.match(tty.read(), /\x07/);
+  tty.input.write("y");
+  await until(() => tty.read().includes("Retained intent state: granted"));
+  tty.input.write("q"); await running;
+  assert.deepEqual(calls, ["/admin/approvals", "/admin/approvals/approval-a/decision"]); assert.equal(f.effects(), 0);
+});
+test("watch skip makes no kernel call and the intent is not prompted again", async t => {
+  const calls = []; const f = await fixture(t, path => { calls.push(path); return {}; });
+  const op = (await (await f.get()).json()).operations[0];
+  await f.post({ kind: "approve", requestId: op.requestId, revision: op.review.revision });
+  const tty = terminal();
+  const running = watch({ statusOptions: f.options, operator: { adminToken: "operator" }, input: tty.input, output: tty.output, intervalMs: 20 });
+  await until(() => tty.read().includes("Confirm this exact decision?"));
+  tty.input.write("n"); await until(() => tty.read().includes("Skipped"));
+  await new Promise(r => setTimeout(r, 100));
+  assert.equal(tty.read().split("Confirm this exact decision?").length - 1, 1);
+  tty.input.write("q"); await running; assert.deepEqual(calls, []);
+});
+test("watch refuses a non-terminal and does not prompt an expired intent", async t => {
+  const f = await fixture(t);
+  const pipe = new PassThrough();
+  await assert.rejects(watch({ statusOptions: f.options, operator: { adminToken: "operator" }, input: pipe, output: pipe }), /interactive terminal/);
+  const op = (await (await f.get()).json()).operations[0];
+  await f.post({ kind: "approve", requestId: op.requestId, revision: op.review.revision });
+  const tty = terminal();
+  const running = watch({ statusOptions: f.options, operator: { adminToken: "operator" }, input: tty.input, output: tty.output, intervalMs: 20, now: () => Date.now() + 120_000 });
+  await new Promise(r => setTimeout(r, 150)); tty.input.write("q"); await running;
+  assert.equal(tty.read().includes("Confirm this exact decision?"), false);
+});
+test("a revocation card renders without an operation", () => {
+  const card = intentCard({ id: "12345678-1234-4123-8123-123456789abc", kind: "revoke", state: "requested", sessionId: "host-session-a", expiresAt: Date.now() + 60_000 }, undefined, Date.now());
+  assert.match(card, /Requested decision: revoke this session/); assert.match(card, /Confirm this exact decision\?/);
 });

@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { readGatewayConfig, privatePath } from "../dist/gateway.js";
 import { confirmControlIntent, controlStatus, startControlServer } from "../dist/control/service.js";
 import { requireSessionCredential } from "./sandbox.mjs";
+import { watch } from "./control-watch.mjs";
 
 export async function main(args = process.argv.slice(2)) {
   const [action, ...rest] = args;
@@ -26,9 +27,16 @@ export async function main(args = process.argv.slice(2)) {
     process.stdout.write(JSON.stringify({ intent: await confirmControlIntent(config, operator, options["--intent"]), dispatchPerformed: false }) + "\n");
     return;
   }
-  if (!["serve", "status", "inbox"].includes(action) || options["--operator-file"] || options["--intent"]) throw new Error("usage: control.mjs serve|status --gateway-config CONFIG [--credential-output NEW_FILE]; confirm --gateway-config CONFIG --intent ID --operator-file PRIVATE_FILE");
+  if (!["serve", "status", "inbox", "watch"].includes(action) || action !== "watch" && options["--operator-file"] || options["--intent"]) throw new Error("usage: control.mjs serve|status|inbox --gateway-config CONFIG [--credential-output NEW_FILE]; watch --gateway-config CONFIG --operator-file PRIVATE_FILE; confirm --gateway-config CONFIG --intent ID --operator-file PRIVATE_FILE");
   const prepared = requireSessionCredential(JSON.parse(readFileSync(configPath, "utf8")));
   const authorityExpiresAt = prepared.sessionCredential.expiresAt;
+  if (action === "watch") {
+    if (!options["--operator-file"] || options["--credential-output"] || options["--intent"]) throw new Error("watch requires --operator-file");
+    const path = resolve(options["--operator-file"]); privatePath(path, false);
+    if (lstatSync(path).size > 1024 * 1024) throw new Error("operator credential file exceeds its bound");
+    await watch({ statusOptions: { config, authorityExpiresAt, workflow: prepared.workflow }, operator: JSON.parse(readFileSync(path, "utf8")), input: process.stdin, output: process.stdout });
+    return;
+  }
   if (action === "inbox") {
     const status = await controlStatus({ config, authorityExpiresAt, workflow: prepared.workflow });
     console.log(JSON.stringify({ sessionId: status.sessionId, authority: status.authority, intents: status.intents.filter(i => i.state === "requested" || i.state === "submitted" || i.state === "unknown"),

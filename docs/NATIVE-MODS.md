@@ -154,6 +154,21 @@ node scripts/control.mjs confirm \
   --operator-file /operator/private/operator.json
 ```
 
+To answer requests as they arrive, run the watch screen in the trusted
+terminal instead:
+
+```sh
+node scripts/control.mjs watch \
+  --gateway-config /operator/private/gateway.json \
+  --operator-file /operator/private/operator.json
+```
+
+It prints each requested intent with its exact action and arguments, rings the
+terminal bell, and asks `[y] confirm  [n] skip  [q] quit`. `y` runs the same
+confirmation as `confirm`; `n` lets the intent expire. The watch never creates
+or changes a decision and dispatches nothing. It requires an interactive
+terminal.
+
 The operator file contains an `adminToken` distinct from delegated execution
 authority. Never supply it to Claude. Confirmation checks session, frozen
 authority binding, exact arguments, state, revision, expiry and prior submission.

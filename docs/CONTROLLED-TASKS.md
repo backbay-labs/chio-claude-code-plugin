@@ -132,6 +132,8 @@ node scripts/control.mjs confirm \
   --operator-file /operator/private/kernel-operator.json
 ```
 
+`control.mjs watch` with the same options prompts for each requested intent as it arrives; see the [native runbook](./NATIVE-MODS.md#confirm-a-decision-outside-claude).
+
 Confirmation checks the exact revision, session, capability and original
 arguments and requires the pinned SDK to verify the signed kernel decision.
 The CLI inbox is the first outside-host review surface. It has no remote web or
