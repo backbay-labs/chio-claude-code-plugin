@@ -8939,6 +8939,14 @@ function validateTemplate(value) {
       const url = new URL(c.url);
       if (url.protocol !== "https:" && !(url.protocol === "http:" && url.hostname === "127.0.0.1")) throw new Error("collector requires HTTPS or exact loopback");
       if (url.username || url.password || url.hash || url.search || !c.artifactPointer.startsWith("/") || !c.statePointer.startsWith("/") || typeof c.passedValue !== "string" || !Array.isArray(c.failedValues) || c.failedValues.some((v) => typeof v !== "string")) throw new Error("invalid JSON collector");
+    } else if (c?.kind === "github") {
+      let base;
+      try {
+        base = new URL(c.apiBase ?? "https://api.github.com");
+      } catch {
+        base = void 0;
+      }
+      if (!base || typeof c.repository !== "string" || !/^[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/.test(c.repository) || base.protocol !== "https:" && !(base.protocol === "http:" && base.hostname === "127.0.0.1") || base.username || base.password || base.search || base.hash || c.checks !== void 0 && (!Array.isArray(c.checks) || !c.checks.length || c.checks.length > 64 || c.checks.some((name) => typeof name !== "string" || !name || name.length > 256)) || c.tokenFile !== void 0 && (typeof c.tokenFile !== "string" || resolve3(c.tokenFile) !== c.tokenFile)) throw new Error("invalid GitHub collector");
     } else throw new Error("unsupported evidence collector");
   }
   return value;

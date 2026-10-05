@@ -88,6 +88,15 @@ CI status is an observation of the configured report, not independent proof of
 deployment behavior. Configure separate requirements for CI, deployment
 identity, preview behavior and production behavior.
 
+A `github` collector reads GitHub check runs for the task's exact commit:
+`{ "kind": "github", "repository": "owner/name", "checks": ["build", "test"], "tokenFile": "/operator/private/github-token.json" }`.
+Every returned run must name the exact commit. Named checks must each conclude
+`success`; without `checks`, every run must conclude `success`, `neutral` or
+`skipped` and at least one must succeed. Missing or unfinished runs are
+`running`. The optional token file is a private JSON file `{ "token": "..." }`
+read only at collection; the token is never stored in the task record. Only
+`git_commit` artifacts can use this collector.
+
 ```sh
 node scripts/task.mjs collect \
   --task /operator/private/new-preview-task/journal/workflow/task.json \
