@@ -499,3 +499,9 @@ test("context stripped downstream stays queued instead of claiming delivery", { 
   expect((await $.command.run(command("chio"))).text).not.toContain("Original result attached");
   strip = false; expect((await $.prompt.submit(submit("retained"))).context?.length).toBe(1);
 });
+test("replacement reviews and uncertain operations announce arrivals at equal counts", () => {
+  const before = projection(), after = projection(); after.operations[0]!.requestId = "request-new";
+  expect(transitions(before, after, Date.now(), { authorityWarned: true })).toEqual(["Chio · 1 action awaiting review · /chio-review"]);
+  const oldUnknown = uncertain(projection()), newUnknown = uncertain(projection()); newUnknown.operations[0]!.requestId = "uncertain-new";
+  expect(transitions(oldUnknown, newUnknown, Date.now(), { authorityWarned: true })).toEqual(["Chio · original outcome unresolved · /chio-doctor"]);
+});
