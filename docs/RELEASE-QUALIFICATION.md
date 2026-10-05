@@ -1,17 +1,17 @@
 # Release qualification
 
-This lane builds `@chio/claude-code-plugin` from one immutable source commit. A passing workflow
+This lane builds `@chio-protocol/claude-code-plugin` from one immutable source commit. A passing workflow
 qualifies its source checks and installable package. It does not establish
 real-host I01-I08 acceptance, a compatible public kernel, or six-host completion.
 
 ## Current boundary
 
-- Source package version: `0.4.0-rc.1` (see `package.json`). This identifies the
+- Source package version: the `version` in `package.json`. This identifies the
   source candidate, not a published npm version. Existing local tarball hashes do
   not identify newly rebuilt archives, including metadata-only rebuilds.
 - Public repository identity: `backbay-labs/chio-claude-code-plugin`.
 - Workflow: `.github/workflows/release.yml`.
-- Registry package: `@chio/claude-code-plugin`; GitHub environment: `npm`.
+- Registry package: `@chio-protocol/claude-code-plugin`; GitHub environment: `npm`.
 - Release tags: `v<package.json version>`, reachable from `main`.
 - Manual `workflow_dispatch` always builds, tests, packs, performs a clean
   consumer install, and generates provenance. It never publishes to npm or
@@ -19,9 +19,9 @@ real-host I01-I08 acceptance, a compatible public kernel, or six-host completion
 - Source CI, real-host acceptance, kernel qualification, and any repository
   rulesets remain separate gates. Do not treat package checks as replacements.
 - Native publication also requires the live gates and delivered-runtime hashes
-  in [the native acceptance record](../acceptance/2026-10-03/native-mods/ACCEPTANCE.json).
-  `scripts/verify-native-qualification.mjs` rejects tag publication while that
-  record remains a candidate. Manual package qualification remains available.
+  in [the current candidate record](../acceptance/2026-10-05/rc5/ACCEPTANCE.json)
+  (`CANDIDATE_RECORD` in `scripts/verify-native-qualification.mjs`). That script
+  rejects tag publication while the record remains a candidate. Manual package qualification remains available.
 
 The release build uses Node 22.19.0, npm 11.8.0, `npm ci --ignore-scripts`, mandatory build and
 unit checks, and `npm run pack:release`. TypeScript packages also require a
@@ -59,6 +59,19 @@ absence of local
 `file:`/`link:`/`workspace:` dependencies, and installed entrypoint syntax.
 The cold consumer install is offline and therefore fails if an unpublished or omitted dependency is needed.
 
+The README's install and quickstart are qualified the same way.
+`scripts/acceptance/documented-install.mjs` installs the archive with the README
+command, `npm install -g`, with the archive in place of the registry name,
+offline and with an empty cache. It then requires `chio-claude --version` to
+print the package version, `--help` to list the commands, `chio-claude prepare`
+to reach the bundled bridge, and `chio-claude demo` to start, print its attach
+command and stop without leaving `attach.json` behind. CI and the release build
+run it on every candidate:
+
+```sh
+node scripts/acceptance/documented-install.mjs /absolute/new-candidate-directory/package.tgz
+```
+
 ## Hosted qualification and publication
 
 1. Commit source, package metadata, and evidence in their owning repository.
@@ -73,7 +86,8 @@ The cold consumer install is offline and therefore fails if an unpublished or om
    repository protection rules. Verify exact commit, kernel compatibility and
    acceptance records under the applicable release procedures. This workflow
    does not require adding human reviewers or changing protection rules.
-5. An npm maintainer must register this package's Trusted Publisher with GitHub
+5. [Publishing](PUBLISHING.md) gives the one-time bootstrap. An npm maintainer
+   must register this package's Trusted Publisher with GitHub
    owner `backbay-labs`, repository `chio-claude-code-plugin`, workflow filename `release.yml`,
    and environment `npm`. Permit direct `npm publish` for this workflow. Do not
    configure a stored `NPM_TOKEN` fallback or print authentication files.
@@ -107,11 +121,11 @@ do not assert that this tag or its assets already exist:
 ```sh
 sha256sum --check SHA256SUMS
 cosign verify-blob --certificate SHA256SUMS.pem --signature SHA256SUMS.sig \
-  --certificate-identity 'https://github.com/backbay-labs/chio-claude-code-plugin/.github/workflows/release.yml@refs/tags/v0.4.0-rc.1' \
+  --certificate-identity 'https://github.com/backbay-labs/chio-claude-code-plugin/.github/workflows/release.yml@refs/tags/v0.4.0-rc.5' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com SHA256SUMS
 slsa-verifier verify-artifact package.tgz \
   --provenance-path package.intoto.jsonl \
-  --source-uri github.com/backbay-labs/chio-claude-code-plugin --source-tag 'v0.4.0-rc.1'
+  --source-uri github.com/backbay-labs/chio-claude-code-plugin --source-tag 'v0.4.0-rc.5'
 ```
 
 A timeout or failure after npm publication can leave a published version without

@@ -21,7 +21,7 @@ function run(command, args, cwd = runtime, env = process.env, expectedCode = 0) 
 }
 const installation = run("npm", ["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", cache, artifact]);
 writeFileSync(join(evidence, "install.txt"), installation.stdout + installation.stderr);
-const installed = join(runtime, "node_modules/@chio/claude-code-plugin"); const pkg = JSON.parse(readFileSync(join(installed, "package.json")));
+const installed = join(runtime, "node_modules/@chio-protocol/claude-code-plugin"); const pkg = JSON.parse(readFileSync(join(installed, "package.json")));
 assert.equal(pkg.version, "0.4.0-rc.4"); assert.equal(pkg.scripts, undefined);
 for (const version of Object.values(pkg.dependencies ?? {})) assert.equal(/^(file:|link:|workspace:)/.test(version), false);
 await import(pathToFileURL(join(installed, pkg.main)).href);

@@ -1,5 +1,5 @@
 {
-  "name": "@chio/claude-code-plugin",
+  "name": "@chio-protocol/claude-code-plugin",
   "version": "0.4.0-rc.5",
   "description": "Native Chio session controls and kernel MCP execution for Claude Code",
   "type": "module",

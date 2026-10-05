@@ -22,7 +22,7 @@ env:
   TZ: UTC
   LC_ALL: C
   PACKAGE_DIRECTORY: .
-  PACKAGE_NAME: "@chio/claude-code-plugin"
+  PACKAGE_NAME: "@chio-protocol/claude-code-plugin"
   TAG_PREFIX: v
 
 jobs:
@@ -169,6 +169,8 @@ jobs:
           }
           NODE
           npm publish "${package_artifact}" --dry-run --ignore-scripts --access public --tag candidate
+          # The README install and quickstart, with this archive in place of the registry name.
+          node "${GITHUB_WORKSPACE}/scripts/acceptance/documented-install.mjs" "${package_artifact}"
       - name: Record source and artifact identities
         id: subjects
         env:
