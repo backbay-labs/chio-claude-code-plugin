@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { spawn } from "node:child_process";
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
@@ -52,4 +52,11 @@ test("receipt identifiers cannot escape their cache and session export cannot pi
   const f = fixture(t);
   assert.equal((await f.run("approve", ["../../operator"])).code, 1);
   const result = await f.run("receipt-export"); assert.equal(result.code, 1); assert.match(result.stderr, /exact session/);
+});
+test("attenuation commands the bridge refuses are not delivered", async () => {
+  for (const path of ["commands/budget-set.md", "commands/guard-pause.md", "scripts/budget-set.mjs", "scripts/guard-pause.mjs", "src/commands/budget-set.ts", "src/commands/guard-pause.ts"]) {
+    assert.equal(existsSync(join(root, path)), false, `${path} must stay removed until a parent-bound attenuation endpoint exists`);
+  }
+  const index = await import(join(root, "dist", "index.js"));
+  assert.equal(index.budgetSet, undefined); assert.equal(index.guardPause, undefined);
 });

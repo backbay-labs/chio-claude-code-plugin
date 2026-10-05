@@ -10287,20 +10287,20 @@ async function bond(args) {
     bondArgs.budgetUsd = budgetUsd;
   }
   const passport = await bridge.bond(bondArgs);
-  const budgetSet2 = budgetUsd !== void 0 && Number.isFinite(budgetUsd) && typeof passport.capabilityId === "string" && passport.capabilityId.length > 0;
+  const budgetSet = budgetUsd !== void 0 && Number.isFinite(budgetUsd) && typeof passport.capabilityId === "string" && passport.capabilityId.length > 0;
   const bondRecord = {
     sessionId,
     policyPath,
     passport,
     bondedAt: (/* @__PURE__ */ new Date()).toISOString()
   };
-  if (budgetSet2 && budgetUsd !== void 0) {
+  if (budgetSet && budgetUsd !== void 0) {
     bondRecord.budgetCapUsd = budgetUsd;
   }
   upsertBond(bondRecord);
   return JSON.stringify(
     {
-      status: budgetSet2 ? "bonded" : "bonded_without_budget",
+      status: budgetSet ? "bonded" : "bonded_without_budget",
       session: sessionId,
       policy: policyPath,
       passport: {
@@ -10310,7 +10310,7 @@ async function bond(args) {
         expiresAt: passport.expiresAt
       },
       ttl,
-      budgetUsd: budgetSet2 ? budgetUsd : null
+      budgetUsd: budgetSet ? budgetUsd : null
     },
     null,
     2
@@ -10371,78 +10371,6 @@ function formatValue(v) {
 ${indent(formatted, 2)}`;
     return `${k}: ${formatted}`;
   }).join("\n");
-}
-
-// src/commands/guard-pause.ts
-async function guardPause(args) {
-  const [guard, duration = "10m"] = args;
-  if (!guard) throw new Error("usage: /chio:guard-pause <guard-id> [duration]");
-  const bond2 = requireSessionBond();
-  const bridge = buildBridge();
-  const token = await bridge.attenuate(bond2.passport.capabilityId, {
-    scope: scopeForPausedGuard(guard)
-  });
-  bond2.pausedGuards = { ...bond2.pausedGuards ?? {} };
-  const expiresAt = addDuration(/* @__PURE__ */ new Date(), duration).toISOString();
-  bond2.pausedGuards[guard] = expiresAt;
-  upsertBond(bond2);
-  return JSON.stringify(
-    {
-      status: "paused",
-      guard,
-      duration,
-      expires_at: expiresAt,
-      capability_id: token.id,
-      delegation_chain: token.delegation_chain?.length ?? 0
-    },
-    null,
-    2
-  );
-}
-function scopeForPausedGuard(guard) {
-  void guard;
-  return { grants: [] };
-}
-function addDuration(base, duration) {
-  const m = duration.match(/^(\d+)(s|m|h|d)$/);
-  if (!m || !m[1] || !m[2]) return new Date(base.getTime() + 10 * 6e4);
-  const n = Number(m[1]);
-  const unit = m[2];
-  const mult = {
-    s: 1e3,
-    m: 6e4,
-    h: 36e5,
-    d: 864e5
-  };
-  return new Date(base.getTime() + n * mult[unit]);
-}
-
-// src/commands/budget-set.ts
-async function budgetSet(args) {
-  const [usdArg] = args;
-  if (!usdArg) throw new Error("usage: /chio:budget-set <usd>");
-  const usd = Number(usdArg);
-  if (!Number.isFinite(usd) || usd < 0) {
-    throw new Error(`invalid budget: "${usdArg}"`);
-  }
-  const bond2 = requireSessionBond();
-  const bridge = buildBridge();
-  const token = await bridge.attenuate(bond2.passport.capabilityId, {
-    budget: { maxUsd: usd }
-  });
-  const previous = bond2.budgetCapUsd ?? null;
-  bond2.budgetCapUsd = usd;
-  upsertBond(bond2);
-  return JSON.stringify(
-    {
-      status: "budget_set",
-      previous_usd: previous,
-      new_usd: usd,
-      capability_id: token.id
-    },
-    null,
-    2
-  );
 }
 
 // src/commands/approve.ts
@@ -10934,14 +10862,12 @@ export {
   approve,
   bond,
   bondPresence,
-  budgetSet,
   buildBridge,
   clearBond,
   getBond,
   getMostRecentBond,
   getPolicyPath,
   getSoleBond,
-  guardPause,
   policyShow,
   readState,
   receiptExport,

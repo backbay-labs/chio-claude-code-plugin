@@ -1,8 +1,6 @@
 // Public entrypoint. Each command is a self-contained module.
 export { bond } from "./commands/bond.js";
 export { policyShow } from "./commands/policy-show.js";
-export { guardPause } from "./commands/guard-pause.js";
-export { budgetSet } from "./commands/budget-set.js";
 export { approve } from "./commands/approve.js";
 export { revoke } from "./commands/revoke.js";
 export { receiptLast } from "./commands/receipt-last.js";

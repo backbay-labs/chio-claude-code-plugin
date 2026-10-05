@@ -203,3 +203,9 @@ substituted evidence is not archived as successful.
 actual host session ID; a random session fallback is not accepted. These repairs
 do not fix host-level hook failure or precheck gaps. Read the
 [host contract probe guide](../SMOKE.md) for the observed boundary and test scope.
+
+`/chio:budget-set` and `/chio:guard-pause` were removed after 0.4.0-rc.4. Both
+narrowed an existing capability, which the bridge refuses without a
+parent-bound kernel attenuation endpoint; the kernel does not provide one.
+Set a budget when bonding with `/chio:bond POLICY TTL BUDGET`, which issues a
+new capability instead of attenuating one.

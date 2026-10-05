@@ -11,9 +11,9 @@ export interface SessionBond {
   /** Absolute path of the most recent receipt JSON dumped by PreToolUse,
    *  so PostToolUse can stream it to the local store. */
   lastReceiptPath?: string;
-  /** Optional budget ceiling in USD, as of the last /chio:budget-set. */
+  /** Budget ceiling in USD from `/chio:bond POLICY TTL BUDGET`. */
   budgetCapUsd?: number;
-  /** Guard ids that are currently paused, with their expiry timestamps. */
+  /** Legacy field from the removed /chio:guard-pause; retained so old state parses. */
   pausedGuards?: Record<string, string>;
 }
 
