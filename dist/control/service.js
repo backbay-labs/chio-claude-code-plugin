@@ -9088,7 +9088,7 @@ function createWorkflowControl(access, options = {}) {
     if (!record) throw new Error("no original operation for this session");
     return record;
   }
-  function readContinuation(id) {
+  function readContinuation(id, persist = true) {
     if (!uuid(id)) throw new Error("invalid continuation id");
     const path = join3(continuations, id + ".json");
     let r = privateRead(path);
@@ -9097,21 +9097,21 @@ function createWorkflowControl(access, options = {}) {
     const verified = verifiedOriginal(access.config, original);
     if (r.state !== "completed" && !jobs.has(id) && verified) {
       r = { ...r, state: "completed", outcome: original.outcome, outcomeHash: digest(original.outcome), challenge: randomBytes(32).toString("hex") };
-      privateSave(path, r);
+      if (persist) privateSave(path, r);
     }
     if (r.state === "completed") {
       if (!verified || !r.outcome || digest(r.outcome) !== digest(original.outcome) || digest(r.outcome) !== r.outcomeHash || !/^[0-9a-f]{64}$/.test(r.challenge ?? "")) throw new Error("continuation does not bind the verified original result");
       if (r.delivery !== "confirmed" && r.served && r.receiptConfirmed === true && original.hostDeliveryConfirmed === true && original.acknowledged === true) {
         r = { ...r, delivery: "confirmed" };
-        privateSave(path, r);
+        if (persist) privateSave(path, r);
       }
     }
     return r;
   }
-  function retained() {
+  function retained(persist = true) {
     const names = readdirSync3(continuations).filter((n) => n.endsWith(".json"));
     if (names.length > 1e3) throw new Error("continuation retention requires maintenance");
-    return names.map((name) => publicContinuation(readContinuation(name.slice(0, -5))));
+    return names.map((name) => publicContinuation(readContinuation(name.slice(0, -5), persist)));
   }
   async function project2() {
     const task = options.taskPath ? await projectTask(readTask(options.taskPath, access.config.sessionId, access.binding)) : void 0;
@@ -9244,8 +9244,9 @@ function createWorkflowControl(access, options = {}) {
 }
 
 // src/control/report.ts
-var clean = (value) => String(value ?? "").replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/g, " ");
-var cell = (value) => clean(value).replace(/\|/g, "\\|") || "\u2014";
+var clean = (value) => String(value ?? "").replace(/[\p{Cc}\p{Cf}\u2028\u2029]/gu, " ");
+var md = (value) => clean(value).replace(/[\\`*_\[\]()<>!#|&~]/g, "\\$&");
+var cell = (value) => md(value) || "\u2014";
 var time = (ms) => new Date(ms).toISOString();
 function table(headers, rows) {
   return [`| ${headers.join(" | ")} |`, `| ${headers.map(() => "---").join(" | ")} |`, ...rows.map((row) => `| ${row.map(cell).join(" | ")} |`)];
@@ -9254,10 +9255,10 @@ function renderSessionReport({ status, continuations, generatedAt, relayEvents }
   const lines = [
     "# Chio session report",
     "",
-    `- Session: ${clean(status.sessionId)}`,
-    `- Scope: ${clean(status.scope)}`,
-    `- Authority: ${clean(status.authority)} \xB7 expires ${time(status.authorityExpiresAt * 1e3)}`,
-    `- Projection revision: ${clean(status.revision)}`,
+    `- Session: ${md(status.sessionId)}`,
+    `- Scope: ${md(status.scope)}`,
+    `- Authority: ${md(status.authority)} \xB7 expires ${time(status.authorityExpiresAt * 1e3)}`,
+    `- Projection revision: ${md(status.revision)}`,
     `- Dispatch fence: ${status.fenced ? "retained" : "clear"}`,
     `- Generated: ${time(generatedAt)}`,
     "",
@@ -9289,8 +9290,8 @@ function renderSessionReport({ status, continuations, generatedAt, relayEvents }
   const task = status.workflow?.task;
   lines.push("## Task", "");
   if (task) lines.push(
-    `- ${clean(task.title)} \xB7 ${clean(task.readiness)}`,
-    `- Artifact: ${clean(task.artifact.kind)} ${clean(task.artifact.digest)} \xB7 ${clean(task.artifact.label)}`,
+    `- ${md(task.title)} \xB7 ${md(task.readiness)}`,
+    `- Artifact: ${md(task.artifact.kind)} ${md(task.artifact.digest)} \xB7 ${md(task.artifact.label)}`,
     "",
     ...table(["Requirement", "State", "Evidence class", "Source", "Observed"], task.requirements.map((r) => [r.title, r.state, r.evidenceClass, r.source, r.observedAt ? time(r.observedAt) : void 0]))
   );
@@ -9299,7 +9300,7 @@ function renderSessionReport({ status, continuations, generatedAt, relayEvents }
   if (Array.isArray(relayEvents)) {
     const forwarded = relayEvents.filter((e) => e?.requestClass === "conversation" && e.forwarded && e.usage);
     const sum = (key) => forwarded.reduce((total, e) => total + (Number.isSafeInteger(e.usage[key]) ? e.usage[key] : 0), 0);
-    const models = [...new Set(forwarded.map((e) => clean(e.model)))];
+    const models = [...new Set(forwarded.map((e) => md(e.model)))];
     lines.push(
       "## Model usage",
       "",
@@ -9529,7 +9530,7 @@ async function controlReport(options) {
   const config = options.config;
   const workflow = createWorkflowControl({ config, binding: hash(gatewayBinding(config)), read: () => records(config), view: (record) => project(config, record), live: async () => false }, options.workflow);
   try {
-    return { status, continuations: workflow.retained() };
+    return { status, continuations: workflow.retained(false) };
   } finally {
     await workflow.close();
   }

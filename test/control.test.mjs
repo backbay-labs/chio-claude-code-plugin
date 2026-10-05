@@ -304,3 +304,19 @@ test("control report writes a private Markdown report once and never includes cr
   assert.ok(text.includes("# Chio session report")); assert.ok(text.includes(f.config.sessionId)); assert.ok(!text.includes(f.config.execution.bearerToken));
   await assert.rejects(operatorMain(["report", "--gateway-config", configPath, "--output", outPath]), /EEXIST/);
 });
+test("control report relay-events and option scoping", async t => {
+  const f = await fixture(t); const now = Math.floor(Date.now() / 1000);
+  const prepared = { ...f.config, sessionCredential: { schema: "chio.mcp.session-credential.v1", sessionId: f.config.execution.sessionId,
+    subjectKey: f.config.execution.subjectKey, capabilityIds: [f.config.execution.capabilityId], serverId: f.config.execution.serverId,
+    endpointPath: "/mcp", allowedTools: ["write_file"], issuedAt: now, expiresAt: now + 600 } };
+  const configPath = join(f.root, "scoped-config.json"); writeFileSync(configPath, JSON.stringify(prepared), { mode: 0o600 });
+  const good = join(f.root, "events.json"), bad = join(f.root, "events-bad.json");
+  writeFileSync(good, JSON.stringify([{ requestClass: "conversation", forwarded: true, model: "claude-sonnet-5-5", usage: { input_tokens: 1, output_tokens: 2 } }])); writeFileSync(bad, "{}");
+  const withEvents = join(f.root, "with-events.md"); await operatorMain(["report", "--gateway-config", configPath, "--output", withEvents, "--relay-events", good]);
+  assert.ok(readFileSync(withEvents, "utf8").includes("## Model usage"));
+  const refused = join(f.root, "refused.md");
+  await assert.rejects(operatorMain(["report", "--gateway-config", configPath, "--output", refused, "--relay-events", bad]), /JSON array/);
+  assert.throws(() => statSync(refused));
+  await assert.rejects(operatorMain(["report", "--gateway-config", configPath, "--output", refused, "--credential-output", join(f.root, "c.json")]), /credential-output/);
+  await assert.rejects(operatorMain(["status", "--gateway-config", configPath, "--output", refused]), /only for report/);
+});

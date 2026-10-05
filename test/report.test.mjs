@@ -17,10 +17,21 @@ test("the report renders every section and escapes table cells", () => {
   const relayEvents = [{ requestClass: "conversation", forwarded: true, model: "claude-sonnet-5-5", usage: { input_tokens: 10, output_tokens: 5, cache_creation_input_tokens: 0, cache_read_input_tokens: 2 } }];
   const text = renderSessionReport({ status, continuations, generatedAt: Date.UTC(2026, 9, 4), relayEvents });
   for (const heading of ["# Chio session report", "## Operations", "## Decisions", "## Continuations", "## Task", "## Model usage", "## What this report is"]) assert.ok(text.includes(heading), heading);
-  assert.ok(text.includes("request-b\\|pipe")); assert.ok(text.includes("receipt-b")); assert.ok(text.includes("reconcile_original"));
+  assert.ok(text.includes("request-b\\|pipe")); assert.ok(text.includes("receipt-b")); assert.ok(text.includes("reconcile\\_original"));
   assert.ok(text.includes("claude-sonnet-5-5")); assert.match(text, /1 request/);
 });
 test("the report omits model usage without relay events and never prints secrets it was not given", () => {
   const text = renderSessionReport({ status, continuations: [], generatedAt: 0 });
   assert.ok(!text.includes("## Model usage")); assert.ok(!/bearer|adminToken|delegated-not-admin/i.test(text));
+});
+test("hostile values are escaped in every interpolated position and keep the table shape", () => {
+  const hostile = ["a\\|b", "[x](https://e.example)", "![i](https://e.example/i.png)", "<img src=x>"];
+  for (const value of hostile) {
+    const s = { ...status, operations: [{ ...status.operations[0], requestId: value }], workflow: { ...status.workflow, task: { ...status.workflow.task, title: value } } };
+    const text = renderSessionReport({ status: s, continuations: [], generatedAt: 0, relayEvents: [{ requestClass: "conversation", forwarded: true, model: value, usage: { input_tokens: 1, output_tokens: 1 } }] });
+    const stripped = text.replace(/\\[\s\S]/g, "");
+    assert.ok(!/[\[(<]/.test(stripped.split("\n").filter(l => l.startsWith("|") || l.startsWith("- ")).join("\n")), value);
+    const ls = text.split("\n"); const row = ls[ls.indexOf("## Operations") + 4];
+    assert.equal(row.replace(/\\./g, "").split("|").length - 2, 8, value);
+  }
 });

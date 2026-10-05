@@ -32,9 +32,16 @@ export async function main(args = process.argv.slice(2)) {
   const prepared = requireSessionCredential(JSON.parse(readFileSync(configPath, "utf8")));
   const authorityExpiresAt = prepared.sessionCredential.expiresAt;
   if (action === "report") {
+    if (options["--credential-output"]) throw new Error("report does not accept --credential-output");
     if (!options["--output"]) throw new Error("report requires a new --output file");
     const result = await controlReport({ config, authorityExpiresAt, workflow: prepared.workflow });
-    const relayEvents = options["--relay-events"] ? JSON.parse(readFileSync(resolve(options["--relay-events"]), "utf8")) : undefined;
+    let relayEvents;
+    if (options["--relay-events"]) {
+      const eventsPath = resolve(options["--relay-events"]);
+      if (lstatSync(eventsPath).size > 16 * 1024 * 1024) throw new Error("relay events file exceeds its bound");
+      relayEvents = JSON.parse(readFileSync(eventsPath, "utf8"));
+      if (!Array.isArray(relayEvents)) throw new Error("relay events must be a JSON array (model-relay.json)");
+    }
     writeFileSync(resolve(options["--output"]), renderSessionReport({ ...result, generatedAt: Date.now(), relayEvents }), { mode: 0o600, flag: "wx" });
     process.stdout.write(JSON.stringify({ report: resolve(options["--output"]), dispatchPerformed: false }) + "\n");
     return;

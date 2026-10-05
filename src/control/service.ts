@@ -186,7 +186,7 @@ export async function controlReport(options: ControlOptions): Promise<{ status: 
   const status = await controlStatus(options);
   const config = options.config;
   const workflow = createWorkflowControl({ config, binding: hash(gatewayBinding(config)), read: () => records(config), view: record => project(config, record), live: async () => false }, options.workflow);
-  try { return { status, continuations: workflow.retained() }; } finally { await workflow.close(); }
+  try { return { status, continuations: workflow.retained(false) }; } finally { await workflow.close(); }
 }
 export async function startControlServer(options: ControlOptions) {
   // Freeze all authority selection before exposing a host credential.

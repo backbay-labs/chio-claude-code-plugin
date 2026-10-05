@@ -51,7 +51,7 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
     if (!record) throw new Error("no original operation for this session");
     return record;
   }
-  function readContinuation(id: unknown): ContinuationRecord {
+  function readContinuation(id: unknown, persist = true): ContinuationRecord {
     if (!uuid(id)) throw new Error("invalid continuation id");
     const path = join(continuations, id + ".json");
     let r = privateRead<ContinuationRecord>(path);
@@ -64,7 +64,7 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
     // durably retained the exact result. Recover that result, never its effect.
     if (r.state !== "completed" && !jobs.has(id) && verified) {
       r = { ...r, state: "completed", outcome: original.outcome as ExecutionOutcome, outcomeHash: digest(original.outcome), challenge: randomBytes(32).toString("hex") };
-      privateSave(path, r);
+      if (persist) privateSave(path, r);
     }
     if (r.state === "completed") {
       if (!verified || !r.outcome || digest(r.outcome) !== digest(original.outcome) || digest(r.outcome) !== r.outcomeHash
@@ -72,15 +72,15 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
       // Receiving native proof and kernel ACK precedes the final continuation
       // save. A restart can recognize those retained facts without another ACK.
       if (r.delivery !== "confirmed" && r.served && r.receiptConfirmed === true && original.hostDeliveryConfirmed === true && original.acknowledged === true) {
-        r = { ...r, delivery: "confirmed" }; privateSave(path, r);
+        r = { ...r, delivery: "confirmed" }; if (persist) privateSave(path, r);
       }
     }
     return r;
   }
-  function retained(): ContinuationView[] {
+  function retained(persist = true): ContinuationView[] {
     const names = readdirSync(continuations).filter(n => n.endsWith(".json"));
     if (names.length > 1000) throw new Error("continuation retention requires maintenance");
-    return names.map(name => publicContinuation(readContinuation(name.slice(0, -5))));
+    return names.map(name => publicContinuation(readContinuation(name.slice(0, -5), persist)));
   }
   async function project(): Promise<WorkflowView> {
     const task = options.taskPath ? await projectTask(readTask(options.taskPath, access.config.sessionId, access.binding)) : undefined;
