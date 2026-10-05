@@ -371,3 +371,8 @@ approval proposals per run. Its fixture also caps executed tool requests at 128.
 Exact gateway resumption and retained outcome inspection remain available at the
 admission limit. Start a new demo directory after inspecting retained work. These
 limits bound fixture files and journals; they confer no protection.
+
+New workflow JSON records and review intents stop at 1,000 records per directory.
+Capacity refusal preserves original records, continuation claims, and acknowledgement
+updates. The operator must inspect retained work before preparing a new journal;
+repeated requests never delete evidence to make space.

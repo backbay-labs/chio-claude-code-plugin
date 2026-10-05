@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
-import { mkdtempSync, readFileSync, readdirSync, rmSync, renameSync } from "node:fs";
+import { mkdtempSync, readFileSync, readdirSync, rmSync, renameSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { createGateway, gatewayApprovalPath, operationKey } from "../dist/gateway.js";
@@ -213,4 +213,21 @@ test("a report on an unused workflow never creates journal directories", async t
   const report = await controlReport({ config: f.config, authorityExpiresAt: 0 });
   assert.deepEqual(report.continuations, []);
   assert.deepEqual(readdirSync(f.config.journalDir).sort(), before);
+});
+
+test("full proposal retention refuses a new host request before writing another record", async t => {
+  const f = await fixture(t), directory = join(f.config.journalDir, "workflow", "proposals");
+  for (let i = 0; i < 1000; i++) writeFileSync(join(directory, randomUUID() + ".json"), "{}", { mode: 0o600 });
+  assert.equal((await f.request("/proposals", { id: randomUUID(), tool: "write_file", arguments: { path: "blocked", content: "x" } })).status, 409);
+  assert.equal(readdirSync(directory).length, 1000);
+  assert.deepEqual(f.counts(), { effects: 0, charges: 0, acks: 0 });
+});
+test("new workflow records stop at capacity while retained records and acknowledgements remain writable", async t => {
+  const root = mkdtempSync(join(tmpdir(), "chio-workflow-quota-")); t.after(() => rmSync(root, { recursive: true, force: true }));
+  for (let i = 0; i < 1000; i++) writeFileSync(join(root, i + ".json"), "{}", { mode: 0o600 });
+  assert.throws(() => privateSave(join(root, "overflow.json"), {}, true), /retention/);
+  privateSave(join(root, "0.json"), { retained: true });
+  privateSave(join(root, "0.ack-claim"), { proof: true }, true);
+  assert.equal(JSON.parse(readFileSync(join(root, "0.json"), "utf8")).retained, true);
+  assert.equal(readdirSync(root).filter(n => n.endsWith(".json")).length, 1000);
 });

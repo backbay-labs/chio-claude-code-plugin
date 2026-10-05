@@ -7362,7 +7362,7 @@ var require_dist = __commonJS({
 // src/control/service.ts
 import { createServer } from "node:http";
 import { createHash as createHash4, randomBytes as randomBytes2, randomUUID as randomUUID3, timingSafeEqual } from "node:crypto";
-import { closeSync as closeSync4, existsSync as existsSync2, fsyncSync as fsyncSync4, lstatSync as lstatSync4, mkdirSync as mkdirSync4, openSync as openSync4, readFileSync as readFileSync4, readdirSync as readdirSync4, renameSync as renameSync3, writeFileSync as writeFileSync4 } from "node:fs";
+import { closeSync as closeSync4, existsSync as existsSync2, fsyncSync as fsyncSync4, lstatSync as lstatSync4, mkdirSync as mkdirSync4, openSync as openSync4, readFileSync as readFileSync4, readdirSync as readdirSync5, renameSync as renameSync3, writeFileSync as writeFileSync4 } from "node:fs";
 import { join as join4, resolve as resolve5 } from "node:path";
 
 // node_modules/@chio-protocol/sdk/dist/invariants/errors.js
@@ -8877,12 +8877,12 @@ if (process.argv[1] && realpathSync2(process.argv[1]) === realpathSync2(fileURLT
 
 // src/workflow/control.ts
 import { randomBytes, randomUUID as randomUUID2 } from "node:crypto";
-import { existsSync, readdirSync as readdirSync3 } from "node:fs";
+import { existsSync, readdirSync as readdirSync4 } from "node:fs";
 import { join as join3, resolve as resolve4 } from "node:path";
 
 // src/workflow/store.ts
 import { createHash as createHash3, randomUUID } from "node:crypto";
-import { closeSync as closeSync3, fsyncSync as fsyncSync3, lstatSync as lstatSync3, mkdirSync as mkdirSync3, openSync as openSync3, readFileSync as readFileSync3, renameSync as renameSync2, unlinkSync as unlinkSync3, writeFileSync as writeFileSync3 } from "node:fs";
+import { closeSync as closeSync3, fsyncSync as fsyncSync3, lstatSync as lstatSync3, mkdirSync as mkdirSync3, openSync as openSync3, readFileSync as readFileSync3, readdirSync as readdirSync3, renameSync as renameSync2, unlinkSync as unlinkSync3, writeFileSync as writeFileSync3 } from "node:fs";
 import { dirname as dirname2 } from "node:path";
 function digest(value) {
   return createHash3("sha256").update(canonicalizeJson(value)).digest("hex");
@@ -8896,8 +8896,12 @@ function privateDirectory(path) {
   mkdirSync3(path, { recursive: true, mode: 448 });
   privatePath(path, true);
 }
+function assertRecordCapacity(directory) {
+  if (readdirSync3(directory).filter((name) => name.endsWith(".json")).length >= 1e3) throw new Error("workflow retention requires operator maintenance");
+}
 function privateSave(path, value, exclusive = false) {
   privatePath(dirname2(path), true);
+  if (exclusive && path.endsWith(".json")) assertRecordCapacity(dirname2(path));
   const contents = JSON.stringify(value);
   if (Buffer.byteLength(contents) > 1024 * 1024) throw new Error("workflow record exceeds limit");
   const temporary = exclusive ? path : path + "." + randomUUID() + ".tmp";
@@ -9111,7 +9115,7 @@ function createWorkflowControl(access, options = {}, readOnly = false) {
   function retained(persist = !readOnly) {
     if (readOnly && persist) throw new Error("read-only continuation projection");
     if (!existsSync(continuations)) return [];
-    const names = readdirSync3(continuations).filter((n) => n.endsWith(".json"));
+    const names = readdirSync4(continuations).filter((n) => n.endsWith(".json"));
     if (names.length > 1e3) throw new Error("continuation retention requires maintenance");
     return names.map((name) => publicContinuation(readContinuation(name.slice(0, -5), persist)));
   }
@@ -9130,6 +9134,7 @@ function createWorkflowControl(access, options = {}, readOnly = false) {
     const record = find(input.requestId), view = access.view(record);
     if (view.state !== "awaiting_approval" || view.review?.decision !== "granted" || input.revision !== view.review.revision || !record.proposal) throw new Error("no exact accepted grant for continuation");
     const claim = join3(continuations, digest(record.requestId) + ".claim");
+    assertRecordCapacity(continuations);
     privateSave(claim, { requestId: record.requestId, revision: view.review.revision }, true);
     const id = randomUUID2(), path = join3(continuations, id + ".json");
     const pending = {
@@ -9370,7 +9375,7 @@ function intentRecords(config) {
   const dir = join4(config.journalDir, "control-intents");
   if (!existsSync2(dir)) return [];
   privatePath(dir, true);
-  const names = readdirSync4(dir).filter((name) => name.endsWith(".json"));
+  const names = readdirSync5(dir).filter((name) => name.endsWith(".json"));
   if (names.length > 1e3) throw new Error("control intent retention requires operator maintenance");
   return names.map((name) => {
     const r = privateJson2(join4(dir, name));
@@ -9383,7 +9388,7 @@ function publicIntent({ id, kind, state, sessionId, requestId, expiresAt }) {
 }
 function records(config) {
   gatewayStatus(config);
-  const names = readdirSync4(config.journalDir).filter((name) => name.endsWith(".json"));
+  const names = readdirSync5(config.journalDir).filter((name) => name.endsWith(".json"));
   if (names.length > 1e3) throw new Error("operation projection bound exceeded");
   return names.sort().map((name) => {
     const r = privateJson2(join4(config.journalDir, name));
@@ -9395,7 +9400,7 @@ function approval(config, record) {
   if (!record.proposal) return void 0;
   const path = gatewayApprovalPath(config, record.requestId);
   if (!existsSync2(resolve5(path, ".."))) return void 0;
-  if (!readdirSync4(resolve5(path, "..")).includes(`${operationKey(record.requestId)}.json`)) return void 0;
+  if (!readdirSync5(resolve5(path, "..")).includes(`${operationKey(record.requestId)}.json`)) return void 0;
   const artifact = privateJson2(path);
   return verifyApprovalToolCall(artifact.toolCallParams, {
     ...config.execution,
@@ -9415,7 +9420,7 @@ function project(config, record) {
   if (record.proposal) {
     const approved = approval(config, record);
     if (approved) decision = approved.decision === "approved" ? "granted" : "declined";
-    else if (existsSync2(join4(config.journalDir, "approvals")) && readdirSync4(join4(config.journalDir, "approvals")).includes(`${operationKey(record.requestId)}.json`)) decision = "expired";
+    else if (existsSync2(join4(config.journalDir, "approvals")) && readdirSync5(join4(config.journalDir, "approvals")).includes(`${operationKey(record.requestId)}.json`)) decision = "expired";
   }
   const nextAction = state === "pending" || state === "unknown" ? "reconcile_original" : state === "denied" ? "linked_continuation" : state === "awaiting_approval" ? decision === "granted" ? "explicit_resume" : decision === "required" ? "review" : "linked_continuation" : state === "completed" && (!record.acknowledged || record.hostDeliveryRequired !== false && !record.hostDeliveryConfirmed) ? "acknowledge_delivery" : "none";
   const view = {
@@ -9464,7 +9469,7 @@ async function controlStatus(options) {
   const task = workflow?.taskPath ? await projectTask(readTask(workflow.taskPath, config.sessionId, hash(gatewayBinding(config)))) : void 0;
   const templates = workflow?.catalogPath ? readCatalog(workflow.catalogPath).map(templateView) : [];
   const taskRequestDir = join4(config.journalDir, "workflow", "task-requests");
-  const requestNames = existsSync2(taskRequestDir) ? readdirSync4(taskRequestDir).filter((name) => name.endsWith(".json")) : [];
+  const requestNames = existsSync2(taskRequestDir) ? readdirSync5(taskRequestDir).filter((name) => name.endsWith(".json")) : [];
   if (requestNames.length > 1e3) throw new Error("task request retention requires maintenance");
   const requests = requestNames.map((name) => {
     const r = privateJson2(join4(taskRequestDir, name));
@@ -9504,6 +9509,7 @@ function requestIntent(options, input) {
     if (!record2 || record2.state !== "awaiting_approval" || project(config, record2).review?.decision !== "required" || reviewRevision(config, record2) !== input.revision) throw new Error("review is stale, already decided, or belongs to another action");
   }
   const existing = intentRecords(config);
+  if (existing.length >= 1e3) throw new Error("control intent retention requires operator maintenance");
   if (existing.some((intent) => intent.kind !== "alternative" && intent.requestId === input.requestId && intent.revision === input.revision)) throw new Error("review intent already recorded; inspect its original outcome");
   const record = {
     schema: "chio.control.intent.v1",

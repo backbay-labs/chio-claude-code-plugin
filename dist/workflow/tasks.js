@@ -9,7 +9,7 @@ import { resolve as resolve2 } from "node:path";
 
 // src/workflow/store.ts
 import { createHash as createHash3, randomUUID } from "node:crypto";
-import { closeSync as closeSync2, fsyncSync as fsyncSync2, lstatSync as lstatSync2, mkdirSync as mkdirSync2, openSync as openSync2, readFileSync as readFileSync2, renameSync as renameSync2, unlinkSync as unlinkSync2, writeFileSync as writeFileSync2 } from "node:fs";
+import { closeSync as closeSync2, fsyncSync as fsyncSync2, lstatSync as lstatSync2, mkdirSync as mkdirSync2, openSync as openSync2, readFileSync as readFileSync2, readdirSync as readdirSync2, renameSync as renameSync2, unlinkSync as unlinkSync2, writeFileSync as writeFileSync2 } from "node:fs";
 import { dirname } from "node:path";
 
 // node_modules/@chio-protocol/sdk/dist/invariants/errors.js
@@ -1310,8 +1310,12 @@ function privateRead(path) {
   if (lstatSync2(path).size > 1024 * 1024) throw new Error("private workflow record exceeds limit");
   return JSON.parse(readFileSync2(path, "utf8"));
 }
+function assertRecordCapacity(directory) {
+  if (readdirSync2(directory).filter((name) => name.endsWith(".json")).length >= 1e3) throw new Error("workflow retention requires operator maintenance");
+}
 function privateSave(path, value, exclusive = false) {
   privatePath(dirname(path), true);
+  if (exclusive && path.endsWith(".json")) assertRecordCapacity(dirname(path));
   const contents = JSON.stringify(value);
   if (Buffer.byteLength(contents) > 1024 * 1024) throw new Error("workflow record exceeds limit");
   const temporary = exclusive ? path : path + "." + randomUUID() + ".tmp";
