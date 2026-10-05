@@ -85,9 +85,11 @@ Approve here when the request appears. ${interactive ? "Press q to stop the demo
       // A closed terminal, SIGTERM or an outside SIGINT quits the watch screen the way q does, so the demo still shuts down.
       const quit = () => process.stdin.emit("data", "q");
       for (const signal of ["SIGINT", "SIGTERM", "SIGHUP"]) process.on(signal, quit);
+      process.stdin.once("end", quit);
       await watch({ statusOptions: { config: d.config, authorityExpiresAt: credential.expiresAt, scope: "demo_fixture" }, operator: d.operator, input: process.stdin, output: process.stdout });
     } else {
-      await new Promise(stop => { process.once("SIGINT", stop); process.once("SIGTERM", stop); });
+      // on, not once: a forwarded signal can arrive twice, and the second must not cut shutdown short.
+      await new Promise(stop => { process.on("SIGINT", stop); process.on("SIGTERM", stop); });
     }
   } finally { await d.close(); }
   console.log(`Demo stopped. Files remain in ${d.directory} (owner/, journal/).`);

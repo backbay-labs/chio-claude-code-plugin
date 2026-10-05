@@ -55,7 +55,9 @@ try {
   const attach = join(home, "demos", demoName, "attach.json");
   if (!existsSync(attach)) fail("demo did not write attach.json");
   demo.kill("SIGTERM");
-  const stopped = await Promise.race([closed.then(() => true), new Promise(done => setTimeout(() => done(false), 15_000))]);
+  let timer;
+  const stopped = await Promise.race([closed.then(() => true), new Promise(done => { timer = setTimeout(() => done(false), 15_000); })]);
+  clearTimeout(timer);
   if (!stopped) fail("demo did not stop within 15 s of SIGTERM");
   if (existsSync(attach)) fail("demo left attach.json after stopping");
   console.log(JSON.stringify({ package: pkg.name, version: pkg.version, command: `npm install -g ${pkg.name}`, archive, bin: "chio-claude", pins: "resolved from the installed record", prepare: "reached the bundled bridge", demo: "started and stopped" }));

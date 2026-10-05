@@ -168,9 +168,10 @@ function runNode(args, { input, env, onStdout } = {}) {
       child.stdout.setEncoding("utf8").on("data", data => { buffer += data; let end; while ((end = buffer.indexOf("\n")) >= 0) { onStdout(buffer.slice(0, end)); buffer = buffer.slice(end + 1); } });
       child.stdout.on("end", () => { if (buffer) onStdout(buffer); buffer = ""; });
     }
-    // A terminal delivers Ctrl+C and hangup to the whole process group, child included; elsewhere
-    // forward them. Either way stay alive until the child has written its outcome.
-    const onInt = () => { if (!process.stdin.isTTY) child.kill("SIGINT"); }, onHup = () => { if (!process.stdin.isTTY) child.kill("SIGHUP"); }, onTerm = () => child.kill("SIGTERM");
+    // A terminal delivers Ctrl+C to the whole process group, child included; elsewhere forward it.
+    // Hangup is always forwarded: when chio-claude is the session leader (ssh -t, tmux), only it
+    // receives one. Either way stay alive until the child has written its outcome.
+    const onInt = () => { if (!process.stdin.isTTY) child.kill("SIGINT"); }, onHup = () => child.kill("SIGHUP"), onTerm = () => child.kill("SIGTERM");
     process.on("SIGINT", onInt); process.on("SIGHUP", onHup); process.on("SIGTERM", onTerm);
     child.once("error", error => { console.error(`chio-claude: ${error.message}`); done(1); });
     child.once("close", (code, signal) => { process.off("SIGINT", onInt); process.off("SIGHUP", onHup); process.off("SIGTERM", onTerm); done(code ?? (signal ? 1 : 0)); });

@@ -204,7 +204,7 @@ flowchart LR
   K -->|Signed evidence| G
 ```
 
-The macOS sandbox restricts Claude to the operator's local MCP transport and bounded Messages relay. Kernel credentials, the authoritative journal, protected storage and resource credentials remain outside the host's access.
+The macOS sandbox restricts Claude to the operator's local MCP transport and bounded Messages relay, plus the session-scoped control service in an interactive session. Kernel credentials, the authoritative journal, protected storage and resource credentials remain outside the host's access.
 
 | Available in restricted mode | Unavailable in this mode |
 | --- | --- |
