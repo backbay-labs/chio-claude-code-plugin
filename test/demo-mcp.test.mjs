@@ -41,6 +41,7 @@ test("an unreviewed read of an earlier write completes verified and leaves no fe
   const w = await d.tool("write_file", writeArgs("notes/hello.txt")); assert.equal(w.state, "awaiting_approval");
   await approveAndContinue(d, w.requestId);
   const read = await d.tool("read_text_file", { path: "notes/hello.txt" });
+  assert.equal(read.scope, "demo_fixture"); assert.match(read.notice, /DEMO fixture kernel.*nothing protected/);
   assert.equal(read.state, "completed"); assert.equal(read.evidence, "verified"); assert.equal(read.result.isError, false); assert.equal(read.result.content[0].text, "hello");
   const s = await status(d);
   assert.equal(s.fenced, false); assert.equal(s.unresolved, 0);

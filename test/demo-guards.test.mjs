@@ -31,9 +31,12 @@ test("control.mjs status and report keep a demo configuration labeled", async t 
   const out = spawnSync(process.execPath, [script("control.mjs"), "status", "--gateway-config", config], { encoding: "utf8" });
   assert.equal(JSON.parse(out.stdout).scope, "demo_fixture");
   const inbox = spawnSync(process.execPath, [script("control.mjs"), "inbox", "--gateway-config", config], { encoding: "utf8" }); assert.equal(inbox.status, 0, inbox.stderr);
+  assert.equal(JSON.parse(inbox.stdout).scope, "demo_fixture");
+  assert.match(inbox.stdout, /DEMO fixture kernel.*nothing protected/);
   const report = join(d.base, "r.md");
   assert.equal(spawnSync(process.execPath, [script("control.mjs"), "report", "--gateway-config", config, "--output", report], { encoding: "utf8" }).status, 0);
   assert.match(readFileSync(report, "utf8"), /Scope: demo\\?_fixture/);
+  assert.match(readFileSync(report, "utf8"), /DEMO fixture kernel.*nothing protected/);
 });
 function terminal() {
   const input = new PassThrough(); input.isTTY = true; input.setRawMode = () => input;

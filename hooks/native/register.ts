@@ -82,11 +82,12 @@ async function open($: EngineInterface, options: PluginOptions, requestId?: stri
 }
 /** Queues only when the host session is still the one the result was received in. */
 async function queueShare($: EngineInterface, session: string, continuationId: string, received: { requestId: string; result: unknown; receiptId: string; outcomeHash: string }): Promise<boolean> {
-  if (await $.session.id() !== session || sessionId !== session) return false;
+  if (await $.session.id() !== session || sessionId !== session || !status || status.sessionId !== session) return false;
   const tool = status?.operations.find(op => op.requestId === received.requestId)?.tool;
-  shareQueue = [...shareQueue.filter(record => record.continuationId !== continuationId), { continuationId, sessionId: session, requestId: received.requestId, ...(tool ? { tool } : {}), receiptId: received.receiptId, outcomeHash: received.outcomeHash, result: received.result }];
+  shareQueue = [...shareQueue.filter(record => record.continuationId !== continuationId), { demo: status.scope === "demo_fixture", continuationId, sessionId: session, requestId: received.requestId, ...(tool ? { tool } : {}), receiptId: received.receiptId, outcomeHash: received.outcomeHash, result: received.result }];
   return true;
 }
+const demoNotice = () => status?.scope === "demo_fixture" ? "DEMO fixture kernel · nothing protected\n" : "";
 const SHARE_NOTICE = "Original result received through native control. Claude receives it with your next message; model delivery is not yet confirmed.";
 export const register: Register = (on, options) => {
   on("engine.create", async (_, e, next) => {
@@ -183,7 +184,7 @@ export const register: Register = (on, options) => {
     if (e.args.trim()) throw new Error("completion targets the current task");
     const current = await refresh($, options); pane = "task";
     if (interactive) await $.ui.open({ id: "chio", title: "Chio task", focus: true, closeOnEscape: true });
-    return { text: taskText(current?.workflow?.task, current?.workflow?.templates) };
+    return { text: demoNotice() + taskText(current?.workflow?.task, current?.workflow?.templates) };
   }).catch(() => ({ text: "Task evidence unavailable for this session.", exitCode: 1 }));
   on("command.run", { command: "chio-task" }, async ($, e) => {
     const current = await refresh($, options); pane = "task";
@@ -195,13 +196,13 @@ export const register: Register = (on, options) => {
       notice = "Task scope requested. The trusted operator prepares a new delegated session; no authority granted or action dispatched.";
     }
     if (interactive) await $.ui.open({ id: "chio", title: "Chio task", focus: true, closeOnEscape: true });
-    return { text: taskText(current?.workflow?.task, current?.workflow?.templates) + (id ? "\n" + notice : "") };
+    return { text: demoNotice() + taskText(current?.workflow?.task, current?.workflow?.templates) + (id ? "\n" + notice : "") };
   }).catch(() => ({ text: "Task request unconfirmed. Inspect the original session.", exitCode: 1 }));
   on("command.run", { command: "chio-continue" }, async ($, e) => {
     const current = await refresh($, options), operation = current?.operations.find(o => o.requestId === e.args.trim());
     if (!operation?.review) throw new Error("exact granted operation required");
     const continuation = await $.chio.continueAction({ requestId: operation.requestId, revision: operation.review.revision });
-    notice = "Continuation submitted for original operation " + continuation.requestId + ". Receive its result with /chio-outcome " + continuation.id + ". No planning turn was started.";
+    notice = demoNotice() + "Continuation submitted for original operation " + continuation.requestId + ". Receive its result with /chio-outcome " + continuation.id + ". No planning turn was started.";
     await refresh($, options); return { text: notice };
   }).catch(() => ({ text: "Continuation unavailable or unresolved. Inspect the original operation; do not retry its effect.", exitCode: 1 }));
   on("command.run", { command: "chio-outcome" }, async ($, e) => {
@@ -210,7 +211,7 @@ export const register: Register = (on, options) => {
     if (!result.ready) return { text: "Original continuation " + result.continuation.state + ". Its fence remains intact." };
     await refresh($, options);
     if (!await queueShare($, session, e.args.trim(), result)) return { text: "Original result was received, but the session changed; it was not shared with Claude.", exitCode: 1 };
-    notice = SHARE_NOTICE;
+    notice = demoNotice() + SHARE_NOTICE;
     return { text: notice + "\n" + safeText(JSON.stringify(result.result, null, 2)) + "\nReceipt: " + safeText(result.receiptId) };
   }).catch(() => ({ text: "Original result or its delivery remains unresolved. Inspect retained evidence; do not dispatch again.", exitCode: 1 }));
   on("command.run", { command: "chio-why" }, async ($, e) => {
@@ -271,7 +272,7 @@ export const register: Register = (on, options) => {
     const operation = status?.operations.find(op => op.requestId === requestId);
     if (!operation) return existing;
     const { Box, Button } = $.ui.resolve(e);
-    return Box({ flexDirection: "column", children: [existing, Button({ key: "chio-evidence", label: `Chio evidence · ${operation.evidence} · ${operation.state}`,
+    return Box({ flexDirection: "column", children: [existing, Button({ key: "chio-evidence", label: `${demoNotice()}Chio evidence · ${operation.evidence} · ${operation.state}`,
       onPress: async () => { try { await open($, options, operation.requestId); } catch { notice = "Evidence unavailable for the current session."; $.ui.invalidate("ui.render"); } } })] });
   }).catch(($, e, next) => next(e));
   on("ui.render", { component: "Pane" }, ($, e, next) => {
@@ -310,12 +311,12 @@ export const register: Register = (on, options) => {
     }
     const continuation = status?.continuations?.find(c => c.requestId === operation?.requestId);
     if (fresh && operation?.review?.decision === "granted" && status?.workflow?.continuation && !continuation) rows.push(Button({ key: "continue", label: "Continue this exact action", onPress: async () => {
-      try { const submitted = await $.chio.continueAction({ requestId: operation.requestId, revision: operation.review!.revision }); notice = "Continuation submitted · " + submitted.id; await refresh($, options); }
+      try { const submitted = await $.chio.continueAction({ requestId: operation.requestId, revision: operation.review!.revision }); notice = demoNotice() + "Continuation submitted · " + submitted.id; await refresh($, options); }
       catch { notice = "Continuation unresolved; inspect the original operation without retry."; }
       $.ui.invalidate("ui.render");
     } }));
     if (continuation && continuation.state !== "unknown" && continuation.delivery !== "confirmed") rows.push(Button({ key: "outcome", label: "Receive original continuation result", onPress: async () => {
-      try { const session = await $.session.id(); const result = await $.chio.receiveOutcome({ continuationId: continuation.id }); await refresh($, options); const queued = result.ready && await queueShare($, session, continuation.id, result); notice = result.ready && !queued ? "Original result received, but the session changed; it was not shared with Claude." : result.ready ? SHARE_NOTICE + "\n" + safeText(JSON.stringify(result.result, null, 2)) : "Original continuation " + result.continuation.state + "; fence retained."; }
+      try { const session = await $.session.id(); const result = await $.chio.receiveOutcome({ continuationId: continuation.id }); await refresh($, options); const queued = result.ready && await queueShare($, session, continuation.id, result); notice = result.ready && !queued ? "Original result received, but the session changed; it was not shared with Claude." : result.ready ? demoNotice() + SHARE_NOTICE + "\n" + safeText(JSON.stringify(result.result, null, 2)) : "Original continuation " + result.continuation.state + "; fence retained."; }
       catch { notice = "Original result delivery unresolved; do not dispatch again."; }
       $.ui.invalidate("ui.render");
     } }));

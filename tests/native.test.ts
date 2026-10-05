@@ -348,8 +348,8 @@ async function readyOutcome(result: unknown) {
   const outcome = { state: "completed", evidence: "verified", requestId: "request-a", result, receipt: { id: "receipt-a" } };
   return { schema: "chio.control.outcome.v1", ready: true, continuation: { id: continuationId, requestId: "request-a", state: "completed", delivery: "pending" }, outcome, outcomeHash: await outcomeHash(outcome), challenge: "c".repeat(64) };
 }
-function outcomeStub(on: On, getSession: () => string, ready: Record<string, unknown>, onAck?: () => void | Promise<void>, onSubmit?: (e: { text: string; context?: readonly string[] }) => { text: string; context?: readonly string[] } | { drop: string }) {
-  const value = projection(); value.continuations = [{ id: continuationId, requestId: "request-a", state: "completed", delivery: "pending" }];
+function outcomeStub(on: On, getSession: () => string, ready: Record<string, unknown>, onAck?: () => void | Promise<void>, onSubmit?: (e: { text: string; context?: readonly string[] }) => { text: string; context?: readonly string[] } | { drop: string }, scope: ControlStatus["scope"] = "kernel_mcp") {
+  const value = projection(); value.scope = scope; value.continuations = [{ id: continuationId, requestId: "request-a", state: "completed", delivery: "pending" }];
   on("session.id", () => ({ value: getSession() }));
   on("ui.close", () => ({ value: undefined }));
   on("command.register", ($, e) => ({ value: { command: e.name } }));
@@ -617,3 +617,17 @@ test("native review text neutralizes bidi and invisible Unicode controls", { opt
   expect(/[\p{Cf}\u2028\u2029]/u.test(answer.text ?? "")).toBe(false);
   expect(answer.text).toContain("safe�txt.exe��");
 });
+
+
+test("demo outcomes remain labeled when shared with Claude", { options }, async ($, on) => {
+  outcomeStub(on, () => "session-a", await readyOutcome({ written: "demo.txt" }), undefined, undefined, "demo_fixture");
+  const received = await $.command.run(command("chio-outcome", continuationId));
+  expect(received.text).toContain("DEMO fixture kernel · nothing protected");
+  const sent = await $.prompt.submit(submit("what happened?"));
+  expect(sent.context?.length).toBe(1);
+  expect(sent.context![0]).toContain("DEMO fixture");
+  expect(sent.context![0]).toContain("nothing protected");
+  expect(sent.context![0]).not.toContain("protected resource");
+  expect(sent.context![0]).not.toContain("Chio verified result");
+});
+

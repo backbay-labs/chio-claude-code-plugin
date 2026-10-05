@@ -9259,6 +9259,7 @@ function renderSessionReport({ status, continuations, generatedAt, relayEvents }
   const lines = [
     "# Chio session report",
     "",
+    ...status.scope === "demo_fixture" ? ["DEMO fixture kernel \xB7 nothing protected", ""] : [],
     `- Session: ${md(status.sessionId)}`,
     `- Scope: ${["isolated_kernel_mcp", "demo_fixture"].includes(status.scope) ? md(status.scope) : "not recorded in the journal (the launcher holds it)"}`,
     `- Authority: ${md(status.authority)} \xB7 expires ${time(status.authorityExpiresAt * 1e3)}`,
@@ -9282,7 +9283,7 @@ function renderSessionReport({ status, continuations, generatedAt, relayEvents }
       ])
     ),
     "",
-    "Evidence: verified means the gateway checked the receipt signature against the session's pinned signers; this report does not re-verify it.",
+    status.scope === "demo_fixture" ? "DEMO evidence: signatures match only this demo run\u2019s fixture key; no protected kernel or resource is established." : "Evidence: verified means the gateway checked the receipt signature against the session's pinned signers; this report does not re-verify it.",
     "",
     "## Decisions",
     "",

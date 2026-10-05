@@ -25,7 +25,7 @@ export async function main(args = process.argv.slice(2)) {
     const path = resolve(options["--operator-file"]); privatePath(path, false);
     if (lstatSync(path).size > 1024 * 1024) throw new Error("operator credential file exceeds its bound");
     const operator = JSON.parse(readFileSync(path, "utf8"));
-    process.stdout.write(JSON.stringify({ intent: await confirmControlIntent(config, operator, options["--intent"]), dispatchPerformed: false }) + "\n");
+    process.stdout.write(JSON.stringify({ ...(isDemoConfig(config) ? { scope: "demo_fixture", notice: "DEMO fixture kernel · nothing protected" } : {}), intent: await confirmControlIntent(config, operator, options["--intent"]), dispatchPerformed: false }) + "\n");
     return;
   }
   if (!["serve", "status", "inbox", "watch", "report"].includes(action) || action !== "watch" && options["--operator-file"] || options["--intent"]) throw new Error("usage: control.mjs serve|status|inbox --gateway-config CONFIG [--credential-output NEW_FILE]; report --gateway-config CONFIG --output NEW_FILE.md [--relay-events model-relay.json]; watch --gateway-config CONFIG --operator-file PRIVATE_FILE; confirm --gateway-config CONFIG --intent ID --operator-file PRIVATE_FILE");
@@ -60,7 +60,7 @@ export async function main(args = process.argv.slice(2)) {
   }
   if (action === "inbox") {
     const status = await controlStatus({ config, authorityExpiresAt, workflow: prepared.workflow, ...demo });
-    console.log(JSON.stringify({ sessionId: status.sessionId, authority: status.authority, intents: status.intents.filter(i => i.state === "requested" || i.state === "submitted" || i.state === "unknown"),
+    console.log(JSON.stringify({ sessionId: status.sessionId, scope: status.scope, ...(status.scope === "demo_fixture" ? { notice: "DEMO fixture kernel · nothing protected" } : {}), authority: status.authority, intents: status.intents.filter(i => i.state === "requested" || i.state === "submitted" || i.state === "unknown"),
       taskRequests: status.workflow?.requests ?? [], exactActions: status.operations.filter(o => o.review), dispatchPerformed: false, next: "Inspect the exact action; confirm a requested intent using a distinct trusted operator credential outside Claude." })); return;
   }
   if (action === "status") { process.stdout.write(JSON.stringify(await controlStatus({ config, authorityExpiresAt, workflow: prepared.workflow, ...demo })) + "\n"); return; }

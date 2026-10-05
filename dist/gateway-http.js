@@ -5,6 +5,10 @@ const require = __chioCreateRequire(import.meta.url);
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import { createServer } from "node:http";
 
+// scripts/sandbox.mjs
+var DEMO_SERVER_ID = "demo-owner";
+var isDemoConfig = (config) => config?.execution?.serverId === DEMO_SERVER_ID;
+
 // node_modules/@chio/bridge/dist/gateway.js
 import { createHash as createHash2 } from "node:crypto";
 import { constants, closeSync, fsyncSync, lstatSync, mkdirSync, openSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
@@ -1227,6 +1231,8 @@ if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToP
 
 // scripts/gateway-http.mjs
 async function startGatewayHttp(config, { requireHostAcknowledgement = true } = {}) {
+  const demo = isDemoConfig(config);
+  const displayResult = (outcome) => gatewayToolResult(demo ? { ...outcome, scope: "demo_fixture", notice: "DEMO fixture kernel \xB7 nothing protected" } : outcome);
   const executor = createMcpExecutionClient(config.execution);
   const validation = await executor.validateSession({ allowedTools: config.tools.map((tool) => tool.name) });
   if (!validation.ok)
@@ -1301,7 +1307,7 @@ async function startGatewayHttp(config, { requireHostAcknowledgement = true } = 
       initialized = true;
       response.setHeader("Mcp-Session-Id", session);
       const offered = message.params?.protocolVersion;
-      reply({ protocolVersion: ["2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25"].includes(offered) ? offered : "2025-11-25", capabilities: { tools: {}, experimental: { chioDeliveryAcknowledgement: { version: "1" } } }, serverInfo: { name: "chio-protected-gateway", version: "0.3.0" } });
+      reply({ protocolVersion: ["2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25"].includes(offered) ? offered : "2025-11-25", capabilities: { tools: {}, experimental: { chioDeliveryAcknowledgement: { version: "1" } } }, serverInfo: { name: demo ? "chio-demo-fixture-gateway" : "chio-protected-gateway", version: "0.3.0" } });
       return;
     }
     if (!initialized || request.headers["mcp-session-id"] !== session) {
@@ -1359,7 +1365,7 @@ async function startGatewayHttp(config, { requireHostAcknowledgement = true } = 
         fail(-32603, "transport closed before dispatch");
         return;
       }
-      reply(gatewayToolResult(await gateway.call(`${session}:${JSON.stringify(message.id)}`, message.params.name, args, controller.signal)));
+      reply(displayResult(await gateway.call(`${session}:${JSON.stringify(message.id)}`, message.params.name, args, controller.signal)));
     }).catch(() => fail(-32603, "gateway failed; no automatic retry")).finally(() => {
       active.delete(key);
     });

@@ -3,6 +3,7 @@
 // capability sharing the same queue and gateway; it has no HTTP route or token.
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import { createServer } from "node:http";
+import { isDemoConfig } from "./sandbox.mjs";
 import { createGateway, gatewayToolResult } from "../src/bridge-internals/gateway.ts";
 import { createMcpExecutionClient } from "../src/bridge-internals/execution.ts";
 /** Launcher-owned transport. The guest receives only this ephemeral local token.
@@ -13,6 +14,8 @@ import { createMcpExecutionClient } from "../src/bridge-internals/execution.ts";
  * can confirm that the host received a result. The local demo has no relay and opts out.
  */
 export async function startGatewayHttp(config, { requireHostAcknowledgement = true } = {}) {
+    const demo = isDemoConfig(config);
+    const displayResult = outcome => gatewayToolResult(demo ? { ...outcome, scope: "demo_fixture", notice: "DEMO fixture kernel · nothing protected" } : outcome);
     const executor = createMcpExecutionClient(config.execution);
     const validation = await executor.validateSession({ allowedTools: config.tools.map(tool => tool.name) });
     if (!validation.ok)
@@ -89,7 +92,7 @@ export async function startGatewayHttp(config, { requireHostAcknowledgement = tr
             initialized = true;
             response.setHeader("Mcp-Session-Id", session);
             const offered = message.params?.protocolVersion;
-            reply({ protocolVersion: ["2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25"].includes(offered) ? offered : "2025-11-25", capabilities: { tools: {}, experimental: { chioDeliveryAcknowledgement: { version: "1" } } }, serverInfo: { name: "chio-protected-gateway", version: "0.3.0" } });
+            reply({ protocolVersion: ["2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25"].includes(offered) ? offered : "2025-11-25", capabilities: { tools: {}, experimental: { chioDeliveryAcknowledgement: { version: "1" } } }, serverInfo: { name: demo ? "chio-demo-fixture-gateway" : "chio-protected-gateway", version: "0.3.0" } });
             return;
         }
         if (!initialized || request.headers["mcp-session-id"] !== session) {
@@ -147,7 +150,7 @@ export async function startGatewayHttp(config, { requireHostAcknowledgement = tr
             }
             // A new host transport may restart its numeric RPC counter. Namespace it
             // without changing retained kernel authority or clearing journal fences.
-            reply(gatewayToolResult(await gateway.call(`${session}:${JSON.stringify(message.id)}`, message.params.name, args, controller.signal)));
+            reply(displayResult(await gateway.call(`${session}:${JSON.stringify(message.id)}`, message.params.name, args, controller.signal)));
         }).catch(() => fail(-32603, "gateway failed; no automatic retry")).finally(() => { active.delete(key); });
         await queued;
     }
