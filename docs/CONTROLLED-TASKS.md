@@ -6,7 +6,7 @@ The kernel admits and executes protected operations. The mod presents authorized
 projections and requests; operator credentials and the authoritative execution
 journal remain outside Claude.
 
-The [recorded acceptance](../acceptance/2026-10-03/controlled-workflows/REPORT.md)
+The [recorded acceptance](../acceptance/2026-10-05/rc5/REPORT.md)
 includes the selected host's event harness and real terminal fixtures. Live
 kernel/resource recovery and supported deployment qualification remain open.
 
