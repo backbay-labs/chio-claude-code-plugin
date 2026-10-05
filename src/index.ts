@@ -11,7 +11,7 @@ export {
   readState,
   writeState,
   upsertBond,
-  clearBond,
+  markRevoked,
   getBond,
   bondPresence,
   requireSessionBond,

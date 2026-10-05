@@ -13,8 +13,8 @@ export async function bond(args: string[]): Promise<string> {
   const bridge = buildBridge();
 
   // Wave D Bug 1: thread budgetUsd through to bridge.bond(). The
-  // bridge now issues a real capability in BOTH daemon and CLI modes
-  // and attenuates it to the requested cap, so the returned passport
+  // bridge issues a new capability in BOTH daemon and CLI modes with the
+  // budget in its scope (it never attenuates), so the returned passport
   // already carries a non-empty capabilityId with the budget bound.
   const budgetUsd = budgetArg ? Number(budgetArg) : undefined;
   const bondArgs: Parameters<typeof bridge.bond>[0] = { policyPath, ttl };

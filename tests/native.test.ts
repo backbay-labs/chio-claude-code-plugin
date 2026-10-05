@@ -257,7 +257,7 @@ test("the pane lists actionable operations first and bounds the list", { options
   expect(String((await ui.find({ key: "operation-0" }))?.props.label)).toContain("awaiting_approval");
   expect(await ui.find({ key: "operation-11" })).toBeDefined();
   expect(await ui.find({ key: "operation-12" })).toBeUndefined();
-  expect(await ui.find({ type: "Text", text: "18 more retained operations" })).toBeDefined();
+  expect(await ui.find({ type: "Text", text: "18 more retained operations not shown · the operator's control status lists every operation" })).toBeDefined();
   await ui.unmount();
 });
 test("exactly twelve retained operations need no overflow line", { options }, async ($, on) => {

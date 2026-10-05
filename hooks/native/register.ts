@@ -268,7 +268,7 @@ export const register: Register = (on, options) => {
     const ordered = [...retained.filter(op => op.nextAction !== "none"), ...retained.filter(op => op.nextAction === "none")];
     for (const [index, op] of ordered.slice(0, PANE_OPERATIONS).entries()) rows.push(Button({ key: `operation-${index}`, label: `${safeText(op.tool ?? "operation")} · ${op.state} · ${safeText(op.requestId.slice(-12))}`,
       onPress: () => { selectedId = op.requestId; showDetails = false; $.ui.invalidate("ui.render"); } }));
-    if (ordered.length > PANE_OPERATIONS) rows.push(Text({ dimColor: true, children: `${ordered.length - PANE_OPERATIONS} more retained operations · /chio-evidence REQUEST_ID` }));
+    if (ordered.length > PANE_OPERATIONS) rows.push(Text({ dimColor: true, children: `${ordered.length - PANE_OPERATIONS} more retained operations not shown · the operator's control status lists every operation` }));
     return Box({ flexDirection: "column", children: rows });
   }).catch(($, e, next) => next(e));
 };

@@ -33,8 +33,11 @@ test("revocation targets the exact passport and retains the bond until lifecycle
   const env = { CLAUDE_SESSION_ID: "a", CHIO_SERVICE_TOKEN: "fixture", CHIO_TRUST_URL: `http://127.0.0.1:${server.address().port}` };
   assert.equal((await f.run("revoke", [], env)).code, 1); assert.equal(Object.hasOwn(JSON.parse(readFileSync(join(f.dir, "state.json"))).bonds, "a"), true);
   confirmed = true; const result = await f.run("revoke", [], env); assert.equal(result.code, 0, result.stderr); assert.equal(JSON.parse(result.stdout).passport_id, "passport-a");
-  assert.equal(Object.hasOwn(JSON.parse(readFileSync(join(f.dir, "state.json"))).bonds, "a"), false);
-  assert.equal(Object.hasOwn(JSON.parse(readFileSync(join(f.dir, "state.json"))).bonds, "b"), true);
+  const after = JSON.parse(readFileSync(join(f.dir, "state.json"))).bonds;
+  assert.equal(typeof after.a.revokedAt, "string"); assert.equal(Number.isFinite(Date.parse(after.a.revokedAt)), true);
+  assert.match(JSON.parse(result.stdout).hooks, /\/chio:bond/);
+  assert.equal(Object.hasOwn(after, "b"), true); assert.equal(after.b.revokedAt, undefined);
+  const again = await f.run("revoke", [], env); assert.equal(again.code, 1); assert.match(again.stderr, /no bond for session a/);
   assert.equal(routes.some(route => route.includes("passport-b") || route === "/v1/passport/statuses"), false);
 });
 test("local countersigning reports signed intent, while HTTP acceptance reports submission only", async t => {

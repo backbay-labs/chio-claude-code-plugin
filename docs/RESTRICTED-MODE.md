@@ -183,11 +183,14 @@ claude plugin install chio@chio
 The `compatibility_hooks` option selects when these hooks check a tool call.
 `bonded` (default) checks only sessions that `/chio:bond` bonded; other sessions
 run without a compatibility decision. `always` denies tools in unbonded sessions,
-the behavior of 0.4.0-rc.4 and earlier. `off` disables both hooks. Unreadable bond state
-denies in `bonded` mode, and an unknown option value denies in every mode except
-`off`.
+the behavior of 0.4.0-rc.4 and earlier. `off` disables both hooks. With unreadable
+bond state (`bonded`) or an unrecognized option value, PreToolUse denies every tool
+and PostToolUse writes a notice. After `/chio:revoke`, the hooks deny tools in that
+session until it is bonded again. Use `always` when a tool in the session can write
+the Chio state directory; in `bonded` mode, deleting a bond ends checking for that
+session.
 
-`PreToolUse` requires an exact session bond, a nonexpired capability, an explicit
+In a checked session, `PreToolUse` requires an exact session bond, a nonexpired capability, an explicit
 allow decision, a receipt matching the request and capability, and an
 operator-pinned `CHIO_TRUSTED_RECEIPT_KEY`. Budgeted calls require a cost oracle;
 oracle errors deny. Authorization evidence is persisted before native admission.

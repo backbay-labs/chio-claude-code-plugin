@@ -31,21 +31,22 @@ const timer = setTimeout(() => deny("chio unavailable: authorization deadline ex
 
 async function main() {
   // Drain the event first so Claude never writes into a closed pipe.
-  const input = JSON.parse(readFileSync(0, "utf8"));
+  const raw = readFileSync(0, "utf8");
   const mode = compatibilityMode();
   if (mode === "off") return;
+  const input = JSON.parse(raw);
   const { session_id, tool_name, tool_input, tool_use_id } = input;
   if (![session_id, tool_name, tool_use_id].every(v => typeof v === "string" && v.length > 0) ||
       !tool_input || typeof tool_input !== "object" || Array.isArray(tool_input)) {
     throw new Error("malformed hook input: session, tool, tool use id and input are required");
   }
   const { bondPresence, getBond } = await import(join(distRoot, "state", "store.js"));
-  if (mode === "bonded") {
-    const presence = bondPresence(session_id);
-    // The compatibility hook is a precheck, not a boundary; sessions without a bond are not checked.
-    if (presence === "absent") return;
-    if (presence !== "present") throw new Error("compatibility bond state is unreadable; repair it or set compatibility_hooks to off");
-  }
+  const { STATE_PATH } = await import(join(distRoot, "state", "paths.js"));
+  const presence = bondPresence(session_id);
+  if (presence === "revoked") throw new Error("capability revoked for this session; run /chio:bond to bond it again");
+  // The compatibility hook is a precheck, not a boundary; sessions without a bond are not checked in bonded mode.
+  if (mode === "bonded" && presence === "absent") return;
+  if (presence === "invalid") throw new Error(`compatibility bond state ${STATE_PATH} is unreadable; repair it or set compatibility_hooks to off`);
   // check() in historical daemon bridge versions dispatches the MCP tool.
   // Calling it before the host dispatch would execute the action twice.
   if (process.env.CHIO_SERVICE_TOKEN || process.env.CLAUDE_PLUGIN_OPTION_SERVICE_TOKEN) {

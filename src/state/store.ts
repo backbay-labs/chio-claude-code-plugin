@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import type { Passport } from "@chio/bridge";
 import { STATE_PATH } from "./paths.js";
@@ -13,6 +13,8 @@ export interface SessionBond {
   lastReceiptPath?: string;
   /** Budget ceiling in USD from `/chio:bond POLICY TTL BUDGET`. */
   budgetCapUsd?: number;
+  /** Set by /chio:revoke. The entry stays so the compatibility hooks keep denying the session until /chio:bond replaces it. */
+  revokedAt?: string;
   /** Legacy field from the removed /chio:guard-pause; retained so old state parses. */
   pausedGuards?: Record<string, string>;
 }
@@ -33,7 +35,10 @@ export function readState(): PluginState {
 
 export function writeState(state: PluginState): void {
   mkdirSync(dirname(STATE_PATH), { recursive: true });
-  writeFileSync(STATE_PATH, JSON.stringify(state, null, 2));
+  // Atomic replace: a concurrent hook never reads a half-written file.
+  const tmp = `${STATE_PATH}.${process.pid}.tmp`;
+  writeFileSync(tmp, JSON.stringify(state, null, 2), { mode: 0o600 });
+  renameSync(tmp, STATE_PATH);
 }
 
 export function upsertBond(bond: SessionBond): void {
@@ -42,9 +47,11 @@ export function upsertBond(bond: SessionBond): void {
   writeState(state);
 }
 
-export function clearBond(sessionId: string): void {
+export function markRevoked(sessionId: string): void {
   const state = readState();
-  delete state.bonds[sessionId];
+  const entry = state.bonds[sessionId];
+  if (!entry) return;
+  state.bonds[sessionId] = { ...entry, revokedAt: new Date().toISOString() };
   writeState(state);
 }
 
@@ -59,7 +66,7 @@ export function getBond(sessionId: string | undefined): SessionBond | undefined 
  * without loading the bridge. The enforcement path still validates a present
  * entry's session, expiry and policy.
  */
-export function bondPresence(sessionId: string): "absent" | "present" | "invalid" {
+export function bondPresence(sessionId: string): "absent" | "present" | "revoked" | "invalid" {
   let raw: string;
   try { raw = readFileSync(STATE_PATH, "utf8"); }
   catch (error) { return (error as NodeJS.ErrnoException).code === "ENOENT" ? "absent" : "invalid"; }
@@ -69,7 +76,9 @@ export function bondPresence(sessionId: string): "absent" | "present" | "invalid
   const bonds = (parsed as { bonds?: unknown }).bonds;
   if (bonds === undefined) return "absent";
   if (!bonds || typeof bonds !== "object" || Array.isArray(bonds)) return "invalid";
-  return Object.hasOwn(bonds, sessionId) ? "present" : "absent";
+  if (!Object.hasOwn(bonds, sessionId)) return "absent";
+  const entry = (bonds as Record<string, unknown>)[sessionId];
+  return entry && typeof entry === "object" && typeof (entry as { revokedAt?: unknown }).revokedAt === "string" ? "revoked" : "present";
 }
 
 /** Controls must name a session, even when only one bond is retained. */
@@ -81,7 +90,7 @@ export function requireSessionBond(explicitSessionId?: string): SessionBond {
   const sessionId = hostSessionId ?? explicitSessionId;
   if (!sessionId) throw new Error("an exact session id is required; set CLAUDE_SESSION_ID or pass the session explicitly");
   const bond = getBond(sessionId);
-  if (!bond || bond.sessionId !== sessionId) throw new Error(`no bond for session ${sessionId}`);
+  if (!bond || bond.revokedAt || bond.sessionId !== sessionId) throw new Error(`no bond for session ${sessionId}`);
   return bond;
 }
 
@@ -91,7 +100,7 @@ export function requireSessionBond(explicitSessionId?: string): SessionBond {
  */
 export function getSoleBond(): SessionBond | undefined {
   const state = readState();
-  const entries = Object.values(state.bonds);
+  const entries = Object.values(state.bonds).filter(b => !b.revokedAt);
   if (entries.length === 1) return entries[0];
   return undefined;
 }
@@ -102,7 +111,7 @@ export function getSoleBond(): SessionBond | undefined {
  */
 export function getMostRecentBond(): SessionBond | undefined {
   const state = readState();
-  const entries = Object.values(state.bonds);
+  const entries = Object.values(state.bonds).filter(b => !b.revokedAt);
   if (entries.length === 0) return undefined;
   entries.sort((a, b) => b.bondedAt.localeCompare(a.bondedAt));
   return entries[0];

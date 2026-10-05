@@ -31,3 +31,7 @@ test("unreadable or malformed state is invalid", t => {
   assert.equal(presence(t, JSON.stringify({ bonds: [] })), "invalid");
   assert.equal(presence(t, JSON.stringify([])), "invalid");
 });
+test("a tombstoned entry is revoked", t => {
+  assert.equal(presence(t, JSON.stringify({ bonds: { "session-a": { sessionId: "session-a", revokedAt: "2026-10-04T00:00:00.000Z" } } })), "revoked");
+  assert.equal(presence(t, JSON.stringify({ bonds: { "session-a": { sessionId: "session-a", revokedAt: 1 } } })), "present");
+});

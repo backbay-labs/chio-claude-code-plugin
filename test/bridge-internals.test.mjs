@@ -1,4 +1,5 @@
-// Unexported bridge modules may be reached only through src/bridge-internals.ts.
+// Unexported bridge modules may be reached only through the per-module seams
+// src/bridge-internals/{approval,execution,gateway-operator,gateway}.ts.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
