@@ -82,3 +82,13 @@ test("refused conversation attempts remain distinct from unsupported auxiliary t
   assert.equal(relay.events[2].requestClass, "conversation"); assert.equal(relay.events[2].forwarded, true); assert.equal(calls, 1);
   assert.ok(!JSON.stringify(relay.events).includes("private fixture")); assert.ok(!JSON.stringify(relay.events).includes("private title"));
 });
+test("host request flooding cannot grow the retained relay event log without bound", async t => {
+  const relay = await startModelRelay({ upstreamBaseUrl: "http://127.0.0.1:1", apiKey: "fixture", model, toolNames: [...tools] });
+  t.after(() => relay.close());
+  for (let i = 0; i < 1030; i++) {
+    const response = await fetch(`http://127.0.0.1:${relay.port}/invalid`, { method: "POST" }); await response.text();
+  }
+  assert.ok(relay.events.length <= 1025, `retained ${relay.events.length} events`);
+  assert.equal(relay.events.at(-1).failure, "model relay request limit reached");
+  assert.equal(relay.events.at(-1).requestClass, "conversation");
+});
