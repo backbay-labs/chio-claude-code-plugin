@@ -133,8 +133,10 @@ Plugin changes:
 
 - `src/bridge-internals.ts` is the one seam for unexported bridge modules. The
   four TypeScript files import from it. `scripts/gateway-http.mjs` imports it
-  too (it only runs bundled; esbuild resolves the `.ts` import).
-  `createMcpExecutionClient` comes from the public root export.
+  too (it only runs bundled; esbuild resolves the `.ts` import). The seam keeps
+  `createMcpExecutionClient` on its `execution.js` path for the gateway bundle,
+  so that bundle does not start pulling the root index's policy and passport
+  modules.
 - `test/bridge-internals.test.mjs` scans `src/`, `scripts/` (excluding
   `scripts/acceptance/`) and `hooks/` for `@chio/bridge/dist` references and
   fails on any reference outside the seam and `scripts/bundle.mjs`. It checks
@@ -164,9 +166,9 @@ In `hooks/native/register.ts`:
 - `request()` calls `$.chio.requestReview({ kind, revision, requestId })`
   instead of its own fetch. It keeps its result-shape checks (state
   `requested`, matching session, UUID id, `authorityAccepted: false`,
-  `dispatchPerformed: false`) and its session-change check. The namespace path
-  adds the 64-hex token check and post-fetch session check the hand-rolled
-  path lacked.
+  `dispatchPerformed: false`) and its session-change check. This is a
+  refactor: the refresh `request()` performs first already goes through the
+  namespace's token check, so the existing review-intent tests cover it.
 - `/chio-evidence` opens the selected operation with evidence details
   expanded; `/chio-review` keeps the compact review. `open()` takes a
   `details` flag.
@@ -175,9 +177,9 @@ In `hooks/native/register.ts`:
   `N more retained operations · /chio-evidence REQUEST_ID`.
 
 Tests (`tests/native.test.ts`, pinned host harness): evidence opens expanded;
-review stays compact; a non-hex control token cannot post review intent; a
-projection with 30 operations renders 12 operation buttons, actionable first,
-and the overflow line.
+review stays compact (existing test); a projection with 30 operations renders
+12 operation buttons, actionable first, and the overflow line; exactly 12
+operations render no overflow line.
 
 `scripts/mod-profile.mjs` computes the native mod identity from these sources,
 so the operator's `--mod-sha256` pin changes. That is expected for any native
