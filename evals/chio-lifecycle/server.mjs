@@ -1,6 +1,7 @@
 // Eval-only fixture MCP server (stdio, newline-delimited JSON-RPC). Evals run with mocks; this only declares the server.
 import { createInterface } from "node:readline";
-const tools = [{"name": "write_file", "description": "Protected write of a file through Chio.", "inputSchema": {"type": "object", "properties": {"path": {"type": "string"}, "content": {"type": "string"}}, "required": ["path", "content"]}}, {"name": "chio_resume", "description": "Resume an operator-approved Chio request.", "inputSchema": {"type": "object", "properties": {"requestId": {"type": "string"}, "tool": {"type": "string"}, "arguments": {"type": "object"}}, "required": ["requestId", "tool", "arguments"]}}];
+import { readFileSync } from "node:fs";
+const { tools } = JSON.parse(readFileSync(new URL("./evals/mocks/chio/_tools.json", import.meta.url), "utf8"));
 const send = (m) => process.stdout.write(JSON.stringify({ jsonrpc: "2.0", ...m }) + "\n");
 createInterface({ input: process.stdin }).on("line", (line) => {
   let msg; try { msg = JSON.parse(line); } catch { return; }
