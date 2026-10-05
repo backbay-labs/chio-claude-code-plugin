@@ -142,6 +142,13 @@ The compatibility hooks stay inactive in a session that `/chio:bond` has not
 bonded, so loading the plugin does not deny native tools; see
 [compatibility hooks](./RESTRICTED-MODE.md#compatibility-hooks).
 
+In a `kernel_mcp` session the mod also counts tool calls that did not go
+through Chio (native Bash, file and web tools, other MCP servers) and shows the
+total in the status line and per tool in `/chio-status` and `/chio-doctor`.
+These counts are observations only: nothing is checked, blocked or recorded
+outside the session. The protected launcher is the way to bring those effects
+under the kernel boundary.
+
 ## Confirm a decision outside Claude
 
 Inspect the exact retained action and its intent in the trusted terminal:

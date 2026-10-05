@@ -3,7 +3,7 @@ import type { ControlStatus, IntentKind, OperationView } from "../../types/contr
 import type { Chio } from "../../types/chio.js";
 import type { ExplanationView, ContinuationView } from "../../types/workflow.js";
 import { controlOrigin, outcomeHash, shareText, taskText, type ShareRecord } from "./workflow.ts";
-import { diagnosticText, operationText, outcomeRequestId, parseStatus, guidanceText, safeText, statusLine, transitions, type NoticeState } from "./projection.ts";
+import { diagnosticText, operationText, outsideText, outcomeRequestId, parseStatus, guidanceText, safeText, statusLine, transitions, type NoticeState } from "./projection.ts";
 
 let sessionId = "";
 let status: ControlStatus | null = null;
@@ -15,6 +15,9 @@ let generation = 0;
 let notices: NoticeState = { authorityWarned: false };
 let inFlight = 0;
 let shareQueue: ShareRecord[] = [];
+let outside = new Map<string, number>();
+const outsideLine = () => { const text = outsideText(outside); return text ? "\n" + text : ""; };
+const outsideTotal = () => [...outside.values()].reduce((a, b) => a + b, 0);
 let pane: "operations" | "task" = "operations";
 let refreshRead: { sessionId: string; generation: number; promise: Promise<ControlStatus | null> } | null = null;
 const PANE_OPERATIONS = 12;
@@ -22,7 +25,7 @@ const PANE_OPERATIONS = 12;
 async function refresh($: EngineInterface, options: PluginOptions): Promise<ControlStatus | null> {
   const actual = await $.session.id();
   if (actual !== sessionId) {
-    sessionId = actual; pane = "operations"; status = null; selectedId = null; showDetails = false; notice = ""; generation += 1; notices = { authorityWarned: false }; shareQueue = []; inFlight = 0;
+    sessionId = actual; pane = "operations"; status = null; selectedId = null; showDetails = false; notice = ""; generation += 1; notices = { authorityWarned: false }; shareQueue = []; outside = new Map(); inFlight = 0;
     await $.ui.close({ id: "chio" });
   }
   const thisGeneration = generation;
@@ -69,7 +72,7 @@ async function open($: EngineInterface, options: PluginOptions, requestId?: stri
   showDetails = details;
   if (requestId && !current?.operations.some(op => op.requestId === requestId)) throw new Error("no retained operation for this session and request id");
   const operation = current?.operations.find(op => op.requestId === selectedId);
-  const text = [statusLine(current, Date.now()), `Session: ${safeText(sessionId)}`, ...(operation ? [operationText(operation)] : []), ...(notice ? [notice] : [])].join("\n");
+  const text = [statusLine(current, Date.now(), outsideTotal()), `Session: ${safeText(sessionId)}`, ...(operation ? [operationText(operation)] : []), ...(notice ? [notice] : [])].join("\n");
   if (interactive) await $.ui.open({ id: "chio", title: "Chio", focus: true, closeOnEscape: true });
   return text;
 }
@@ -148,7 +151,7 @@ export const register: Register = (on, options) => {
   on("classic.SessionStart", async ($, e, next) => {
     // /clear, resume and fork do not fire session.start; always re-resolve the host id.
     if (e.source === "compact") { await refresh($, options); return next(e); }
-    status = null; selectedId = null; showDetails = false; generation += 1; notices = { authorityWarned: false }; shareQueue = [];
+    status = null; selectedId = null; showDetails = false; generation += 1; notices = { authorityWarned: false }; shareQueue = []; outside = new Map();
     await refresh($, options); return next(e);
   }).catch(($, e, next) => next(e));
 
@@ -156,12 +159,12 @@ export const register: Register = (on, options) => {
     .catch(() => ({ text: "Chio controls unavailable. Authority remains unconfirmed.", exitCode: 1 }));
   on("command.run", { command: "chio-status" }, async ($) => {
     const current = await refresh($, options);
-    return { text: `${statusLine(current, Date.now())}\nSession: ${safeText(sessionId)}${current ? `\nProtected tools: ${current.protectedTools.join(", ")}\nDispatch fence: ${current.fenced ? "retained" : "clear"}` : ""}${current?.modelUsage ? modelUsageLine(current.modelUsage) : ""}`, exitCode: current ? 0 : 1 };
+    return { text: `${statusLine(current, Date.now(), outsideTotal())}\nSession: ${safeText(sessionId)}${current ? `\nProtected tools: ${current.protectedTools.join(", ")}\nDispatch fence: ${current.fenced ? "retained" : "clear"}` : ""}${current?.modelUsage ? modelUsageLine(current.modelUsage) : ""}${outsideLine()}`, exitCode: current ? 0 : 1 };
   }).catch(() => ({ text: "Chio status unavailable. Authority remains unconfirmed.", exitCode: 1 }));
   on("command.run", { command: "chio-doctor" }, async ($, e) => {
     if (e.args.trim()) return { text: "Doctor checks the current session; arguments are refused.", exitCode: 1 };
     const current = await refresh($, options);
-    return { text: diagnosticText(current, sessionId, Date.now()), exitCode: current ? 0 : 1 };
+    return { text: diagnosticText(current, sessionId, Date.now()) + outsideLine(), exitCode: current ? 0 : 1 };
   }).catch(() => ({ text: "Chio diagnosis unavailable. Authority remains unconfirmed; preserve original operation fences.", exitCode: 1 }));
   on("command.run", { command: "chio-review" }, async ($, e) => ({ text: await open($, options, e.args.trim() || undefined) }))
     .catch(() => ({ text: "Chio review unavailable for this exact session and action.", exitCode: 1 }));
@@ -217,6 +220,13 @@ export const register: Register = (on, options) => {
     try { result = await next(e); } finally { inFlight = Math.max(0, inFlight - 1); }
     await refresh($, options); return result;
   }).catch(($, e, next) => next(e)); // Observation only; replay-safe preservation after next.
+  on("tool.call", async ($, e, next) => {
+    const result = await next(e);
+    try {
+      if (!e.tool.startsWith("mcp__chio__") && status?.scope === "kernel_mcp" && await $.session.id() === sessionId) outside.set(e.tool, (outside.get(e.tool) ?? 0) + 1);
+    } catch { /* Observation only: a failure never changes the call. */ }
+    return result;
+  }).catch(($, e, next) => next(e));
   on("turn.complete", async ($, e, next) => { await refresh($, options); return next(e); })
     .catch(($, e, next) => next(e));
   on("prompt.context", async ($, e, next) => {
@@ -237,7 +247,7 @@ export const register: Register = (on, options) => {
   on("ui.render", { component: "AbovePrompt" }, async ($, e, next) => {
     const existing = await next(e);
     const { Box, Text } = $.ui.resolve(e);
-    return Box({ flexDirection: "column", children: [existing, Text({ dimColor: true, children: statusLine(status, Date.now()) })] });
+    return Box({ flexDirection: "column", children: [existing, Text({ dimColor: true, children: statusLine(status, Date.now(), outsideTotal()) })] });
   }).catch(($, e, next) => next(e));
   on("ui.render", { component: "ToolResult" }, async ($, e, next) => {
     const existing = await next(e);
@@ -253,7 +263,7 @@ export const register: Register = (on, options) => {
     if (e.requestId !== "chio") return next(e);
     const { Box, Text, Button } = $.ui.resolve(e);
     if (pane === "task") {
-      const rows = [Text({ children: statusLine(status, Date.now()) }), Text({ children: taskText(status?.workflow?.task, status?.workflow?.templates) }), Text({ children: safeText(notice) })];
+      const rows = [Text({ children: statusLine(status, Date.now(), outsideTotal()) }), Text({ children: taskText(status?.workflow?.task, status?.workflow?.templates) }), Text({ children: safeText(notice) })];
       for (const template of status?.workflow?.templates ?? []) rows.push(Button({ key: "task-" + template.id, label: "Request scope: " + safeText(template.title), onPress: async () => {
         try { await $.chio.selectTask({ templateId: template.id, revision: template.revision }); notice = "Scope requested. Trusted operator preparation required; no authority granted."; }
         catch { notice = "Task request unconfirmed; inspect the current catalog."; }
@@ -275,7 +285,7 @@ export const register: Register = (on, options) => {
       "Kernel policy applies. Budget impact unavailable.",
       "Exact arguments:", safeText(JSON.stringify(operation.review.arguments, null, 2)),
     ].join("\n") : operation ? operationText(operation) : "No selected retained operation.";
-    const rows = [Text({ children: statusLine(status, Date.now()) }), Text({ dimColor: true, children: `Session ${safeText(sessionId)}` }),
+    const rows = [Text({ children: statusLine(status, Date.now(), outsideTotal()) }), Text({ dimColor: true, children: `Session ${safeText(sessionId)}` }),
       Text({ children: summary }), Text({ children: safeText(notice) })];
     for (const intent of intents) rows.push(Text({ children: `${intent.kind} ${intent.state} · ${safeText(intent.id)}${Date.now() >= intent.expiresAt ? " · request expired; inspect its original outcome" : ""}` }));
     if (fresh && operation?.review?.decision === "required" && !intents.some(intent => intent.kind !== "alternative")) {

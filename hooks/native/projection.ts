@@ -51,13 +51,20 @@ export function parseStatus(text: string, sessionId: string): ControlStatus {
 
 /** Control characters cannot turn retained input into terminal instructions. */
 export function safeText(value: unknown): string { return String(value).replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g, "�"); }
-export function statusLine(status: ControlStatus | null, now: number): string {
+/** Advisory count of tool calls that did not go through Chio. Observed, never checked or blocked. */
+export function outsideText(counts: ReadonlyMap<string, number>): string | null {
+  const entries = [...counts].filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  if (!entries.length) return null;
+  const shown = entries.slice(0, 8).map(([tool, n]) => `${safeText(tool)} ${n}`);
+  return `Outside Chio protection this session (observed, not checked): ${shown.join(" · ")}${entries.length > 8 ? ` · +${entries.length - 8} more` : ""}`;
+}
+export function statusLine(status: ControlStatus | null, now: number, outsideCalls = 0): string {
   if (!status) return "Chio · disconnected · protection scope unavailable";
   const live = status.authority === "live" && now - status.checkedAt <= 10_000 && now < status.authorityExpiresAt * 1000;
   const scope = status.scope === "isolated_kernel_mcp" ? "isolated kernel MCP" : "kernel MCP tools only";
   const authority = live ? `authority ${Math.max(1, Math.ceil((status.authorityExpiresAt * 1000 - now) / 60_000))}m`
     : status.authority === "live" ? "authority unconfirmed" : `authority ${status.authority}`;
-  return `Chio · ${scope} · ${authority} · ${status.awaitingReview} review · ${status.unresolved} unresolved`;
+  return `Chio · ${scope} · ${authority} · ${status.awaitingReview} review · ${status.unresolved} unresolved${outsideCalls > 0 ? ` · ${outsideCalls} call${outsideCalls === 1 ? "" : "s"} outside Chio` : ""}`;
 }
 export function operationText(operation: OperationView): string {
   const lines = [`${safeText(operation.tool ?? "operation")} · ${safeText(operation.requestId)}`, `State: ${operation.state} · evidence: ${operation.evidence}`];

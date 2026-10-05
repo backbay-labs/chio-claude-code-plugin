@@ -1,7 +1,7 @@
 import { expect, mock, test } from "claude-code/testing";
 import type { On, CommandRunInput, HttpResponse } from "claude-code";
 import type { ControlStatus } from "../types/control.js";
-import { transitions } from "../hooks/native/projection.ts";
+import { outsideText, transitions } from "../hooks/native/projection.ts";
 import { outcomeHash, shareText } from "../hooks/native/workflow.ts";
 
 const options = { control_url: "http://127.0.0.1:12345", control_token: "a".repeat(64) };
@@ -475,4 +475,46 @@ test("status rejects a malformed model usage projection", { options }, async ($,
   stub(on, () => "session-a", () => value);
   const text = (await $.command.run(command("chio-status"))).text;
   expect(text).not.toContain("Model usage");
+});
+test("calls outside Chio are counted per tool in a kernel MCP session and shown in status", { options }, async ($, on) => {
+  stub(on, () => "session-a", () => projection());
+  on("tool.call", () => ({ result: "native" }));
+  await $.command.run(command("chio-status"));
+  for (const call of [{ tool: "Bash", command: "ls" }, { tool: "Read", file_path: "/a" }, { tool: "Read", file_path: "/b" }, { tool: "mcp__chio__write_file", path: "/p", content: "c" }]) {
+    expect((await $.tool.call(call as never)).result).toBe("native");
+  }
+  const text = (await $.command.run(command("chio-status"))).text;
+  expect(text!.split("\n")[0]).toContain("· 3 calls outside Chio");
+  expect(text).toContain("Outside Chio protection this session (observed, not checked): Read 2 · Bash 1");
+  expect(text).not.toContain("mcp__chio__");
+});
+test("isolated sessions count nothing", { options }, async ($, on) => {
+  const value = projection(); value.scope = "isolated_kernel_mcp";
+  stub(on, () => "session-a", () => value);
+  on("tool.call", () => ({ result: "native" }));
+  await $.command.run(command("chio-status"));
+  await $.tool.call({ tool: "Bash", command: "ls" } as never);
+  expect((await $.command.run(command("chio-status"))).text).not.toContain("Outside Chio");
+});
+test("a session change resets outside counts", { options }, async ($, on) => {
+  let session = "session-a";
+  stub(on, () => session, () => projection(session));
+  on("tool.call", () => ({ result: "native" }));
+  await $.command.run(command("chio-status"));
+  await $.tool.call({ tool: "Bash", command: "ls" } as never);
+  expect((await $.command.run(command("chio-status"))).text).toContain("Bash 1");
+  session = "session-b";
+  expect((await $.command.run(command("chio-status"))).text).not.toContain("Outside Chio");
+});
+test("a failing observation still returns the original result once", { options }, async ($, on) => {
+  let dispatched = 0;
+  on("tool.call", () => { dispatched++; return { result: "native" }; });
+  on("session.id", () => { throw new Error("host lookup failed"); });
+  expect((await $.tool.call({ tool: "Bash", command: "ls" } as never)).result).toBe("native");
+  expect(dispatched).toBe(1);
+});
+test("outsideText sorts by count then name and caps at eight tools", () => {
+  expect(outsideText(new Map())).toBe(null);
+  const counts = new Map([["Bash", 4], ["Edit", 2], ["Read", 4], ...Array.from({ length: 8 }, (_, i) => [`T${i}`, 1] as [string, number])]);
+  expect(outsideText(counts)).toBe("Outside Chio protection this session (observed, not checked): Bash 4 · Read 4 · Edit 2 · T0 1 · T1 1 · T2 1 · T3 1 · T4 1 · +3 more");
 });
