@@ -1,0 +1,145 @@
+{
+  "schema": "chio.native-enforcing-failure.v1",
+  "recordedAt": "2026-10-04T01:40:06.552Z",
+  "classification": "live kernel and disposable native file resource; unresolved original result",
+  "passedAssertions": true,
+  "productionQualified": false,
+  "serverIdentityBound": true,
+  "exactApprovalAccepted": true,
+  "duplicateContinuationRejected": true,
+  "kernelRestarted": true,
+  "identityAndKeyringRetained": true,
+  "databasesRetained": true,
+  "resourcesRetained": true,
+  "before": {
+    "resource": {
+      "sha256": "5555315fa4dc304d4c81fc7f3d4037e109b53581b97563c7c162615e6cc2fdc7",
+      "bytes": 38,
+      "closeWriteCount": 1,
+      "observerMutatedResource": false
+    },
+    "ledger": {
+      "operations": [
+        {
+          "request_id": "b85d56ea-9aeb-4f0f-ba82-37db459266d1:ec7814e866a2425b5c6a3c534a96d24c376063be952bfa3d70ee26836bd79b34",
+          "state": "outcome_unknown_after_dispatch",
+          "terminal": 1
+        },
+        {
+          "request_id": "native-missing-approval-e4e40401-3924-494b-b7d7-aebf1e026517",
+          "state": "compensated_before_dispatch",
+          "terminal": 1
+        }
+      ],
+      "holds": [
+        {
+          "operation_id": "8f2c1fa1e0be1117f8b999e47cd30faa7235fa9d80b803b422e9af3112144ca3",
+          "invocation_count_debited": 1,
+          "invocation_captured": 1,
+          "disposition": "open",
+          "invocation_state": "captured",
+          "monetary_state": "none"
+        }
+      ],
+      "grantUsage": [
+        {
+          "invocation_count": 1,
+          "total_cost_exposed": 0,
+          "total_cost_realized_spend": 0
+        }
+      ],
+      "quotas": [
+        {
+          "max_invocations": 64,
+          "reserved_invocations": 0,
+          "captured_invocations": 1
+        }
+      ],
+      "retainedSessionLatchCount": 2
+    },
+    "budget": {
+      "usageCount": 1,
+      "invocationCount": 1
+    },
+    "gateway": {
+      "state": "unknown",
+      "requestId": "b85d56ea-9aeb-4f0f-ba82-37db459266d1:ec7814e866a2425b5c6a3c534a96d24c376063be952bfa3d70ee26836bd79b34",
+      "acknowledged": false,
+      "hostDeliveryRequired": true,
+      "outcomeState": "unknown",
+      "evidence": "verified",
+      "receiptId": "61e5922655c717c2d2f5c8581e620f961ceea4f382f2fd99e54d182a00290edb",
+      "verdict": "incomplete",
+      "verifiedCompletedResult": false
+    }
+  },
+  "after": {
+    "resource": {
+      "sha256": "5555315fa4dc304d4c81fc7f3d4037e109b53581b97563c7c162615e6cc2fdc7",
+      "bytes": 38,
+      "closeWriteCount": 1,
+      "observerMutatedResource": false
+    },
+    "ledger": {
+      "operations": [
+        {
+          "request_id": "b85d56ea-9aeb-4f0f-ba82-37db459266d1:ec7814e866a2425b5c6a3c534a96d24c376063be952bfa3d70ee26836bd79b34",
+          "state": "outcome_unknown_after_dispatch",
+          "terminal": 1
+        },
+        {
+          "request_id": "native-missing-approval-e4e40401-3924-494b-b7d7-aebf1e026517",
+          "state": "compensated_before_dispatch",
+          "terminal": 1
+        }
+      ],
+      "holds": [
+        {
+          "operation_id": "8f2c1fa1e0be1117f8b999e47cd30faa7235fa9d80b803b422e9af3112144ca3",
+          "invocation_count_debited": 1,
+          "invocation_captured": 1,
+          "disposition": "open",
+          "invocation_state": "captured",
+          "monetary_state": "none"
+        }
+      ],
+      "grantUsage": [
+        {
+          "invocation_count": 1,
+          "total_cost_exposed": 0,
+          "total_cost_realized_spend": 0
+        }
+      ],
+      "quotas": [
+        {
+          "max_invocations": 64,
+          "reserved_invocations": 0,
+          "captured_invocations": 1
+        }
+      ],
+      "retainedSessionLatchCount": 2
+    },
+    "budget": {
+      "usageCount": 1,
+      "invocationCount": 1
+    },
+    "gateway": {
+      "state": "unknown",
+      "requestId": "b85d56ea-9aeb-4f0f-ba82-37db459266d1:ec7814e866a2425b5c6a3c534a96d24c376063be952bfa3d70ee26836bd79b34",
+      "acknowledged": false,
+      "hostDeliveryRequired": true,
+      "outcomeState": "unknown",
+      "evidence": "verified",
+      "receiptId": "61e5922655c717c2d2f5c8581e620f961ceea4f382f2fd99e54d182a00290edb",
+      "verdict": "incomplete",
+      "verifiedCompletedResult": false
+    }
+  },
+  "statusProjection": {
+    "available": false,
+    "reason": "delegated session validation refused before dispatch",
+    "credentialExpiresAt": 1791080676
+  },
+  "restartRedispatched": false,
+  "verifiedOriginalOutcomeRecovered": false
+}

@@ -1,0 +1,482 @@
+{
+  "passed": true,
+  "classification": "host fixture only",
+  "cases": [
+    {
+      "scenario": "review",
+      "passed": true,
+      "code": 4,
+      "claim": "actual host and sandbox with stubbed kernel context and deterministic model; no resource qualification",
+      "hostVersion": "2.1.287",
+      "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
+      "gatewaySha256": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
+      "modSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "productionModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "testOnlyModifiedArtifact": false,
+      "activation": "explicit-process-opt-in",
+      "kernelMethods": [
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context"
+      ],
+      "modelRequests": [
+        {
+          "toolNames": [
+            "mcp__chio__chio_resume",
+            "mcp__chio__write_file"
+          ],
+          "resultCount": 0
+        },
+        {
+          "toolNames": [
+            "mcp__chio__chio_resume",
+            "mcp__chio__write_file"
+          ],
+          "resultCount": 1
+        }
+      ],
+      "nativeBypassEffect": false,
+      "outsideFileEffect": false,
+      "otherPortRequests": 0,
+      "routeProbe": null,
+      "terminal": {
+        "code": 0,
+        "signal": null,
+        "exitCode": 4,
+        "hostInitialization": {
+          "ready": true,
+          "failed": false,
+          "nativeStatusReads": 3,
+          "controlOnly": false,
+          "sessionChanged": false
+        },
+        "hostDelivery": {
+          "confirmed": 0,
+          "failed": false
+        },
+        "nativeControlDelivery": {
+          "confirmed": 0,
+          "modelDeliveryClaimed": false
+        },
+        "modelWorkFailed": false,
+        "executionOutcome": "awaiting-approval",
+        "retry": "never-automatic"
+      }
+    },
+    {
+      "scenario": "native-bypass",
+      "passed": true,
+      "code": 2,
+      "claim": "actual host and sandbox with stubbed kernel context and deterministic model; no resource qualification",
+      "hostVersion": "2.1.287",
+      "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
+      "gatewaySha256": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
+      "modSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "productionModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "testOnlyModifiedArtifact": false,
+      "activation": "explicit-process-opt-in",
+      "kernelMethods": [
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context"
+      ],
+      "modelRequests": [
+        {
+          "toolNames": [
+            "mcp__chio__chio_resume",
+            "mcp__chio__write_file"
+          ],
+          "resultCount": 0
+        }
+      ],
+      "nativeBypassEffect": false,
+      "outsideFileEffect": false,
+      "otherPortRequests": 0,
+      "routeProbe": null,
+      "terminal": {
+        "code": 1,
+        "signal": null,
+        "exitCode": 2,
+        "hostInitialization": {
+          "ready": true,
+          "failed": false,
+          "nativeStatusReads": 3,
+          "controlOnly": false,
+          "sessionChanged": false
+        },
+        "hostDelivery": {
+          "confirmed": 0,
+          "failed": true
+        },
+        "nativeControlDelivery": {
+          "confirmed": 0,
+          "modelDeliveryClaimed": false
+        },
+        "modelWorkFailed": true,
+        "executionOutcome": "unresolved",
+        "retry": "never-automatic"
+      }
+    },
+    {
+      "scenario": "status-command",
+      "passed": true,
+      "code": 0,
+      "claim": "actual host and sandbox with stubbed kernel context and deterministic model; no resource qualification",
+      "hostVersion": "2.1.287",
+      "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
+      "gatewaySha256": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
+      "modSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "productionModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "testOnlyModifiedArtifact": false,
+      "activation": "explicit-process-opt-in",
+      "kernelMethods": [
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context"
+      ],
+      "modelRequests": [],
+      "nativeBypassEffect": false,
+      "outsideFileEffect": false,
+      "otherPortRequests": 0,
+      "routeProbe": null,
+      "terminal": {
+        "code": 0,
+        "signal": null,
+        "exitCode": 0,
+        "hostInitialization": {
+          "ready": true,
+          "failed": false,
+          "nativeStatusReads": 3,
+          "controlOnly": true,
+          "sessionChanged": false
+        },
+        "hostDelivery": {
+          "confirmed": 0,
+          "failed": false
+        },
+        "nativeControlDelivery": {
+          "confirmed": 0,
+          "modelDeliveryClaimed": false
+        },
+        "modelWorkFailed": false,
+        "executionOutcome": "completed",
+        "retry": "never-automatic"
+      }
+    },
+    {
+      "scenario": "native-routes",
+      "passed": true,
+      "code": 4,
+      "claim": "actual host and sandbox with stubbed kernel context and deterministic model; no resource qualification",
+      "hostVersion": "2.1.287",
+      "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
+      "gatewaySha256": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
+      "modSha256": "e8aa7037979f57bb94a426ffb32c1f392ebe02944ad52dcf0f91b78b1609c7cf",
+      "productionModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "testOnlyModifiedArtifact": true,
+      "activation": "explicit-process-opt-in",
+      "kernelMethods": [
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context"
+      ],
+      "modelRequests": [
+        {
+          "toolNames": [
+            "mcp__chio__chio_resume",
+            "mcp__chio__write_file"
+          ],
+          "resultCount": 0
+        },
+        {
+          "toolNames": [
+            "mcp__chio__chio_resume",
+            "mcp__chio__write_file"
+          ],
+          "resultCount": 1
+        }
+      ],
+      "nativeBypassEffect": false,
+      "outsideFileEffect": false,
+      "otherPortRequests": 0,
+      "routeProbe": {
+        "operatorConfigReadBlocked": true,
+        "journalReadBlocked": true,
+        "outsideWriteBlocked": true,
+        "processBlocked": true,
+        "otherPortBlocked": true,
+        "operatorEnvExcluded": true
+      },
+      "terminal": {
+        "code": 0,
+        "signal": null,
+        "exitCode": 4,
+        "hostInitialization": {
+          "ready": true,
+          "failed": false,
+          "nativeStatusReads": 3,
+          "controlOnly": false,
+          "sessionChanged": false
+        },
+        "hostDelivery": {
+          "confirmed": 0,
+          "failed": false
+        },
+        "nativeControlDelivery": {
+          "confirmed": 0,
+          "modelDeliveryClaimed": false
+        },
+        "modelWorkFailed": false,
+        "executionOutcome": "awaiting-approval",
+        "retry": "never-automatic"
+      }
+    },
+    {
+      "scenario": "disconnected-mod",
+      "passed": true,
+      "code": 1,
+      "claim": "actual host and sandbox with stubbed kernel context and deterministic model; no resource qualification",
+      "hostVersion": "2.1.287",
+      "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
+      "gatewaySha256": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
+      "modSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "productionModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "testOnlyModifiedArtifact": true,
+      "activation": "explicit-process-opt-in",
+      "kernelMethods": [
+        "chio/execution-context"
+      ],
+      "modelRequests": [],
+      "nativeBypassEffect": false,
+      "outsideFileEffect": false,
+      "otherPortRequests": 0,
+      "routeProbe": null,
+      "terminal": {
+        "code": 143,
+        "signal": null,
+        "exitCode": 1,
+        "hostInitialization": {
+          "ready": false,
+          "failed": true,
+          "nativeStatusReads": 0,
+          "controlOnly": false,
+          "sessionChanged": false
+        },
+        "hostDelivery": {
+          "confirmed": 0,
+          "failed": false
+        },
+        "nativeControlDelivery": {
+          "confirmed": 0,
+          "modelDeliveryClaimed": false
+        },
+        "modelWorkFailed": true,
+        "executionOutcome": "host-initialization-failed",
+        "retry": "never-automatic"
+      }
+    },
+    {
+      "scenario": "interactive",
+      "passed": true,
+      "code": 4,
+      "claim": "actual host and sandbox with stubbed kernel context and deterministic model; no resource qualification",
+      "hostVersion": "2.1.287",
+      "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
+      "gatewaySha256": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
+      "modSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "productionModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "testOnlyModifiedArtifact": false,
+      "activation": "explicit-process-opt-in",
+      "kernelMethods": [
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context"
+      ],
+      "modelRequests": [
+        {
+          "toolNames": [
+            "mcp__chio__chio_resume",
+            "mcp__chio__write_file"
+          ],
+          "resultCount": 0
+        },
+        {
+          "toolNames": [
+            "mcp__chio__chio_resume",
+            "mcp__chio__write_file"
+          ],
+          "resultCount": 1
+        }
+      ],
+      "nativeBypassEffect": false,
+      "outsideFileEffect": false,
+      "otherPortRequests": 0,
+      "routeProbe": null,
+      "terminalStage": "done",
+      "startupAnswers": [],
+      "cleanup": "deliberate interruption after rendered review",
+      "terminal": {
+        "code": 143,
+        "signal": null,
+        "exitCode": 4,
+        "hostInitialization": {
+          "ready": true,
+          "failed": false,
+          "nativeStatusReads": 6,
+          "controlOnly": false,
+          "sessionChanged": false
+        },
+        "hostDelivery": {
+          "confirmed": 0,
+          "failed": false
+        },
+        "nativeControlDelivery": {
+          "confirmed": 0,
+          "modelDeliveryClaimed": false
+        },
+        "modelWorkFailed": false,
+        "executionOutcome": "awaiting-approval",
+        "retry": "never-automatic"
+      }
+    },
+    {
+      "scenario": "interactive-clear",
+      "passed": true,
+      "code": 1,
+      "claim": "actual host and sandbox with stubbed kernel context and deterministic model; no resource qualification",
+      "hostVersion": "2.1.287",
+      "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
+      "gatewaySha256": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
+      "modSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "productionModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "testOnlyModifiedArtifact": false,
+      "activation": "explicit-process-opt-in",
+      "kernelMethods": [
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context"
+      ],
+      "modelRequests": [],
+      "nativeBypassEffect": false,
+      "outsideFileEffect": false,
+      "otherPortRequests": 0,
+      "routeProbe": null,
+      "terminalStage": "clear",
+      "startupAnswers": [],
+      "cleanup": "launcher termination on host identity change",
+      "terminal": {
+        "code": 143,
+        "signal": null,
+        "exitCode": 1,
+        "hostInitialization": {
+          "ready": false,
+          "failed": true,
+          "nativeStatusReads": 3,
+          "controlOnly": false,
+          "sessionChanged": true
+        },
+        "hostDelivery": {
+          "confirmed": 0,
+          "failed": false
+        },
+        "nativeControlDelivery": {
+          "confirmed": 0,
+          "modelDeliveryClaimed": false
+        },
+        "modelWorkFailed": false,
+        "executionOutcome": "host-initialization-failed",
+        "retry": "never-automatic"
+      }
+    },
+    {
+      "scenario": "interactive-workflow",
+      "passed": true,
+      "code": 0,
+      "claim": "actual host and sandbox with stubbed kernel context and deterministic model; no resource qualification",
+      "hostVersion": "2.1.287",
+      "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
+      "gatewaySha256": "cc1a16eae54c4b468af051001e30c0491a6428e2d7bad817b948b5cf74f75d48",
+      "modSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "productionModSha256": "e01a6ef6b281a10e4c071998bf9f0109626ab8aa66c44b6f754aed6ef00fb9d9",
+      "testOnlyModifiedArtifact": false,
+      "activation": "explicit-process-opt-in",
+      "fixtureEffects": 1,
+      "fixtureCharges": 1,
+      "fixtureAcks": 1,
+      "naturalTerminalExit": true,
+      "kernelMethods": [
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "chio/execution-context",
+        "tools/call",
+        "chio/acknowledge",
+        "chio/execution-context"
+      ],
+      "modelRequests": [
+        {
+          "toolNames": [
+            "mcp__chio__chio_resume",
+            "mcp__chio__write_file"
+          ],
+          "resultCount": 0
+        },
+        {
+          "toolNames": [
+            "mcp__chio__chio_resume",
+            "mcp__chio__write_file"
+          ],
+          "resultCount": 1
+        }
+      ],
+      "nativeBypassEffect": false,
+      "outsideFileEffect": false,
+      "otherPortRequests": 0,
+      "routeProbe": null,
+      "terminalStage": "done",
+      "startupAnswers": [],
+      "cleanup": "natural terminal exit after native-control delivery",
+      "terminal": {
+        "code": 0,
+        "signal": null,
+        "exitCode": 0,
+        "hostInitialization": {
+          "ready": true,
+          "failed": false,
+          "nativeStatusReads": 10,
+          "controlOnly": false,
+          "sessionChanged": false
+        },
+        "hostDelivery": {
+          "confirmed": 0,
+          "failed": false
+        },
+        "nativeControlDelivery": {
+          "confirmed": 1,
+          "modelDeliveryClaimed": false
+        },
+        "modelWorkFailed": false,
+        "executionOutcome": "completed",
+        "retry": "never-automatic"
+      }
+    }
+  ]
+}

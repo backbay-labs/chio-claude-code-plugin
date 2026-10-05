@@ -1,0 +1,26 @@
+{
+  "schema": "chio.live-decision-observations.v1",
+  "classification": "live selected kernel and exact native file resource; separate negative and positive sessions",
+  "missingApproval": {
+    "state": "denied",
+    "evidence": "verified",
+    "verdict": "deny",
+    "receiptId": "9812217b4951c21e59541bac84b2b0c945e7bd3b949d23368d9f24b677264ac6",
+    "resourceWrites": 0,
+    "capturedInvocations": 0
+  },
+  "positiveReview": [
+    {
+      "case": "exact review",
+      "kernelAccepted": true,
+      "decisionDoesNotDispatch": true,
+      "staleReviewRejected": true,
+      "foreignSessionRejected": true,
+      "wrongControlTokenRejected": true,
+      "repeatedDecisionRejected": true
+    }
+  ],
+  "liveRevocationQualified": false,
+  "liveExpiryQualified": false,
+  "originalOutcomeQualified": false
+}

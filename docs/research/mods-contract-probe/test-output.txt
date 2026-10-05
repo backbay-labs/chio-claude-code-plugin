@@ -1,0 +1,9 @@
+tests/control-flow.test.ts:
+(pass) positive control reaches the stub once [29.95ms]
+(pass) failure handler denies before the stub is reached [8.28ms]
+(pass) failure after dispatch preserves the original without redispatch [7.15ms]
+(pass) a failed hook without a handler is skipped and the stub runs [7.19ms]
+
+ 4 pass
+ 0 fail
+Ran 4 tests across 1 file. [0.30s]

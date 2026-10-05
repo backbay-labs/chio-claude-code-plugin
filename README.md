@@ -33,8 +33,23 @@ Run Claude Code against tools and data controlled by the [Chio kernel](https://g
 - **Scoped access.** The kernel checks the prepared session's delegated authority before protected work.
 - **Bound results.** The gateway verifies the receipt signer, caller, request and returned output before accepting an execution result.
 - **Recoverable uncertainty.** Unknown outcomes remain in the private journal and block new dispatch until the operator resolves them.
+- **Native session interface.** Inspect scope, exact action reviews, retained evidence and session-specific revocation requests while Claude works.
 
-**Status:** A source-build candidate for macOS, with [bounded real-host evidence](acceptance/2026-09-10/final-static-continuation/README.md). Complete I01-I08 acceptance and a compatible published release remain open. The marketplace plugin provides diagnostics; protected execution uses the separate restricted launcher below.
+**Status:** Version 0.4.0-rc.4 adds the [native mod interface](docs/NATIVE-MODS.md) against pinned Claude Code 2.1.287. The [controlled-task workflow](docs/CONTROLLED-TASKS.md) adds artifact-bound completion evidence, guided scopes, exact continuation and the typed `$.chio` interface. The trusted operator service supplies session-scoped status and accepts review intent; kernel authority and protected execution remain outside the host. The interactive protected profile remains a qualification candidate. Earlier [bounded real-host evidence](https://github.com/backbay-labs/chio-claude-code-plugin/blob/65ac8390c57a5292c055fba50caa1aafbd915848/acceptance/2026-09-10/final-static-continuation/README.md) pins a different host and does not qualify this version.
+
+The [dedicated-environment report](acceptance/2026-10-03/qualification-environment/REPORT.md) records shared VM recovery, restored backups and live enforcing failures. `/chio-doctor` diagnoses the exact session without submitting work; the separate operator probe checks guest and image availability. An observed native write remains fenced after its durability syscall failed. Production qualification is still incomplete.
+
+Native commands include `/chio`, `/chio-status`, `/chio-review`, `/chio-evidence`, `/chio-revoke`, `/chio-task`, `/chio-completion`, `/chio-continue`, `/chio-outcome` and `/chio-why`. See the [native interface runbook](docs/NATIVE-MODS.md) for activation, scoped credentials and operator confirmation. An ordinary session displays **kernel MCP tools only**; a mod does not confer protection on native Bash or file tools.
+
+## Try it locally
+
+`node scripts/demo.mjs --directory /tmp/new-chio-demo` starts a **demo** with a
+fixture kernel on this machine: the real gateway and control service, an
+operator watch screen in that terminal, and a throwaway owner directory. It
+prints the `claude` command to run in a second terminal. Ask Claude to write a
+file with the chio tool, approve it in the watch screen, then continue it from
+the Chio pane. Nothing is protected: the fixture kernel signs with a key made
+for that run only, and every Chio surface says DEMO.
 
 ## Build from source
 
@@ -47,7 +62,7 @@ npm ci --ignore-scripts --no-audit --no-fund
 npm run build
 ```
 
-The lockfile and checked-in `vendor/` archives supply the Chio bridge and SDK. No sibling checkout is required. The build produces the bundled runtime in `dist/`.
+The npm lockfile and checked-in `vendor/` archives supply the Chio bridge and SDK. No sibling checkout is required. The build produces the bundled runtime in `dist/`. npm is the supported source-install path; the obsolete Bun lockfile referenced a sibling bridge and an unavailable registry dependency.
 
 Building the plugin does not prepare a kernel session. Protected execution also requires macOS, a qualified Claude executable, a compatible running kernel and an isolated resource server. Follow the [operator preparation guide](docs/RESTRICTED-MODE.md#boundary-and-preparation) before launching work.
 
@@ -124,7 +139,7 @@ claude plugin marketplace add backbay-labs/chio-claude-code-plugin
 claude plugin install chio@chio
 ```
 
-This installation does not enable the restricted launcher. Real-host probes found that several hook failures let an otherwise permitted native tool execute. Hook configuration therefore does not establish complete mediation. See [compatibility-hook behavior and state](docs/RESTRICTED-MODE.md#compatibility-hooks) and the [host contract probes](SMOKE.md).
+This installation does not enable the restricted launcher. Real-host probes found that several hook failures let an otherwise permitted native tool execute. Hook configuration therefore does not establish complete mediation. See [compatibility-hook behavior and state](docs/RESTRICTED-MODE.md#compatibility-hooks) and the [host contract probes](SMOKE.md). By default the hooks check only sessions bonded with `/chio:bond`; set the plugin's `compatibility_hooks` option to `always` to deny tools in unbonded sessions, or `off` to disable them.
 
 ## Recovery
 
@@ -132,7 +147,7 @@ After interruption, retain the profile, original request IDs, gateway configurat
 
 - [Failure and recovery](docs/RESTRICTED-MODE.md#failure-and-recovery): inspect retained state, recover dead-process locks and preserve unresolved effects.
 - [Upgrade and removal](docs/RESTRICTED-MODE.md#upgrade-and-removal): retain evidence, revoke old authority and qualify the replacement.
-- [Pinned qualification records](acceptance/2026-09-10/final-static-continuation/README.md): exact versions, executed cases and remaining scope.
+- [Pinned qualification records](https://github.com/backbay-labs/chio-claude-code-plugin/blob/65ac8390c57a5292c055fba50caa1aafbd915848/acceptance/2026-09-10/final-static-continuation/README.md): exact versions, executed cases and remaining scope.
 
 ## Development
 

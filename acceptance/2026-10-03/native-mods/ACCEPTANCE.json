@@ -1,0 +1,127 @@
+{
+  "schema": "chio.claude.native-acceptance.v1",
+  "recordedAt": "2026-10-03T16:27:59.003Z",
+  "version": "0.4.0-rc.1",
+  "productionQualified": false,
+  "sourceBaseline": "65ac8390c57a5292c055fba50caa1aafbd915848",
+  "hostVersion": "2.1.287",
+  "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
+  "nativeModSha256": "d855b6e8fe191971007f701d9e489f7603e8ecdfde94bc751c40ce9efb154522",
+  "localToolchain": {
+    "node": "v25.5.0",
+    "npm": "11.8.0",
+    "python": "3.11.4",
+    "platform": "darwin-arm64",
+    "terminalEmulator": {
+      "pyte": "0.8.2",
+      "wcwidth": "0.9.1"
+    }
+  },
+  "artifacts": {
+    "hooks/native/register.ts": "a28c7f42bbcce56be0884eb6190144e14624c9af35d77b71f9b1c96e44006f89",
+    "hooks/native/projection.ts": "d68d64649e8926f7c3b08c2ebeb200a3840ca1e69c960e5a12eb4bcd842490b2",
+    "types/control.d.ts": "ca6530a0658920ddaf8e527f08ffad3126c611fc06ca89e29a0a295d4695bb32",
+    "dist/control/service.js": "325f1ed5d86cb7878abaaf7967d70e77271085889503773de6d9e0ea6977b2d6",
+    "dist/gateway-http.js": "6ef1dfdf0fc822685574bc1a0d6a3d37764772a2401afd14a8f2706d904c47cf",
+    "scripts/restricted.mjs": "eeeed8f49a6e924af355e68c980fd30825c2e0a621f9d66799a40236f6289767",
+    "scripts/model-relay.mjs": "25a09317a847aeda582b59ef985a51dd53827addeff6d258535d18c4d69dba75",
+    "scripts/sandbox.mjs": "7ab4b1072cd8007e0634d0aa41e37e6e98329a2b67260c5ee2f07d1ba85e08d9",
+    "scripts/mod-profile.mjs": "ab6aa05c20fdd67cfb7fd4eb023f8d531a57f738fdbcda1c876bf0b1a8e27ea2",
+    "scripts/control.mjs": "73f5dac85a3c7a901add2a7c95b58c279f5d62608315a6b6294f5bb37d9692c6",
+    "scripts/host-supervisor.mjs": "07ec66143bf1276217e7a240eef39156e656c2dd7e3ec210810807809d979155",
+    "scripts/fetch-host.mjs": "14e44ad16b14fe9a8cd97bc5c7d225d73b4987526d91e8c1974fb7fcfabb9652"
+  },
+  "checks": {
+    "typecheck": "passed",
+    "build": "passed",
+    "unit": {
+      "passed": 55,
+      "failed": 0,
+      "evidenceClass": "local regressions and signed fixtures"
+    },
+    "nativeModHarness": {
+      "passed": 11,
+      "failed": 0,
+      "evidenceClass": "actual pinned event/drawing harness; stubbed APIs"
+    },
+    "middlewareContract": {
+      "passed": 4,
+      "failed": 0,
+      "evidenceClass": "actual pinned event harness; stubbed dispatch"
+    },
+    "hostFixtures": {
+      "passed": 7,
+      "failed": 0,
+      "evidence": "HOST-FIXTURES.json",
+      "evidenceClass": "actual host and sandbox; stubbed kernel context and local model"
+    },
+    "cleanConsumer": {
+      "evidenceLocation": "final candidate directory sidecar after packing; no self-referential package digest in this source record"
+    },
+    "workflowSyntax": "both YAML workflows parsed",
+    "localDocumentLinks": {
+      "checked": 53,
+      "missing": 0
+    },
+    "publicationGate": {
+      "result": "rejected as required",
+      "exitCode": 1,
+      "reason": "productionQualified is false"
+    }
+  },
+  "gates": {
+    "hostContract": {
+      "qualified": true,
+      "evidenceClass": "live-host-contract",
+      "scope": "selected darwin-arm64 host loading and bounded event behavior",
+      "evidence": "HOST-FIXTURES.json"
+    },
+    "sessionLifecycle": {
+      "qualified": false,
+      "evidenceClass": "partial-host-and-stubbed-harness",
+      "reason": "Actual initial session and clear tested; reload, resume, fork, reconnect and natural terminal shutdown remain open."
+    },
+    "kernelDecisions": {
+      "qualified": false,
+      "evidenceClass": "signed-fixture",
+      "reason": "Exact signed acceptance and revocation verification implemented and tested against fixtures; selected live kernel decisions remain open."
+    },
+    "interactiveProtection": {
+      "qualified": false,
+      "evidenceClass": "partial-live-host-fixture",
+      "reason": "Actual terminal and six bounded native-route probes passed; live provider and resource confinement with delivered artifacts remain open."
+    },
+    "nativeRecovery": {
+      "qualified": false,
+      "evidenceClass": "unperformed",
+      "reason": "No one-effect/one-charge write, lost-response, restart and original-outcome reconciliation on this native host."
+    },
+    "coldInstall": {
+      "qualified": false,
+      "evidenceClass": "artifact-check-separate",
+      "reason": "Offline installation and disconnected command checks are recorded for the exact tarball externally; complete supported kernel activation remains open."
+    }
+  },
+  "qualificationBlockers": [
+    {
+      "code": "linux-custody-environment",
+      "detail": "The current required resource owner requires Linux custody, immutable resource image, signed manifest and cage policy, and a private resume keyring. No new qualified owner was provisioned."
+    },
+    {
+      "code": "containerd-io-error",
+      "detail": "Read-only Docker image inventory failed with a containerd content-blob input/output error. Existing containers, volumes and VM state were preserved."
+    },
+    {
+      "code": "live-provider-not-qualified",
+      "detail": "The pinned-host effort header compatibility rule is fixture tested. No live provider call was made for the new native profile."
+    }
+  ],
+  "excludedFeatures": [
+    "managed organization policy mod",
+    "transparent native Read/Write mediation",
+    "general Bash execution confinement",
+    "semantic remedy generation",
+    "automatic authority-decision retries",
+    "automatic uncertain-operation retries"
+  ]
+}

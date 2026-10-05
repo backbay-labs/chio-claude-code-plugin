@@ -1,0 +1,44 @@
+{
+  "schema": "chio.claude.native-owner-preflight.v1",
+  "recordedAt": "2026-10-03T22:19:27.179550+00:00",
+  "liveOwnerQualified": false,
+  "changesPerformed": false,
+  "checks": [
+    {
+      "name": "required-resource-image",
+      "command": [
+        "docker",
+        "image",
+        "inspect",
+        "sha256:188cb84d5d0bb4063d4ce5a3b9c3832445a5acda5604911cda80a9136d1850a0"
+      ],
+      "exitCode": 1,
+      "output": "[]\nError response from daemon: rpc error: code = Unknown desc = blob sha256:188cb84d5d0bb4063d4ce5a3b9c3832445a5acda5604911cda80a9136d1850a0 expected at /var/lib/containerd/io.containerd.content.v1.content/blobs/sha256/188cb84d5d0bb4063d4ce5a3b9c3832445a5acda5604911cda80a9136d1850a0: open /var/lib/containerd/io.containerd.content.v1.content/blobs/sha256/188cb84d5d0bb4063d4ce5a3b9c3832445a5acda5604911cda80a9136d1850a0: input/output error\n"
+    },
+    {
+      "name": "vm-shell",
+      "command": [
+        "colima",
+        "ssh",
+        "--",
+        "sh",
+        "-c",
+        "true"
+      ],
+      "exitCode": 1,
+      "output": "/bin/bash: Input/output error\ntime=\"2026-10-03T18:19:27-04:00\" level=fatal msg=\"exit status 1\"\n"
+    },
+    {
+      "name": "existing-containers",
+      "command": [
+        "docker",
+        "ps",
+        "--format",
+        "{{.Names}} {{.Status}}"
+      ],
+      "exitCode": 0,
+      "output": "playground-control-plane Up 3 days\nplayground-worker2 Up 3 days\nplayground-worker Up 3 days\nbackbay-imperium Up 3 days\nthrunt-postgres Up 3 days (unhealthy)\nthrunt-redis Up 3 days (unhealthy)\n"
+    }
+  ],
+  "decision": "Existing VM, containers, services, volumes and owner state preserved. Live custody and recovery qualification remains blocked."
+}

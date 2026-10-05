@@ -1,0 +1,56 @@
+{
+  "schema": "chio.isolated-restore-observations.v1",
+  "postgres": {
+    "schema": "chio.database.restore-check.v1",
+    "profile": "chio-native-qualification",
+    "containerNetwork": "none",
+    "sourceUnmodified": true,
+    "globalsRestored": true,
+    "existingBootstrapRoleCreateSkipped": "postgres",
+    "databases": [
+      {
+        "archive": "postgres-database-0.dump",
+        "restoreExitCode": 0,
+        "restoredUserTableCount": 3
+      },
+      {
+        "archive": "postgres-database-1.dump",
+        "restoreExitCode": 0,
+        "restoredUserTableCount": 0
+      },
+      {
+        "archive": "postgres-database-2.dump",
+        "restoreExitCode": 0,
+        "restoredUserTableCount": 18
+      },
+      {
+        "archive": "postgres-database-3.dump",
+        "restoreExitCode": 0,
+        "restoredUserTableCount": 11
+      }
+    ],
+    "scope": "successful complete archive restoration and user-table inventory; no application functional acceptance claim"
+  },
+  "redis": {
+    "schema": "chio.redis.restore-check.v1",
+    "profile": "chio-native-qualification",
+    "network": "none",
+    "sourceUnmodified": true,
+    "rdbIntegrityExitCode": 0,
+    "restoreVerified": true,
+    "restoredKeyCount": 3,
+    "rdbSha256": "0af06064c1a789f8a0fb48acd7791e09abd9e613f866efaa9795e2e498568ceb",
+    "scope": "successful RDB integrity check and isolated load; no application functional acceptance claim"
+  },
+  "originalFilesystemRepaired": false,
+  "applicationFunctionalAcceptance": false,
+  "crossServiceConsistentCutpointVerified": false,
+  "diskCopies": {
+    "liveCheckpointRetained": true,
+    "stoppedCheckpointRetained": true,
+    "unmountedCopyFilesystem": "ext4",
+    "repairAppliedToDisposableCopyOnly": true,
+    "repairedCopyReadOnlyFsckExitCode": 0,
+    "originalDiskReplaced": false
+  }
+}

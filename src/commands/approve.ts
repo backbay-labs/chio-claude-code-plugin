@@ -26,7 +26,9 @@ import { KEYSTORE_DIR, RECEIPT_CACHE_DIR } from "../state/paths.js";
  */
 export async function approve(args: string[]): Promise<string> {
   const [receiptId] = args;
-  if (!receiptId) throw new Error("usage: /chio:approve <receipt-id>");
+  if (args.length !== 1 || !receiptId || !/^[A-Za-z0-9_-]{1,128}$/.test(receiptId)) {
+    throw new Error("usage: /chio:approve <receipt-id> (letters, digits, underscores and hyphens only)");
+  }
 
   const bridge = buildBridge();
   const receipt = await loadReceipt(bridge, receiptId);
@@ -69,7 +71,9 @@ export async function approve(args: string[]): Promise<string> {
 
   return JSON.stringify(
     {
-      status: "approved",
+      status: propagated === "posted" ? "decision_submitted" : "signed_intent",
+      authority_accepted: false,
+      execution_verified: false,
       receipt_id: receiptId,
       signer: key.did,
       signature_hex: bundle.signature_hex,
@@ -128,6 +132,8 @@ async function postAuthority(bundle: {
       signer: bundle.signer,
       signature_hex: bundle.signature_hex,
     }),
+    redirect: "error",
+    signal: AbortSignal.timeout(10_000),
   });
   if (!res.ok) {
     throw new Error(`authority endpoint returned HTTP ${res.status}`);

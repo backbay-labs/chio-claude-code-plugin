@@ -1,0 +1,59 @@
+{
+  "schema": "chio.enforcing-launch-probe.v1",
+  "resourceProfile": "Docker CLI to container filesystem resource",
+  "provisioningSucceeded": true,
+  "authenticatedMcpInitializationSucceeded": false,
+  "protectedToolDispatched": false,
+  "records": [
+    {
+      "receiptId": "8c35ced736b8ce011db4d05d13c99e7fa6e37c0fb50810b77052b6b3f9c19a34",
+      "stage": "enforcement",
+      "state": "fully_enforced",
+      "landlockFilesystemStatus": "fully_enforced",
+      "landlockNetworkStatus": "fully_enforced",
+      "seccompStatus": "fully_enforced",
+      "targetBindingDigest": "c6a20cf0d5cd2e0efc6dce3aaa9cbd9cd7ef2a98f32aac3bfa7ff976577fab18",
+      "exit": null
+    },
+    {
+      "receiptId": "533f5573d9fbec4c32d0a74e8997da60129f9b78ac8a0595e25a7be91fa6da43",
+      "stage": "terminal_exit",
+      "state": "exited",
+      "landlockFilesystemStatus": "fully_enforced",
+      "landlockNetworkStatus": "fully_enforced",
+      "seccompStatus": "fully_enforced",
+      "targetBindingDigest": "c6a20cf0d5cd2e0efc6dce3aaa9cbd9cd7ef2a98f32aac3bfa7ff976577fab18",
+      "exit": {
+        "exitCode": null,
+        "signal": 31,
+        "signalName": "SIGSYS"
+      }
+    },
+    {
+      "receiptId": "7afec654fc9b6b3d443823d6da6ffe56294d929008944b4e6c9de7ebb7370076",
+      "stage": "enforcement",
+      "state": "fully_enforced",
+      "landlockFilesystemStatus": "fully_enforced",
+      "landlockNetworkStatus": "fully_enforced",
+      "seccompStatus": "fully_enforced",
+      "targetBindingDigest": "c6a20cf0d5cd2e0efc6dce3aaa9cbd9cd7ef2a98f32aac3bfa7ff976577fab18",
+      "exit": null
+    },
+    {
+      "receiptId": "70c5ad6a502fab1c29f8d312a94301bf287690b9794409000c20015683471663",
+      "stage": "terminal_exit",
+      "state": "exited",
+      "landlockFilesystemStatus": "fully_enforced",
+      "landlockNetworkStatus": "fully_enforced",
+      "seccompStatus": "fully_enforced",
+      "targetBindingDigest": "c6a20cf0d5cd2e0efc6dce3aaa9cbd9cd7ef2a98f32aac3bfa7ff976577fab18",
+      "exit": {
+        "exitCode": null,
+        "signal": 31,
+        "signalName": "SIGSYS"
+      }
+    }
+  ],
+  "firstRejectedSyscall": "not retained",
+  "productionQualified": false
+}

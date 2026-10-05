@@ -6,7 +6,7 @@
 // Runtime load map:
 //   scripts/_runner.mjs      -> dist/index.js
 //   hooks/pretooluse.mjs     -> dist/state/{bridge,store,paths}.js
-//   hooks/posttooluse.mjs    -> dist/state/{bridge,paths}.js
+//   hooks/posttooluse.mjs    -> dist/state/{bridge,store,paths}.js
 //
 // Each entrypoint is bundled independently (no shared chunks). Command and
 // hook processes are separate, so the duplication costs disk, not correctness.
@@ -27,7 +27,14 @@ await build({
     "state/store": "src/state/store.ts",
     "state/paths": "src/state/paths.ts",
     gateway: join(bridgeRoot, "dist", "gateway.js"),
-    "gateway-http": join(bridgeRoot, "dist", "gateway-http.js"),
+    "gateway-http": "scripts/gateway-http.mjs",
+    "gateway-operator": join(bridgeRoot, "dist", "gateway-operator.js"),
+    "control/service": "src/control/service.ts",
+    "demo/fixture": "src/demo/fixture.ts",
+    "workflow/store": "src/workflow/store.ts",
+    "workflow/tasks": "src/workflow/tasks.ts",
+    "workflow/handoff": "src/workflow/handoff.ts",
+    "workflow/prepare": join(bridgeRoot, "dist", "prepare-gateway.js"),
   },
   outbase: "src",
   outdir: "dist",

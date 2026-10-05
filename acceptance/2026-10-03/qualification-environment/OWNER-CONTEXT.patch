@@ -1,0 +1,517 @@
+From cf378e457bc9714977c698457695bd466800793e Mon Sep 17 00:00:00 2001
+From: Codex <codex@example.invalid>
+Date: Sat, 3 Oct 2026 21:45:00 -0400
+Subject: [PATCH] fix(qualification): bind owner context and signed resource
+ identity
+
+---
+ integrations/required-agents/README.md        |  12 ++
+ .../qualification/Dockerfile.kernel-cross     |  42 +++++
+ .../Dockerfile.reference-tools-cross          |  37 +++++
+ .../required-agents/qualification/README.md   |  60 +++++++
+ .../test_owner_docker_context.py              | 148 ++++++++++++++++++
+ .../required-agents/serve-filesystem.py       |  74 +++++++--
+ 6 files changed, 362 insertions(+), 11 deletions(-)
+ create mode 100644 integrations/required-agents/qualification/Dockerfile.kernel-cross
+ create mode 100644 integrations/required-agents/qualification/Dockerfile.reference-tools-cross
+ create mode 100644 integrations/required-agents/qualification/test_owner_docker_context.py
+
+diff --git a/integrations/required-agents/README.md b/integrations/required-agents/README.md
+index 52a42d7fb..f1650b813 100644
+--- a/integrations/required-agents/README.md
++++ b/integrations/required-agents/README.md
+@@ -79,6 +79,7 @@ python3 resource-owner/serve-filesystem.py start \
+   --cage-policy /absolute/reviewed/native-launch-policy.json \
+   --cage-policy-signer REPLACE_WITH_POLICY_SIGNER_HEX \
+   --resume-hmac-keyring /absolute/private/resume-hmac-keyring.json \
++  --docker-context SELECTED_DOCKER_CONTEXT \
+   --image sha256:REPLACE_WITH_IMAGE_ID \
+   --volume chio-required-example \
+   --port 58483
+@@ -89,6 +90,17 @@ sandbox must deny this directory, historical operator state in `/tmp`, and all
+ other host profiles. A mode-0600 file alone does not isolate same-user processes.
+ The launcher refuses an existing resource or audit volume or state directory. It creates private
+ operator credentials, snapshots and hashes the policy, and starts a durable kernel owner.
++Every Docker call selects the supplied context explicitly. The owner record pins
++its endpoint, daemon ID, operating system and architecture; restart refuses a
++changed binding. This does not change the active context. Choose the context
++in the Linux owner environment: a host-side Colima context name is not implicitly
++available inside its guest. An older owner without this binding needs an explicit
++qualified migration that preserves its state.
++The runtime server name and version come from the pinned signed manifest.
++Restart checks those exact arguments before signaling the owner. The kernel's
++default server name can differ from the reviewed resource identity and prevent
++authenticated preparation; overriding the manifest to hide that mismatch is
++not a qualified migration.
+ Use `--policy /absolute/selected-policy.yaml` for a separately qualified policy,
+ such as the explicit-confirmation qualification policy. Restart rejects changes
+ to that snapshot.
+diff --git a/integrations/required-agents/qualification/Dockerfile.kernel-cross b/integrations/required-agents/qualification/Dockerfile.kernel-cross
+new file mode 100644
+index 000000000..81032a6bb
+--- /dev/null
++++ b/integrations/required-agents/qualification/Dockerfile.kernel-cross
+@@ -0,0 +1,42 @@
++# Qualification build from clean Chio source de84fc306efbb4c8dd6de748d0ad2a8d695fd30e.
++# Native ARM compilation produces Linux x86_64 artifacts; execution occurs in the x86_64 guest.
++FROM rust:1.94.1-bookworm@sha256:55912ad77b52c411af5ecb4cf8901199b3688dbc96bf979570bbd8834dac69aa AS build
++RUN dpkg --add-architecture amd64 \
++ && apt-get update \
++ && apt-get install -y --no-install-recommends gcc-x86-64-linux-gnu g++-x86-64-linux-gnu libssl-dev:amd64 cmake clang pkg-config \
++ && rustup target add x86_64-unknown-linux-gnu x86_64-unknown-linux-musl \
++ && dpkg-query -W > /build-packages.txt
++ENV CARGO_BUILD_JOBS=3 CARGO_INCREMENTAL=0 \
++ CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER=x86_64-linux-gnu-gcc \
++ CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=x86_64-linux-gnu-gcc \
++ CC_x86_64_unknown_linux_gnu=x86_64-linux-gnu-gcc \
++ CXX_x86_64_unknown_linux_gnu=x86_64-linux-gnu-g++ \
++ CC_x86_64_unknown_linux_musl=x86_64-linux-gnu-gcc \
++ PKG_CONFIG_ALLOW_CROSS=1 PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig \
++ CARGO_PROFILE_DOCKER_RELEASE_OPT_LEVEL=1 CARGO_PROFILE_DOCKER_RELEASE_LTO=false CARGO_PROFILE_DOCKER_RELEASE_CODEGEN_UNITS=16 CARGO_PROFILE_DOCKER_RELEASE_OVERFLOW_CHECKS=true
++WORKDIR /workspace
++COPY Cargo.toml Cargo.lock ./
++COPY .cargo ./.cargo
++COPY crates ./crates
++COPY third_party ./third_party
++COPY bench ./bench
++COPY examples ./examples
++COPY integrations ./integrations
++COPY tests ./tests
++COPY xtask ./xtask
++COPY fixtures/proof-room ./fixtures/proof-room
++COPY spec ./spec
++COPY wit ./wit
++COPY formal ./formal
++RUN --mount=type=cache,target=/usr/local/cargo/registry,sharing=locked \
++ --mount=type=cache,target=/workspace/target,sharing=locked \
++ cargo metadata --format-version 1 --locked >/dev/null \
++ && cargo build --locked --profile docker-release --target x86_64-unknown-linux-gnu -p chio-cli --bin chio \
++ && cargo build --locked --profile docker-release --target x86_64-unknown-linux-musl -p chio-cage --bin chio-cage-init \
++ && mkdir /artifacts \
++ && cp target/x86_64-unknown-linux-gnu/docker-release/chio target/x86_64-unknown-linux-musl/docker-release/chio-cage-init /artifacts/ \
++ && cp /build-packages.txt Cargo.lock /artifacts/ \
++ && rustc -Vv > /artifacts/rustc.txt \
++ && sha256sum /artifacts/chio /artifacts/chio-cage-init > /artifacts/SHA256SUMS
++FROM scratch
++COPY --from=build /artifacts /artifacts
+diff --git a/integrations/required-agents/qualification/Dockerfile.reference-tools-cross b/integrations/required-agents/qualification/Dockerfile.reference-tools-cross
+new file mode 100644
+index 000000000..d880d62f1
+--- /dev/null
++++ b/integrations/required-agents/qualification/Dockerfile.reference-tools-cross
+@@ -0,0 +1,37 @@
++# Component probe from clean Chio source de84fc306efbb4c8dd6de748d0ad2a8d695fd30e.
++# The native file tool is a separate resource profile from the Docker filesystem owner.
++FROM rust:1.94.1-bookworm@sha256:55912ad77b52c411af5ecb4cf8901199b3688dbc96bf979570bbd8834dac69aa AS build
++RUN dpkg --add-architecture amd64 \
++ && apt-get update \
++ && apt-get install -y --no-install-recommends gcc-x86-64-linux-gnu g++-x86-64-linux-gnu libssl-dev:amd64 cmake clang pkg-config \
++ && rustup target add x86_64-unknown-linux-gnu x86_64-unknown-linux-musl \
++ && dpkg-query -W > /build-packages.txt
++ENV CARGO_BUILD_JOBS=3 CARGO_INCREMENTAL=0 \
++ CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=x86_64-linux-gnu-gcc \
++ CC_x86_64_unknown_linux_musl=x86_64-linux-gnu-gcc \
++ CARGO_PROFILE_DOCKER_RELEASE_OPT_LEVEL=1 CARGO_PROFILE_DOCKER_RELEASE_LTO=false CARGO_PROFILE_DOCKER_RELEASE_CODEGEN_UNITS=16 CARGO_PROFILE_DOCKER_RELEASE_OVERFLOW_CHECKS=true
++WORKDIR /workspace
++COPY Cargo.toml Cargo.lock ./
++COPY .cargo ./.cargo
++COPY crates ./crates
++COPY third_party ./third_party
++COPY bench ./bench
++COPY examples ./examples
++COPY integrations ./integrations
++COPY tests ./tests
++COPY xtask ./xtask
++COPY fixtures/proof-room ./fixtures/proof-room
++COPY spec ./spec
++COPY wit ./wit
++COPY formal ./formal
++RUN --mount=type=cache,target=/usr/local/cargo/registry,sharing=locked \
++ --mount=type=cache,target=/workspace/target,sharing=locked \
++ cargo metadata --format-version 1 --locked >/dev/null \
++ && cargo build --locked --profile docker-release --target x86_64-unknown-linux-musl -p chio-reference-tools --bins \
++ && mkdir /artifacts \
++ && cp target/x86_64-unknown-linux-musl/docker-release/chio-tool-artifact-writer target/x86_64-unknown-linux-musl/docker-release/chio-tool-repo-reader target/x86_64-unknown-linux-musl/docker-release/chio-tool-digest /artifacts/ \
++ && cp /build-packages.txt Cargo.lock /artifacts/ \
++ && rustc -Vv > /artifacts/rustc.txt \
++ && sha256sum /artifacts/chio-tool-* > /artifacts/SHA256SUMS
++FROM scratch
++COPY --from=build /artifacts /artifacts
+diff --git a/integrations/required-agents/qualification/README.md b/integrations/required-agents/qualification/README.md
+index 6fb98cbd0..7869adfde 100644
+--- a/integrations/required-agents/qualification/README.md
++++ b/integrations/required-agents/qualification/README.md
+@@ -109,3 +109,63 @@ they do not carry structured admission-state metadata. Consumers must preserve
+ the original unknown outcome. An unsigned duplicate rejection also does not
+ establish no original effect. Successful replay after restart returns the
+ original signed receipt and preserves the observer's sentinel.
++## Dedicated native qualification environment
++
++Keep qualification separate from shared application services. The selected
++source `de84fc306efbb4c8dd6de748d0ad2a8d695fd30e` accepts only native x86_64
++enforcement. An aarch64 Docker guest can build artifacts and inspect recovery
++copies, but it cannot qualify that enforcing runtime.
++
++On the inspected Colima 0.8.4 and Lima 2.1.4 installation:
++
++```sh
++colima start chio-native-qualification-x86 \
++  --runtime docker --vm-type qemu --arch x86_64 \
++  --cpus 4 --memory 8 --disk 40 --activate=false --template=false
++colima --profile chio-native-qualification-x86 ssh -- uname -m
++docker --context colima-chio-native-qualification-x86 info
++```
++
++Every host Docker command must select its context. Inside the Linux resource
++owner, select the guest's own context explicitly. The owner launcher pins the
++resolved endpoint and daemon identity and checks them again before restart.
++Its private stores and credentials belong in the Linux owner environment, away
++from the agent host. Never copy private operator records into public evidence.
++
++The [cross-build recipe](./Dockerfile.kernel-cross) compiles pinned-source Linux
++x86_64 artifacts on a native ARM builder. It pins Rust 1.94.1 and retains the
++dependency lock, toolchain metadata, distribution package inventory and binary
++hashes. Build it from a clean selected checkout using an explicit ARM Docker
++context. The recipe selects `docker-release` with optimization level 1, LTO off
++and overflow checks enabled. Its profile and artifact identity must be retained.
++Package versions are inventoried rather than frozen, so a new
++build needs independent identity and qualification.
++
++Infrastructure availability is an admission prerequisite. Passing shell,
++storage, inode and image reads does not prove live approval, resource custody,
++original-outcome recovery or release qualification. The enforcing runtime also
++needs an independently qualified launch contract: an ordinary Docker CLI needs
++socket creation that the selected native cage forbids. A weaker migration stage
++cannot satisfy an enforcing-profile gate. Preserve failed state and the exact
++diagnostic before revising that contract.
++
++The selected filesystem server's actual fourteen-tool inventory includes MCP
++`execution: {taskSupport: "forbidden"}` metadata. The selected manifest
++provisioner rejects that metadata. A reviewed synchronous four-tool projection
++was used only to probe enforcing launch; it does not qualify the full inventory
++or its metadata binding. Retain the actual discovery response and qualify the
++publisher manifest contract before claiming resource acceptance.
++
++The [reference-tool cross-build](./Dockerfile.reference-tools-cross) supplies a
++separate static, single-threaded file-writer experiment. This is a different
++resource profile and cannot qualify the Docker filesystem server. Its
++`write_file` implementation calls `sync_all` after writing a precreated exact
++file. On the selected enforcing build, the writer was killed by seccomp at
++x86_64 syscall 74 (`fsync`) after one independently observed write. The kernel
++retained `outcome_unknown_after_dispatch`; restart did not redispatch it.
++No verified original result was returned, so this does not satisfy original
++outcome recovery. A file's observed contents also do not prove that a failed
++durability barrier committed them to stable storage. Qualify a reviewed
++durability contract or resource-owned broker before retrying that acceptance
++case with fresh disposable state. Do not remove the durability barrier or
++weaken the cage to turn this failure into a passing check.
+diff --git a/integrations/required-agents/qualification/test_owner_docker_context.py b/integrations/required-agents/qualification/test_owner_docker_context.py
+new file mode 100644
+index 000000000..2ac241415
+--- /dev/null
++++ b/integrations/required-agents/qualification/test_owner_docker_context.py
+@@ -0,0 +1,148 @@
++#!/usr/bin/env python3
++"""Explicit Docker bindings must fail before launching a different resource owner."""
++import importlib.util
++import json
++from pathlib import Path
++import subprocess
++import tempfile
++import types
++import unittest
++from unittest.mock import patch
++
++SPEC = importlib.util.spec_from_file_location(
++    "resource_owner", Path(__file__).resolve().parents[1] / "serve-filesystem.py")
++OWNER = importlib.util.module_from_spec(SPEC)
++SPEC.loader.exec_module(OWNER)
++
++
++class DockerBindingTest(unittest.TestCase):
++    def setUp(self):
++        self.context = "chio-qualification"
++        self.executable = "/usr/bin/docker"
++        self.endpoint = {"Host": "unix:///var/run/docker.sock", "SkipTLSVerify": False}
++        self.info = {"ID": "daemon-one", "Architecture": "x86_64", "OSType": "linux"}
++
++    def docker_run(self, *args):
++        self.assertEqual(args[:3], (self.executable, "--context", self.context))
++        if args[3] == "context":
++            self.assertEqual(args[4:7], ("inspect", self.context, "--format"))
++            value = self.endpoint
++        else:
++            self.assertEqual(args[3:5], ("info", "--format"))
++            value = self.info
++        return types.SimpleNamespace(stdout=json.dumps(value))
++
++    def operator(self):
++        selected = OWNER.docker_selection(self.context, self.executable)
++        return {"dockerSelection": selected, "dockerExecutable": self.executable,
++                "command": ["/opt/chio", "mcp", "serve-http", "--", self.executable,
++                            "--context", self.context, "run", "image"]}
++
++    def test_explicit_selection_and_stable_restart(self):
++        with patch.object(OWNER, "run", side_effect=self.docker_run) as calls:
++            operator = self.operator()
++            OWNER.validate_docker_selection(operator)
++            self.assertEqual(calls.call_count, 4)
++            self.assertEqual(operator["dockerSelection"]["daemonId"], "daemon-one")
++
++    def test_changed_daemon_refuses_restart(self):
++        with patch.object(OWNER, "run", side_effect=self.docker_run):
++            operator = self.operator()
++            self.info["ID"] = "daemon-two"
++            with self.assertRaisesRegex(ValueError, "daemon changed"):
++                OWNER.validate_docker_selection(operator)
++
++    def test_changed_endpoint_refuses_restart(self):
++        with patch.object(OWNER, "run", side_effect=self.docker_run):
++            operator = self.operator()
++            self.endpoint["Host"] = "unix:///another/daemon.sock"
++            with self.assertRaisesRegex(ValueError, "endpoint or daemon changed"):
++                OWNER.validate_docker_selection(operator)
++
++    def test_command_cannot_drop_or_replace_context(self):
++        with patch.object(OWNER, "run", side_effect=self.docker_run):
++            operator = self.operator()
++            operator["command"][6] = "default"
++            with self.assertRaisesRegex(ValueError, "command no longer binds"):
++                OWNER.validate_docker_selection(operator)
++
++    def test_unreachable_daemon_does_not_fall_back(self):
++        with patch.object(OWNER, "run", side_effect=subprocess.CalledProcessError(1, ["docker"])):
++            with self.assertRaises(subprocess.CalledProcessError):
++                OWNER.docker_selection(self.context, self.executable)
++
++    def test_empty_daemon_identity_and_legacy_owner_refused(self):
++        with patch.object(OWNER, "run", side_effect=self.docker_run):
++            self.info["ID"] = ""
++            with self.assertRaisesRegex(ValueError, "identified, reachable"):
++                OWNER.docker_selection(self.context, self.executable)
++        with self.assertRaisesRegex(ValueError, "explicit Docker binding"):
++            OWNER.validate_docker_selection({"command": ["docker", "run"]})
++
++    def test_context_is_required_and_cannot_be_an_option(self):
++        for context in (None, "", "--host", "bad/name"):
++            with self.subTest(context=context), self.assertRaises(ValueError):
++                OWNER.docker_selection(context, self.executable)
++
++    def test_restart_validates_binding_before_signaling_the_running_owner(self):
++        with patch.object(OWNER, "run", side_effect=self.docker_run):
++            operator = self.operator()
++            self.info["ID"] = "replacement-daemon"
++            with tempfile.TemporaryDirectory() as directory:
++                (Path(directory) / "operator.json").write_text(json.dumps(operator))
++                args = types.SimpleNamespace(state_dir=directory, action="restart")
++                with patch.object(OWNER.os, "kill") as signal:
++                    with self.assertRaisesRegex(ValueError, "daemon changed"):
++                        OWNER.lifecycle(args)
++                    signal.assert_not_called()
++
++
++class ManifestIdentityTest(unittest.TestCase):
++    def material(self, directory, manifest=None):
++        directory = Path(directory)
++        manifest_path = directory / "manifest.json"
++        manifest_path.write_text(json.dumps({"manifest": manifest or {
++            "server_id": "fs", "name": "Reviewed resource", "version": "7.2"}}))
++        policy = directory / "policy.json"
++        policy.write_text("{}")
++        keyring = directory / "keyring.json"
++        keyring.write_text("{}")
++        for path in (manifest_path, policy, keyring):
++            path.chmod(0o600)
++        return {"signedManifest": OWNER.launch_file(manifest_path),
++                "manifestPublicKey": "a" * 64, "cagePolicy": OWNER.launch_file(policy),
++                "cagePolicySigner": "b" * 64,
++                "resumeHmacKeyring": OWNER.launch_file(keyring, private=True)}
++
++    def test_runtime_uses_the_admitted_manifest_identity_and_refuses_default_substitution(self):
++        with tempfile.TemporaryDirectory() as directory:
++            material = self.material(directory)
++            arguments = OWNER.launch_arguments(material)
++            operator = {"launchMaterial": material, "command": ["/opt/chio", *arguments]}
++            OWNER.validate_launch_material(operator)
++            self.assertEqual(arguments[arguments.index("--server-name") + 1], "Reviewed resource")
++            self.assertEqual(arguments[arguments.index("--server-version") + 1], "7.2")
++            operator["command"][operator["command"].index("--server-name") + 1] = "fs"
++            with self.assertRaisesRegex(ValueError, "no longer binds"):
++                OWNER.validate_launch_material(operator)
++
++    def test_foreign_manifest_identity_is_rejected(self):
++        with tempfile.TemporaryDirectory() as directory:
++            material = self.material(directory, {"server_id": "foreign", "name": "Server", "version": "1"})
++            with self.assertRaisesRegex(ValueError, "server identity"):
++                OWNER.launch_arguments(material)
++
++    def test_changed_manifest_refuses_restart_before_signaling(self):
++        with tempfile.TemporaryDirectory() as directory:
++            material = self.material(directory)
++            operator = {"launchMaterial": material, "command": ["/opt/chio", *OWNER.launch_arguments(material)]}
++            (Path(directory) / "operator.json").write_text(json.dumps(operator))
++            Path(material["signedManifest"]["path"]).write_text('{"manifest":{"server_id":"fs","name":"Changed","version":"7.2"}}')
++            with patch.object(OWNER, "validate_docker_selection"), patch.object(OWNER.os, "kill") as signal:
++                with self.assertRaisesRegex(ValueError, "launch input changed"):
++                    OWNER.lifecycle(types.SimpleNamespace(state_dir=directory, action="restart"))
++                signal.assert_not_called()
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/integrations/required-agents/serve-filesystem.py b/integrations/required-agents/serve-filesystem.py
+index 116385fa4..b986dc109 100644
+--- a/integrations/required-agents/serve-filesystem.py
++++ b/integrations/required-agents/serve-filesystem.py
+@@ -7,6 +7,7 @@ import os
+ from pathlib import Path
+ import re
+ import secrets
++import shutil
+ import signal
+ import stat
+ import subprocess
+@@ -61,7 +62,17 @@ def selected_launch_material(args):
+ 
+ 
+ def launch_arguments(material):
+-    return ["--signed-manifest", material["signedManifest"]["path"],
++    manifest_file = material["signedManifest"]
++    if launch_file(manifest_file["path"]) != manifest_file:
++        raise ValueError("signed manifest changed before selecting its server identity")
++    manifest = json.loads(Path(manifest_file["path"]).read_text()).get("manifest")
++    if (not isinstance(manifest, dict) or manifest.get("server_id") != "fs"
++            or not isinstance(manifest.get("name"), str) or not 0 < len(manifest["name"]) <= 512
++            or not isinstance(manifest.get("version"), str) or not 0 < len(manifest["version"]) <= 128
++            or any(ord(char) < 32 for char in manifest["name"] + manifest["version"])):
++        raise ValueError("signed manifest must declare this resource's bounded server identity")
++    return ["--server-id", "fs", "--server-name", manifest["name"], "--server-version", manifest["version"],
++            "--signed-manifest", manifest_file["path"],
+             "--manifest-public-key", material["manifestPublicKey"],
+             "--cage-policy", material["cagePolicy"]["path"],
+             "--cage-policy-signer", material["cagePolicySigner"],
+@@ -89,8 +100,38 @@ def validate_launch_material(operator):
+             raise ValueError("owner command no longer binds the reviewed launch inputs")
+ 
+ 
++def docker_selection(context, executable):
++    """Resolve an explicit context without changing the operator's active one."""
++    if not isinstance(context, str) or not re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_.-]{0,127}", context):
++        raise ValueError("select one explicit Docker context name")
++    prefix = [executable, "--context", context]
++    endpoint = json.loads(run(*prefix, "context", "inspect", context,
++                              "--format", "{{json .Endpoints.docker}}").stdout)
++    info = json.loads(run(*prefix, "info", "--format", "{{json .}}").stdout)
++    if (not isinstance(endpoint, dict) or not isinstance(endpoint.get("Host"), str)
++            or not endpoint["Host"] or not isinstance(info, dict)
++            or not isinstance(info.get("ID"), str) or not info["ID"]):
++        raise ValueError("Docker context must resolve to an identified, reachable daemon")
++    return {"context": context, "endpoint": endpoint, "daemonId": info["ID"],
++            "architecture": info.get("Architecture"), "osType": info.get("OSType")}
++
++
++def validate_docker_selection(operator):
++    recorded = operator.get("dockerSelection")
++    executable = operator.get("dockerExecutable")
++    if not isinstance(recorded, dict) or not isinstance(executable, str) or not Path(executable).is_absolute():
++        raise ValueError("owner lacks an explicit Docker binding; qualify a migration without replacing its state")
++    if docker_selection(recorded.get("context"), executable) != recorded:
++        raise ValueError("Docker endpoint or daemon changed; preserve state and qualify an explicit migration")
++    command = operator.get("command", [])
++    if "--" not in command or command[command.index("--") + 1:command.index("--") + 5] != [
++            executable, "--context", recorded["context"], "run"]:
++        raise ValueError("owner command no longer binds the selected Docker context")
++
++
+ def start(args):
+     material = selected_launch_material(args)
++    identity_arguments = launch_arguments(material)
+     state = Path(args.state_dir).resolve()
+     kernel = Path(args.kernel).resolve(strict=True)
+     digest = hashlib.sha256(kernel.read_bytes()).hexdigest()
+@@ -102,21 +143,27 @@ def start(args):
+         raise ValueError("use a dedicated chio-required- prefixed volume")
+     if not 1024 <= args.port <= 65535:
+         raise ValueError("choose a nonprivileged TCP port")
+-    run("docker", "image", "inspect", args.image)
++    executable = shutil.which("docker")
++    if not executable:
++        raise ValueError("Docker CLI is required in the operator environment")
++    executable = str(Path(executable).resolve(strict=True))
++    selection = docker_selection(args.docker_context, executable)
++    docker = [executable, "--context", args.docker_context]
++    run(*docker, "image", "inspect", args.image)
+     audit_volume = args.volume + "-audit"
++    existing_volumes = set(run(*docker, "volume", "ls", "--format", "{{.Name}}").stdout.splitlines())
+     for volume in (args.volume, audit_volume):
+-        exists = subprocess.run(["docker", "volume", "inspect", volume], capture_output=True)
+-        if exists.returncode == 0:
++        if volume in existing_volumes:
+             raise ValueError("refusing an existing volume; preserve it and select a fresh test volume")
+     state.mkdir(mode=0o700, parents=False, exist_ok=False)
+     policy = state / "filesystem-policy.yaml"
+     selected_policy = Path(args.policy).resolve(strict=True)
+     policy.write_bytes(selected_policy.read_bytes())
+     policy.chmod(0o400)
+-    run("docker", "volume", "create", "--label", "chio.task=required-agent-integrations", args.volume)
+-    run("docker", "volume", "create", "--label", "chio.task=required-agent-integrations", audit_volume)
++    run(*docker, "volume", "create", "--label", "chio.task=required-agent-integrations", args.volume)
++    run(*docker, "volume", "create", "--label", "chio.task=required-agent-integrations", audit_volume)
+     # Only the resource owner receives this mount. Host agents never receive it or a Docker socket.
+-    run("docker", "run", "--rm", "--network", "none", "--read-only", "--user", "0",
++    run(*docker, "run", "--rm", "--network", "none", "--read-only", "--user", "0",
+         "--cap-drop", "ALL", "--cap-add", "CHOWN", "--mount",
+         f"type=volume,src={args.volume},dst=/workspace", "--mount",
+         f"type=volume,src={audit_volume},dst=/audit", "--entrypoint", "node", args.image,
+@@ -124,10 +171,10 @@ def start(args):
+     command = [str(kernel), "--session-db", str(state / "sessions.sqlite"),
+                "--receipt-db", str(state / "receipts.sqlite"),
+                "--authority-db", str(state / "authority.sqlite"),
+-               "mcp", "serve-http", "--policy", str(policy), "--server-id", "fs",
+-               *launch_arguments(material),
++               "mcp", "serve-http", "--policy", str(policy),
++               *identity_arguments,
+                "--shared-hosted-owner", "--listen", f"127.0.0.1:{args.port}", "--",
+-               "docker", "run", "--rm", "-i", "--network", "none", "--read-only",
++               *docker, "run", "--rm", "-i", "--network", "none", "--read-only",
+                "--cap-drop", "ALL", "--security-opt", "no-new-privileges", "--label",
+                f"chio.owner={args.volume}", "--mount",
+                f"type=volume,src={args.volume},dst=/workspace", "--mount",
+@@ -138,6 +185,7 @@ def start(args):
+                 "image": args.image, "volume": args.volume, "auditVolume": audit_volume,
+                 "policySha256": hashlib.sha256(policy.read_bytes()).hexdigest(),
+                 "launchMaterial": material,
++                "dockerExecutable": executable, "dockerSelection": selection,
+                 "stateDir": str(state)}
+     private_json(state / "operator.json", operator)
+     launch(state, operator)
+@@ -145,6 +193,7 @@ def start(args):
+ 
+ def launch(state, operator):
+     validate_launch_material(operator)
++    validate_docker_selection(operator)
+     kernel = Path(operator["command"][0])
+     if hashlib.sha256(kernel.read_bytes()).hexdigest() != operator["kernelSha256"]:
+         raise ValueError("kernel changed; qualify and explicitly select an upgrade")
+@@ -165,6 +214,9 @@ def launch(state, operator):
+ def lifecycle(args):
+     state = Path(args.state_dir).resolve(strict=True)
+     operator = json.loads((state / "operator.json").read_text())
++    if args.action == "restart":
++        validate_docker_selection(operator)
++        validate_launch_material(operator)
+     pid = int((state / "kernel.pid").read_text())
+     current = subprocess.run(["ps", "-p", str(pid), "-o", "command="], capture_output=True, text=True)
+     if current.returncode == 0 and current.stdout.strip():
+@@ -192,7 +244,7 @@ def main():
+     create = sub.add_parser("start")
+     for flag in ("state-dir", "kernel", "kernel-sha256", "image", "volume",
+                  "signed-manifest", "manifest-public-key", "cage-policy",
+-                 "cage-policy-signer", "resume-hmac-keyring"):
++                 "cage-policy-signer", "resume-hmac-keyring", "docker-context"):
+         create.add_argument("--" + flag, required=True)
+     create.add_argument("--port", type=int, required=True)
+     create.add_argument("--policy", default=str(Path(__file__).resolve().with_name("filesystem-policy.yaml")))
+-- 
+2.52.0
+

@@ -6,7 +6,7 @@ real-host I01-I08 acceptance, a compatible public kernel, or six-host completion
 
 ## Current boundary
 
-- Source package version: `0.3.1-rc.1` (see `package.json`). This identifies the
+- Source package version: `0.4.0-rc.1` (see `package.json`). This identifies the
   source candidate, not a published npm version. Existing local tarball hashes do
   not identify newly rebuilt archives, including metadata-only rebuilds.
 - Public repository identity: `backbay-labs/chio-claude-code-plugin`.
@@ -18,6 +18,10 @@ real-host I01-I08 acceptance, a compatible public kernel, or six-host completion
   creates a GitHub Release. There is no manual publish switch.
 - Source CI, real-host acceptance, kernel qualification, and any repository
   rulesets remain separate gates. Do not treat package checks as replacements.
+- Native publication also requires the live gates and delivered-runtime hashes
+  in [the native acceptance record](../acceptance/2026-10-03/native-mods/ACCEPTANCE.json).
+  `scripts/verify-native-qualification.mjs` rejects tag publication while that
+  record remains a candidate. Manual package qualification remains available.
 
 The release build uses Node 22.19.0, npm 11.8.0, `npm ci --ignore-scripts`, mandatory build and
 unit checks, and `npm run pack:release`. TypeScript packages also require a
@@ -103,11 +107,11 @@ do not assert that this tag or its assets already exist:
 ```sh
 sha256sum --check SHA256SUMS
 cosign verify-blob --certificate SHA256SUMS.pem --signature SHA256SUMS.sig \
-  --certificate-identity 'https://github.com/backbay-labs/chio-claude-code-plugin/.github/workflows/release.yml@refs/tags/v0.3.1-rc.1' \
+  --certificate-identity 'https://github.com/backbay-labs/chio-claude-code-plugin/.github/workflows/release.yml@refs/tags/v0.4.0-rc.1' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com SHA256SUMS
 slsa-verifier verify-artifact package.tgz \
   --provenance-path package.intoto.jsonl \
-  --source-uri github.com/backbay-labs/chio-claude-code-plugin --source-tag 'v0.3.1-rc.1'
+  --source-uri github.com/backbay-labs/chio-claude-code-plugin --source-tag 'v0.4.0-rc.1'
 ```
 
 A timeout or failure after npm publication can leave a published version without

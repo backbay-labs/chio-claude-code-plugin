@@ -1,0 +1,40 @@
+     84e72661-ffb7-444d-8a3e-3d4bce785727:7d9de1712cc6228c2d65406ccf25c6c70d622d9b2ce14c304278425a0d4c4609
+     State: awaiting_approval · evidence: unverified
+     requested → awaiting review
+     Kernel acknowledgement: unconfirmed
+     Host delivery: unconfirmed
+     Purpose: exact fixture write
+     Requested capability: fixture-capability
+     Grant TTL: 300s · decision: required
+     Restrictions: kernel policy applies · budget impact unavailable
+     Exact arguments:
+     {
+       "content": "exact fixture payload",
+       "path": "/protected/test.txt"
+     }
+     Review the exact retained action.
+
+❯ /chio-continue
+84e72661-ffb7-444d-8a3e-3d4bce785727:7d9de1712cc6228c2d65406ccf25c6c70d622d9b2ce14c304278425a0d4c4609
+  ⎿  chio: Continuation submitted for original operation
+     84e72661-ffb7-444d-8a3e-3d4bce785727:7d9de1712cc6228c2d65406ccf25c6c70d622d9b2ce14c304278425a0d4c4609.
+     Receive its result with /chio-outcome d41e27fc-c64a-4f79-9996-1678f559a20a. No planning turn was started.
+
+❯ /chio-outcome d41e27fc-c64a-4f79-9996-1678f559a20a
+  ⎿  chio: Original result received through native control. This does not claim delivery to the model.
+     {
+       "content": [
+         {
+           "type": "text",
+           "text": "One fixture write completed."
+         }
+       ],
+       "isError": false
+     }
+     Receipt: 0b9c287b0b4fa6dbd5805a0c9867db1571e574993741a01bbf3069624e9f90c5
+Chio · isolated kernel MCP · authority 10m · 0 review · 1 unresolved                                       [-]
+                                                                                          ◐ medium · /effort
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ don't ask on (shift+tab to cycle) · esc to interrupt · ← for agents

@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
 import { buildBridge } from "../state/bridge.js";
-import { getMostRecentBond, getSoleBond } from "../state/store.js";
+import { requireSessionBond } from "../state/store.js";
 
 export async function receiptExport(args: string[]): Promise<string> {
   const [sinceArg = "session", outArg = "./chio-evidence.tar.zst"] = args;
@@ -15,6 +15,8 @@ export async function receiptExport(args: string[]): Promise<string> {
       status: "exported",
       path: writtenPath,
       since: since.toISOString(),
+      scope: "time_range",
+      session_filtered: false,
     },
     null,
     2,
@@ -25,10 +27,7 @@ function resolveSince(input: string): Date {
   const now = Date.now();
   if (input === "all") return new Date(0);
   if (input === "session") {
-    const bond = getSoleBond() ?? getMostRecentBond();
-    if (bond) return new Date(bond.bondedAt);
-    // Fall back to the last hour if we can't locate a bond.
-    return new Date(now - 3600_000);
+    return new Date(requireSessionBond().bondedAt);
   }
   const m = input.match(/^(\d+)(s|m|h|d)$/);
   if (m && m[1] && m[2]) {

@@ -1,0 +1,40 @@
+                                                                      │Chio · isolated kernel MCP · authority✕
+ ▐▛███▛█   Claude Code v2.1.287                                       │10m · 0 review · 0 unresolved
+▝▜██████▀  Sonnet 5.5 · API Usage Billing                             │Prepare exact preview · outstanding
+ ▝▝   ▝▝   /private/tmp/chio-native-host-mBm8wv/workspace             │Goal: Review and continue one exact
+                                                                      │fixture write
+▎ Debug mode enabled · logging to                                     │Artifact: sha256
+▎ /private/tmp/chio-native-host-mBm8wv/profile/host-debug.log         │eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+                                                                      │eeeeeeeeeeeeeeeeeeeeeeeee · fixture
+❯ /chio-status                                                        │artifact
+  ⎿  chio: Chio · isolated kernel MCP · authority 10m · 0 review · 0  │Local checks · passed ·
+     unresolved                                                       │trusted_collector_observation
+     Session: 84e72661-ffb7-444d-8a3e-3d4bce785727                    │Hosted checks · running ·
+     Protected tools: write_file                                      │trusted_collector_observation
+     Dispatch fence: clear                                            │Resources: Disposable fixture file
+                                                                      │Destinations: Fixture owner
+❯ /chio-completion                                                    │Restrictions: Exact write review
+  ⎿  chio: Prepare exact preview · outstanding                        │Scope descriptions come
+                                                                      │
+                                                                      │
+                                                                      │
+                                                                      │
+                                                                      │
+                                                                      │
+                                                                      │
+                                                                      │
+                                                                      │
+                                                                      │
+                                                                      │
+                                                                      │
+                                                                      │
+                                                                      │
+✳ Accomplishing…                                                      │
+  ⎿  Tip: Start with small features or bug fixes, tell Claude to      │
+     propose a plan, and verify its suggested edits                   │
+Chio · isolated kernel MCP · authority 10m · 0 review · 0 unresolve[-]│
+                                                  ◐ medium · /effort  │
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯ 
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏵⏵ don't ask on (shift+tab to cycle) · esc to interrupt · ← for agents

@@ -1,22 +1,28 @@
 import { buildBridge } from "../state/bridge.js";
-import { clearBond, getMostRecentBond, getSoleBond } from "../state/store.js";
+import { markRevoked, requireSessionBond } from "../state/store.js";
 
-export async function revoke(): Promise<string> {
-  const bond = getSoleBond() ?? getMostRecentBond();
-  if (!bond) throw new Error("no active bond to revoke");
+export async function revoke(args: string[] = []): Promise<string> {
+  if (args.length > 1) throw new Error("usage: /chio:revoke [session-id]");
+  const bond = requireSessionBond(args[0]);
+  if (!bond.passport.passportId) throw new Error("bond has no exact passport artifact id; refusing subject-based revocation");
 
   const bridge = buildBridge();
-  // Revoke the passport (did). Arc's trust plane propagates revocations via
-  // POST /v1/revocations; federation partners sync on pull.
-  await bridge.revoke(bond.passport.did);
-  clearBond(bond.sessionId);
+  // This compatibility path revokes a passport, not a kernel MCP session.
+  // Native /chio-revoke requests an exact kernel session revocation instead.
+  await bridge.revoke(bond.passport.passportId);
+  const confirmed = await bridge.status(bond.passport.passportId);
+  if (confirmed.status !== "revoked") throw new Error("revocation was submitted but the passport lifecycle has not confirmed it; bond retained");
+  markRevoked(bond.sessionId);
 
   return JSON.stringify(
     {
       status: "revoked",
+      scope: "passport_lifecycle",
+      passport_id: bond.passport.passportId,
       session: bond.sessionId,
       did: bond.passport.did,
       capabilityId: bond.passport.capabilityId,
+      hooks: "compatibility hooks keep denying this session until /chio:bond",
     },
     null,
     2,

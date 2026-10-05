@@ -9,8 +9,8 @@ const spec = JSON.parse(readFileSync(configuration, 'utf8'));
 if (spec.command !== '/usr/bin/sandbox-exec' || !Array.isArray(spec.args) || typeof spec.cwd !== 'string' || !spec.env) throw new Error('Invalid trusted host launch specification');
 const lifeline = new Socket({fd:3,readable:true,writable:false});
 let closed = false, stopping = false, timer;
-const child = spawn(spec.command, spec.args, {cwd:spec.cwd,env:spec.env,detached:true,stdio:['inherit','pipe','inherit']});
-child.stdout.pipe(process.stdout);
+const child = spawn(spec.command, spec.args, {cwd:spec.cwd,env:spec.env,detached:true,stdio:['inherit',spec.interactive === true ? 'inherit' : 'pipe','inherit']});
+child.stdout?.pipe(process.stdout);
 function signal(value) {
   if (closed || !child.pid) return;
   try { process.kill(-child.pid,value); } catch (error) { if (error.code !== 'ESRCH') throw error; }

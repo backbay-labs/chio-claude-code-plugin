@@ -10186,7 +10186,8 @@ function getPolicyPath() {
 }
 
 // src/state/store.ts
-import { mkdirSync as mkdirSync2, readFileSync as readFileSync2, writeFileSync as writeFileSync2 } from "node:fs";
+import { mkdirSync as mkdirSync2, readFileSync as readFileSync2, renameSync as renameSync2, rmSync, writeFileSync as writeFileSync2 } from "node:fs";
+import { randomUUID } from "node:crypto";
 import { dirname } from "node:path";
 
 // src/state/paths.ts
@@ -10194,7 +10195,7 @@ import { homedir } from "node:os";
 import { join as join3 } from "node:path";
 var STATE_DIR = process.env.CHIO_STATE_DIR ?? join3(process.env.CLAUDE_CONFIG_DIR ?? join3(homedir(), ".claude"), "plugins", "chio");
 var STATE_PATH = join3(STATE_DIR, "state.json");
-var KEYSTORE_DIR = join3(homedir(), ".chio", "keys");
+var KEYSTORE_DIR = process.env.CHIO_KEYSTORE_DIR ?? join3(homedir(), ".chio", "keys");
 var PENDING_DIR = join3(STATE_DIR, "pending");
 var RECEIPT_CACHE_DIR = join3(STATE_DIR, "receipts");
 
@@ -10210,16 +10211,24 @@ function readState() {
 }
 function writeState(state) {
   mkdirSync2(dirname(STATE_PATH), { recursive: true });
-  writeFileSync2(STATE_PATH, JSON.stringify(state, null, 2));
+  const tmp = `${STATE_PATH}.${randomUUID()}.tmp`;
+  try {
+    writeFileSync2(tmp, JSON.stringify(state, null, 2), { mode: 384, flag: "wx" });
+    renameSync2(tmp, STATE_PATH);
+  } finally {
+    rmSync(tmp, { force: true });
+  }
 }
 function upsertBond(bond2) {
   const state = readState();
   state.bonds[bond2.sessionId] = bond2;
   writeState(state);
 }
-function clearBond(sessionId) {
+function markRevoked(sessionId) {
   const state = readState();
-  delete state.bonds[sessionId];
+  const entry = state.bonds[sessionId];
+  if (!entry) return;
+  state.bonds[sessionId] = { ...entry, revokedAt: (/* @__PURE__ */ new Date()).toISOString() };
   writeState(state);
 }
 function getBond(sessionId) {
@@ -10227,15 +10236,49 @@ function getBond(sessionId) {
   const state = readState();
   return state.bonds[sessionId];
 }
+function bondPresence(sessionId) {
+  let raw;
+  try {
+    raw = readFileSync2(STATE_PATH, "utf8");
+  } catch (error) {
+    return error.code === "ENOENT" ? "absent" : "invalid";
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return "invalid";
+  }
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return "invalid";
+  const bonds = parsed.bonds;
+  if (bonds === void 0) return "absent";
+  if (!bonds || typeof bonds !== "object" || Array.isArray(bonds)) return "invalid";
+  if (!Object.hasOwn(bonds, sessionId)) return "absent";
+  const entry = bonds[sessionId];
+  if (!entry || typeof entry !== "object" || Array.isArray(entry)) return "invalid";
+  if (!Object.hasOwn(entry, "revokedAt")) return "present";
+  return typeof entry.revokedAt === "string" ? "revoked" : "invalid";
+}
+function requireSessionBond(explicitSessionId) {
+  const hostSessionId = process.env.CLAUDE_SESSION_ID;
+  if (explicitSessionId && hostSessionId && explicitSessionId !== hostSessionId) {
+    throw new Error("requested session differs from the current Claude session");
+  }
+  const sessionId = hostSessionId ?? explicitSessionId;
+  if (!sessionId) throw new Error("an exact session id is required; set CLAUDE_SESSION_ID or pass the session explicitly");
+  const bond2 = getBond(sessionId);
+  if (!bond2 || Object.hasOwn(bond2, "revokedAt") || bond2.sessionId !== sessionId) throw new Error(`no bond for session ${sessionId}`);
+  return bond2;
+}
 function getSoleBond() {
   const state = readState();
-  const entries = Object.values(state.bonds);
+  const entries = Object.values(state.bonds).filter((b) => b && typeof b === "object" && !Object.hasOwn(b, "revokedAt"));
   if (entries.length === 1) return entries[0];
   return void 0;
 }
 function getMostRecentBond() {
   const state = readState();
-  const entries = Object.values(state.bonds);
+  const entries = Object.values(state.bonds).filter((b) => b && typeof b === "object" && !Object.hasOwn(b, "revokedAt"));
   if (entries.length === 0) return void 0;
   entries.sort((a, b) => b.bondedAt.localeCompare(a.bondedAt));
   return entries[0];
@@ -10249,28 +10292,32 @@ async function bond(args) {
   }
   const sessionId = process.env.CLAUDE_SESSION_ID;
   if (!sessionId) throw new Error("CLAUDE_SESSION_ID is required; refusing to create an unbound capability");
+  if (args.length > 3) throw new Error("usage: /chio:bond <policy-path> [ttl] [budget-usd]");
+  const budgetUsd = budgetArg === void 0 ? void 0 : Number(budgetArg);
+  if (budgetArg !== void 0 && (!budgetArg.trim() || !Number.isFinite(budgetUsd) || budgetUsd < 0)) {
+    throw new Error("invalid budget: expected a finite nonnegative USD amount");
+  }
   const policyPath = resolve2(policyArg);
   const bridge = buildBridge();
-  const budgetUsd = budgetArg ? Number(budgetArg) : void 0;
   const bondArgs = { policyPath, ttl };
   if (budgetUsd !== void 0 && Number.isFinite(budgetUsd)) {
     bondArgs.budgetUsd = budgetUsd;
   }
   const passport = await bridge.bond(bondArgs);
-  const budgetSet2 = budgetUsd !== void 0 && Number.isFinite(budgetUsd) && typeof passport.capabilityId === "string" && passport.capabilityId.length > 0;
+  const budgetSet = budgetUsd !== void 0 && Number.isFinite(budgetUsd) && typeof passport.capabilityId === "string" && passport.capabilityId.length > 0;
   const bondRecord = {
     sessionId,
     policyPath,
     passport,
     bondedAt: (/* @__PURE__ */ new Date()).toISOString()
   };
-  if (budgetSet2 && budgetUsd !== void 0) {
+  if (budgetSet && budgetUsd !== void 0) {
     bondRecord.budgetCapUsd = budgetUsd;
   }
   upsertBond(bondRecord);
   return JSON.stringify(
     {
-      status: budgetSet2 ? "bonded" : "bonded_without_budget",
+      status: budgetSet ? "bonded" : "bonded_without_budget",
       session: sessionId,
       policy: policyPath,
       passport: {
@@ -10280,7 +10327,7 @@ async function bond(args) {
         expiresAt: passport.expiresAt
       },
       ttl,
-      budgetUsd: budgetSet2 ? budgetUsd : null
+      budgetUsd: budgetSet ? budgetUsd : null
     },
     null,
     2
@@ -10289,8 +10336,8 @@ async function bond(args) {
 
 // src/commands/policy-show.ts
 async function policyShow() {
-  const bond2 = getSoleBond();
-  const policyPath = bond2?.policyPath ?? getPolicyPath();
+  const bond2 = getBond(process.env.CLAUDE_SESSION_ID);
+  const policyPath = (bond2 && !Object.hasOwn(bond2, "revokedAt") ? bond2.policyPath : void 0) ?? getPolicyPath();
   if (!policyPath) {
     throw new Error(
       "no policy path known; run /chio:bond or set CHIO_POLICY_PATH"
@@ -10341,82 +10388,6 @@ function formatValue(v) {
 ${indent(formatted, 2)}`;
     return `${k}: ${formatted}`;
   }).join("\n");
-}
-
-// src/commands/guard-pause.ts
-async function guardPause(args) {
-  const [guard, duration = "10m"] = args;
-  if (!guard) throw new Error("usage: /chio:guard-pause <guard-id> [duration]");
-  const bond2 = getSoleBond();
-  if (!bond2) {
-    throw new Error("no active bond; run /chio:bond first");
-  }
-  const bridge = buildBridge();
-  const token = await bridge.attenuate(bond2.passport.capabilityId, {
-    scope: scopeForPausedGuard(guard)
-  });
-  bond2.pausedGuards = { ...bond2.pausedGuards ?? {} };
-  const expiresAt = addDuration(/* @__PURE__ */ new Date(), duration).toISOString();
-  bond2.pausedGuards[guard] = expiresAt;
-  upsertBond(bond2);
-  return JSON.stringify(
-    {
-      status: "paused",
-      guard,
-      duration,
-      expires_at: expiresAt,
-      capability_id: token.id,
-      delegation_chain: token.delegation_chain?.length ?? 0
-    },
-    null,
-    2
-  );
-}
-function scopeForPausedGuard(guard) {
-  void guard;
-  return { grants: [] };
-}
-function addDuration(base, duration) {
-  const m = duration.match(/^(\d+)(s|m|h|d)$/);
-  if (!m || !m[1] || !m[2]) return new Date(base.getTime() + 10 * 6e4);
-  const n = Number(m[1]);
-  const unit = m[2];
-  const mult = {
-    s: 1e3,
-    m: 6e4,
-    h: 36e5,
-    d: 864e5
-  };
-  return new Date(base.getTime() + n * mult[unit]);
-}
-
-// src/commands/budget-set.ts
-async function budgetSet(args) {
-  const [usdArg] = args;
-  if (!usdArg) throw new Error("usage: /chio:budget-set <usd>");
-  const usd = Number(usdArg);
-  if (!Number.isFinite(usd) || usd < 0) {
-    throw new Error(`invalid budget: "${usdArg}"`);
-  }
-  const bond2 = getSoleBond();
-  if (!bond2) throw new Error("no active bond; run /chio:bond first");
-  const bridge = buildBridge();
-  const token = await bridge.attenuate(bond2.passport.capabilityId, {
-    budget: { maxUsd: usd }
-  });
-  const previous = bond2.budgetCapUsd ?? null;
-  bond2.budgetCapUsd = usd;
-  upsertBond(bond2);
-  return JSON.stringify(
-    {
-      status: "budget_set",
-      previous_usd: previous,
-      new_usd: usd,
-      capability_id: token.id
-    },
-    null,
-    2
-  );
 }
 
 // src/commands/approve.ts
@@ -10694,7 +10665,9 @@ function signJsonStringEd255192(input, seedHex) {
 // src/commands/approve.ts
 async function approve(args) {
   const [receiptId] = args;
-  if (!receiptId) throw new Error("usage: /chio:approve <receipt-id>");
+  if (args.length !== 1 || !receiptId || !/^[A-Za-z0-9_-]{1,128}$/.test(receiptId)) {
+    throw new Error("usage: /chio:approve <receipt-id> (letters, digits, underscores and hyphens only)");
+  }
   const bridge = buildBridge();
   const receipt = await loadReceipt(bridge, receiptId);
   if (!receipt) throw new Error(`no receipt ${receiptId} in local cache or trust plane`);
@@ -10729,7 +10702,9 @@ async function approve(args) {
   }
   return JSON.stringify(
     {
-      status: "approved",
+      status: propagated === "posted" ? "decision_submitted" : "signed_intent",
+      authority_accepted: false,
+      execution_verified: false,
       receipt_id: receiptId,
       signer: key.did,
       signature_hex: bundle.signature_hex,
@@ -10771,7 +10746,9 @@ async function postAuthority(bundle) {
       receipt_id: bundle.receipt_id,
       signer: bundle.signer,
       signature_hex: bundle.signature_hex
-    })
+    }),
+    redirect: "error",
+    signal: AbortSignal.timeout(1e4)
   });
   if (!res.ok) {
     throw new Error(`authority endpoint returned HTTP ${res.status}`);
@@ -10799,18 +10776,24 @@ function ensureOperatorKey() {
 }
 
 // src/commands/revoke.ts
-async function revoke() {
-  const bond2 = getSoleBond() ?? getMostRecentBond();
-  if (!bond2) throw new Error("no active bond to revoke");
+async function revoke(args = []) {
+  if (args.length > 1) throw new Error("usage: /chio:revoke [session-id]");
+  const bond2 = requireSessionBond(args[0]);
+  if (!bond2.passport.passportId) throw new Error("bond has no exact passport artifact id; refusing subject-based revocation");
   const bridge = buildBridge();
-  await bridge.revoke(bond2.passport.did);
-  clearBond(bond2.sessionId);
+  await bridge.revoke(bond2.passport.passportId);
+  const confirmed = await bridge.status(bond2.passport.passportId);
+  if (confirmed.status !== "revoked") throw new Error("revocation was submitted but the passport lifecycle has not confirmed it; bond retained");
+  markRevoked(bond2.sessionId);
   return JSON.stringify(
     {
       status: "revoked",
+      scope: "passport_lifecycle",
+      passport_id: bond2.passport.passportId,
       session: bond2.sessionId,
       did: bond2.passport.did,
-      capabilityId: bond2.passport.capabilityId
+      capabilityId: bond2.passport.capabilityId,
+      hooks: "compatibility hooks keep denying this session until /chio:bond"
     },
     null,
     2
@@ -10858,7 +10841,9 @@ async function receiptExport(args) {
     {
       status: "exported",
       path: writtenPath,
-      since: since.toISOString()
+      since: since.toISOString(),
+      scope: "time_range",
+      session_filtered: false
     },
     null,
     2
@@ -10868,9 +10853,7 @@ function resolveSince(input) {
   const now = Date.now();
   if (input === "all") return /* @__PURE__ */ new Date(0);
   if (input === "session") {
-    const bond2 = getSoleBond() ?? getMostRecentBond();
-    if (bond2) return new Date(bond2.bondedAt);
-    return new Date(now - 36e5);
+    return new Date(requireSessionBond().bondedAt);
   }
   const m = input.match(/^(\d+)(s|m|h|d)$/);
   if (m && m[1] && m[2]) {
@@ -10896,18 +10879,18 @@ export {
   STATE_PATH,
   approve,
   bond,
-  budgetSet,
+  bondPresence,
   buildBridge,
-  clearBond,
   getBond,
   getMostRecentBond,
   getPolicyPath,
   getSoleBond,
-  guardPause,
+  markRevoked,
   policyShow,
   readState,
   receiptExport,
   receiptLast,
+  requireSessionBond,
   revoke,
   upsertBond,
   writeState

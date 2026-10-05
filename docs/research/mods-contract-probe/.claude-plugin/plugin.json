@@ -1,0 +1,5 @@
+{
+  "name": "chio-mod-contract-probe",
+  "version": "0.0.1",
+  "description": "Isolated, fully stubbed mod control-flow research"
+}

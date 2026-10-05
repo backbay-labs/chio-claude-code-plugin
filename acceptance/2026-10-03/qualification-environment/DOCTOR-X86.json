@@ -1,0 +1,62 @@
+{
+  "schema": "chio.infrastructure.diagnosis.v1",
+  "checkedAt": "2026-10-04T00:01:45.927Z",
+  "profile": "chio-native-qualification-x86",
+  "dockerContext": "colima-chio-native-qualification-x86",
+  "state": "available",
+  "checks": [
+    {
+      "name": "docker-endpoint",
+      "state": "passed",
+      "endpoint": "unix:///Users/connor/.colima/chio-native-qualification-x86/docker.sock",
+      "skipTlsVerify": false
+    },
+    {
+      "name": "docker-daemon",
+      "state": "passed",
+      "daemonId": "a6f98963-643f-49d6-9d38-db3956b1bf96",
+      "architecture": "x86_64",
+      "kernel": "6.8.0-64-generic"
+    },
+    {
+      "name": "guest-execution",
+      "state": "passed"
+    },
+    {
+      "name": "guest-storage",
+      "state": "passed",
+      "rootAndDockerReported": true,
+      "availableKiB": 37468348,
+      "utilization": [
+        "6%",
+        "6%"
+      ]
+    },
+    {
+      "name": "guest-inodes",
+      "state": "passed",
+      "availableInodes": 5075981,
+      "utilization": [
+        "1%",
+        "1%"
+      ]
+    },
+    {
+      "name": "guest-storage-errors",
+      "state": "passed",
+      "retainedStorageWarnings": 0,
+      "filesystemIntegrity": "unchecked"
+    },
+    {
+      "name": "resource-image-read",
+      "state": "passed",
+      "imageId": "sha256:648682c65411e9db1ef49996000501f22359910258bbbc758abe5467397952a5",
+      "architecture": "amd64"
+    }
+  ],
+  "protectedDispatchPerformed": false,
+  "repairPerformed": false,
+  "filesystemIntegrity": "unchecked",
+  "qualification": "unchecked",
+  "next": "Use /chio-doctor in the exact host session for authority and original-outcome diagnosis. Infrastructure availability does not establish filesystem integrity or protected-workflow qualification."
+}

@@ -1,9 +1,9 @@
 import { buildBridge, getPolicyPath } from "../state/bridge.js";
-import { getSoleBond } from "../state/store.js";
+import { getBond } from "../state/store.js";
 
 export async function policyShow(): Promise<string> {
-  const bond = getSoleBond();
-  const policyPath = bond?.policyPath ?? getPolicyPath();
+  const bond = getBond(process.env.CLAUDE_SESSION_ID);
+  const policyPath = (bond && !Object.hasOwn(bond, "revokedAt") ? bond.policyPath : undefined) ?? getPolicyPath();
   if (!policyPath) {
     throw new Error(
       "no policy path known; run /chio:bond or set CHIO_POLICY_PATH",

@@ -1,0 +1,36 @@
+{
+  "schema": "chio.research.mod-event-harness.v1",
+  "research_date": "2026-10-02",
+  "evidence_class": "NATIVE_MOD_TEST_HARNESS_STUBBED_TOOLS_NO_LIVE_SESSION_NO_CHIO_KERNEL",
+  "host_version": "2.1.285",
+  "host_binary_path": "/Users/connor/.local/share/claude/versions/2.1.285",
+  "host_binary_sha256": "51f09bd1e021d9fa8a1864c179799bd37cb39962a937935c5cf6823398e86db4",
+  "test_command": "CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1 claude plugin test <probe-directory>",
+  "exit_code": 0,
+  "passed": 4,
+  "failed": 0,
+  "default_test_command_exit_code": 1,
+  "default_test_command_reason": "hooks modules are not turned on in this build yet (early access)",
+  "cases": [
+    {
+      "name": "positive control reaches the stub once",
+      "expected_dispatches": 1,
+      "passed": true
+    },
+    {
+      "name": "failure handler denies before the stub is reached",
+      "expected_dispatches": 0,
+      "passed": true
+    },
+    {
+      "name": "failure after dispatch preserves the original without redispatch",
+      "expected_dispatches": 1,
+      "passed": true
+    },
+    {
+      "name": "a failed hook without a handler is skipped and the stub runs",
+      "expected_dispatches": 1,
+      "passed": true
+    }
+  ]
+}
