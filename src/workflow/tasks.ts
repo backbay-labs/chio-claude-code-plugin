@@ -179,8 +179,8 @@ export function githubState(value: unknown, commit: string, required?: string[])
   const considered = required ? runs.filter(r => required.includes(String(r.name))) : runs;
   const missing = required ? required.some(name => !runs.some(r => r.name === name)) : !runs.length;
   let state: "running" | "failed" | "passed";
-  if (missing || considered.some(r => r.status !== "completed")) state = "running";
-  else if (considered.some(r => GITHUB_FAILED.has(String(r.conclusion)))) state = "failed";
+  if (considered.some(r => GITHUB_FAILED.has(String(r.conclusion)) || r.status === "completed" && !(required ? ["success"] : ["success", "neutral", "skipped"]).includes(String(r.conclusion)))) state = "failed";
+  else if (missing || considered.some(r => r.status !== "completed")) state = "running";
   else if (required) state = considered.every(r => r.conclusion === "success") ? "passed" : "failed";
   else state = considered.every(r => ["success", "neutral", "skipped"].includes(String(r.conclusion))) && considered.some(r => r.conclusion === "success") ? "passed" : "failed";
   return { state, considered };
@@ -215,7 +215,7 @@ export async function collectRequirement(path: string, id: string): Promise<Task
     const parts = c.checks ? [] as ReturnType<typeof githubState>[] : [githubState(await page(), task.artifact.digest)];
     for (const check of c.checks ?? []) parts.push(githubState(await page(check), task.artifact.digest, [check]));
     const considered = parts.flatMap(p => p.considered);
-    state = parts.some(p => p.state === "running") ? "running" : parts.some(p => p.state === "failed") ? "failed" : "passed";
+    state = parts.some(p => p.state === "failed") ? "failed" : parts.some(p => p.state === "running") ? "running" : "passed";
     source = `github check-runs · ${base.origin === "https://api.github.com" ? "" : base.origin + " · "}${c.repository} · ${considered.length} checks · ${digest(considered)}`;
   } else if (c.kind === "json") {
     const value = await boundedJson(c.url.replaceAll("{artifact}", task.artifact.digest));
