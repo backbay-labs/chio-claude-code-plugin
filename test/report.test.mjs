@@ -49,3 +49,20 @@ test("hostile values are escaped in every interpolated position and keep the tab
     assert.equal(row.replace(/\\./g, "").split("|").length - 2, 8, value);
   }
 });
+
+test("report task titles render list punctuation literally", () => {
+  for (const title of ["1. pretend item", "- pretend item", "+ pretend item", "= pretend heading"]) {
+    const s = { ...status, workflow: { ...status.workflow, task: { ...status.workflow.task, title } } };
+    const text = renderSessionReport({ status: s, continuations: [], generatedAt: 0 });
+    assert.ok(text.includes(title.replace(/[.+=-]/g, "\\$&")), title);
+  }
+});
+test("report labels partial usage and ignores invalid negative counts", () => {
+  const events = [
+    { requestClass: "conversation", forwarded: true, model: "m", usageComplete: false, usage: { input_tokens: 4, output_tokens: -8 } },
+    { requestClass: "conversation", forwarded: true, model: "m", usageComplete: true, usage: { input_tokens: 2, output_tokens: 3 } }
+  ];
+  const text = renderSessionReport({ status, continuations: [], generatedAt: 0, relayEvents: events });
+  assert.match(text, /2 requests · 6 in · 3 out/);
+  assert.match(text, /1 with partial usage/);
+});

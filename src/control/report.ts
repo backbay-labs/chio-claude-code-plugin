@@ -4,6 +4,7 @@ import type { ContinuationView } from "../../types/workflow.js";
 export interface ReportInput { status: ControlStatus; continuations: ContinuationView[]; generatedAt: number; relayEvents?: unknown }
 const clean = (value: unknown) => String(value ?? "").replace(/[\p{Cc}\p{Cf}\u2028\u2029]/gu, " ");
 const md = (value: unknown) => clean(value).replace(/[\\`*_\[\]()<>!#|&~]/g, "\\$&");
+const escapeList = (value: string) => value.replace(/^(\d+)\.(?=\s)/, "$1\\.").replace(/^[+=-]/, "\\$&");
 const cell = (value: unknown) => md(value) || "—";
 const time = (ms: number) => new Date(ms).toISOString();
 function table(headers: string[], rows: unknown[][]): string[] {
@@ -24,16 +25,17 @@ export function renderSessionReport({ status, continuations, generatedAt, relayE
     "## Continuations", "", ...(continuations.length ? table(["Continuation", "Original request", "State", "Delivery", "Model context"], continuations.map(c => [c.id, c.requestId, c.state, c.delivery, c.modelContext ?? "not available to the operator report"])) : ["No continuations retained."]), ""];
   const task = status.workflow?.task;
   lines.push("## Task", "");
-  if (task) lines.push(`- ${md(task.title)} · ${md(task.readiness)}`, `- Artifact: ${md(task.artifact.kind)} ${md(task.artifact.digest)} · ${md(task.artifact.label)}`, "",
+  if (task) lines.push(`- ${escapeList(md(task.title))} · ${md(task.readiness)}`, `- Artifact: ${md(task.artifact.kind)} ${md(task.artifact.digest)} · ${md(task.artifact.label)}`, "",
     ...table(["Requirement", "State", "Evidence class", "Source", "Observed"], task.requirements.map(r => [r.title, r.state, r.evidenceClass, r.source, r.observedAt ? time(r.observedAt) : undefined])));
   else lines.push("No task contract is bound to this session.");
   lines.push("");
   if (Array.isArray(relayEvents)) {
     const forwarded = relayEvents.filter((e: any) => e?.requestClass === "conversation" && e.forwarded);
     const unknown = forwarded.filter((e: any) => !e.usage).length;
-    const sum = (key: string) => forwarded.reduce((total: number, e: any) => total + (Number.isSafeInteger(e.usage?.[key]) ? e.usage[key] : 0), 0);
+    const partial = forwarded.filter((e: any) => e.usage && e.usageComplete !== true).length;
+    const sum = (key: string) => forwarded.reduce((total: number, e: any) => total + (Number.isSafeInteger(e.usage?.[key]) && e.usage[key] >= 0 ? e.usage[key] : 0), 0);
     const models = [...new Set(forwarded.map((e: any) => md(e.model)))];
-    lines.push("## Model usage", "", `- Relay-metered: ${forwarded.length} request${forwarded.length === 1 ? "" : "s"} · ${sum("input_tokens")} in · ${sum("output_tokens")} out · ${sum("cache_read_input_tokens")} cache read · ${sum("cache_creation_input_tokens")} cache write tokens${unknown ? ` · ${unknown} with unknown usage` : ""}`,
+    lines.push("## Model usage", "", `- Relay-metered: ${forwarded.length} request${forwarded.length === 1 ? "" : "s"} · ${sum("input_tokens")} in · ${sum("output_tokens")} out · ${sum("cache_read_input_tokens")} cache read · ${sum("cache_creation_input_tokens")} cache write tokens${unknown ? ` · ${unknown} with unknown usage` : ""}${partial ? ` · ${partial} with partial usage; completion not confirmed` : ""}`,
       `- Models: ${models.join(", ") || "—"}`, "- Provider-reported counts, not billing records.", "- Source: the relay events file supplied by the operator; this report does not authenticate it.", "");
   }
   lines.push("## What this report is", "",

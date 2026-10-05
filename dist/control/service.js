@@ -9249,6 +9249,7 @@ function createWorkflowControl(access, options = {}, readOnly = false) {
 // src/control/report.ts
 var clean = (value) => String(value ?? "").replace(/[\p{Cc}\p{Cf}\u2028\u2029]/gu, " ");
 var md = (value) => clean(value).replace(/[\\`*_\[\]()<>!#|&~]/g, "\\$&");
+var escapeList = (value) => value.replace(/^(\d+)\.(?=\s)/, "$1\\.").replace(/^[+=-]/, "\\$&");
 var cell = (value) => md(value) || "\u2014";
 var time = (ms) => new Date(ms).toISOString();
 function table(headers, rows) {
@@ -9295,7 +9296,7 @@ function renderSessionReport({ status, continuations, generatedAt, relayEvents }
   const task = status.workflow?.task;
   lines.push("## Task", "");
   if (task) lines.push(
-    `- ${md(task.title)} \xB7 ${md(task.readiness)}`,
+    `- ${escapeList(md(task.title))} \xB7 ${md(task.readiness)}`,
     `- Artifact: ${md(task.artifact.kind)} ${md(task.artifact.digest)} \xB7 ${md(task.artifact.label)}`,
     "",
     ...table(["Requirement", "State", "Evidence class", "Source", "Observed"], task.requirements.map((r) => [r.title, r.state, r.evidenceClass, r.source, r.observedAt ? time(r.observedAt) : void 0]))
@@ -9305,12 +9306,13 @@ function renderSessionReport({ status, continuations, generatedAt, relayEvents }
   if (Array.isArray(relayEvents)) {
     const forwarded = relayEvents.filter((e) => e?.requestClass === "conversation" && e.forwarded);
     const unknown = forwarded.filter((e) => !e.usage).length;
-    const sum = (key) => forwarded.reduce((total, e) => total + (Number.isSafeInteger(e.usage?.[key]) ? e.usage[key] : 0), 0);
+    const partial = forwarded.filter((e) => e.usage && e.usageComplete !== true).length;
+    const sum = (key) => forwarded.reduce((total, e) => total + (Number.isSafeInteger(e.usage?.[key]) && e.usage[key] >= 0 ? e.usage[key] : 0), 0);
     const models = [...new Set(forwarded.map((e) => md(e.model)))];
     lines.push(
       "## Model usage",
       "",
-      `- Relay-metered: ${forwarded.length} request${forwarded.length === 1 ? "" : "s"} \xB7 ${sum("input_tokens")} in \xB7 ${sum("output_tokens")} out \xB7 ${sum("cache_read_input_tokens")} cache read \xB7 ${sum("cache_creation_input_tokens")} cache write tokens${unknown ? ` \xB7 ${unknown} with unknown usage` : ""}`,
+      `- Relay-metered: ${forwarded.length} request${forwarded.length === 1 ? "" : "s"} \xB7 ${sum("input_tokens")} in \xB7 ${sum("output_tokens")} out \xB7 ${sum("cache_read_input_tokens")} cache read \xB7 ${sum("cache_creation_input_tokens")} cache write tokens${unknown ? ` \xB7 ${unknown} with unknown usage` : ""}${partial ? ` \xB7 ${partial} with partial usage; completion not confirmed` : ""}`,
       `- Models: ${models.join(", ") || "\u2014"}`,
       "- Provider-reported counts, not billing records.",
       "- Source: the relay events file supplied by the operator; this report does not authenticate it.",
