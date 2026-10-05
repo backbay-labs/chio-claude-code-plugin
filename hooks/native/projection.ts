@@ -40,7 +40,7 @@ export function parseStatus(text: string, sessionId: string): ControlStatus {
       || [t.scope.resources, t.scope.destinations, t.scope.restrictions].some(a => !Array.isArray(a) || a.some(v => typeof v !== "string")))) throw new Error("invalid task contract");
   }
   if (value.continuations && (!Array.isArray(value.continuations) || value.continuations.length > 1000 || value.continuations.some(c => !/^[0-9a-f-]{36}$/.test(c.id)
-    || typeof c.requestId !== "string" || !["submitted", "completed", "unknown"].includes(c.state) || !["pending", "confirmed"].includes(c.delivery)))) throw new Error("invalid continuation projection");
+    || typeof c.requestId !== "string" || !["submitted", "completed", "unknown"].includes(c.state) || !["pending", "confirmed"].includes(c.delivery) || (c.modelContext !== undefined && c.modelContext !== "confirmed")))) throw new Error("invalid continuation projection");
   return value;
 }
 
@@ -107,4 +107,48 @@ export function diagnosticText(status: ControlStatus | null, sessionId: string, 
   if (!live) lines.push("Obtain a confirmed current authority binding before new protected effects. Preserve the original session's uncertain work.");
   lines.push(`Dispatch fence: ${status.fenced ? "retained" : "clear"}. No control intent or protected action was submitted by this check.`);
   return lines.join("\n");
+}
+
+/** What Claude reads with the first message. Null without a projection or protected tools. */
+export function guidanceText(status: ControlStatus | null): string | null {
+  if (!status || !status.protectedTools.length) return null;
+  return [
+    `Chio mediates these tools: ${status.protectedTools.map(safeText).join(", ")}.`,
+    "Each result is a JSON outcome with a state and a requestId.",
+    "- awaiting_approval: the action was kept without running. Stop and tell the user it needs review (/chio-review REQUEST_ID). Do not call chio_resume unless the user says the operator granted it.",
+    "- denied: an authority decision. Do not repeat the same call; explain the reason or propose a different permitted action.",
+    "- pending or unknown: the effect may have happened. Never repeat the call. Tell the user to reconcile it (/chio-evidence REQUEST_ID).",
+    "- completed with evidence \"verified\": the result is bound to a signed receipt.",
+    status.scope === "isolated_kernel_mcp" ? "This session has no other tools." : "Other tools in this session are not protected by Chio.",
+  ].join("\n");
+}
+
+export interface NoticeState { authorityWarned: boolean; uncertain?: number; uncertainIds?: string[] }
+function uncertainIds(status: ControlStatus, ignorePending = false): string[] { return status.operations.filter(op => op.state === "unknown" || (!ignorePending && op.state === "pending")).map(op => op.requestId); }
+/** Notices for changes between two projections of one session. A first projection or reconnect is a silent baseline.
+ * `ignorePending` is set while a protected call is in flight: the gateway records every dispatch as pending until the kernel answers. */
+export function transitions(previous: ControlStatus | null, next: ControlStatus | null, now: number, state: NoticeState, ignorePending = false): string[] {
+  if (next) {
+    const ids = uncertainIds(next, ignorePending);
+    const before = new Set(state.uncertainIds ?? (previous && previous.sessionId === next.sessionId ? uncertainIds(previous, ignorePending) : ids));
+    state.uncertain = ids.length; state.uncertainIds = ids;
+    if (!previous || previous.sessionId !== next.sessionId) return [];
+    return diff(previous, next, now, state, ids.some(id => !before.has(id)));
+  }
+  return [];
+}
+function diff(previous: ControlStatus, next: ControlStatus, now: number, state: NoticeState, moreUncertain: boolean): string[] {
+  const notices: string[] = [];
+  const priorReviews = new Set(previous.operations.filter(op => op.nextAction === "review").map(op => op.requestId));
+  if (next.operations.some(op => op.nextAction === "review" && !priorReviews.has(op.requestId))) notices.push(`Chio · ${next.awaitingReview} action${next.awaitingReview === 1 ? "" : "s"} awaiting review · /chio-review`);
+  if (moreUncertain) notices.push("Chio · original outcome unresolved · /chio-doctor");
+  const remaining = next.authorityExpiresAt * 1000 - now;
+  if (!state.authorityWarned && next.authority === "live" && remaining > 0 && remaining <= 5 * 60_000) {
+    state.authorityWarned = true; notices.push(`Chio · authority expires in ${Math.max(1, Math.ceil(remaining / 60_000))}m`);
+  }
+  for (const continuation of next.continuations ?? []) {
+    const before = previous.continuations?.find(prior => prior.id === continuation.id);
+    if (continuation.state === "completed" && continuation.delivery === "pending" && before?.state !== "completed") notices.push(`Chio · original result ready · /chio-outcome ${safeText(continuation.id)}`);
+  }
+  return notices;
 }

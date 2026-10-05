@@ -15,7 +15,7 @@ async function fixture(t, mode = "completed") {
   const config = { sessionId: randomUUID(), journalDir: join(root, "journal"), tools: [{ name: "write_file", inputSchema: { type: "object" } }],
     execution: { endpoint: "http://127.0.0.1:1", bearerToken: "delegated-fixture", trustedSigners: [signer], subjectKey: "b2".repeat(32), capabilityId: "cap-a", serverId: "resource-a", sessionId: "kernel-session-a" },
     approval: { requiredTools: ["write_file"], purpose: "Exact fixture write", ttlSeconds: 300 } };
-  let effects = 0, charges = 0, acks = 0, live = true;
+  let effects = 0, charges = 0, acks = 0, live = true, modelContext = () => false;
   let gateway = createGateway(config, {
     execute: async request => {
       effects++; charges++;
@@ -26,7 +26,7 @@ async function fixture(t, mode = "completed") {
     acknowledge: async result => { acks++; return mode === "ack_unknown" ? { acknowledged: false, reason: "fixture lost kernel ACK response" } : { acknowledged: true, requestId: result.requestId }; },
   }, { requireHostAcknowledgement: true });
   const proposal = await gateway.call("fixture-original", "write_file", { path: "/protected/out.txt", content: "Exact payload" });
-  let control = await startControlServer({ config, authorityExpiresAt: Math.floor(Date.now() / 1000) + 600, validateAuthority: async () => live,
+  let control = await startControlServer({ config, authorityExpiresAt: Math.floor(Date.now() / 1000) + 600, validateAuthority: async () => live, modelContextConfirmed: id => modelContext(id),
     workflow: { propose: (id, tool, args) => gateway.call("control:" + id, tool, args),
       resume: (id, requestId, tool, args) => gateway.call("control:" + id, "chio_resume", { requestId, tool, arguments: args }),
       acknowledge: result => gateway.acknowledgeReceivedOutcome(result) } });
@@ -38,11 +38,11 @@ async function fixture(t, mode = "completed") {
   const restart = async () => {
     await control.close(); gateway.close();
     gateway = createGateway(config, { execute: async request => { effects++; charges++; return signedOutcome(config, request); }, acknowledge: async result => { acks++; return { acknowledged: true, requestId: result.requestId }; } }, { requireHostAcknowledgement: true });
-    control = await startControlServer({ config, authorityExpiresAt: Math.floor(Date.now() / 1000) + 600, validateAuthority: async () => live,
+    control = await startControlServer({ config, authorityExpiresAt: Math.floor(Date.now() / 1000) + 600, validateAuthority: async () => live, modelContextConfirmed: id => modelContext(id),
       workflow: { resume: (id, requestId, tool, args) => gateway.call("control:" + id, "chio_resume", { requestId, tool, arguments: args }), acknowledge: result => gateway.acknowledgeReceivedOutcome(result) } });
     headers.Authorization = "Bearer " + control.token;
   };
-  return { root, config, gateway, proposal, approve, request, status, restart, setLive: value => { live = value; }, counts: () => ({ effects, charges, acks }) };
+  return { root, config, gateway, proposal, approve, request, status, restart, setLive: value => { live = value; }, setModelContext: value => { modelContext = value; }, retained: () => control.retainedContinuations(), counts: () => ({ effects, charges, acks }) };
 }
 test("exact native continuation retains one operation, effect, charge and proven delivery", async t => {
   const f = await fixture(t); f.approve();
@@ -176,6 +176,21 @@ test("a signed completion cannot be projected as evidence for a different retain
   assert.equal(status.operations[0].acknowledged, false); assert.equal(status.operations[0].hostDeliveryConfirmed, false);
 });
 
+test("relay-observed model context is projected only for natively confirmed continuations", async t => {
+  const f = await fixture(t); f.approve(); const op = (await f.status()).operations[0];
+  const { continuation } = await (await f.request("/continuations", { requestId: op.requestId, revision: op.review.revision })).json();
+  const original = await (await f.request("/continuations/" + continuation.id + "/outcome")).json();
+  f.setModelContext(id => id === op.requestId);
+  assert.equal((await f.status()).continuations[0].modelContext, undefined);
+  assert.equal((await f.request("/continuations/" + continuation.id + "/ack", { outcomeHash: original.outcomeHash, challenge: original.challenge })).status, 200);
+  const current = await f.status(); assert.equal(current.continuations[0].delivery, "confirmed"); assert.equal(current.continuations[0].modelContext, "confirmed");
+  assert.deepEqual(f.retained().map(c => c.id), current.continuations.map(c => c.id));
+  await f.restart();
+  assert.equal((await f.status()).continuations[0].modelContext, "confirmed");
+  assert.deepEqual(f.counts(), { effects: 1, charges: 1, acks: 1 });
+  f.setModelContext(() => false);
+  assert.equal("modelContext" in (await f.status()).continuations[0], false);
+});
 
 test("full proposal retention refuses a new host request before writing another record", async t => {
   const f = await fixture(t), directory = join(f.config.journalDir, "workflow", "proposals");

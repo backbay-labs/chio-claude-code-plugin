@@ -10,6 +10,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const scriptDirectory=dirname(realpathSync(fileURLToPath(import.meta.url)));
 const {buildSandboxPolicy,requireSessionCredential}=await import(pathToFileURL(join(scriptDirectory,"sandbox.mjs")).href);
 const {startModelRelay}=await import(pathToFileURL(join(scriptDirectory,"model-relay.mjs")).href);
+const {observeModelContext}=await import(pathToFileURL(join(scriptDirectory,"model-context.mjs")).href);
 const {createControlTransport}=await import(pathToFileURL(join(scriptDirectory,"control-transport.mjs")).href);
 const {stageNativeMod}=await import(pathToFileURL(join(scriptDirectory,"mod-profile.mjs")).href);
 
@@ -132,6 +133,7 @@ async function main() {
   const hostPendingRequests=new Set();
   const nativeDeliveredRequests=new Set();
   const modelDeliveredRequests=new Set();
+  const modelContextRequests=new Set();
   let acknowledgements=Promise.resolve();
   const confirmed=new Set();
   function retainUnresolvedHostResult() {
@@ -179,13 +181,13 @@ async function main() {
       if (actual.length !== toolNames.length || actual.some((name, index) => name !== [...toolNames].sort()[index])) { hostInitializationFailed = true; throw new Error("native host tool inventory changed"); }
       if (!controlServer?.statusReads) { hostInitializationFailed = true; throw new Error("native interface has not read its exact session projection"); }
       hostReady = true;
-    } } : {}) });
+    }, onModelForwarded: body => observeModelContext(body, () => controlServer.retainedContinuations(), requestId => modelContextRequests.add(requestId)) } : {}) });
   try {
     const {startGatewayHttp}=await import(pathToFileURL(gateway).href);
     transport=await startGatewayHttp(config);
     if (native) {
       const { startControlServer } = await import(pathToFileURL(join(scriptDirectory, "..", "dist", "control", "service.js")).href);
-      controlServer = await startControlServer({ config, authorityExpiresAt: config.sessionCredential.expiresAt, scope: "isolated_kernel_mcp", modelDeliveryConfirmed: requestId => modelDeliveredRequests.has(requestId), workflow: { ...(config.workflow ?? {}), ...createControlTransport(transport, config, outcome => {
+      controlServer = await startControlServer({ config, authorityExpiresAt: config.sessionCredential.expiresAt, scope: "isolated_kernel_mcp", modelDeliveryConfirmed: requestId => modelDeliveredRequests.has(requestId), modelContextConfirmed: requestId => modelContextRequests.has(requestId), workflow: { ...(config.workflow ?? {}), ...createControlTransport(transport, config, outcome => {
         hostPendingRequests.delete(outcome.requestId); nativeDeliveredRequests.add(outcome.requestId);
         if (outcome.result?.isError === true) hostWorkIncomplete = true;
       }) }, onSessionMismatch: () => {
@@ -265,7 +267,7 @@ async function main() {
     const initializationFailed=hostInitializationFailed||!hostReady&&!nativeControlOnly;
     const executionOutcome=unresolved?"unresolved":initializationFailed?"host-initialization-failed":pending?"awaiting-approval":unsuccessful?"protected-work-incomplete":state.code===0?"completed":"host-failed";
     const exitCode=unresolved?2:initializationFailed?1:pending?4:unsuccessful?3:state.code??1;
-    writeFileSync(join(profile,"exit.json"),JSON.stringify({...state,exitCode,hostInitialization:{ready:hostReady||nativeControlOnly,failed:initializationFailed,...(native?{nativeStatusReads:controlServer.statusReads,controlOnly:nativeControlOnly,sessionChanged:controlServer.sessionMismatch}:{})},hostDelivery:{confirmed:delivered,failed:deliveryFailed},nativeControlDelivery:{confirmed:nativeDeliveredRequests.size,modelDeliveryClaimed:false},modelWorkFailed,executionOutcome,retry:"never-automatic"}),{mode:0o600});
+    writeFileSync(join(profile,"exit.json"),JSON.stringify({...state,exitCode,hostInitialization:{ready:hostReady||nativeControlOnly,failed:initializationFailed,...(native?{nativeStatusReads:controlServer.statusReads,controlOnly:nativeControlOnly,sessionChanged:controlServer.sessionMismatch}:{})},hostDelivery:{confirmed:delivered,failed:deliveryFailed},nativeControlDelivery:{confirmed:nativeDeliveredRequests.size,modelDeliveryClaimed:false,modelContextConfirmed:modelContextRequests.size},modelWorkFailed,executionOutcome,retry:"never-automatic"}),{mode:0o600});
     process.exitCode=exitCode;
   } finally {
     await controlServer?.close();

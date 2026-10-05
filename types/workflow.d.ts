@@ -32,6 +32,7 @@ export interface ContinuationView {
   requestId: string;
   state: "submitted" | "completed" | "unknown";
   delivery: "pending" | "confirmed";
+  modelContext?: "confirmed";
   receiptConfirmed?: boolean;
   outcomeHash?: string;
 }

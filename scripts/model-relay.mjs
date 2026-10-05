@@ -55,7 +55,7 @@ export function validateModelRequest(body,model,toolNames,betaHeaders=[]) {
   // These values cannot authorize remote tools, references, files or background work.
   if (body.metadata!==undefined && (!object(body.metadata)||!keys(body.metadata,["user_id"]))) throw new Error("unsupported metadata");
 }
-export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.com",apiKey,oauth,model,toolNames,onToolResults,onModelRequest,pinnedHostEffortBeta=false}) {
+export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.com",apiKey,oauth,model,toolNames,onToolResults,onModelRequest,onModelForwarded,pinnedHostEffortBeta=false}) {
   const upstream=new URL(upstreamBaseUrl);
   if (oauth && upstream.origin!=="https://api.anthropic.com") throw new Error("Native subscription authentication requires the fixed Anthropic origin");
   if ((!apiKey && !oauth) || (apiKey && oauth) || (oauth && (!oauth.authorization?.startsWith("Bearer ") || !oauth.beta)) || upstream.username || upstream.password || upstream.search || upstream.hash || upstream.pathname!=="/" || !(upstream.origin==="https://api.anthropic.com" || upstream.protocol==="http:"&&upstream.hostname==="127.0.0.1"&&upstream.port)) throw new Error("explicit API or native subscription credential and qualified provider or localhost fixture origin required");
@@ -108,6 +108,9 @@ export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.co
       }
       const result=await fetch(new URL(target.pathname+target.search,upstream),{method:"POST",redirect:"error",signal:controller.signal,headers,body:JSON.stringify(body)});
       event.status=result.status;
+      if (onModelForwarded && target.pathname === "/v1/messages") {
+        try { await onModelForwarded(body); } catch { /* Read-only observation never changes forwarding. */ }
+      }
       response.writeHead(result.status,{"content-type":result.headers.get("content-type")??"application/json"});
       if(result.body) for await(const data of result.body) { if(!response.write(data)) await once(response,"drain",{signal:controller.signal}); }
       response.end();

@@ -132,6 +132,8 @@ node scripts/control.mjs confirm \
   --operator-file /operator/private/kernel-operator.json
 ```
 
+`control.mjs watch` with the same options prompts for each requested intent as it arrives; see the [native runbook](./NATIVE-MODS.md#confirm-a-decision-outside-claude).
+
 Confirmation checks the exact revision, session, capability and original
 arguments and requires the pinned SDK to verify the signed kernel decision.
 The CLI inbox is the first outside-host review surface. It has no remote web or
@@ -168,12 +170,17 @@ outcomes remain fenced; current resource contents cannot substitute for a missin
 verified original result.
 
 The native-control channel is retained separately from model tool-result
-delivery. A native result does not establish that a model read it. The launcher
-clears an earlier model-side awaiting-review observation only after exact native
-delivery and kernel acknowledgement; its exit record reports the two channels
-separately. A lost response, repeated button press or unconfirmed ACK cannot
-create another protected effect. Unknown operations retain their original IDs
-and require trusted resource reconciliation; no generic retry is offered.
+delivery. After the result is received, the mod attaches it, with its receipt
+id and outcome hash, to the user's next message as context, once per session.
+In a protected launch the parent relay records the delivery only when a
+forwarded model request carries the exact hash of a continuation whose native
+delivery is confirmed; the pane then shows "relay-confirmed". That means a
+forwarded model request carried the exact hash, not that the model read or acted
+on it. Ordinary sessions
+have no relay and never show that label. A lost response, repeated button press
+or unconfirmed ACK cannot create another protected effect. Unknown operations
+retain their original IDs and require trusted resource reconciliation; no
+generic retry is offered.
 
 ## Explain a retained decision
 

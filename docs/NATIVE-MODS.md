@@ -63,6 +63,11 @@ every request and after clear, resume or fork. The compact review puts the exact
 payload before its decision controls; a separate control expands evidence and
 authority details. Panes scroll when an exact payload exceeds the viewport.
 
+In an interactive session the mod shows a short notice when a new action awaits
+review, a new original outcome becomes uncertain, live authority has five
+minutes or less left (once per session), or a continued result is ready to
+receive. The first projection after start or reconnect is a silent baseline.
+
 The native doctor reads only the authorized session projection. It cannot inspect
 the VM or prove storage integrity. In the trusted operator terminal, use the
 separate infrastructure probe with an explicit profile, matching Docker context
@@ -95,6 +100,15 @@ returns `requested`, `authorityAccepted: false` and `dispatchPerformed: false`.
 Previously recorded alternative requests remain visible to the operator and do
 not block supported exact decisions. Semantic remedy generation and validation
 are not implemented.
+
+### Guidance for Claude
+
+When a projection lists protected tools, the mod adds a `chio` context block to
+the conversation's first message (and again after `/clear` or compaction). It
+names the protected tools and tells Claude to stop at `awaiting_approval`,
+never repeat a `pending` or `unknown` call, not repeat a denied call, and not
+call `chio_resume` unless the user says the operator granted it. Guidance shapes
+model behavior only; the kernel and gateway still enforce every decision.
 
 ## Operator service and ordinary sessions
 
@@ -139,6 +153,21 @@ node scripts/control.mjs confirm \
   --intent "$CHIO_REVIEW_INTENT_ID" \
   --operator-file /operator/private/operator.json
 ```
+
+To answer requests as they arrive, run the watch screen in the trusted
+terminal instead:
+
+```sh
+node scripts/control.mjs watch \
+  --gateway-config /operator/private/gateway.json \
+  --operator-file /operator/private/operator.json
+```
+
+It prints each requested intent with its exact action and arguments, rings the
+terminal bell, and asks `[y] confirm  [n] skip  [q] quit`. `y` runs the same
+confirmation as `confirm`; `n` lets the intent expire. The watch never creates
+or changes a decision and dispatches nothing. It requires an interactive
+terminal.
 
 The operator file contains an `adminToken` distinct from delegated execution
 authority. Never supply it to Claude. Confirmation checks session, frozen

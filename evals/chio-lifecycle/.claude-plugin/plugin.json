@@ -1,0 +1,5 @@
+{
+  "name": "chio-lifecycle-fixture",
+  "version": "0.0.0",
+  "description": "Eval-only fixture exposing mocked Chio tools. Not delivered."
+}

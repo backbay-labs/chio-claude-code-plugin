@@ -1,6 +1,8 @@
 import { expect, mock, test } from "claude-code/testing";
 import type { On, CommandRunInput, HttpResponse } from "claude-code";
 import type { ControlStatus } from "../types/control.js";
+import { transitions } from "../hooks/native/projection.ts";
+import { outcomeHash, shareText } from "../hooks/native/workflow.ts";
 
 const options = { control_url: "http://127.0.0.1:12345", control_token: "a".repeat(64) };
 function command(name: string, args = ""): CommandRunInput { return { command: name, args, origin: { kind: "composer" }, presentation: { isFullscreen: false, columns: 80 } }; }
@@ -16,6 +18,7 @@ function stub(on: On, getSession: () => string, getStatus: () => ControlStatus, 
   on("ui.close", () => ({ value: undefined }));
   on("command.register", ($, e) => ({ value: { command: e.name } }));
   on("session.start", ($, e) => ({ cwd: e.cwd }));
+  on("prompt.context", ($, e) => ({ blocks: e.blocks }));
   on("http.fetch", ($, e) => {
     if (e.init?.method === "POST") {
       if (!post) throw new Error("unexpected intent post");
@@ -267,6 +270,254 @@ test("exactly twelve retained operations need no overflow line", { options }, as
   expect(await ui.find({ key: "operation-11" })).toBeDefined();
   expect(await ui.find({ type: "Text", text: "more retained operations" })).toBeUndefined();
   await ui.unmount();
+});
+test("lifecycle guidance joins the first-message context once, naming the protected tools", { options }, async ($, on) => {
+  stub(on, () => "session-a", () => projection());
+  await $.command.run(command("chio-status"));
+  const result = await $.prompt.context({ blocks: [{ name: "chio", text: "stale" }, { name: "currentDate", text: "today" }] });
+  const chio = result.blocks.filter(block => block.name === "chio");
+  expect(chio.length).toBe(1);
+  expect(chio[0]!.text).toContain("Chio mediates these tools: write_file.");
+  expect(chio[0]!.text).toContain("Never repeat the call.");
+  expect(chio[0]!.text).toContain("Other tools in this session are not protected by Chio.");
+  expect(result.blocks.some(block => block.name === "currentDate")).toBe(true);
+});
+test("disconnected status adds no guidance", { options }, async ($, on) => {
+  stub(on, () => "session-a", () => projection("session-b"));
+  await $.command.run(command("chio-status"));
+  const result = await $.prompt.context({ blocks: [] });
+  expect(result.blocks.some(block => block.name === "chio")).toBe(false);
+});
+test("isolated scope guidance says the session has no other tools", { options }, async ($, on) => {
+  const value = projection(); value.scope = "isolated_kernel_mcp";
+  stub(on, () => "session-a", () => value);
+  await $.command.run(command("chio-status"));
+  const text = (await $.prompt.context({ blocks: [] })).blocks.find(block => block.name === "chio")?.text ?? "";
+  expect(text).toContain("This session has no other tools.");
+});
+
+function uncertain(value: ControlStatus): ControlStatus {
+  value.operations = [{ requestId: "request-u", tool: "write_file", state: "unknown", evidence: "unverified", acknowledged: false, hostDeliveryConfirmed: false, nextAction: "reconcile_original" }];
+  value.awaitingReview = 0; value.unresolved = 1; return value;
+}
+test("transitions are silent for a first projection or a reconnect", () => {
+  const state = { authorityWarned: false };
+  expect(transitions(null, projection(), Date.now(), state)).toEqual([]);
+  expect(transitions(projection(), null, Date.now(), state)).toEqual([]);
+});
+test("transitions announce new reviews, new uncertain outcomes, near expiry once, and ready results", () => {
+  const now = Date.now(), state = { authorityWarned: false };
+  const quiet = projection(); quiet.awaitingReview = 0; quiet.operations = []; quiet.authorityExpiresAt = Math.floor(now / 1000) + 3600;
+  const review = projection(); review.authorityExpiresAt = quiet.authorityExpiresAt;
+  expect(transitions(quiet, review, now, state)).toEqual(["Chio · 1 action awaiting review · /chio-review"]);
+  const unknown = uncertain(projection()); unknown.authorityExpiresAt = quiet.authorityExpiresAt;
+  expect(transitions(quiet, unknown, now, state)).toEqual(["Chio · original outcome unresolved · /chio-doctor"]);
+  const expiring = projection(); expiring.awaitingReview = 0; expiring.operations = []; expiring.authorityExpiresAt = Math.floor(now / 1000) + 240;
+  expect(transitions(quiet, expiring, now, state)).toEqual(["Chio · authority expires in 4m"]);
+  expect(transitions(quiet, expiring, now, state)).toEqual([]);
+  const id = "12345678-1234-4123-8123-123456789abc";
+  const submitted = projection(); submitted.authorityExpiresAt = quiet.authorityExpiresAt; submitted.continuations = [{ id, requestId: "request-a", state: "submitted", delivery: "pending" }];
+  const completed = projection(); completed.authorityExpiresAt = quiet.authorityExpiresAt; completed.continuations = [{ id, requestId: "request-a", state: "completed", delivery: "pending" }];
+  expect(transitions(submitted, completed, now, { authorityWarned: true })).toEqual([`Chio · original result ready · /chio-outcome ${id}`]);
+});
+for (const interactive of [true, false]) {
+  test(`a new review ${interactive ? "shows" : "does not show"} a toast`, { options }, async ($, on) => {
+    const toasts: string[] = []; let value = projection(); value.awaitingReview = 0; value.operations = [];
+    stub(on, () => "session-a", () => value);
+    on("ui.toast", ($, e) => { toasts.push(e.text); return { value: undefined }; });
+    await $.session.start({ cwd: "/tmp", surface: null, isInteractive: interactive });
+    await $.command.run(command("chio-status"));
+    value = projection();
+    await $.command.run(command("chio-status"));
+    expect(toasts).toEqual(interactive ? ["Chio · 1 action awaiting review · /chio-review"] : []);
+  });
+}
+const submit = (text: string) => ({ text, wait: false, origin: { kind: "composer" as const } });
+const continuationId = "12345678-1234-4123-8123-123456789abc";
+async function readyOutcome(result: unknown) {
+  const outcome = { state: "completed", evidence: "verified", requestId: "request-a", result, receipt: { id: "receipt-a" } };
+  return { schema: "chio.control.outcome.v1", ready: true, continuation: { id: continuationId, requestId: "request-a", state: "completed", delivery: "pending" }, outcome, outcomeHash: await outcomeHash(outcome), challenge: "c".repeat(64) };
+}
+function outcomeStub(on: On, getSession: () => string, ready: Record<string, unknown>, onAck?: () => void | Promise<void>, onSubmit?: (e: { text: string; context?: readonly string[] }) => { text: string; context?: readonly string[] } | { drop: string }) {
+  const value = projection(); value.continuations = [{ id: continuationId, requestId: "request-a", state: "completed", delivery: "pending" }];
+  on("session.id", () => ({ value: getSession() }));
+  on("ui.close", () => ({ value: undefined }));
+  on("command.register", ($, e) => ({ value: { command: e.name } }));
+  on("prompt.submit", ($, e) => onSubmit ? onSubmit(e) : ({ text: e.text, ...(e.context ? { context: e.context } : {}) }));
+  on("http.fetch", async ($, e) => {
+    if (e.url.endsWith("/outcome")) return { value: { status: 200, ok: true, headers: {}, text: JSON.stringify(ready) } };
+    if (e.url.endsWith("/ack")) { await onAck?.(); return { value: { status: 200, ok: true, headers: {}, text: JSON.stringify({ acknowledged: true, requestId: "request-a", channel: "native_control" }) } }; }
+    return { value: { status: 200, ok: true, headers: {}, text: JSON.stringify({ ...value, sessionId: getSession(), checkedAt: Date.now() }) } };
+  });
+}
+test("a received continued result is attached to the next prompt exactly once", { options }, async ($, on) => {
+  const ready = await readyOutcome({ written: "/protected/out.txt" });
+  outcomeStub(on, () => "session-a", ready);
+  expect((await $.command.run(command("chio-outcome", continuationId))).text).toContain("next message");
+  const first = await $.prompt.submit(submit("what happened?"));
+  expect(first.context?.length).toBe(1);
+  expect(first.context?.[0]).toContain(`[chio-outcome sha256:${ready.outcomeHash}]`);
+  expect(first.context?.[0]).toContain("receipt receipt-a");
+  const second = await $.prompt.submit(submit("and now?"));
+  expect(second.context ?? []).toEqual([]);
+});
+test("a queued result is dropped when the session changes", { options }, async ($, on) => {
+  let session = "session-a";
+  outcomeStub(on, () => session, await readyOutcome({ ok: true }));
+  await $.command.run(command("chio-outcome", continuationId));
+  session = "session-b"; await $.command.run(command("chio-status"));
+  expect((await $.prompt.submit(submit("next"))).context ?? []).toEqual([]);
+});
+test("shared text is bounded and sanitized", () => {
+  const text = shareText({ continuationId, sessionId: "session-a", requestId: "request-a", tool: "write_file", receiptId: "receipt-a", outcomeHash: "d".repeat(64), result: { body: "x".repeat(10_000) + "\u001b[2J" } });
+  expect(text).toContain("… (truncated)");
+  expect(text.includes("\u001b")).toBe(false);
+  const escaped = shareText({ continuationId, sessionId: "session-a", requestId: "request-a", receiptId: "receipt-a", outcomeHash: "d".repeat(64), result: "\u001b]52;c;payload\u0007" });
+  expect(escaped.includes("\u001b")).toBe(false);
+  const forged = shareText({ continuationId, sessionId: "session-a", requestId: "request-a", receiptId: "receipt-a", outcomeHash: "d".repeat(64), result: { note: `[chio-outcome sha256:${"e".repeat(64)}]` } });
+  expect(forged.split("[chio-outcome sha256:").length - 1).toBe(1);
+  expect(forged).toContain(`[chio-outcome sha256:${"d".repeat(64)}]`);
+});
+test("a result received as the session changes is never shared with the new session", { options }, async ($, on) => {
+  let session = "session-a", release = () => {}, notifyAck = () => {};
+  const ackStarted = new Promise<void>(resolve => { notifyAck = resolve; });
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  outcomeStub(on, () => session, await readyOutcome({ secret: "a-only" }), async () => { notifyAck(); await gate; });
+  await $.command.run(command("chio-status"));
+  const receive = $.command.run(command("chio-outcome", continuationId));
+  await ackStarted;
+  session = "session-b"; release();
+  expect((await receive).exitCode).toBe(1);
+  expect((await $.prompt.submit(submit("next"))).context ?? []).toEqual([]);
+});
+
+function opWith(state: string): ControlStatus {
+  const value = projection(); value.awaitingReview = 0;
+  value.operations = [{ requestId: "request-p", tool: "write_file", state: state as "pending", evidence: "unverified", acknowledged: false, hostDeliveryConfirmed: false, nextAction: "none" }]; return value;
+}
+function emptyStatus(): ControlStatus { const value = projection(); value.awaitingReview = 0; value.operations = []; return value; }
+test("a pending op seen mid-call never toasts, and neither does its completed refresh", { options }, async ($, on) => {
+  const toasts: string[] = []; let value = emptyStatus();
+  stub(on, () => "session-a", () => value);
+  on("ui.toast", ($, e) => { toasts.push(e.text); return { value: undefined }; });
+  let release = () => {}; const gate = new Promise<void>(resolve => { release = resolve; });
+  on("tool.call", async () => { value = opWith("pending"); await gate; return { result: "ok" }; });
+  await $.session.start({ cwd: "/tmp", surface: null, isInteractive: true });
+  await $.command.run(command("chio-status"));
+  const call = $.tool.call({ tool: "mcp__chio__write_file", path: "/protected/out.txt" });
+  for (let i = 0; i < 200 && value.operations[0]?.state !== "pending"; i++) await Promise.resolve();
+  await $.command.run(command("chio-status")); expect(toasts).toEqual([]);
+  value = opWith("completed"); release(); expect((await call).result).toBe("ok");
+  expect(toasts).toEqual([]);
+  value = opWith("completed"); await $.command.run(command("chio-status"));
+  expect(toasts).toEqual([]);
+});
+test("a pending op that remains after the call toasts once on the next refresh", { options }, async ($, on) => {
+  const toasts: string[] = []; let value = emptyStatus();
+  stub(on, () => "session-a", () => value);
+  on("ui.toast", ($, e) => { toasts.push(e.text); return { value: undefined }; });
+  let release = () => {}; const gate = new Promise<void>(resolve => { release = resolve; });
+  on("tool.call", async () => { value = opWith("pending"); await gate; return { result: "ok" }; });
+  await $.session.start({ cwd: "/tmp", surface: null, isInteractive: true });
+  await $.command.run(command("chio-status"));
+  const call = $.tool.call({ tool: "mcp__chio__write_file", path: "/protected/out.txt" });
+  for (let i = 0; i < 200 && value.operations[0]?.state !== "pending"; i++) await Promise.resolve();
+  await $.command.run(command("chio-status")); expect(toasts).toEqual([]);
+  release(); await call;
+  await $.command.run(command("chio-status"));
+  expect(toasts).toEqual(["Chio · original outcome unresolved · /chio-doctor"]);
+});
+test("transitions can ignore pending ops and remember the stored uncertain count", () => {
+  const now = Date.now(), quiet = emptyStatus(), pending = opWith("pending"), unknown = opWith("unknown");
+  const state: { authorityWarned: boolean; uncertain?: number } = { authorityWarned: true };
+  expect(transitions(quiet, pending, now, state, true)).toEqual([]); expect(state.uncertain).toBe(0);
+  expect(transitions(pending, pending, now, state)).toEqual(["Chio · original outcome unresolved · /chio-doctor"]); expect(state.uncertain).toBe(1);
+  expect(transitions(pending, pending, now, state)).toEqual([]);
+  expect(transitions(null, unknown, now, state)).toEqual([]); expect(state.uncertain).toBe(1);
+  expect(transitions(quiet, unknown, now, { authorityWarned: true })).toEqual(["Chio · original outcome unresolved · /chio-doctor"]);
+});
+test("a throwing toast never nulls live status", { options }, async ($, on) => {
+  let value = emptyStatus();
+  stub(on, () => "session-a", () => value);
+  on("ui.toast", () => { throw new Error("toast failed"); });
+  await $.session.start({ cwd: "/tmp", surface: null, isInteractive: true });
+  await $.command.run(command("chio-status"));
+  value = projection();
+  const answer = await $.command.run(command("chio-status"));
+  expect(answer.text).not.toContain("disconnected"); expect(answer.exitCode).toBe(0);
+});
+test("a compact SessionStart keeps a queued share while clear drops it", { options }, async ($, on) => {
+  outcomeStub(on, () => "session-a", await readyOutcome({ ok: true }));
+  on("classic.SessionStart", () => ({}));
+  await $.command.run(command("chio-outcome", continuationId));
+  await $.classic.SessionStart({ source: "compact" });
+  const kept = await $.prompt.submit(submit("next"));
+  expect(kept.context?.length).toBe(1);
+  await $.command.run(command("chio-outcome", continuationId));
+  await $.classic.SessionStart({ source: "clear" });
+  expect((await $.prompt.submit(submit("later"))).context ?? []).toEqual([]);
+});
+test("attaching a share replaces the not-yet-confirmed notice", { options }, async ($, on) => {
+  outcomeStub(on, () => "session-a", await readyOutcome({ ok: true }));
+  await $.command.run(command("chio-outcome", continuationId));
+  await $.prompt.submit(submit("next"));
+  const text = (await $.command.run(command("chio", ""))).text;
+  expect(text).toContain("Original result attached to your message for Claude."); expect(text).not.toContain("not yet confirmed");
+});
+test("guidance cache is invalidated when connection or protected scope changes", { options }, async ($, on) => {
+  let live = false, value = projection(); const invalidated: string[] = [];
+  stub(on, () => "session-a", () => { if (!live) throw new Error("offline"); return value; });
+  on("ui.invalidate", ($, e) => { invalidated.push(e.event); return { value: undefined }; });
+  await $.command.run(command("chio-status"));
+  await $.prompt.context({ blocks: [] }); invalidated.length = 0;
+  live = true; await $.command.run(command("chio-status"));
+  expect(invalidated).toContain("prompt.context"); invalidated.length = 0;
+  value = { ...value, protectedTools: ["read_file"] }; await $.command.run(command("chio-status"));
+  expect(invalidated).toContain("prompt.context"); invalidated.length = 0;
+  await $.command.run(command("chio-status")); expect(invalidated.includes("prompt.context")).toBe(false);
+  live = false; await $.command.run(command("chio-status"));
+  expect(invalidated).toContain("prompt.context");
+  const result = await $.prompt.context({ blocks: [{ name: "chio", text: "old authority" }, { name: "other", text: "keep" }] });
+  expect(result.blocks).toEqual([{ name: "other", text: "keep" }]);
+});
+
+test("a refused prompt keeps its queued result and does not claim attachment", { options }, async ($, on) => {
+  let refuse = true;
+  outcomeStub(on, () => "session-a", await readyOutcome({ ok: true }), undefined,
+    e => refuse ? { drop: "fixture refusal" } : { text: e.text, ...(e.context ? { context: e.context } : {}) });
+  await $.command.run(command("chio-outcome", continuationId));
+  expect((await $.prompt.submit(submit("blocked"))).drop).toBe("fixture refusal");
+  expect((await $.command.run(command("chio"))).text).not.toContain("Original result attached");
+  refuse = false;
+  expect((await $.prompt.submit(submit("try again"))).context?.length).toBe(1);
+  expect((await $.prompt.submit(submit("later"))).context ?? []).toEqual([]);
+});
+test("context stripped downstream stays queued instead of claiming delivery", { options }, async ($, on) => {
+  let strip = true;
+  outcomeStub(on, () => "session-a", await readyOutcome({ ok: true }), undefined,
+    e => strip ? { text: e.text } : { text: e.text, ...(e.context ? { context: e.context } : {}) });
+  await $.command.run(command("chio-outcome", continuationId));
+  await $.prompt.submit(submit("stripped"));
+  expect((await $.command.run(command("chio"))).text).not.toContain("Original result attached");
+  strip = false; expect((await $.prompt.submit(submit("retained"))).context?.length).toBe(1);
+});
+test("replacement reviews and uncertain operations announce arrivals at equal counts", () => {
+  const before = projection(), after = projection(); after.operations[0]!.requestId = "request-new";
+  expect(transitions(before, after, Date.now(), { authorityWarned: true })).toEqual(["Chio · 1 action awaiting review · /chio-review"]);
+  const oldUnknown = uncertain(projection()), newUnknown = uncertain(projection()); newUnknown.operations[0]!.requestId = "uncertain-new";
+  expect(transitions(oldUnknown, newUnknown, Date.now(), { authorityWarned: true })).toEqual(["Chio · original outcome unresolved · /chio-doctor"]);
+});
+
+test("the pane receive control queues the original result without redispatch", { options }, async ($, on) => {
+  let acknowledgements = 0;
+  outcomeStub(on, () => "session-a", await readyOutcome({ written: true }), () => { acknowledgements++; });
+  await $.command.run(command("chio-review", "request-a"));
+  const ui = await $.ui.mount({ plugin: "chio", surface: "terminal", component: "Pane", requestId: "chio", props: paneProps });
+  await ui.press({ key: "outcome" });
+  expect(acknowledgements).toBe(1);
+  expect((await $.prompt.submit(submit("what happened?"))).context?.length).toBe(1);
+  expect((await $.prompt.submit(submit("next"))).context ?? []).toEqual([]);
+  expect(acknowledgements).toBe(1); await ui.unmount();
 });
 test("native review text neutralizes bidi and invisible Unicode controls", { options }, async ($, on) => {
   const value = projection(); value.operations[0]!.review!.arguments = { path: "safe\u202Etxt.exe\u200B\u{E0041}", content: "data" };
