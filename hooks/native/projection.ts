@@ -52,11 +52,11 @@ export function parseStatus(text: string, sessionId: string): ControlStatus {
 /** Control characters cannot turn retained input into terminal instructions. */
 export function safeText(value: unknown): string { return String(value).replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f\p{Cf}\u2028\u2029]/gu, "�"); }
 /** Advisory count of tool calls that did not go through Chio. Observed, never checked or blocked. */
-export function outsideText(counts: ReadonlyMap<string, number>): string | null {
+export function outsideText(counts: ReadonlyMap<string, number>, otherCalls = 0): string | null {
   const entries = [...counts].filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-  if (!entries.length) return null;
-  const shown = entries.slice(0, 8).map(([tool, n]) => `${safeText(tool)} ${n}`);
-  return `Outside Chio protection while connected (observed, not checked): ${shown.join(" · ")}${entries.length > 8 ? ` · +${entries.length - 8} more` : ""}`;
+  if (!entries.length && !otherCalls) return null;
+  const shown = entries.slice(0, 8).map(([tool, n]) => `${safeText(tool).replace(/\n/g, "\\n")} ${n}`);
+  return `Outside Chio protection while connected (observed, not checked): ${shown.join(" · ")}${entries.length > 8 ? ` · +${entries.length - 8} more` : ""}${otherCalls ? ` · ${otherCalls} additional calls across other tools` : ""}`;
 }
 export function statusLine(status: ControlStatus | null, now: number, outsideCalls = 0): string {
   if (!status) return "Chio · disconnected · protection scope unavailable";

@@ -16,8 +16,9 @@ let notices: NoticeState = { authorityWarned: false };
 let inFlight = 0;
 let shareQueue: ShareRecord[] = [];
 let outside = new Map<string, number>();
-const outsideLine = () => { const text = outsideText(outside); return text ? "\n" + text : ""; };
-const outsideTotal = () => [...outside.values()].reduce((a, b) => a + b, 0);
+let outsideOther = 0;
+const outsideLine = () => { const text = status?.scope === "kernel_mcp" ? outsideText(outside, outsideOther) : null; return text ? "\n" + text : ""; };
+const outsideTotal = () => status?.scope === "kernel_mcp" ? [...outside.values()].reduce((a, b) => a + b, outsideOther) : 0;
 
 const sharing = new Set<ShareRecord>();
 let pane: "operations" | "task" = "operations";
@@ -28,7 +29,7 @@ async function refresh($: EngineInterface, options: PluginOptions): Promise<Cont
   const actual = await $.session.id();
   const priorGuidance = guidanceText(status);
   if (actual !== sessionId) {
-    sessionId = actual; pane = "operations"; status = null; selectedId = null; showDetails = false; notice = ""; generation += 1; notices = { authorityWarned: false }; shareQueue = []; outside = new Map(); inFlight = 0;
+    sessionId = actual; pane = "operations"; status = null; selectedId = null; showDetails = false; notice = ""; generation += 1; notices = { authorityWarned: false }; shareQueue = []; outside = new Map(); outsideOther = 0; inFlight = 0;
     await $.ui.close({ id: "chio" });
   }
   const thisGeneration = generation;
@@ -156,7 +157,7 @@ export const register: Register = (on, options) => {
   on("classic.SessionStart", async ($, e, next) => {
     // /clear, resume and fork do not fire session.start; always re-resolve the host id.
     if (e.source === "compact") { await refresh($, options); return next(e); }
-    status = null; selectedId = null; showDetails = false; generation += 1; notices = { authorityWarned: false }; shareQueue = []; outside = new Map();
+    status = null; selectedId = null; showDetails = false; generation += 1; notices = { authorityWarned: false }; shareQueue = []; outside = new Map(); outsideOther = 0;
     await refresh($, options); return next(e);
   }).catch(($, e, next) => next(e));
 
@@ -226,9 +227,14 @@ export const register: Register = (on, options) => {
     await refresh($, options); return result;
   }).catch(($, e, next) => next(e)); // Observation only; replay-safe preservation after next.
   on("tool.call", async ($, e, next) => {
+    const startedSession = sessionId, startedGeneration = generation, startedScope = status?.scope;
     const result = await next(e);
     try {
-      if (!e.tool.startsWith("mcp__chio__") && status?.scope === "kernel_mcp" && await $.session.id() === sessionId) outside.set(e.tool, (outside.get(e.tool) ?? 0) + 1);
+      if (!e.tool.startsWith("mcp__chio__") && startedScope === "kernel_mcp" && status?.scope === "kernel_mcp"
+        && await $.session.id() === startedSession && sessionId === startedSession && generation === startedGeneration) {
+        if (e.tool.length <= 128 && (outside.has(e.tool) || outside.size < 128)) outside.set(e.tool, Math.min(Number.MAX_SAFE_INTEGER, (outside.get(e.tool) ?? 0) + 1));
+        else outsideOther = Math.min(Number.MAX_SAFE_INTEGER, outsideOther + 1);
+      }
     } catch { /* Observation only: a failure never changes the call. */ }
     return result;
   }).catch(($, e, next) => next(e));

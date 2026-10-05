@@ -631,3 +631,25 @@ test("demo outcomes remain labeled when shared with Claude", { options }, async 
   expect(sent.context![0]).not.toContain("Chio verified result");
 });
 
+test("a native call that finishes after a session change is not counted in the new session", { options }, async ($, on) => {
+  let session = "session-a", started = () => {}, release = () => {};
+  const begun = new Promise<void>(r => { started = r; }), gate = new Promise<void>(r => { release = r; });
+  stub(on, () => session, () => projection(session));
+  on("tool.call", async () => { started(); await gate; return { result: "original" }; });
+  await $.command.run(command("chio-status"));
+  const pending = $.tool.call({ tool: "Bash", command: "true" } as never);
+  await begun; session = "session-b"; await $.command.run(command("chio-status")); release();
+  expect((await pending).result).toBe("original");
+  expect((await $.command.run(command("chio-status"))).text).not.toContain("calls outside Chio");
+  expect((await $.command.run(command("chio-status"))).text).not.toContain("Outside Chio protection");
+});
+
+test("outside coverage bounds retained tool names and aggregates excess calls", { options }, async ($, on) => {
+  stub(on, () => "session-a", () => projection());
+  on("tool.call", () => ({ result: "original" }));
+  await $.command.run(command("chio-status"));
+  for (let i = 0; i < 150; i++) await $.tool.call({ tool: `external_${i}` } as never);
+  const text = (await $.command.run(command("chio-status"))).text;
+  expect(text).toContain("150 calls outside Chio");
+  expect(text).toContain("22 additional calls across other tools");
+});
