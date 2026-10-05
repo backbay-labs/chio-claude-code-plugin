@@ -1,5 +1,5 @@
 import { verifyCompletedOutcome } from "@chio/bridge";
-import type { GatewayConfig, StoredOperation } from "../../node_modules/@chio/bridge/dist/gateway.js";
+import type { GatewayConfig, StoredOperation } from "../bridge-internals/gateway.js";
 import { digest } from "./store.js";
 
 /** Bind the journal identity as well as the signed request and result. */

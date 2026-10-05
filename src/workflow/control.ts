@@ -2,7 +2,7 @@ import { randomBytes, randomUUID } from "node:crypto";
 import { existsSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { verifyBoundReceipt, verifyCompletedOutcome, type ExecutionOutcome, type AcknowledgementResult } from "@chio/bridge";
-import type { GatewayConfig, GatewayOutcome, StoredOperation } from "../../node_modules/@chio/bridge/dist/gateway.js";
+import type { GatewayConfig, GatewayOutcome, StoredOperation } from "../bridge-internals/gateway.js";
 import type { OperationView } from "../../types/control.js";
 import type { ContinuationView, ExplanationView, WorkflowView } from "../../types/workflow.js";
 import { digest, privateDirectory, privateRead, privateSave } from "./store.js";

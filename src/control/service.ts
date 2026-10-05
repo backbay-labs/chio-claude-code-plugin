@@ -5,9 +5,9 @@ import { join, resolve } from "node:path";
 import { canonicalizeJson } from "@chio-protocol/sdk/invariants";
 import { createMcpExecutionClient } from "@chio/bridge";
 // Internal bridge contracts are pinned by the vendored archive and bundled at release.
-import { gatewayApprovalPath, gatewayBinding, operationKey, privatePath, type GatewayConfig, type StoredOperation } from "../../node_modules/@chio/bridge/dist/gateway.js";
-import { gatewayStatus } from "../../node_modules/@chio/bridge/dist/gateway-operator.js";
-import { verifyApprovalToolCall } from "../../node_modules/@chio/bridge/dist/approval.js";
+import { gatewayApprovalPath, gatewayBinding, operationKey, privatePath, type GatewayConfig, type StoredOperation } from "../bridge-internals/gateway.js";
+import { gatewayStatus } from "../bridge-internals/gateway-operator.js";
+import { verifyApprovalToolCall } from "../bridge-internals/approval.js";
 import type { ControlStatus, IntentKind, IntentState, IntentView, OperationView } from "../../types/control.js";
 
 import { createWorkflowControl, type WorkflowOptions } from "../workflow/control.js";

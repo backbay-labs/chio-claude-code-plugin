@@ -2,7 +2,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { closeSync, fsyncSync, lstatSync, mkdirSync, openSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { canonicalizeJson } from "@chio-protocol/sdk/invariants";
-import { privatePath } from "../../node_modules/@chio/bridge/dist/gateway.js";
+import { privatePath } from "../bridge-internals/gateway.js";
 
 export function digest(value: unknown): string { return createHash("sha256").update(canonicalizeJson(value)).digest("hex"); }
 export function privateRead<T>(path: string): T {
