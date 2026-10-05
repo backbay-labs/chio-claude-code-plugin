@@ -78,7 +78,9 @@ export function bondPresence(sessionId: string): "absent" | "present" | "revoked
   if (!bonds || typeof bonds !== "object" || Array.isArray(bonds)) return "invalid";
   if (!Object.hasOwn(bonds, sessionId)) return "absent";
   const entry = (bonds as Record<string, unknown>)[sessionId];
-  return entry && typeof entry === "object" && typeof (entry as { revokedAt?: unknown }).revokedAt === "string" ? "revoked" : "present";
+  if (!entry || typeof entry !== "object" || Array.isArray(entry)) return "invalid";
+  if (!Object.hasOwn(entry, "revokedAt")) return "present";
+  return typeof (entry as { revokedAt?: unknown }).revokedAt === "string" ? "revoked" : "invalid";
 }
 
 /** Controls must name a session, even when only one bond is retained. */
@@ -90,7 +92,7 @@ export function requireSessionBond(explicitSessionId?: string): SessionBond {
   const sessionId = hostSessionId ?? explicitSessionId;
   if (!sessionId) throw new Error("an exact session id is required; set CLAUDE_SESSION_ID or pass the session explicitly");
   const bond = getBond(sessionId);
-  if (!bond || bond.revokedAt || bond.sessionId !== sessionId) throw new Error(`no bond for session ${sessionId}`);
+  if (!bond || Object.hasOwn(bond, "revokedAt") || bond.sessionId !== sessionId) throw new Error(`no bond for session ${sessionId}`);
   return bond;
 }
 
@@ -100,7 +102,7 @@ export function requireSessionBond(explicitSessionId?: string): SessionBond {
  */
 export function getSoleBond(): SessionBond | undefined {
   const state = readState();
-  const entries = Object.values(state.bonds).filter(b => !b.revokedAt);
+  const entries = Object.values(state.bonds).filter(b => b && typeof b === "object" && !Object.hasOwn(b, "revokedAt"));
   if (entries.length === 1) return entries[0];
   return undefined;
 }
@@ -111,7 +113,7 @@ export function getSoleBond(): SessionBond | undefined {
  */
 export function getMostRecentBond(): SessionBond | undefined {
   const state = readState();
-  const entries = Object.values(state.bonds).filter(b => !b.revokedAt);
+  const entries = Object.values(state.bonds).filter(b => b && typeof b === "object" && !Object.hasOwn(b, "revokedAt"));
   if (entries.length === 0) return undefined;
   entries.sort((a, b) => b.bondedAt.localeCompare(a.bondedAt));
   return entries[0];

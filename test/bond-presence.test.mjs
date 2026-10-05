@@ -33,5 +33,12 @@ test("unreadable or malformed state is invalid", t => {
 });
 test("a tombstoned entry is revoked", t => {
   assert.equal(presence(t, JSON.stringify({ bonds: { "session-a": { sessionId: "session-a", revokedAt: "2026-10-04T00:00:00.000Z" } } })), "revoked");
-  assert.equal(presence(t, JSON.stringify({ bonds: { "session-a": { sessionId: "session-a", revokedAt: 1 } } })), "present");
+  assert.equal(presence(t, JSON.stringify({ bonds: { "session-a": { sessionId: "session-a", revokedAt: 1 } } })), "invalid");
+});
+
+test("malformed revocation markers cannot disagree with command bond selection", t => {
+  for (const revokedAt of [null, false, 0, true, {}, []]) {
+    assert.equal(presence(t, JSON.stringify({ bonds: { "session-a": { sessionId: "session-a", revokedAt } } })), "invalid");
+  }
+  assert.equal(presence(t, JSON.stringify({ bonds: { "session-a": { sessionId: "session-a", revokedAt: "" } } })), "revoked");
 });

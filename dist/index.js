@@ -10250,7 +10250,9 @@ function bondPresence(sessionId) {
   if (!bonds || typeof bonds !== "object" || Array.isArray(bonds)) return "invalid";
   if (!Object.hasOwn(bonds, sessionId)) return "absent";
   const entry = bonds[sessionId];
-  return entry && typeof entry === "object" && typeof entry.revokedAt === "string" ? "revoked" : "present";
+  if (!entry || typeof entry !== "object" || Array.isArray(entry)) return "invalid";
+  if (!Object.hasOwn(entry, "revokedAt")) return "present";
+  return typeof entry.revokedAt === "string" ? "revoked" : "invalid";
 }
 function requireSessionBond(explicitSessionId) {
   const hostSessionId = process.env.CLAUDE_SESSION_ID;
@@ -10260,18 +10262,18 @@ function requireSessionBond(explicitSessionId) {
   const sessionId = hostSessionId ?? explicitSessionId;
   if (!sessionId) throw new Error("an exact session id is required; set CLAUDE_SESSION_ID or pass the session explicitly");
   const bond2 = getBond(sessionId);
-  if (!bond2 || bond2.revokedAt || bond2.sessionId !== sessionId) throw new Error(`no bond for session ${sessionId}`);
+  if (!bond2 || Object.hasOwn(bond2, "revokedAt") || bond2.sessionId !== sessionId) throw new Error(`no bond for session ${sessionId}`);
   return bond2;
 }
 function getSoleBond() {
   const state = readState();
-  const entries = Object.values(state.bonds).filter((b) => !b.revokedAt);
+  const entries = Object.values(state.bonds).filter((b) => b && typeof b === "object" && !Object.hasOwn(b, "revokedAt"));
   if (entries.length === 1) return entries[0];
   return void 0;
 }
 function getMostRecentBond() {
   const state = readState();
-  const entries = Object.values(state.bonds).filter((b) => !b.revokedAt);
+  const entries = Object.values(state.bonds).filter((b) => b && typeof b === "object" && !Object.hasOwn(b, "revokedAt"));
   if (entries.length === 0) return void 0;
   entries.sort((a, b) => b.bondedAt.localeCompare(a.bondedAt));
   return entries[0];
@@ -10326,7 +10328,7 @@ async function bond(args) {
 // src/commands/policy-show.ts
 async function policyShow() {
   const bond2 = getBond(process.env.CLAUDE_SESSION_ID);
-  const policyPath = bond2?.policyPath ?? getPolicyPath();
+  const policyPath = (bond2 && !Object.hasOwn(bond2, "revokedAt") ? bond2.policyPath : void 0) ?? getPolicyPath();
   if (!policyPath) {
     throw new Error(
       "no policy path known; run /chio:bond or set CHIO_POLICY_PATH"
