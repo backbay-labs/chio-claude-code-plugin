@@ -99,13 +99,16 @@ chio-claude run "Read /workspace/notes.md and write a summary to /workspace/summ
 `chio-claude host` downloads the Claude Code version this package is pinned to
 into `CHIO_HOME/host` and checks its SHA-256 against
 [`host-contract.json`](host-contract.json). It never replaces your own `claude`.
-`chio-claude run` uses that host, then `CHIO_CLAUDE_HOST`, then a `claude` on
-your `PATH` whose digest matches the pin.
+`chio-claude run` uses `CHIO_CLAUDE_HOST` when it is set, and refuses if that
+file does not match the pin. Otherwise it uses the downloaded host, then a
+`claude` on your `PATH` whose digest matches the pin.
 
 ### 2. Prepare authority
 
 The operator chooses the policy, trusted receipt signers and allowed tools, then
-prepares a retained kernel session:
+prepares a retained kernel session. The request holds operator authority, so it
+must be a private regular file (`chmod 600`); `chio-claude prepare` refuses
+anything else and says why.
 
 ```sh
 chio-claude prepare /operator/private/claude-prepare.json
@@ -171,10 +174,21 @@ node scripts/restricted.mjs \
 ### 4. Inspect the outcome
 
 `chio-claude run` ends by naming the recorded outcome and the path of its
-`exit.json`. Its exit code is the launcher's: 0 completed, 1 the host did not
-start with the exact Chio tools, 2 an unresolved outcome, 3 incomplete protected
-work, 4 waiting for operator approval. A usage mistake in `chio-claude` itself
-exits 64 before anything starts.
+`exit.json`. Its exit code is the launcher's:
+
+| Code | Meaning |
+| --- | --- |
+| 0 | Completed |
+| 1 | Refused before launch (a pin, file mode or credential check; the message says which), or the host did not start with the exact Chio tools |
+| 2 | An unresolved outcome, kept fenced |
+| 3 | Incomplete protected work: denied, not dispatched or a tool error |
+| 4 | Waiting for operator approval |
+| 64 | A usage mistake in `chio-claude` itself; nothing started |
+
+Any other code is Claude Code's own exit status. A pending approval is confirmed
+from the watch screen, `chio-claude control watch --operator-file PRIVATE_FILE`,
+where the private file holds the operator's admin token; see
+[operator confirmation](NATIVE-MODS.md#confirm-a-decision-outside-claude).
 
 The profile retains `launch.json` and `exit.json`; the private gateway journal retains request-bound outcomes. Treat `state: completed` with verified evidence and `result.isError: false` as a successful tool result. A model's summary alone is insufficient. Unknown results stay unresolved and must not be retried automatically.
 

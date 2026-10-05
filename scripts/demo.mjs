@@ -49,9 +49,11 @@ export async function startDemo({ directory }) {
     control = await startControlServer({ config, authorityExpiresAt: credential.expiresAt, scope: "demo_fixture", workflow: createControlTransport(gateway, config) });
     privateFile(join(dir, "mcp.json"), { mcpServers: { chio: { type: "http", url: gateway.url, headers: { Authorization: "Bearer " + gateway.token } } } });
     // chio-claude demo attach reads this to open Claude against the demo; it is as private as the tokens above.
-    privateFile(join(dir, "attach.json"), { sessionId: config.sessionId, mcpConfig: join(dir, "mcp.json"), controlUrl: control.url, controlToken: control.token });
+    // pid lets chio-claude demo attach skip a demo that died without cleaning up.
+    privateFile(join(dir, "attach.json"), { pid: process.pid, sessionId: config.sessionId, mcpConfig: join(dir, "mcp.json"), controlUrl: control.url, controlToken: control.token });
     let closing;
     const close = () => closing ??= (async () => {
+      try { unlinkSync(join(dir, "attach.json")); } catch {}
       for (const part of [control, gateway, kernel]) { try { await part.close(); } catch {} }
     })();
     return { directory: dir, sessionId: config.sessionId, config, operator, gateway: { url: gateway.url, token: gateway.token }, control: { url: control.url, token: control.token }, owner, kernel, close };
@@ -80,11 +82,14 @@ Then ask Claude: Use the chio write_file tool to write "hello" to notes/hello.tx
 Approve here when the request appears. ${interactive ? "Press q to stop the demo." : "Stop the demo with Ctrl+C."}`);
   try {
     if (interactive) {
+      // A closed terminal, SIGTERM or an outside SIGINT quits the watch screen the way q does, so the demo still shuts down.
+      const quit = () => process.stdin.emit("data", "q");
+      for (const signal of ["SIGINT", "SIGTERM", "SIGHUP"]) process.on(signal, quit);
       await watch({ statusOptions: { config: d.config, authorityExpiresAt: credential.expiresAt, scope: "demo_fixture" }, operator: d.operator, input: process.stdin, output: process.stdout });
     } else {
       await new Promise(stop => { process.once("SIGINT", stop); process.once("SIGTERM", stop); });
     }
-  } finally { await d.close(); try { unlinkSync(join(d.directory, "attach.json")); } catch {} }
+  } finally { await d.close(); }
   console.log(`Demo stopped. Files remain in ${d.directory} (owner/, journal/).`);
 }
 if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) main().catch(error => { console.error(`[chio demo] ${error.message}`); process.exitCode = 1; });

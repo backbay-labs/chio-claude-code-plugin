@@ -54,11 +54,10 @@ two-factor authentication enabled, plus the GitHub CLI and
    provenance binds that digest to this repository and run. Confirm that
    `release-identity.json` names the commit you intend to release, package
    `@chio-protocol/claude-code-plugin` and the version you expect. Then confirm
-   the publication gate on that commit:
+   the publication gate on that commit, from the repository root:
 
    ```sh
-   git checkout SOURCE_COMMIT
-   node scripts/verify-native-qualification.mjs
+   (cd .. && git checkout SOURCE_COMMIT && node scripts/verify-native-qualification.mjs)
    ```
 
 3. **Publish that exact file once.** A prerelease version such as
@@ -109,9 +108,11 @@ version.
 1. Raise the version in a reviewed commit on `main`: `package.json`,
    `package-lock.json`, `.claude-plugin/plugin.json` and `NATIVE_MOD_VERSION`
    in `scripts/mod-profile.mjs` (`test/version.test.mjs` holds them together).
-   Record the candidate with `scripts/acceptance/record-native-acceptance.mjs`
-   and point `CANDIDATE_RECORD` at the new record. Wait for the commit's `ci`
-   push run to succeed.
+   Record the candidate with `scripts/acceptance/record-native-acceptance.mjs`,
+   point `CANDIDATE_RECORD` at the new record and add the record's directory to
+   `files` in `package.json`: `chio-claude` reads its default pins from that
+   record at run time, and `test/cli.test.mjs` refuses a package without it.
+   Wait for the commit's `ci` push run to succeed.
 2. Tag that commit and push the tag:
 
    ```sh

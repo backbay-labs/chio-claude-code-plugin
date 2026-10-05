@@ -23,8 +23,8 @@ and returns a signed receipt. Claude never holds kernel or provider credentials.
 - **Scoped authority.** The operator prepares the session, its capability and
   its trusted signers before launch. Claude sees the declared kernel MCP tools,
   and nothing else.
-- **Signed receipts.** Every result is bound to its signer, caller, request and
-  output, and verified before Claude sees it.
+- **Signed receipts.** Every executed result is bound to its signer, caller,
+  request and output, and verified before Claude sees it.
 - **Recoverable outcomes.** An unknown outcome stays in the private journal and
   blocks new dispatch. Nothing is retried blindly.
 
@@ -43,14 +43,15 @@ release, [build from source](docs/GETTING-STARTED.md#build-from-source).
 chio-claude demo
 ```
 
-That starts a fixture kernel and an operator watch screen. In a second terminal:
+That starts a fixture kernel and an operator watch screen. In a second terminal,
+with Claude Code installed (`chio-claude host` fetches the pinned version):
 
 ```sh
 chio-claude demo attach
 ```
 
-Ask Claude to write a file with the chio tool, then approve it in the watch
-screen. Nothing is protected: the demo kernel signs with a throwaway key, and
+Ask Claude to write a file with the chio tool, approve it in the watch screen,
+then continue it from the Chio pane. Nothing is protected: the demo kernel signs with a throwaway key, and
 every Chio surface says DEMO.
 
 ## Run with your kernel
@@ -95,7 +96,9 @@ ordinary session. Install it the standard way:
 
 `chio-claude run` starts Claude Code under `sandbox-exec`, with its native Bash,
 file and web tools turned off. Claude can reach two local endpoints, both owned
-by the trusted launcher: the kernel gateway and a bounded Messages relay. The
+by the trusted launcher: the kernel gateway and a bounded Messages relay. An
+interactive session adds a third, the session-scoped control service behind the
+Chio pane. The
 launcher holds the credentials and keeps the private journal. The kernel checks
 each call against the delegated authority and dispatches it to the resource
 server.
