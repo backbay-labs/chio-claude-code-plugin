@@ -22,24 +22,30 @@ test("the fixture kernel answers execution context only for the demo credential"
   assert.equal(ok.status, 200); assert.equal((await ok.json()).result.sessionCredential.sessionId, f.credential.sessionId);
   assert.equal((await rpc(kernel.url, "chio/execution-context", {}, { Authorization: "Bearer wrong", "mcp-session-id": f.credential.sessionId })).status, 401);
 });
+const ENVELOPE = { chioGovernedIntent: { a: 1 }, chioApprovalToken: { b: 2 } };
+const refused = async (response, pattern) => {
+  const body = await response.json(); assert.equal(body.error, undefined); assert.equal(body.result._meta.chioEvidence.output.isError, true);
+  assert.match(body.result._meta.chioEvidence.output.content[0].text, /^Refused: /); if (pattern) assert.match(body.result._meta.chioEvidence.output.content[0].text, pattern);
+};
 test("writes are confined to the owner directory", async t => {
   const f = setup(t); const owner = join(f.root, "owner");
   const kernel = await startDemoKernel({ owner, seed: f.seed, adminToken: "demo-admin", bearerToken: "demo-bearer", credential: f.credential, config: () => f.config });
   t.after(() => kernel.close());
   const headers = { Authorization: "Bearer demo-bearer", "mcp-session-id": f.credential.sessionId };
   for (const path of ["../escape.txt", "/etc/escape", "a/\u0000b"]) {
-    const response = await rpc(kernel.url, "tools/call", { name: "write_file", arguments: { path, content: "x" }, _meta: { chioRequestId: "r-" + path.length } }, headers);
-    assert.ok((await response.json()).error, path);
+    const response = await rpc(kernel.url, "tools/call", { name: "write_file", arguments: { path, content: "x" }, _meta: { chioRequestId: "r-" + path.length, ...ENVELOPE } }, headers);
+    await refused(response, /outside the owner directory/);
   }
   assert.equal(kernel.writes(), 0); assert.equal(existsSync(join(f.root, "escape.txt")), false);
 });
-const REFUSAL = /outside the owner directory|refused/;
+const REFUSAL = /outside the owner directory|Refused/;
 async function boot(t) {
   const f = setup(t); f.owner = join(f.root, "owner");
   f.kernel = await startDemoKernel({ owner: f.owner, seed: f.seed, adminToken: "demo-admin", bearerToken: "demo-bearer", credential: f.credential, config: () => f.config });
   t.after(() => f.kernel.close());
   f.headers = { Authorization: "Bearer demo-bearer", "mcp-session-id": f.credential.sessionId };
-  f.call = async (name, args) => (await rpc(f.kernel.url, "tools/call", { name, arguments: args, _meta: { chioRequestId: "r-1", chioGovernedIntent: { a: 1 }, chioApprovalToken: { b: 2 } } }, f.headers)).json();
+  f.call = async (name, args, meta = ENVELOPE) => (await rpc(f.kernel.url, "tools/call", { name, arguments: args, _meta: { chioRequestId: "r-1", ...meta } }, f.headers)).json();
+  f.refusal = async (name, args, meta) => { const body = await f.call(name, args, meta); assert.equal(body.error, undefined); const out = body.result._meta.chioEvidence.output; assert.equal(out.isError, true); assert.match(out.content[0].text, /^Refused: /); return out.content[0].text; };
   return f;
 }
 test("a valid write creates exactly the file and a repeat is refused", async t => {
@@ -48,25 +54,25 @@ test("a valid write creates exactly the file and a repeat is refused", async t =
   assert.ok(first.result._meta.chioEvidence); assert.equal(f.kernel.writes(), 1);
   assert.equal(readFileSync(join(f.owner, "sub/a.txt"), "utf8"), "one");
   const second = await f.call("write_file", { path: "sub/a.txt", content: "two" });
-  assert.match(second.error.message, REFUSAL); assert.equal(f.kernel.writes(), 1);
+  assert.match(second.result._meta.chioEvidence.output.content[0].text, /Refused: .*exists/); assert.equal(second.result._meta.chioEvidence.output.isError, true); assert.equal(f.kernel.writes(), 1);
   assert.equal(readFileSync(join(f.owner, "sub/a.txt"), "utf8"), "one");
   const read = await f.call("read_text_file", { path: "sub/a.txt" });
   assert.equal(read.result._meta.chioEvidence.output.content[0].text, "one");
-  assert.match((await f.call("write_file", { path: "x.txt" })).error.message, REFUSAL);
-  assert.match((await f.call("write_file", undefined)).error.message, REFUSAL);
+  assert.match(await f.refusal("write_file", { path: "x.txt" }), REFUSAL);
+  assert.match(await f.refusal("write_file", undefined), REFUSAL);
 });
 test("symlinks inside the owner directory cannot escape it", async t => {
   const f = await boot(t); const outside = join(f.root, "outside");
   mkdirSync(outside); writeFileSync(join(outside, "secret.txt"), "secret");
   symlinkSync(outside, join(f.owner, "link")); symlinkSync(join(outside, "secret.txt"), join(f.owner, "leaf.txt"));
-  assert.match((await f.call("write_file", { path: "link/x.txt", content: "x" })).error.message, REFUSAL);
-  assert.match((await f.call("write_file", { path: "link/new/x.txt", content: "x" })).error.message, REFUSAL);
-  assert.match((await f.call("read_text_file", { path: "link/secret.txt" })).error.message, REFUSAL);
-  assert.match((await f.call("read_text_file", { path: "leaf.txt" })).error.message, REFUSAL);
-  assert.match((await f.call("write_file", { path: "leaf.txt", content: "x" })).error.message, REFUSAL);
+  assert.match(await f.refusal("write_file", { path: "link/x.txt", content: "x" }), REFUSAL);
+  assert.match(await f.refusal("write_file", { path: "link/new/x.txt", content: "x" }), REFUSAL);
+  assert.match(await f.refusal("read_text_file", { path: "link/secret.txt" }), REFUSAL);
+  assert.match(await f.refusal("read_text_file", { path: "leaf.txt" }), REFUSAL);
+  assert.match(await f.refusal("write_file", { path: "leaf.txt", content: "x" }), REFUSAL);
   assert.deepEqual(readdirSync(outside), ["secret.txt"]); assert.equal(readFileSync(join(outside, "secret.txt"), "utf8"), "secret");
   assert.equal(f.kernel.writes(), 0);
-  for (const path of ["../escape.txt", "/etc/escape"]) assert.match((await f.call("write_file", { path, content: "x" })).error.message, REFUSAL);
+  for (const path of ["../escape.txt", "/etc/escape"]) assert.match(await f.refusal("write_file", { path, content: "x" }), REFUSAL);
 });
 test("names that merely begin with two dots are allowed", async t => {
   const f = await boot(t);

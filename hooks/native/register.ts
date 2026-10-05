@@ -159,12 +159,12 @@ export const register: Register = (on, options) => {
     .catch(() => ({ text: "Chio controls unavailable. Authority remains unconfirmed.", exitCode: 1 }));
   on("command.run", { command: "chio-status" }, async ($) => {
     const current = await refresh($, options);
-    return { text: `${statusLine(current, Date.now(), outsideTotal())}\nSession: ${safeText(sessionId)}${current ? `\nProtected tools: ${current.protectedTools.join(", ")}\nDispatch fence: ${current.fenced ? "retained" : "clear"}` : ""}${current?.modelUsage ? modelUsageLine(current.modelUsage) : ""}${outsideLine()}`, exitCode: current ? 0 : 1 };
+    return { text: `${statusLine(current, Date.now(), outsideTotal())}\nSession: ${safeText(sessionId)}${current ? `\n${current.scope === "demo_fixture" ? "Mediated" : "Protected"} tools: ${current.protectedTools.join(", ")}\nDispatch fence: ${current.fenced ? "retained" : "clear"}` : ""}${current?.modelUsage ? modelUsageLine(current.modelUsage) : ""}${current ? outsideLine() : ""}`, exitCode: current ? 0 : 1 };
   }).catch(() => ({ text: "Chio status unavailable. Authority remains unconfirmed.", exitCode: 1 }));
   on("command.run", { command: "chio-doctor" }, async ($, e) => {
     if (e.args.trim()) return { text: "Doctor checks the current session; arguments are refused.", exitCode: 1 };
     const current = await refresh($, options);
-    return { text: diagnosticText(current, sessionId, Date.now()) + outsideLine(), exitCode: current ? 0 : 1 };
+    return { text: diagnosticText(current, sessionId, Date.now()) + (current ? outsideLine() : ""), exitCode: current ? 0 : 1 };
   }).catch(() => ({ text: "Chio diagnosis unavailable. Authority remains unconfirmed; preserve original operation fences.", exitCode: 1 }));
   on("command.run", { command: "chio-review" }, async ($, e) => ({ text: await open($, options, e.args.trim() || undefined) }))
     .catch(() => ({ text: "Chio review unavailable for this exact session and action.", exitCode: 1 }));

@@ -4,9 +4,10 @@ import { confirmControlIntent, controlStatus } from "../dist/control/service.js"
 
 const clean = value => String(value).replace(/[\p{Cc}\p{Cf}\u2028\u2029]/gu, char => char === "\n" ? char : "\ufffd");
 const confirmable = (intent, operation) => intent.kind === "revoke" || Boolean(operation?.review);
-export function intentCard(intent, operation, now) {
+const DEMO_PREFIX = "DEMO fixture kernel · nothing protected · ";
+export function intentCard(intent, operation, now, scope) {
   const seconds = Math.max(0, Math.ceil((intent.expiresAt - now) / 1000));
-  const lines = [`Chio review · intent ${clean(intent.id)} · expires in ${seconds}s`,
+  const lines = [`${scope === "demo_fixture" ? DEMO_PREFIX : ""}Chio review · intent ${clean(intent.id)} · expires in ${seconds}s`,
     `Requested decision: ${intent.kind === "revoke" ? "revoke this session" : clean(intent.kind)}`];
   if (operation) {
     lines.push(`Action: ${clean(operation.tool ?? "operation")} · request ${clean(operation.requestId)}`);
@@ -40,7 +41,7 @@ export async function watch({ statusOptions, operator, input, output, intervalMs
       // The service refuses a second intent for the same revision, so an action with any intent cannot be requested again.
       const stuck = needing.filter(op => status.intents.some(i => i.requestId === op.requestId && i.state !== "requested")).length;
       const waiting = needing.filter(op => !status.intents.some(i => i.requestId === op.requestId)).length;
-      const summary = `Chio watch · session ${clean(status.sessionId)} · authority ${clean(status.authority)} · ${waiting} action${waiting === 1 ? "" : "s"} awaiting a review request from Claude\n`
+      const summary = `${status.scope === "demo_fixture" ? DEMO_PREFIX : ""}Chio watch · session ${clean(status.sessionId)} · authority ${clean(status.authority)} · ${waiting} action${waiting === 1 ? "" : "s"} awaiting a review request from Claude\n`
         + (stuck ? `${stuck} action${stuck === 1 ? "" : "s"} ${stuck === 1 ? "needs" : "need"} inspection: an earlier request for the same revision was skipped, expired or unresolved\n` : "");
       if (summary !== line) { output.write(summary); line = summary; }
       const pending = status.intents.filter(i => i.state === "requested" && i.expiresAt > now() && !answered.has(i.id)).sort((a, b) => a.expiresAt - b.expiresAt);
@@ -48,7 +49,7 @@ export async function watch({ statusOptions, operator, input, output, intervalMs
       const intent = pending[0];
       const operation = status.operations.find(op => op.requestId === intent.requestId);
       keys.length = 0; // only keystrokes typed after the card is on screen count
-      output.write("\x07" + intentCard(intent, operation, now()));
+      output.write("\x07" + intentCard(intent, operation, now(), status.scope));
       // A held or doubled key must not reach a card its operator has not read: discard input for a guard interval.
       await new Promise(resolve => setTimeout(resolve, guardMs)); keys.length = 0;
       const key = await nextKey(confirmable(intent, operation) ? ["y", "n", "q"] : ["n", "q"], Math.max(0, intent.expiresAt - now()));

@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readGatewayConfig, privatePath } from "../dist/gateway.js";
 import { confirmControlIntent, controlReport, controlStatus, renderSessionReport, startControlServer } from "../dist/control/service.js";
-import { requireSessionCredential } from "./sandbox.mjs";
+import { isDemoConfig, refuseDemoConfig, requireSessionCredential } from "./sandbox.mjs";
 import { watch } from "./control-watch.mjs";
 
 export async function main(args = process.argv.slice(2)) {
@@ -31,10 +31,12 @@ export async function main(args = process.argv.slice(2)) {
   if (!["serve", "status", "inbox", "watch", "report"].includes(action) || action !== "watch" && options["--operator-file"] || options["--intent"]) throw new Error("usage: control.mjs serve|status|inbox --gateway-config CONFIG [--credential-output NEW_FILE]; report --gateway-config CONFIG --output NEW_FILE.md [--relay-events model-relay.json]; watch --gateway-config CONFIG --operator-file PRIVATE_FILE; confirm --gateway-config CONFIG --intent ID --operator-file PRIVATE_FILE");
   const prepared = requireSessionCredential(JSON.parse(readFileSync(configPath, "utf8")));
   const authorityExpiresAt = prepared.sessionCredential.expiresAt;
+  const demo = isDemoConfig(prepared) ? { scope: "demo_fixture" } : {}; // demo configs stay labeled
+  if (action === "serve") refuseDemoConfig(prepared);
   if (action === "report") {
     if (options["--credential-output"]) throw new Error("report does not accept --credential-output");
     if (!options["--output"]) throw new Error("report requires a new --output file");
-    const result = await controlReport({ config, authorityExpiresAt, workflow: prepared.workflow });
+    const result = await controlReport({ config, authorityExpiresAt, workflow: prepared.workflow, ...demo });
     let relayEvents;
     if (options["--relay-events"]) {
       const eventsPath = resolve(options["--relay-events"]);
@@ -53,15 +55,15 @@ export async function main(args = process.argv.slice(2)) {
     if (!process.stdin.isTTY || !process.stdout.isTTY) throw new Error("watch requires an interactive terminal");
     const path = resolve(options["--operator-file"]); privatePath(path, false);
     if (lstatSync(path).size > 1024 * 1024) throw new Error("operator credential file exceeds its bound");
-    await watch({ statusOptions: { config, authorityExpiresAt, workflow: prepared.workflow }, operator: JSON.parse(readFileSync(path, "utf8")), input: process.stdin, output: process.stdout });
+    await watch({ statusOptions: { config, authorityExpiresAt, workflow: prepared.workflow, ...demo }, operator: JSON.parse(readFileSync(path, "utf8")), input: process.stdin, output: process.stdout });
     return;
   }
   if (action === "inbox") {
-    const status = await controlStatus({ config, authorityExpiresAt, workflow: prepared.workflow });
+    const status = await controlStatus({ config, authorityExpiresAt, workflow: prepared.workflow, ...demo });
     console.log(JSON.stringify({ sessionId: status.sessionId, authority: status.authority, intents: status.intents.filter(i => i.state === "requested" || i.state === "submitted" || i.state === "unknown"),
       taskRequests: status.workflow?.requests ?? [], exactActions: status.operations.filter(o => o.review), dispatchPerformed: false, next: "Inspect the exact action; confirm a requested intent using a distinct trusted operator credential outside Claude." })); return;
   }
-  if (action === "status") { process.stdout.write(JSON.stringify(await controlStatus({ config, authorityExpiresAt, workflow: prepared.workflow })) + "\n"); return; }
+  if (action === "status") { process.stdout.write(JSON.stringify(await controlStatus({ config, authorityExpiresAt, workflow: prepared.workflow, ...demo })) + "\n"); return; }
   if (!options["--credential-output"]) throw new Error("serve requires a new private --credential-output file");
   const path = resolve(options["--credential-output"]);
   const server = await startControlServer({ config, authorityExpiresAt, workflow: prepared.workflow });

@@ -9,13 +9,15 @@ import { createMcpExecutionClient } from "../src/bridge-internals/execution.ts";
  * Run this server in the launcher process, outside the guest sandbox. Closing or
  * killing that process removes the guest's only route to the retained gateway.
  * The guest must have no direct kernel egress or access to the owner config.
+ * Host acknowledgement is required by default: only a relay-backed protected launcher
+ * can confirm that the host received a result. The local demo has no relay and opts out.
  */
-export async function startGatewayHttp(config) {
+export async function startGatewayHttp(config, { requireHostAcknowledgement = true } = {}) {
     const executor = createMcpExecutionClient(config.execution);
     const validation = await executor.validateSession({ allowedTools: config.tools.map(tool => tool.name) });
     if (!validation.ok)
         throw new Error(validation.reason);
-    const gateway = createGateway(config, executor, { requireHostAcknowledgement: true });
+    const gateway = createGateway(config, executor, { requireHostAcknowledgement });
     const token = randomBytes(32).toString("base64url");
     const session = randomBytes(32).toString("base64url");
     let initialized = false;

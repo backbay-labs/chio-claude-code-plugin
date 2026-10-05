@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import { startDemo } from "../scripts/demo.mjs";
+import { signerFor } from "../dist/demo/fixture.js";
 import { confirmControlIntent } from "../dist/control/service.js";
 async function demo(t) {
   const base = mkdtempSync(join(tmpdir(), "chio-demo-")); t.after(() => rmSync(base, { recursive: true, force: true }));
@@ -14,7 +15,7 @@ const call = (d, path, body) => fetch(`${d.control.url}/sessions/${d.sessionId}$
 test("the demo runs one reviewed write end to end with exactly one owner effect", async t => {
   const d = await demo(t);
   const proposal = await call(d, "/proposals", { id: randomUUID(), tool: "write_file", arguments: { path: "notes/hello.txt", content: "hello" } });
-  assert.equal(proposal.state, "awaiting_approval"); assert.equal(existsSync(join(d.owner, "notes/hello.txt")), false);
+  assert.equal(proposal.state, "awaiting_approval"); assert.equal(existsSync(join(d.owner, "notes/hello.txt")), false); assert.equal(d.kernel.writes(), 0);
   const op = (await call(d, "/status")).operations.find(o => o.review?.decision === "required");
   assert.equal((await call(d, "/status")).scope, "demo_fixture");
   const { intent } = await call(d, "/intents", { kind: "approve", requestId: op.requestId, revision: op.review.revision });
@@ -29,6 +30,7 @@ test("the demo runs one reviewed write end to end with exactly one owner effect"
 test("each demo trusts only its own run's key, keeps credentials private and refuses an existing directory", async t => {
   const a = await demo(t), b = await demo(t);
   assert.notEqual(a.config.execution.trustedSigners[0], b.config.execution.trustedSigners[0]);
+  assert.equal(a.config.execution.trustedSigners[0], signerFor(JSON.parse(readFileSync(join(a.directory, "signing-seed.json"), "utf8")).seed));
   for (const name of ["gateway.json", "operator.json", "mcp.json", "signing-seed.json"]) assert.equal(statSync(join(a.directory, name)).mode & 0o077, 0, name);
   const existing = mkdtempSync(join(tmpdir(), "chio-demo-existing-")); t.after(() => rmSync(existing, { recursive: true, force: true }));
   await assert.rejects(startDemo({ directory: existing }), /already exists/);

@@ -495,7 +495,7 @@ test("calls outside Chio are counted per tool in a kernel MCP session and shown 
   }
   const text = (await $.command.run(command("chio-status"))).text;
   expect(text!.split("\n")[0]).toContain("· 3 calls outside Chio");
-  expect(text).toContain("Outside Chio protection this session (observed, not checked): Read 2 · Bash 1");
+  expect(text).toContain("Outside Chio protection while connected (observed, not checked): Read 2 · Bash 1");
   expect(text).not.toContain("mcp__chio__");
 });
 test("isolated sessions count nothing", { options }, async ($, on) => {
@@ -517,14 +517,39 @@ test("a session change resets outside counts", { options }, async ($, on) => {
   expect((await $.command.run(command("chio-status"))).text).not.toContain("Outside Chio");
 });
 test("a failing observation still returns the original result once", { options }, async ($, on) => {
-  let dispatched = 0;
+  let dispatched = 0, fail = false;
+  stub(on, () => { if (fail) throw new Error("host lookup failed"); return "session-a"; }, () => projection());
   on("tool.call", () => { dispatched++; return { result: "native" }; });
-  on("session.id", () => { throw new Error("host lookup failed"); });
+  await $.command.run(command("chio-status"));
+  fail = true;
   expect((await $.tool.call({ tool: "Bash", command: "ls" } as never)).result).toBe("native");
   expect(dispatched).toBe(1);
+});
+test("the outside line appears only while connected", { options }, async ($, on) => {
+  let down = false;
+  stub(on, () => "session-a", () => { if (down) throw new Error("control down"); return projection(); });
+  on("tool.call", () => ({ result: "native" }));
+  await $.command.run(command("chio-status"));
+  await $.tool.call({ tool: "Bash", command: "ls" } as never);
+  expect((await $.command.run(command("chio-status"))).text).toContain("Outside Chio protection while connected");
+  down = true;
+  for (const name of ["chio-status", "chio-doctor"]) {
+    const answer = await $.command.run(command(name));
+    expect(answer.exitCode).toBe(1); expect(answer.text).not.toContain("Outside Chio");
+  }
+  down = false;
+  expect((await $.command.run(command("chio-doctor"))).text).toContain("Outside Chio protection while connected");
+});
+test("demo status says mediated tools, not protected tools", { options }, async ($, on) => {
+  const value = projection(); value.scope = "demo_fixture";
+  stub(on, () => "session-a", () => value);
+  const text = (await $.command.run(command("chio-status"))).text!;
+  expect(text).toContain("Mediated tools: write_file"); expect(text).not.toContain("Protected tools:");
+  value.scope = "kernel_mcp";
+  expect((await $.command.run(command("chio-status"))).text).toContain("Protected tools: write_file");
 });
 test("outsideText sorts by count then name and caps at eight tools", () => {
   expect(outsideText(new Map())).toBe(null);
   const counts = new Map([["Bash", 4], ["Edit", 2], ["Read", 4], ...Array.from({ length: 8 }, (_, i) => [`T${i}`, 1] as [string, number])]);
-  expect(outsideText(counts)).toBe("Outside Chio protection this session (observed, not checked): Bash 4 · Read 4 · Edit 2 · T0 1 · T1 1 · T2 1 · T3 1 · T4 1 · +3 more");
+  expect(outsideText(counts)).toBe("Outside Chio protection while connected (observed, not checked): Bash 4 · Read 4 · Edit 2 · T0 1 · T1 1 · T2 1 · T3 1 · T4 1 · +3 more");
 });

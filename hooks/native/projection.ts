@@ -56,7 +56,7 @@ export function outsideText(counts: ReadonlyMap<string, number>): string | null 
   const entries = [...counts].filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
   if (!entries.length) return null;
   const shown = entries.slice(0, 8).map(([tool, n]) => `${safeText(tool)} ${n}`);
-  return `Outside Chio protection this session (observed, not checked): ${shown.join(" · ")}${entries.length > 8 ? ` · +${entries.length - 8} more` : ""}`;
+  return `Outside Chio protection while connected (observed, not checked): ${shown.join(" · ")}${entries.length > 8 ? ` · +${entries.length - 8} more` : ""}`;
 }
 export function statusLine(status: ControlStatus | null, now: number, outsideCalls = 0): string {
   if (!status) return "Chio · disconnected · protection scope unavailable";

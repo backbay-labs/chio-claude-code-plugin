@@ -346,3 +346,16 @@ kernel signs with a key made for that run only, and every Chio surface says DEMO
   (all mode 0600) to the new directory, which must not already exist.
 - The fixture kernel confines writes to the `owner/` subdirectory.
 - It is not a qualification environment.
+
+### What the demo does not show
+
+- The fixture kernel does not verify approval tokens or evaluate policy; its
+  delivery acknowledgement is a constant.
+- The demo gateway does not require host acknowledgement. Only the relay-backed
+  protected launcher can confirm that the host received a result.
+- Claude in the demo has native tools and can read the demo directory, including
+  `operator.json`, so it could approve its own request.
+- Authority lasts one hour.
+- `serverId: "demo-owner"` marks demo configurations. `scripts/restricted.mjs` and
+  `control.mjs serve` refuse them; `control.mjs status`, `inbox`, `watch` and
+  `report` label them `demo_fixture`.

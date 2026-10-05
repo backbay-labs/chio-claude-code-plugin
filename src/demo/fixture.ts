@@ -121,7 +121,6 @@ export async function startDemoKernel(options: DemoKernelOptions): Promise<DemoK
       send(res, 401, { jsonrpc: "2.0", id: body?.id ?? null, error: { code: -32001, message: "unauthorized" } }); return;
     }
     const id = body?.id ?? null;
-    const fail = (message: string) => send(res, 200, { jsonrpc: "2.0", id, error: { code: -32602, message } });
     const ok = (result: unknown) => send(res, 200, { jsonrpc: "2.0", id, result });
     const params = body?.params ?? {};
     if (body?.method === "chio/execution-context") {
@@ -129,26 +128,30 @@ export async function startDemoKernel(options: DemoKernelOptions): Promise<DemoK
         serverId: credential.serverId, capabilityIds: credential.capabilityIds, sessionCredential: credential }); return;
     }
     if (body?.method === "tools/call" && (params.name === "write_file" || params.name === "read_text_file")) {
-      let text: string;
+      // After authentication a refusal is a completed tool error, not a JSON-RPC error: the gateway would record the latter as an unknown effect and fence.
+      let text: string, isError = false;
       try {
-        const args = params.arguments;
-        if (args === null || typeof args !== "object" || Array.isArray(args)) throw new Refusal("refused: arguments are required");
-        if (!params._meta?.chioRequestId || !params._meta.chioGovernedIntent || !params._meta.chioApprovalToken) throw new Refusal("refused: approval envelope is required");
+        const args = params.arguments, meta = params._meta ?? {};
+        if (args === null || typeof args !== "object" || Array.isArray(args)) throw new Refusal("arguments are required");
+        if (!meta.chioRequestId) throw new Refusal("request id is required");
+        // Only review-required tools carry an approval envelope; the fixture checks it is present, never verifies it.
+        if (config.approval?.requiredTools?.includes(params.name) && (!meta.chioGovernedIntent || !meta.chioApprovalToken)) throw new Refusal("approval envelope is required");
         if (params.name === "write_file") {
-          if (typeof args.content !== "string") throw new Refusal("refused: content must be a string");
+          if (typeof args.content !== "string") throw new Refusal("content must be a string");
           const full = confine(args.path, true);
-          if (exists(full)) throw new Refusal("refused: target already exists");
+          if (exists(full)) throw new Refusal("target already exists");
           writeFileSync(full, args.content, { flag: "wx" });
           writes++; text = `Wrote ${args.path} in the demo owner directory.`;
         } else {
           const full = confine(args.path, false);
-          if (!exists(full) || !lstatSync(full).isFile()) throw new Refusal("refused: not a regular file in the owner directory");
+          if (!exists(full) || !lstatSync(full).isFile()) throw new Refusal("not a regular file in the owner directory");
           text = readFileSync(full, "utf8");
         }
-      } catch (error) { fail(error instanceof Refusal ? error.message : "refused: tool call failed"); return; }
-      const outcome = signedOutcome(config, { requestId: params._meta?.chioRequestId, tool: params.name, arguments: params.arguments,
-        approval: { chioGovernedIntent: params._meta?.chioGovernedIntent, chioApprovalToken: params._meta?.chioApprovalToken } }, seed,
-        { content: [{ type: "text", text }], isError: false });
+      } catch (error) { text = `Refused: ${error instanceof Refusal ? error.message : "tool call failed"}`; isError = true; }
+      const meta = params._meta ?? {};
+      const outcome = signedOutcome(config, { requestId: meta.chioRequestId ?? "", tool: params.name, arguments: params.arguments ?? {},
+        approval: { ...(meta.chioGovernedIntent ? { chioGovernedIntent: meta.chioGovernedIntent } : {}), ...(meta.chioApprovalToken ? { chioApprovalToken: meta.chioApprovalToken } : {}) } }, seed,
+        { content: [{ type: "text", text }], isError });
       ok({ _meta: { chioEvidence: { schema: "chio.mcp.execution-evidence.v1", requestId: outcome.requestId, receipt: outcome.receipt, terminalState: "completed", outputKind: "value", output: outcome.result }, chioDelivery: outcome.delivery } }); return;
     }
     if (body?.method === "chio/acknowledge") {

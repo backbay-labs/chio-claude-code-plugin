@@ -9,8 +9,10 @@ import { startGatewayHttp } from "../dist/gateway-http.js";
 import { startControlServer } from "../dist/control/service.js";
 import { createControlTransport } from "./control-transport.mjs";
 import { watch } from "./control-watch.mjs";
+import { DEMO_SERVER_ID } from "./sandbox.mjs"; // serverId "demo-owner" marks demo configs; real launchers refuse them
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const shellQuote = value => `'${String(value).replaceAll("'", `'\\''`)}'`;
 const privateFile = (path, value) => writeFileSync(path, JSON.stringify(value, null, 2) + "\n", { mode: 0o600, flag: "wx" });
 
 export async function startDemo({ directory }) {
@@ -25,7 +27,7 @@ export async function startDemo({ directory }) {
   privateFile(join(dir, "signing-seed.json"), { seed, note: "Demo only. Trust this key nowhere else." });
   const now = Math.floor(Date.now() / 1000);
   const kernelSessionId = randomUUID(), adminToken = randomBytes(24).toString("hex"), bearerToken = randomBytes(24).toString("hex");
-  const credential = { schema: "chio.mcp.session-credential.v1", sessionId: kernelSessionId, subjectKey: randomBytes(32).toString("hex"), capabilityIds: ["demo-capability"], serverId: "demo-owner", endpointPath: "/mcp", allowedTools: ["read_text_file", "write_file"], issuedAt: now, expiresAt: now + 3600 };
+  const credential = { schema: "chio.mcp.session-credential.v1", sessionId: kernelSessionId, subjectKey: randomBytes(32).toString("hex"), capabilityIds: ["demo-capability"], serverId: DEMO_SERVER_ID, endpointPath: "/mcp", allowedTools: ["read_text_file", "write_file"], issuedAt: now, expiresAt: now + 3600 };
   const config = {
     sessionId: randomUUID(), journalDir, sessionCredential: credential,
     execution: { endpoint: "", bearerToken, trustedSigners: [signerFor(seed)], subjectKey: credential.subjectKey, capabilityId: "demo-capability", serverId: credential.serverId, sessionId: kernelSessionId, timeoutMs: 3000 },
@@ -42,7 +44,8 @@ export async function startDemo({ directory }) {
     privateFile(join(dir, "gateway.json"), config);
     const operator = { adminToken };
     privateFile(join(dir, "operator.json"), operator);
-    gateway = await startGatewayHttp(config);
+    // Only the relay-backed protected launcher can confirm host receipt, so the demo gateway does not require it.
+    gateway = await startGatewayHttp(config, { requireHostAcknowledgement: false });
     control = await startControlServer({ config, authorityExpiresAt: credential.expiresAt, scope: "demo_fixture", workflow: createControlTransport(gateway, config) });
     privateFile(join(dir, "mcp.json"), { mcpServers: { chio: { type: "http", url: gateway.url, headers: { Authorization: "Bearer " + gateway.token } } } });
     let closing;
@@ -60,15 +63,17 @@ async function main(args = process.argv.slice(2)) {
   if (args.length !== 2 || args[0] !== "--directory" || !args[1]) throw new Error("usage: demo.mjs --directory NEW_DIR");
   const d = await startDemo({ directory: args[1] });
   const credential = d.config.sessionCredential;
+  const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
   console.log(`Chio DEMO · fixture kernel · nothing is protected
 In another terminal:
   CHIO_CONTROL_URL=${d.control.url} CHIO_CONTROL_TOKEN=${d.control.token} \\
-  CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1 claude --plugin-dir ${root} \\
-    --mcp-config ${join(d.directory, "mcp.json")} --session-id ${d.sessionId}
+  CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1 claude --plugin-dir ${shellQuote(root)} \\
+    --mcp-config ${shellQuote(join(d.directory, "mcp.json"))} --session-id ${d.sessionId}
+Tested with Claude Code 2.1.287; the control token in this command grants this session's view and review requests only and ends with the demo.
 Then ask Claude: Use the chio write_file tool to write "hello" to notes/hello.txt.
-Approve here when the request appears. Press q to stop the demo.`);
+Approve here when the request appears. ${interactive ? "Press q to stop the demo." : "Stop the demo with Ctrl+C."}`);
   try {
-    if (process.stdin.isTTY && process.stdout.isTTY) {
+    if (interactive) {
       await watch({ statusOptions: { config: d.config, authorityExpiresAt: credential.expiresAt, scope: "demo_fixture" }, operator: d.operator, input: process.stdin, output: process.stdout });
     } else {
       await new Promise(stop => { process.once("SIGINT", stop); process.once("SIGTERM", stop); });

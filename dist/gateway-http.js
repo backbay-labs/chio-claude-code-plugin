@@ -1226,12 +1226,12 @@ if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToP
 }
 
 // scripts/gateway-http.mjs
-async function startGatewayHttp(config) {
+async function startGatewayHttp(config, { requireHostAcknowledgement = true } = {}) {
   const executor = createMcpExecutionClient(config.execution);
   const validation = await executor.validateSession({ allowedTools: config.tools.map((tool) => tool.name) });
   if (!validation.ok)
     throw new Error(validation.reason);
-  const gateway = createGateway(config, executor, { requireHostAcknowledgement: true });
+  const gateway = createGateway(config, executor, { requireHostAcknowledgement });
   const token = randomBytes(32).toString("base64url");
   const session = randomBytes(32).toString("base64url");
   let initialized = false;
