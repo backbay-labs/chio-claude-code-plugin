@@ -3,7 +3,7 @@
   "recordedAt": "2026-10-05T05:44:30.517Z",
   "version": "0.4.0-rc.5",
   "productionQualified": false,
-  "sourceBaseline": "aa706779279281a8638343b427db876f51e5e255",
+  "sourceBaseline": "762ac654bbb2c226c5954ce077c4066a04cf588a",
   "hostVersion": "2.1.287",
   "hostSha256": "6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea",
   "nativeModSha256": "0848f70d41c2a19931af32747a664ed2bf433518d4a94d151c76e96b3fcd0966",
@@ -224,8 +224,8 @@
     },
     "releaseTarball": {
       "file": "chio-claude-code-plugin-0.4.0-rc.5.tgz",
-      "sha256": "fa90df29a1c17bc376230dd8f128f25eca16a0044d1164c202188b4232468d49",
-      "note": "built from sourceBaseline before this record was added; no self-referential digest"
+      "built": true,
+      "note": "The package includes this record, so its digest cannot be stored here. The digest of the package built from this commit is published with the PR and release; the per-file inventory in artifacts is the binding pin."
     },
     "publicationGate": {
       "result": "rejected as required",

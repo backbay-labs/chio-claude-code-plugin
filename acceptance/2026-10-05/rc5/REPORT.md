@@ -67,13 +67,12 @@ paths under a temporary directory that no longer exists.
 | Claude Code 2.1.287 darwin-arm64 binary | `6eab8333fe2121553100d8f40bfada384a3e989b94f947e18ba6677a6fcb41ea` |
 | `dist/gateway-http.js` | `f14e45fb538190aa969c662eaed09f71198a4e716d27ba33d2d4a4f76b143b16` |
 | Native mod identity (`nativeModIdentity`) | `0848f70d41c2a19931af32747a664ed2bf433518d4a94d151c76e96b3fcd0966` |
-| Release tarball `chio-claude-code-plugin-0.4.0-rc.5.tgz` | `fa90df29a1c17bc376230dd8f128f25eca16a0044d1164c202188b4232468d49` |
 
-The tarball was built from the source commit named in
-`ACCEPTANCE.json.sourceBaseline`, before this record was added. A tarball
-built after the record is committed includes the record and has a different
-digest; a record cannot contain its own digest. The per-file inventory in
-`ACCEPTANCE.json.artifacts` is the binding pin for the delivered files.
+The release package includes this record, so the record cannot contain the
+package's own digest. The digest of the package built from this commit is
+published with the PR and release. The per-file inventory in
+`ACCEPTANCE.json.artifacts` is the binding pin for the delivered files; it
+matches the tree at `ACCEPTANCE.json.sourceBaseline` outside `acceptance/`.
 
 ## What this record does not establish
 
