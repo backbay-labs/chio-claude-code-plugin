@@ -338,15 +338,15 @@ async function readyOutcome(result: unknown) {
   const outcome = { state: "completed", evidence: "verified", requestId: "request-a", result, receipt: { id: "receipt-a" } };
   return { schema: "chio.control.outcome.v1", ready: true, continuation: { id: continuationId, requestId: "request-a", state: "completed", delivery: "pending" }, outcome, outcomeHash: await outcomeHash(outcome), challenge: "c".repeat(64) };
 }
-function outcomeStub(on: On, getSession: () => string, ready: Record<string, unknown>, onAck?: () => void, onSubmit?: (e: { text: string; context?: readonly string[] }) => { text: string; context?: readonly string[] } | { drop: string }) {
+function outcomeStub(on: On, getSession: () => string, ready: Record<string, unknown>, onAck?: () => void | Promise<void>, onSubmit?: (e: { text: string; context?: readonly string[] }) => { text: string; context?: readonly string[] } | { drop: string }) {
   const value = projection(); value.continuations = [{ id: continuationId, requestId: "request-a", state: "completed", delivery: "pending" }];
   on("session.id", () => ({ value: getSession() }));
   on("ui.close", () => ({ value: undefined }));
   on("command.register", ($, e) => ({ value: { command: e.name } }));
   on("prompt.submit", ($, e) => onSubmit ? onSubmit(e) : ({ text: e.text, ...(e.context ? { context: e.context } : {}) }));
-  on("http.fetch", ($, e) => {
+  on("http.fetch", async ($, e) => {
     if (e.url.endsWith("/outcome")) return { value: { status: 200, ok: true, headers: {}, text: JSON.stringify(ready) } };
-    if (e.url.endsWith("/ack")) { onAck?.(); return { value: { status: 200, ok: true, headers: {}, text: JSON.stringify({ acknowledged: true, requestId: "request-a", channel: "native_control" }) } }; }
+    if (e.url.endsWith("/ack")) { await onAck?.(); return { value: { status: 200, ok: true, headers: {}, text: JSON.stringify({ acknowledged: true, requestId: "request-a", channel: "native_control" }) } }; }
     return { value: { status: 200, ok: true, headers: {}, text: JSON.stringify({ ...value, sessionId: getSession(), checkedAt: Date.now() }) } };
   });
 }
@@ -379,13 +379,15 @@ test("shared text is bounded and sanitized", () => {
   expect(forged).toContain(`[chio-outcome sha256:${"d".repeat(64)}]`);
 });
 test("a result received as the session changes is never shared with the new session", { options }, async ($, on) => {
-  let session = "session-a";
-  const ready = await readyOutcome({ secret: "a-only" });
-  // The ack's own session check still sees session-a; every later read (refresh, queueing) sees session-b.
-  let acked = false, afterAck = 0;
-  outcomeStub(on, () => { if (acked && afterAck++ >= 1) session = "session-b"; return session; }, ready, () => { acked = true; });
+  let session = "session-a", release = () => {}, notifyAck = () => {};
+  const ackStarted = new Promise<void>(resolve => { notifyAck = resolve; });
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  outcomeStub(on, () => session, await readyOutcome({ secret: "a-only" }), async () => { notifyAck(); await gate; });
   await $.command.run(command("chio-status"));
-  await $.command.run(command("chio-outcome", continuationId));
+  const receive = $.command.run(command("chio-outcome", continuationId));
+  await ackStarted;
+  session = "session-b"; release();
+  expect((await receive).exitCode).toBe(1);
   expect((await $.prompt.submit(submit("next"))).context ?? []).toEqual([]);
 });
 
@@ -482,7 +484,7 @@ test("guidance cache is invalidated when connection or protected scope changes",
 test("a refused prompt keeps its queued result and does not claim attachment", { options }, async ($, on) => {
   let refuse = true;
   outcomeStub(on, () => "session-a", await readyOutcome({ ok: true }), undefined,
-    e => refuse ? { drop: "fixture refusal" } : { text: e.text, context: e.context });
+    e => refuse ? { drop: "fixture refusal" } : { text: e.text, ...(e.context ? { context: e.context } : {}) });
   await $.command.run(command("chio-outcome", continuationId));
   expect((await $.prompt.submit(submit("blocked"))).drop).toBe("fixture refusal");
   expect((await $.command.run(command("chio"))).text).not.toContain("Original result attached");
@@ -493,7 +495,7 @@ test("a refused prompt keeps its queued result and does not claim attachment", {
 test("context stripped downstream stays queued instead of claiming delivery", { options }, async ($, on) => {
   let strip = true;
   outcomeStub(on, () => "session-a", await readyOutcome({ ok: true }), undefined,
-    e => strip ? { text: e.text } : { text: e.text, context: e.context });
+    e => strip ? { text: e.text } : { text: e.text, ...(e.context ? { context: e.context } : {}) });
   await $.command.run(command("chio-outcome", continuationId));
   await $.prompt.submit(submit("stripped"));
   expect((await $.command.run(command("chio"))).text).not.toContain("Original result attached");
@@ -504,4 +506,16 @@ test("replacement reviews and uncertain operations announce arrivals at equal co
   expect(transitions(before, after, Date.now(), { authorityWarned: true })).toEqual(["Chio · 1 action awaiting review · /chio-review"]);
   const oldUnknown = uncertain(projection()), newUnknown = uncertain(projection()); newUnknown.operations[0]!.requestId = "uncertain-new";
   expect(transitions(oldUnknown, newUnknown, Date.now(), { authorityWarned: true })).toEqual(["Chio · original outcome unresolved · /chio-doctor"]);
+});
+
+test("the pane receive control queues the original result without redispatch", { options }, async ($, on) => {
+  let acknowledgements = 0;
+  outcomeStub(on, () => "session-a", await readyOutcome({ written: true }), () => { acknowledgements++; });
+  await $.command.run(command("chio-review", "request-a"));
+  const ui = await $.ui.mount({ plugin: "chio", surface: "terminal", component: "Pane", requestId: "chio", props: paneProps });
+  await ui.press({ key: "outcome" });
+  expect(acknowledgements).toBe(1);
+  expect((await $.prompt.submit(submit("what happened?"))).context?.length).toBe(1);
+  expect((await $.prompt.submit(submit("next"))).context ?? []).toEqual([]);
+  expect(acknowledgements).toBe(1); await ui.unmount();
 });
