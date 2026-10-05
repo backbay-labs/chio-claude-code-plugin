@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Local demo: a fixture kernel, the real gateway and control service, and the operator watch. Nothing is protected.
 import { randomBytes, randomUUID } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, realpathSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { signerFor, startDemoKernel } from "../dist/demo/fixture.js";
@@ -48,6 +48,8 @@ export async function startDemo({ directory }) {
     gateway = await startGatewayHttp(config, { requireHostAcknowledgement: false });
     control = await startControlServer({ config, authorityExpiresAt: credential.expiresAt, scope: "demo_fixture", workflow: createControlTransport(gateway, config) });
     privateFile(join(dir, "mcp.json"), { mcpServers: { chio: { type: "http", url: gateway.url, headers: { Authorization: "Bearer " + gateway.token } } } });
+    // chio-claude demo attach reads this to open Claude against the demo; it is as private as the tokens above.
+    privateFile(join(dir, "attach.json"), { sessionId: config.sessionId, mcpConfig: join(dir, "mcp.json"), controlUrl: control.url, controlToken: control.token });
     let closing;
     const close = () => closing ??= (async () => {
       for (const part of [control, gateway, kernel]) { try { await part.close(); } catch {} }
@@ -65,12 +67,15 @@ async function main(args = process.argv.slice(2)) {
   const credential = d.config.sessionCredential;
   const hostVersion = JSON.parse(readFileSync(join(root, "docs/host-contract.json"), "utf8")).version;
   const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
+  // chio-claude sets CHIO_DEMO_ATTACH to its short attach command; a source checkout prints the full one.
+  const attach = process.env.CHIO_DEMO_ATTACH;
   console.log(`Chio DEMO · fixture kernel · nothing is protected
 In another terminal:
-  CHIO_CONTROL_URL=${d.control.url} CHIO_CONTROL_TOKEN=${d.control.token} \\
+${attach ? `  ${attach}
+Tested with Claude Code ${hostVersion}; the control token in attach.json grants this session's view and review requests only and ends with the demo.` : `  CHIO_CONTROL_URL=${d.control.url} CHIO_CONTROL_TOKEN=${d.control.token} \\
   CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1 claude --plugin-dir ${shellQuote(root)} \\
     --mcp-config ${shellQuote(join(d.directory, "mcp.json"))} --session-id ${d.sessionId}
-Tested with Claude Code ${hostVersion}; the control token in this command grants this session's view and review requests only and ends with the demo.
+Tested with Claude Code ${hostVersion}; the control token in this command grants this session's view and review requests only and ends with the demo.`}
 Then ask Claude: Use the chio write_file tool to write "hello" to notes/hello.txt.
 Approve here when the request appears. ${interactive ? "Press q to stop the demo." : "Stop the demo with Ctrl+C."}`);
   try {
@@ -79,7 +84,7 @@ Approve here when the request appears. ${interactive ? "Press q to stop the demo
     } else {
       await new Promise(stop => { process.once("SIGINT", stop); process.once("SIGTERM", stop); });
     }
-  } finally { await d.close(); }
+  } finally { await d.close(); try { unlinkSync(join(d.directory, "attach.json")); } catch {} }
   console.log(`Demo stopped. Files remain in ${d.directory} (owner/, journal/).`);
 }
 if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) main().catch(error => { console.error(`[chio demo] ${error.message}`); process.exitCode = 1; });

@@ -12,7 +12,11 @@
       "import": "./dist/index.js"
     }
   },
+  "bin": {
+    "chio-claude": "cli/chio-claude.mjs"
+  },
   "files": [
+    "cli",
     "dist",
     ".claude-plugin",
     "commands",
