@@ -3,8 +3,8 @@
 // capability sharing the same queue and gateway; it has no HTTP route or token.
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import { createServer } from "node:http";
-import { createGateway, gatewayToolResult } from "../node_modules/@chio/bridge/dist/gateway.js";
-import { createMcpExecutionClient } from "../node_modules/@chio/bridge/dist/execution.js";
+import { createGateway, gatewayToolResult } from "../src/bridge-internals/gateway.ts";
+import { createMcpExecutionClient } from "../src/bridge-internals/execution.ts";
 /** Launcher-owned transport. The guest receives only this ephemeral local token.
  * Run this server in the launcher process, outside the guest sandbox. Closing or
  * killing that process removes the guest's only route to the retained gateway.

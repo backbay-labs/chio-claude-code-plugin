@@ -2,10 +2,10 @@ import { randomBytes, randomUUID } from "node:crypto";
 import { existsSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { verifyBoundReceipt, verifyCompletedOutcome, type ExecutionOutcome, type AcknowledgementResult } from "@chio/bridge";
-import type { GatewayConfig, GatewayOutcome, StoredOperation } from "../../node_modules/@chio/bridge/dist/gateway.js";
+import type { GatewayConfig, GatewayOutcome, StoredOperation } from "../bridge-internals/gateway.js";
 import type { OperationView } from "../../types/control.js";
 import type { ContinuationView, ExplanationView, WorkflowView } from "../../types/workflow.js";
-import { digest, privateDirectory, privateRead, privateSave } from "./store.js";
+import { assertRecordCapacity, digest, privateDirectory, privateRead, privateSave } from "./store.js";
 import { projectTask, readCatalog, readTask, templateView } from "./tasks.js";
 import { verifiedOriginal } from "./outcome.js";
 
@@ -94,6 +94,7 @@ export function createWorkflowControl(access: Access, options: WorkflowOptions =
     if (view.state !== "awaiting_approval" || view.review?.decision !== "granted" || input.revision !== view.review.revision || !record.proposal) throw new Error("no exact accepted grant for continuation");
     // One durable claim per original operation. A crash or lost response never earns another dispatch.
     const claim = join(continuations, digest(record.requestId) + ".claim");
+    assertRecordCapacity(continuations);
     privateSave(claim, { requestId: record.requestId, revision: view.review.revision }, true);
     const id = randomUUID(), path = join(continuations, id + ".json");
     const pending: ContinuationRecord = { schema: "chio.control.continuation.v1", id, sessionId: access.config.sessionId, binding: access.binding,

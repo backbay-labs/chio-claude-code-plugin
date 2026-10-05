@@ -26,7 +26,7 @@ export async function run(name) {
     console.error(`[chio] no exported command "${name}"`);
     process.exit(2);
   }
-  const args = process.argv.slice(2).filter((a) => a.length > 0);
+  const args = process.argv.slice(2);
   try {
     const out = await fn(args);
     if (out !== undefined && out !== null) {

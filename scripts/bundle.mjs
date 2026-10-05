@@ -6,7 +6,7 @@
 // Runtime load map:
 //   scripts/_runner.mjs      -> dist/index.js
 //   hooks/pretooluse.mjs     -> dist/state/{bridge,store,paths}.js
-//   hooks/posttooluse.mjs    -> dist/state/{bridge,paths}.js
+//   hooks/posttooluse.mjs    -> dist/state/{bridge,store,paths}.js
 //
 // Each entrypoint is bundled independently (no shared chunks). Command and
 // hook processes are separate, so the duplication costs disk, not correctness.

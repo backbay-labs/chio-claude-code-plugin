@@ -1,4 +1,5 @@
 import { createServer } from "node:http";
+import { once } from "node:events";
 import { randomBytes } from "node:crypto";
 const object=value=>Boolean(value)&&typeof value==="object"&&!Array.isArray(value);
 const keys=(value,allowed)=>Object.keys(value).every(key=>allowed.includes(key));
@@ -61,7 +62,12 @@ export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.co
   const token=randomBytes(32).toString("hex"),events=[];
   const server=createServer(async (request,response)=>{
     const controller=new AbortController();response.on("close",()=>controller.abort());
-    const event={method:request.method,path:request.url,forwarded:false};events.push(event);
+    if (events.length >= 1024) {
+      if (events.length === 1024) events.push({ requestClass: "conversation", forwarded: false, failure: "model relay request limit reached" });
+      request.resume(); response.writeHead(503, { "content-type": "application/json" });
+      response.end(JSON.stringify({ type: "error", error: { type: "permission_error", message: "Operator model relay request limit reached" } })); return;
+    }
+    const event={method:request.method,path:request.url?.slice(0,2048),forwarded:false};events.push(event);
     try {
       const target=new URL(request.url,"http://127.0.0.1");
       if (request.method!=="POST" || !["/v1/messages","/v1/messages/count_tokens"].includes(target.pathname) || [...target.searchParams].some(([key,value])=>key!=="beta"||value!=="true") || request.headers["x-api-key"]!==token) throw new Error("model route refused");
@@ -72,22 +78,22 @@ export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.co
       // They remain refused, but cannot stand in for an attempted work turn.
       event.requestClass=target.pathname!=="/v1/messages"?"count-tokens":Array.isArray(body.tools)&&body.tools.length===0&&object(body.output_config?.format)?"auxiliary-structured":"conversation";
       // Field names only help qualify a changed host contract without retaining prompts.
-      event.messageFields=Array.isArray(body.messages)?body.messages.map(message=>Object.keys(message).filter(key=>/^[a-z_]{1,64}$/.test(key))):[];
-      event.messageRoles=Array.isArray(body.messages)?body.messages.map(message=>typeof message.role==="string"&&/^[a-z_]{1,32}$/.test(message.role)?message.role:"invalid"):[];
+      event.messageFields=Array.isArray(body.messages)?body.messages.slice(0,128).map(message=>Object.keys(message).filter(key=>/^[a-z_]{1,64}$/.test(key))):[];
+      event.messageRoles=Array.isArray(body.messages)?body.messages.slice(0,128).map(message=>typeof message.role==="string"&&/^[a-z_]{1,32}$/.test(message.role)?message.role:"invalid"):[];
       event.topLevelKeys=Object.keys(body).filter(key=>/^[a-z_]{1,64}$/.test(key));
-      event.outputConfigFields=object(body.output_config)?Object.keys(body.output_config):[];
-      event.thinkingFields=object(body.thinking)?Object.keys(body.thinking):[];
+      event.outputConfigFields=object(body.output_config)?Object.keys(body.output_config).filter(key=>/^[a-z_]{1,64}$/.test(key)).slice(0,64):[];
+      event.thinkingFields=object(body.thinking)?Object.keys(body.thinking).filter(key=>/^[a-z_]{1,64}$/.test(key)).slice(0,64):[];
       event.thinkingDisplay=typeof body.thinking?.display==="string"&&/^[a-z_]{1,32}$/.test(body.thinking.display)?body.thinking.display:typeof body.thinking?.display;
-      event.contextEditTypes=Array.isArray(body.context_management?.edits)?body.context_management.edits.map(edit=>/^[a-z0-9_]{1,64}$/.test(edit.type)?edit.type:"invalid"):[];
+      event.contextEditTypes=Array.isArray(body.context_management?.edits)?body.context_management.edits.slice(0,128).map(edit=>/^[a-z0-9_]{1,64}$/.test(edit.type)?edit.type:"invalid"):[];
       const betaHeaders=[...new Set([...(oauth?.beta??"").split(","),...(typeof request.headers["anthropic-beta"]==="string"?request.headers["anthropic-beta"]:"").split(",")].map(value=>value.trim()).filter(Boolean))];
       // 2.1.287 emits this private client beta. Add the documented API beta
       // only in the separately checksum-pinned host profile; never alter content.
       if (pinnedHostEffortBeta && betaHeaders.includes("per-turn-control-2026-07-01") && body.messages?.some(message=>message.output_config!==undefined)) {
         betaHeaders.push("mid-conversation-output-config-2026-07-01"); event.pinnedHostEffortBeta=true;
       }
-      event.betaHeaders=betaHeaders.filter(value=>/^[a-z0-9-]{1,100}$/.test(value));
-      event.messageEfforts=Array.isArray(body.messages)?body.messages.filter(message=>message.output_config!==undefined).map(message=>effort(message.output_config)?message.output_config.effort:"invalid"):[];
-      event.thinkingType=body.thinking?.type;
+      event.betaHeaders=betaHeaders.slice(0,64).filter(value=>/^[a-z0-9-]{1,100}$/.test(value));
+      event.messageEfforts=Array.isArray(body.messages)?body.messages.slice(0,128).filter(message=>message.output_config!==undefined).map(message=>effort(message.output_config)?message.output_config.effort:"invalid"):[];
+      event.thinkingType=typeof body.thinking?.type==="string"&&/^[a-z_]{1,32}$/.test(body.thinking.type)?body.thinking.type:undefined;
       validateModelRequest(body,model,new Set(toolNames),betaHeaders);
       if(onModelRequest && target.pathname==="/v1/messages") await onModelRequest(body);
       if(onToolResults) await onToolResults(body.messages);
@@ -103,7 +109,7 @@ export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.co
       const result=await fetch(new URL(target.pathname+target.search,upstream),{method:"POST",redirect:"error",signal:controller.signal,headers,body:JSON.stringify(body)});
       event.status=result.status;
       response.writeHead(result.status,{"content-type":result.headers.get("content-type")??"application/json"});
-      if(result.body) for await(const data of result.body) response.write(data);
+      if(result.body) for await(const data of result.body) { if(!response.write(data)) await once(response,"drain",{signal:controller.signal}); }
       response.end();
     } catch(error) {
       event.failure=error.message;

@@ -129,7 +129,7 @@ claude plugin marketplace add backbay-labs/chio-claude-code-plugin
 claude plugin install chio@chio
 ```
 
-This installation does not enable the restricted launcher. Real-host probes found that several hook failures let an otherwise permitted native tool execute. Hook configuration therefore does not establish complete mediation. See [compatibility-hook behavior and state](docs/RESTRICTED-MODE.md#compatibility-hooks) and the [host contract probes](SMOKE.md).
+This installation does not enable the restricted launcher. Real-host probes found that several hook failures let an otherwise permitted native tool execute. Hook configuration therefore does not establish complete mediation. See [compatibility-hook behavior and state](docs/RESTRICTED-MODE.md#compatibility-hooks) and the [host contract probes](SMOKE.md). By default the hooks check only sessions bonded with `/chio:bond`; set the plugin's `compatibility_hooks` option to `always` to deny tools in unbonded sessions, or `off` to disable them.
 
 ## Recovery
 

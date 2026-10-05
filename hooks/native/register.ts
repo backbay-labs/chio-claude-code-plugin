@@ -14,12 +14,8 @@ let notice = "";
 let generation = 0;
 let pane: "operations" | "task" = "operations";
 let refreshRead: { sessionId: string; generation: number; promise: Promise<ControlStatus | null> } | null = null;
+const PANE_OPERATIONS = 12;
 
-function endpoint(base: string): string {
-  const url = new URL(base);
-  if (url.protocol !== "http:" || url.hostname !== "127.0.0.1" || !url.port || url.username || url.password || url.search || url.hash || url.pathname !== "/") throw new Error("exact loopback control origin required");
-  return url.origin;
-}
 async function refresh($: EngineInterface, options: PluginOptions): Promise<ControlStatus | null> {
   const actual = await $.session.id();
   if (actual !== sessionId) {
@@ -51,26 +47,19 @@ async function request($: EngineInterface, options: PluginOptions, kind: IntentK
   const original = operation && current?.operations.find(op => op.requestId === operation.requestId);
   if (!current || current.authority !== "live" || capturedSession !== current.sessionId || !capturedRevision
     || (kind === "revoke" ? current.revision !== capturedRevision : !original?.review || original.review.revision !== capturedRevision || original.review.decision !== "required")) throw new Error("review changed, expired, or disconnected; reopen the current action");
-  const base = typeof options.control_url === "string" ? options.control_url : await $.env.get("CHIO_CONTROL_URL");
-  const token = typeof options.control_token === "string" ? options.control_token : await $.env.get("CHIO_CONTROL_TOKEN");
-  if (!base || !token) throw new Error("scoped control service disconnected");
-  const response = await $.http.fetch(`${endpoint(base)}/sessions/${encodeURIComponent(current.sessionId)}/intents`, {
-    method: "POST", headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ kind, revision: capturedRevision, ...(operation ? { requestId: operation.requestId } : {}) }),
-  });
-  if (!response.ok || response.text.length > 4096) throw new Error("intent was not confirmed; inspect status before another request");
-  const result = JSON.parse(response.text) as { intent?: { id?: string; state?: string; sessionId?: string }; authorityAccepted?: boolean; dispatchPerformed?: boolean };
+  // The namespace binds the session, checks the scoped token and rejects a session change during the request.
+  const result = await $.chio.requestReview({ kind, revision: capturedRevision, ...(operation ? { requestId: operation.requestId } : {}) }) as { intent?: { id?: string; state?: string; sessionId?: string }; authorityAccepted?: boolean; dispatchPerformed?: boolean };
   if (result.intent?.state !== "requested" || result.intent.sessionId !== capturedSession || typeof result.intent.id !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(result.intent.id) || result.authorityAccepted !== false || result.dispatchPerformed !== false) throw new Error("unexpected control acknowledgement; authority remains unconfirmed");
   if (await $.session.id() !== capturedSession) throw new Error("session changed while requesting control; inspect the original session");
   notice = `${kind} requested · ${result.intent.id} · trusted operator confirmation required`;
   await refresh($, options);
   return notice;
 }
-async function open($: EngineInterface, options: PluginOptions, requestId?: string): Promise<string> {
+async function open($: EngineInterface, options: PluginOptions, requestId?: string, details = false): Promise<string> {
   const current = await refresh($, options);
   pane = "operations";
   selectedId = requestId ?? current?.operations.find(op => op.review?.decision === "required" || op.nextAction !== "none")?.requestId ?? null;
-  showDetails = false;
+  showDetails = details;
   if (requestId && !current?.operations.some(op => op.requestId === requestId)) throw new Error("no retained operation for this session and request id");
   const operation = current?.operations.find(op => op.requestId === selectedId);
   const text = [statusLine(current, Date.now()), `Session: ${safeText(sessionId)}`, ...(operation ? [operationText(operation)] : []), ...(notice ? [notice] : [])].join("\n");
@@ -160,7 +149,7 @@ export const register: Register = (on, options) => {
   }).catch(() => ({ text: "Chio diagnosis unavailable. Authority remains unconfirmed; preserve original operation fences.", exitCode: 1 }));
   on("command.run", { command: "chio-review" }, async ($, e) => ({ text: await open($, options, e.args.trim() || undefined) }))
     .catch(() => ({ text: "Chio review unavailable for this exact session and action.", exitCode: 1 }));
-  on("command.run", { command: "chio-evidence" }, async ($, e) => ({ text: await open($, options, e.args.trim() || undefined) }))
+  on("command.run", { command: "chio-evidence" }, async ($, e) => ({ text: await open($, options, e.args.trim() || undefined, true) }))
     .catch(() => ({ text: "Chio evidence unavailable for this exact session and action.", exitCode: 1 }));
   on("command.run", { command: "chio-revoke" }, async ($, e) => {
     if (e.args.trim()) return { text: "Revocation always targets the current session; arguments are refused.", exitCode: 1 };
@@ -275,8 +264,11 @@ export const register: Register = (on, options) => {
     }
     rows.push(Button({ key: "task", label: "Task and completion evidence", onPress: () => { pane = "task"; $.ui.invalidate("ui.render"); } }));
     rows.push(Button({ key: "refresh", label: "Refresh", onPress: async () => { await refresh($, options); } }));
-    for (const [index, op] of (status?.operations ?? []).entries()) rows.push(Button({ key: `operation-${index}`, label: `${safeText(op.tool ?? "operation")} · ${op.state} · ${safeText(op.requestId.slice(-12))}`,
+    const retained = status?.operations ?? [];
+    const ordered = [...retained.filter(op => op.nextAction !== "none"), ...retained.filter(op => op.nextAction === "none")];
+    for (const [index, op] of ordered.slice(0, PANE_OPERATIONS).entries()) rows.push(Button({ key: `operation-${index}`, label: `${safeText(op.tool ?? "operation")} · ${op.state} · ${safeText(op.requestId.slice(-12))}`,
       onPress: () => { selectedId = op.requestId; showDetails = false; $.ui.invalidate("ui.render"); } }));
+    if (ordered.length > PANE_OPERATIONS) rows.push(Text({ dimColor: true, children: `${ordered.length - PANE_OPERATIONS} more retained operations not shown · the operator's control status lists every operation` }));
     return Box({ flexDirection: "column", children: rows });
   }).catch(($, e, next) => next(e));
 };

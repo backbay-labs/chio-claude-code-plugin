@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { spawn } from "node:child_process";
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
@@ -33,8 +33,11 @@ test("revocation targets the exact passport and retains the bond until lifecycle
   const env = { CLAUDE_SESSION_ID: "a", CHIO_SERVICE_TOKEN: "fixture", CHIO_TRUST_URL: `http://127.0.0.1:${server.address().port}` };
   assert.equal((await f.run("revoke", [], env)).code, 1); assert.equal(Object.hasOwn(JSON.parse(readFileSync(join(f.dir, "state.json"))).bonds, "a"), true);
   confirmed = true; const result = await f.run("revoke", [], env); assert.equal(result.code, 0, result.stderr); assert.equal(JSON.parse(result.stdout).passport_id, "passport-a");
-  assert.equal(Object.hasOwn(JSON.parse(readFileSync(join(f.dir, "state.json"))).bonds, "a"), false);
-  assert.equal(Object.hasOwn(JSON.parse(readFileSync(join(f.dir, "state.json"))).bonds, "b"), true);
+  const after = JSON.parse(readFileSync(join(f.dir, "state.json"))).bonds;
+  assert.equal(typeof after.a.revokedAt, "string"); assert.equal(Number.isFinite(Date.parse(after.a.revokedAt)), true);
+  assert.match(JSON.parse(result.stdout).hooks, /\/chio:bond/);
+  assert.equal(Object.hasOwn(after, "b"), true); assert.equal(after.b.revokedAt, undefined);
+  const again = await f.run("revoke", [], env); assert.equal(again.code, 1); assert.match(again.stderr, /no bond for session a/);
   assert.equal(routes.some(route => route.includes("passport-b") || route === "/v1/passport/statuses"), false);
 });
 test("local countersigning reports signed intent, while HTTP acceptance reports submission only", async t => {
@@ -52,4 +55,28 @@ test("receipt identifiers cannot escape their cache and session export cannot pi
   const f = fixture(t);
   assert.equal((await f.run("approve", ["../../operator"])).code, 1);
   const result = await f.run("receipt-export"); assert.equal(result.code, 1); assert.match(result.stderr, /exact session/);
+});
+test("attenuation commands the bridge refuses are not delivered", async () => {
+  for (const path of ["commands/budget-set.md", "commands/guard-pause.md", "scripts/budget-set.mjs", "scripts/guard-pause.mjs", "src/commands/budget-set.ts", "src/commands/guard-pause.ts"]) {
+    assert.equal(existsSync(join(root, path)), false, `${path} must stay removed until a parent-bound attenuation endpoint exists`);
+  }
+  const index = await import(join(root, "dist", "index.js"));
+  assert.equal(index.budgetSet, undefined); assert.equal(index.guardPause, undefined);
+});
+
+test("policy-show ignores a revoked bond rather than reading its old policy path", async t => {
+  const f = fixture(t);
+  const policy = join(f.dir, "revoked.yaml");
+  writeFileSync(policy, "hushspec: '0.1.0'\nname: revoked-policy-sentinel\nrules: {}\n");
+  writeFileSync(join(f.dir, "state.json"), JSON.stringify({ bonds: { a: { sessionId: "a", policyPath: policy, revokedAt: "2026-10-04" } } }));
+  const result = await f.run("policy-show", [], { CLAUDE_SESSION_ID: "a" });
+  assert.equal(result.code, 1); assert.match(result.stderr, /no policy path known/);
+  assert.doesNotMatch(result.stdout, /revoked-policy-sentinel/);
+});
+test("bond refuses malformed budgets before issuing an unbounded capability", async t => {
+  const f = fixture(t);
+  for (const budget of ["NaN", "Infinity", "-1", "", " ", "1e999"]) {
+    const result = await f.run("bond", ["/policy", "4h", budget], { CLAUDE_SESSION_ID: "a" });
+    assert.equal(result.code, 1); assert.match(result.stderr, /invalid budget/);
+  }
 });

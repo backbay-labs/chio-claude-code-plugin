@@ -2,7 +2,8 @@ import { createRequire as __chioCreateRequire } from 'node:module';
 const require = __chioCreateRequire(import.meta.url);
 
 // src/state/store.ts
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { randomUUID } from "node:crypto";
 import { dirname } from "node:path";
 
 // src/state/paths.ts
@@ -26,22 +27,53 @@ function readState() {
 }
 function writeState(state) {
   mkdirSync(dirname(STATE_PATH), { recursive: true });
-  writeFileSync(STATE_PATH, JSON.stringify(state, null, 2));
+  const tmp = `${STATE_PATH}.${randomUUID()}.tmp`;
+  try {
+    writeFileSync(tmp, JSON.stringify(state, null, 2), { mode: 384, flag: "wx" });
+    renameSync(tmp, STATE_PATH);
+  } finally {
+    rmSync(tmp, { force: true });
+  }
 }
 function upsertBond(bond) {
   const state = readState();
   state.bonds[bond.sessionId] = bond;
   writeState(state);
 }
-function clearBond(sessionId) {
+function markRevoked(sessionId) {
   const state = readState();
-  delete state.bonds[sessionId];
+  const entry = state.bonds[sessionId];
+  if (!entry) return;
+  state.bonds[sessionId] = { ...entry, revokedAt: (/* @__PURE__ */ new Date()).toISOString() };
   writeState(state);
 }
 function getBond(sessionId) {
   if (!sessionId) return void 0;
   const state = readState();
   return state.bonds[sessionId];
+}
+function bondPresence(sessionId) {
+  let raw;
+  try {
+    raw = readFileSync(STATE_PATH, "utf8");
+  } catch (error) {
+    return error.code === "ENOENT" ? "absent" : "invalid";
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return "invalid";
+  }
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return "invalid";
+  const bonds = parsed.bonds;
+  if (bonds === void 0) return "absent";
+  if (!bonds || typeof bonds !== "object" || Array.isArray(bonds)) return "invalid";
+  if (!Object.hasOwn(bonds, sessionId)) return "absent";
+  const entry = bonds[sessionId];
+  if (!entry || typeof entry !== "object" || Array.isArray(entry)) return "invalid";
+  if (!Object.hasOwn(entry, "revokedAt")) return "present";
+  return typeof entry.revokedAt === "string" ? "revoked" : "invalid";
 }
 function requireSessionBond(explicitSessionId) {
   const hostSessionId = process.env.CLAUDE_SESSION_ID;
@@ -51,27 +83,28 @@ function requireSessionBond(explicitSessionId) {
   const sessionId = hostSessionId ?? explicitSessionId;
   if (!sessionId) throw new Error("an exact session id is required; set CLAUDE_SESSION_ID or pass the session explicitly");
   const bond = getBond(sessionId);
-  if (!bond || bond.sessionId !== sessionId) throw new Error(`no bond for session ${sessionId}`);
+  if (!bond || Object.hasOwn(bond, "revokedAt") || bond.sessionId !== sessionId) throw new Error(`no bond for session ${sessionId}`);
   return bond;
 }
 function getSoleBond() {
   const state = readState();
-  const entries = Object.values(state.bonds);
+  const entries = Object.values(state.bonds).filter((b) => b && typeof b === "object" && !Object.hasOwn(b, "revokedAt"));
   if (entries.length === 1) return entries[0];
   return void 0;
 }
 function getMostRecentBond() {
   const state = readState();
-  const entries = Object.values(state.bonds);
+  const entries = Object.values(state.bonds).filter((b) => b && typeof b === "object" && !Object.hasOwn(b, "revokedAt"));
   if (entries.length === 0) return void 0;
   entries.sort((a, b) => b.bondedAt.localeCompare(a.bondedAt));
   return entries[0];
 }
 export {
-  clearBond,
+  bondPresence,
   getBond,
   getMostRecentBond,
   getSoleBond,
+  markRevoked,
   readState,
   requireSessionBond,
   upsertBond,

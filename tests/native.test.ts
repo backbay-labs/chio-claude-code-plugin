@@ -235,3 +235,43 @@ test("a session change during a shared refresh cannot overwrite the new session'
   release(); expect((await original).exitCode).toBe(1);
   const final = await $.command.run(command("chio-status")); expect(final.exitCode).toBe(0); expect(final.text).toContain("Session: session-b");
 });
+test("evidence opens the exact operation with evidence and authority details expanded", { options }, async ($, on) => {
+  stub(on, () => "session-a", () => projection());
+  await $.command.run(command("chio-evidence", "request-a"));
+  const ui = await $.ui.mount({ plugin: "chio", surface: "terminal", component: "Pane", requestId: "chio", props: paneProps });
+  expect(await ui.find({ type: "Text", text: "Kernel acknowledgement: unconfirmed" })).toBeDefined();
+  expect((await ui.find({ key: "details" }))?.props.label).toBe("Hide evidence and authority details");
+  await ui.unmount();
+});
+function retainedOperations(count: number): ControlStatus {
+  const value = projection();
+  const completed = Array.from({ length: count - 1 }, (_, i) => ({ requestId: `request-done-${String(i).padStart(2, "0")}`, tool: "read_file", state: "completed" as const,
+    evidence: "verified" as const, acknowledged: true, hostDeliveryConfirmed: true, nextAction: "none" as const }));
+  value.operations = [...completed, value.operations[0]!];
+  return value;
+}
+test("the pane lists actionable operations first and bounds the list", { options }, async ($, on) => {
+  stub(on, () => "session-a", () => retainedOperations(30));
+  await $.command.run(command("chio"));
+  const ui = await $.ui.mount({ plugin: "chio", surface: "terminal", component: "Pane", requestId: "chio", props: paneProps });
+  expect(String((await ui.find({ key: "operation-0" }))?.props.label)).toContain("awaiting_approval");
+  expect(await ui.find({ key: "operation-11" })).toBeDefined();
+  expect(await ui.find({ key: "operation-12" })).toBeUndefined();
+  expect(await ui.find({ type: "Text", text: "18 more retained operations not shown · the operator's control status lists every operation" })).toBeDefined();
+  await ui.unmount();
+});
+test("exactly twelve retained operations need no overflow line", { options }, async ($, on) => {
+  stub(on, () => "session-a", () => retainedOperations(12));
+  await $.command.run(command("chio"));
+  const ui = await $.ui.mount({ plugin: "chio", surface: "terminal", component: "Pane", requestId: "chio", props: paneProps });
+  expect(await ui.find({ key: "operation-11" })).toBeDefined();
+  expect(await ui.find({ type: "Text", text: "more retained operations" })).toBeUndefined();
+  await ui.unmount();
+});
+test("native review text neutralizes bidi and invisible Unicode controls", { options }, async ($, on) => {
+  const value = projection(); value.operations[0]!.review!.arguments = { path: "safe\u202Etxt.exe\u200B\u{E0041}", content: "data" };
+  stub(on, () => "session-a", () => value);
+  const answer = await $.command.run(command("chio-review", "request-a"));
+  expect(/[\p{Cf}\u2028\u2029]/u.test(answer.text ?? "")).toBe(false);
+  expect(answer.text).toContain("safe�txt.exe��");
+});

@@ -5,9 +5,9 @@ import { join, resolve } from "node:path";
 import { canonicalizeJson } from "@chio-protocol/sdk/invariants";
 import { createMcpExecutionClient } from "@chio/bridge";
 // Internal bridge contracts are pinned by the vendored archive and bundled at release.
-import { gatewayApprovalPath, gatewayBinding, operationKey, privatePath, type GatewayConfig, type StoredOperation } from "../../node_modules/@chio/bridge/dist/gateway.js";
-import { gatewayStatus } from "../../node_modules/@chio/bridge/dist/gateway-operator.js";
-import { verifyApprovalToolCall } from "../../node_modules/@chio/bridge/dist/approval.js";
+import { gatewayApprovalPath, gatewayBinding, operationKey, privatePath, type GatewayConfig, type StoredOperation } from "../bridge-internals/gateway.js";
+import { gatewayStatus } from "../bridge-internals/gateway-operator.js";
+import { verifyApprovalToolCall } from "../bridge-internals/approval.js";
 import type { ControlStatus, IntentKind, IntentState, IntentView, OperationView } from "../../types/control.js";
 
 import { createWorkflowControl, type WorkflowOptions } from "../workflow/control.js";
@@ -157,6 +157,7 @@ function requestIntent(options: ControlOptions, input: Record<string, unknown>):
     if (!record || record.state !== "awaiting_approval" || project(config, record).review?.decision !== "required" || reviewRevision(config, record) !== input.revision) throw new Error("review is stale, already decided, or belongs to another action");
   }
   const existing = intentRecords(config);
+  if (existing.length >= 1000) throw new Error("control intent retention requires operator maintenance");
   if (existing.some(intent => intent.kind !== "alternative" && intent.requestId === input.requestId && intent.revision === input.revision)) throw new Error("review intent already recorded; inspect its original outcome");
   const record: IntentRecord = { schema: "chio.control.intent.v1", id: randomUUID(), kind, state: "requested", sessionId: config.sessionId,
     ...(typeof input.requestId === "string" ? { requestId: input.requestId } : {}), revision: input.revision, binding: hash(gatewayBinding(config)),

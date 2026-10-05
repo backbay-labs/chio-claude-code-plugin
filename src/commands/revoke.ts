@@ -1,5 +1,5 @@
 import { buildBridge } from "../state/bridge.js";
-import { clearBond, requireSessionBond } from "../state/store.js";
+import { markRevoked, requireSessionBond } from "../state/store.js";
 
 export async function revoke(args: string[] = []): Promise<string> {
   if (args.length > 1) throw new Error("usage: /chio:revoke [session-id]");
@@ -12,7 +12,7 @@ export async function revoke(args: string[] = []): Promise<string> {
   await bridge.revoke(bond.passport.passportId);
   const confirmed = await bridge.status(bond.passport.passportId);
   if (confirmed.status !== "revoked") throw new Error("revocation was submitted but the passport lifecycle has not confirmed it; bond retained");
-  clearBond(bond.sessionId);
+  markRevoked(bond.sessionId);
 
   return JSON.stringify(
     {
@@ -22,6 +22,7 @@ export async function revoke(args: string[] = []): Promise<string> {
       session: bond.sessionId,
       did: bond.passport.did,
       capabilityId: bond.passport.capabilityId,
+      hooks: "compatibility hooks keep denying this session until /chio:bond",
     },
     null,
     2,

@@ -1,8 +1,8 @@
 import { createHash, randomUUID } from "node:crypto";
-import { closeSync, fsyncSync, lstatSync, mkdirSync, openSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
+import { closeSync, fsyncSync, lstatSync, mkdirSync, openSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { canonicalizeJson } from "@chio-protocol/sdk/invariants";
-import { privatePath } from "../../node_modules/@chio/bridge/dist/gateway.js";
+import { privatePath } from "../bridge-internals/gateway.js";
 
 export function digest(value: unknown): string { return createHash("sha256").update(canonicalizeJson(value)).digest("hex"); }
 export function privateRead<T>(path: string): T {
@@ -13,9 +13,13 @@ export function privateRead<T>(path: string): T {
 export function privateDirectory(path: string): void {
   mkdirSync(path, { recursive: true, mode: 0o700 }); privatePath(path, true);
 }
+export function assertRecordCapacity(directory: string): void {
+  if (readdirSync(directory).filter(name => name.endsWith(".json")).length >= 1000) throw new Error("workflow retention requires operator maintenance");
+}
 /** Replace only in the operator tree. Flush contents and the rename before reporting success. */
 export function privateSave(path: string, value: unknown, exclusive = false): void {
   privatePath(dirname(path), true);
+  if (exclusive && path.endsWith(".json")) assertRecordCapacity(dirname(path));
   const contents = JSON.stringify(value);
   if (Buffer.byteLength(contents) > 1024 * 1024) throw new Error("workflow record exceeds limit");
   const temporary = exclusive ? path : path + "." + randomUUID() + ".tmp";

@@ -124,6 +124,9 @@ file tools and other mods do not gain protection from this interface. Kernel and
 operator credentials and the private journal stay outside Claude. The control
 credential can read this session's authorized projection and record intent; it
 cannot submit kernel authority decisions or dispatch a resource tool.
+The compatibility hooks stay inactive in a session that `/chio:bond` has not
+bonded, so loading the plugin does not deny native tools; see
+[compatibility hooks](./RESTRICTED-MODE.md#compatibility-hooks).
 
 ## Confirm a decision outside Claude
 
@@ -272,3 +275,14 @@ The [dedicated environment and recovery report](../acceptance/2026-10-03/qualifi
 records explicit context binding, actual enforcing-owner failures and shared
 service preservation. Infrastructure recovery does not qualify those open
 execution and durability contracts.
+
+The parent model relay retains at most 1,024 request observations plus one
+limit record. Further requests are refused and the launch records incomplete
+work. Diagnostic field lists are bounded; response forwarding respects host
+backpressure. Start a newly bound launch after inspecting retained work if
+this per-launch request limit is reached.
+
+New workflow JSON records and review intents stop at 1,000 records per directory.
+Capacity refusal preserves original records, continuation claims, and acknowledgement
+updates. The operator must inspect retained work before preparing a new journal;
+repeated requests never delete evidence to make space.
