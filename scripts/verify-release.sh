@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# verify-release.sh — verify a published @chio/claude-code-plugin release.
+# verify-release.sh — verify a published @chio-protocol/claude-code-plugin release.
 #
 # Usage:
 #   scripts/verify-release.sh <version>
@@ -19,7 +19,7 @@
 
 set -euo pipefail
 
-PKG="@chio/claude-code-plugin"
+PKG="@chio-protocol/claude-code-plugin"
 SOURCE_REPO="${CHIO_GH_OWNER:-owner}/chio-claude-code-plugin"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 

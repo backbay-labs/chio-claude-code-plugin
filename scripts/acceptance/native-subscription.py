@@ -406,7 +406,7 @@ const p='/audit/dispatch.jsonl';console.log(JSON.stringify({files,dispatch:f.exi
             installed = subprocess.run(["npm", "install", "--prefix", str(consumer), "--cache", str(evidence / (label + "-empty-cache")), "--offline", "--ignore-scripts", "--no-audit", "--no-fund", str(archive.resolve())], capture_output=True, text=True, timeout=120)
             save(evidence / (label + ".json"), {"exitCode": installed.returncode, "archiveSha256": digest(archive), "stdout": installed.stdout, "stderr": installed.stderr})
             require(installed.returncode == 0, "Disposable archive installation failed")
-            package = consumer / "node_modules/@chio/claude-code-plugin"
+            package = consumer / "node_modules/@chio-protocol/claude-code-plugin"
             save(evidence / (label + "-installed-archive-files.json"), verify_installed_archive(archive, expected, package))
             return package
         if case in ["plugin-omitted", "gateway-missing"]:
@@ -790,7 +790,7 @@ syncBuiltinESMExports();
                 record_snapshot("after-recovery")
                 if case == "upgrade-removal":
                     before_removal = {str(path.relative_to(private)): digest(path) for path in private.rglob("*") if path.is_file()}
-                    removed = subprocess.run(["npm", "uninstall", "--prefix", str(evidence / "consumer"), "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "@chio/claude-code-plugin"], capture_output=True, text=True, timeout=60)
+                    removed = subprocess.run(["npm", "uninstall", "--prefix", str(evidence / "consumer"), "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "@chio-protocol/claude-code-plugin"], capture_output=True, text=True, timeout=60)
                     save(evidence / "removal.json", {"exitCode": removed.returncode, "stdout": removed.stdout, "stderr": removed.stderr})
                     require(removed.returncode == 0 and not launch_package.exists(), "Isolated package removal failed")
                     missing = subprocess.run(["node", str(launch_package / "scripts/restricted.mjs")], capture_output=True, text=True, timeout=10)
