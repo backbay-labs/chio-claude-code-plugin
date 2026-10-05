@@ -9,6 +9,11 @@ export async function bond(args: string[]): Promise<string> {
   }
   const sessionId = process.env.CLAUDE_SESSION_ID;
   if (!sessionId) throw new Error("CLAUDE_SESSION_ID is required; refusing to create an unbound capability");
+  if (args.length > 3) throw new Error("usage: /chio:bond <policy-path> [ttl] [budget-usd]");
+  const budgetUsd = budgetArg === undefined ? undefined : Number(budgetArg);
+  if (budgetArg !== undefined && (!budgetArg.trim() || !Number.isFinite(budgetUsd) || budgetUsd! < 0)) {
+    throw new Error("invalid budget: expected a finite nonnegative USD amount");
+  }
   const policyPath = resolve(policyArg);
   const bridge = buildBridge();
 
@@ -16,7 +21,6 @@ export async function bond(args: string[]): Promise<string> {
   // bridge issues a new capability in BOTH daemon and CLI modes with the
   // budget in its scope (it never attenuates), so the returned passport
   // already carries a non-empty capabilityId with the budget bound.
-  const budgetUsd = budgetArg ? Number(budgetArg) : undefined;
   const bondArgs: Parameters<typeof bridge.bond>[0] = { policyPath, ttl };
   if (budgetUsd !== undefined && Number.isFinite(budgetUsd)) {
     bondArgs.budgetUsd = budgetUsd;

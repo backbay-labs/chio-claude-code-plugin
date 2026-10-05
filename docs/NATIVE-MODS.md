@@ -324,3 +324,9 @@ The [dedicated environment and recovery report](../acceptance/2026-10-03/qualifi
 records explicit context binding, actual enforcing-owner failures and shared
 service preservation. Infrastructure recovery does not qualify those open
 execution and durability contracts.
+
+The parent model relay retains at most 1,024 request observations plus one
+limit record. Further requests are refused and the launch records incomplete
+work. Diagnostic field lists are bounded; response forwarding respects host
+backpressure. Start a newly bound launch after inspecting retained work if
+this per-launch request limit is reached.

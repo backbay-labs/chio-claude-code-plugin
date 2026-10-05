@@ -156,3 +156,26 @@ test("the token budget parser accepts only positive safe integers", () => {
   assert.equal(parseTokenBudget(undefined), undefined); assert.equal(parseTokenBudget("50000"), 50000);
   for (const bad of ["0", "-1", "1.5", "abc", "", "1e3", "9007199254740993"]) assert.throws(() => parseTokenBudget(bad), /positive integer/, bad);
 });
+test("model context observation runs only after provider forwarding and never for count-tokens", async t => {
+  let calls = 0, observed = 0, rejectResult = false; const observations = [];
+  const server = createServer((req, res) => { calls++; res.end('{"ok":true}'); });
+  await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
+  const relay = await startModelRelay({ upstreamBaseUrl: `http://127.0.0.1:${server.address().port}`, apiKey: "fixture", model, toolNames: [...tools],
+    onToolResults: () => { if (rejectResult) throw new Error("fixture refused"); },
+    onModelForwarded: () => { observed++; observations.push(calls); } });
+  t.after(async () => { await relay.close(); server.closeAllConnections(); await new Promise(r => server.close(r)); });
+  const send = route => fetch(`http://127.0.0.1:${relay.port}${route}`, { method: "POST", headers: { "x-api-key": relay.token, "Content-Type": "application/json" }, body: JSON.stringify(request([{ role: "user", content: "context fixture" }])) });
+  assert.equal((await send("/v1/messages")).status, 200); assert.equal(observed, 1); assert.deepEqual(observations, [1]);
+  rejectResult = true; assert.equal((await send("/v1/messages")).status, 403); assert.equal(observed, 1);
+  rejectResult = false; assert.equal((await send("/v1/messages/count_tokens")).status, 200); assert.equal(observed, 1);
+});
+test("host request flooding cannot grow the retained relay event log without bound", async t => {
+  const relay = await startModelRelay({ upstreamBaseUrl: "http://127.0.0.1:1", apiKey: "fixture", model, toolNames: [...tools] });
+  t.after(() => relay.close());
+  for (let i = 0; i < 1030; i++) {
+    const response = await fetch(`http://127.0.0.1:${relay.port}/invalid`, { method: "POST" }); await response.text();
+  }
+  assert.ok(relay.events.length <= 1025, `retained ${relay.events.length} events`);
+  assert.equal(relay.events.at(-1).failure, "model relay request limit reached");
+  assert.equal(relay.events.at(-1).requestClass, "conversation");
+});

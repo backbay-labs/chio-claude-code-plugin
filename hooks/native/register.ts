@@ -15,12 +15,14 @@ let generation = 0;
 let notices: NoticeState = { authorityWarned: false };
 let inFlight = 0;
 let shareQueue: ShareRecord[] = [];
+const sharing = new Set<ShareRecord>();
 let pane: "operations" | "task" = "operations";
 let refreshRead: { sessionId: string; generation: number; promise: Promise<ControlStatus | null> } | null = null;
 const PANE_OPERATIONS = 12;
 
 async function refresh($: EngineInterface, options: PluginOptions): Promise<ControlStatus | null> {
   const actual = await $.session.id();
+  const priorGuidance = guidanceText(status);
   if (actual !== sessionId) {
     sessionId = actual; pane = "operations"; status = null; selectedId = null; showDetails = false; notice = ""; generation += 1; notices = { authorityWarned: false }; shareQueue = []; inFlight = 0;
     await $.ui.close({ id: "chio" });
@@ -40,6 +42,7 @@ async function refresh($: EngineInterface, options: PluginOptions): Promise<Cont
       if (thisGeneration === generation) { status = null; notice = "Control service disconnected. No authority decision was inferred."; }
     }
     if (thisGeneration !== generation) return null;
+    if (guidanceText(status) !== priorGuidance) $.ui.invalidate("prompt.context");
     for (const text of toasts) { try { await $.ui.toast(text); } catch { $.ui.log("Chio notice toast unavailable", { to: "debug" }); } }
     $.ui.invalidate("ui.render"); return status;
   })() };
@@ -222,16 +225,27 @@ export const register: Register = (on, options) => {
   on("prompt.context", async ($, e, next) => {
     const result = await next(e);
     const text = guidanceText(status);
-    if (!text) return result;
-    return { ...result, blocks: [...result.blocks.filter(block => block.name !== "chio"), { name: "chio", text }] };
+    return { ...result, blocks: [...result.blocks.filter(block => block.name !== "chio"), ...(text ? [{ name: "chio", text }] : [])] };
   }).catch(($, e, next) => next(e));
   on("prompt.submit", async ($, e, next) => {
     if (!shareQueue.length) return next(e);
     const current = await $.session.id();
-    const shared = shareQueue.filter(record => record.sessionId === current); shareQueue = [];
+    shareQueue = shareQueue.filter(record => record.sessionId === current);
+    const shared = shareQueue.filter(record => !sharing.has(record));
     if (!shared.length) return next(e);
-    notice = "Original result attached to your message for Claude.";
-    return next({ ...e, context: [...(e.context ?? []), ...shared.map(shareText)] });
+    const atGeneration = generation;
+    const contexts = shared.map(shareText);
+    for (const record of shared) sharing.add(record);
+    try {
+      const result = await next({ ...e, context: [...(e.context ?? []), ...contexts] });
+      if (atGeneration === generation && await $.session.id() === current) {
+        if (result.drop === undefined && contexts.every(text => result.context?.includes(text))) {
+          shareQueue = shareQueue.filter(record => !shared.includes(record));
+          notice = "Original result attached to your message for Claude.";
+        } else notice = "Original result is still queued for your next accepted message to Claude.";
+      }
+      return result;
+    } finally { for (const record of shared) sharing.delete(record); }
   }).catch(($, e, next) => next(e));
 
   on("ui.render", { component: "AbovePrompt" }, async ($, e, next) => {

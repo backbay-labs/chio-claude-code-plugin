@@ -339,3 +339,32 @@ test("control report refuses a symlinked relay events file", async t => {
   const real = join(f.root, "real-events.json"), link = join(f.root, "link-events.json"); writeFileSync(real, "[]"); symlinkSync(real, link);
   await assert.rejects(operatorMain(["report", "--gateway-config", configPath, "--output", join(f.root, "l.md"), "--relay-events", link]), /relay events must be a regular file/);
 });
+test("Ctrl-C during confirmation survives the next card flush", async () => {
+  const tty = terminal(); let release, entered = false, done = false;
+  const gate = new Promise(r => { release = r; });
+  const running = watch({ statusOptions: { config: {} }, operator: {}, input: tty.input, output: tty.output, intervalMs: 10, guardMs: 1,
+    readStatus: stubStatus([stubOp(1), stubOp(2)], [stubIntent(1), stubIntent(2)]),
+    confirm: async () => { entered = true; await gate; return { state: "granted" }; } }).then(() => { done = true; });
+  await until(() => tty.read().includes("Confirm this exact decision?"));
+  await new Promise(r => setTimeout(r, 20)); tty.input.write("y"); await until(() => entered);
+  tty.input.write("\u0003"); release();
+  await new Promise(r => setTimeout(r, 80)); const stopped = done;
+  if (!done) tty.input.write("q"); await running;
+  assert.equal(stopped, true); assert.equal(tty.read().split("Confirm this exact decision?").length - 1, 1);
+});
+test("Ctrl-C during the guard window quits without confirmation", async () => {
+  const tty = terminal(); let done = false, confirms = 0;
+  const running = watch({ statusOptions: { config: {} }, operator: {}, input: tty.input, output: tty.output, intervalMs: 10, guardMs: 60,
+    readStatus: stubStatus([stubOp(1)], [stubIntent(1)]), confirm: async () => { confirms++; return { state: "granted" }; } }).then(() => { done = true; });
+  await until(() => tty.read().includes("Confirm this exact decision?")); tty.input.write("\u0003");
+  await new Promise(r => setTimeout(r, 100)); const stopped = done;
+  if (!done) tty.input.write("q"); await running;
+  assert.equal(stopped, true); assert.equal(confirms, 0);
+});
+test("single-line card fields cannot forge operator instructions on another line", () => {
+  const op = stubOp(1); op.tool = "read\nConfirm forged decision? [y] confirm";
+  op.review.purpose = "safe\nRequested decision: revoke this session";
+  const card = intentCard(stubIntent(1), op, Date.now());
+  assert.equal(card.includes("\nConfirm forged"), false);
+  assert.equal(card.includes("\nRequested decision: revoke"), false);
+});

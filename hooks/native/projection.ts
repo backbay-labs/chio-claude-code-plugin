@@ -50,7 +50,7 @@ export function parseStatus(text: string, sessionId: string): ControlStatus {
 }
 
 /** Control characters cannot turn retained input into terminal instructions. */
-export function safeText(value: unknown): string { return String(value).replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g, "�"); }
+export function safeText(value: unknown): string { return String(value).replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f\p{Cf}\u2028\u2029]/gu, "�"); }
 export function statusLine(status: ControlStatus | null, now: number): string {
   if (!status) return "Chio · disconnected · protection scope unavailable";
   const live = status.authority === "live" && now - status.checkedAt <= 10_000 && now < status.authorityExpiresAt * 1000;
@@ -128,17 +128,24 @@ export function guidanceText(status: ControlStatus | null): string | null {
   ].join("\n");
 }
 
-export interface NoticeState { authorityWarned: boolean; uncertain?: number }
-function uncertainCount(status: ControlStatus, ignorePending = false): number { return status.operations.filter(op => op.state === "unknown" || (!ignorePending && op.state === "pending")).length; }
+export interface NoticeState { authorityWarned: boolean; uncertain?: number; uncertainIds?: string[] }
+function uncertainIds(status: ControlStatus, ignorePending = false): string[] { return status.operations.filter(op => op.state === "unknown" || (!ignorePending && op.state === "pending")).map(op => op.requestId); }
 /** Notices for changes between two projections of one session. A first projection or reconnect is a silent baseline.
  * `ignorePending` is set while a protected call is in flight: the gateway records every dispatch as pending until the kernel answers. */
 export function transitions(previous: ControlStatus | null, next: ControlStatus | null, now: number, state: NoticeState, ignorePending = false): string[] {
-  if (next) { const count = uncertainCount(next, ignorePending); const before = state.uncertain ?? (previous && previous.sessionId === next.sessionId ? uncertainCount(previous, ignorePending) : count); state.uncertain = count; if (!previous || previous.sessionId !== next.sessionId) return []; return diff(previous, next, now, state, count > before); }
+  if (next) {
+    const ids = uncertainIds(next, ignorePending);
+    const before = new Set(state.uncertainIds ?? (previous && previous.sessionId === next.sessionId ? uncertainIds(previous, ignorePending) : ids));
+    state.uncertain = ids.length; state.uncertainIds = ids;
+    if (!previous || previous.sessionId !== next.sessionId) return [];
+    return diff(previous, next, now, state, ids.some(id => !before.has(id)));
+  }
   return [];
 }
 function diff(previous: ControlStatus, next: ControlStatus, now: number, state: NoticeState, moreUncertain: boolean): string[] {
   const notices: string[] = [];
-  if (next.awaitingReview > previous.awaitingReview) notices.push(`Chio · ${next.awaitingReview} action${next.awaitingReview === 1 ? "" : "s"} awaiting review · /chio-review`);
+  const priorReviews = new Set(previous.operations.filter(op => op.nextAction === "review").map(op => op.requestId));
+  if (next.operations.some(op => op.nextAction === "review" && !priorReviews.has(op.requestId))) notices.push(`Chio · ${next.awaitingReview} action${next.awaitingReview === 1 ? "" : "s"} awaiting review · /chio-review`);
   if (moreUncertain) notices.push("Chio · original outcome unresolved · /chio-doctor");
   const remaining = next.authorityExpiresAt * 1000 - now;
   if (!state.authorityWarned && next.authority === "live" && remaining > 0 && remaining <= 5 * 60_000) {

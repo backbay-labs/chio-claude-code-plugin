@@ -38,7 +38,7 @@ async function fixture(t, mode = "completed") {
   const restart = async () => {
     await control.close(); gateway.close();
     gateway = createGateway(config, { execute: async request => { effects++; charges++; return signedOutcome(config, request); }, acknowledge: async result => { acks++; return { acknowledged: true, requestId: result.requestId }; } }, { requireHostAcknowledgement: true });
-    control = await startControlServer({ config, authorityExpiresAt: Math.floor(Date.now() / 1000) + 600, validateAuthority: async () => live,
+    control = await startControlServer({ config, authorityExpiresAt: Math.floor(Date.now() / 1000) + 600, validateAuthority: async () => live, modelContextConfirmed: id => modelContext(id),
       workflow: { resume: (id, requestId, tool, args) => gateway.call("control:" + id, "chio_resume", { requestId, tool, arguments: args }), acknowledge: result => gateway.acknowledgeReceivedOutcome(result) } });
     headers.Authorization = "Bearer " + control.token;
   };
@@ -185,6 +185,9 @@ test("relay-observed model context is projected only for natively confirmed cont
   assert.equal((await f.request("/continuations/" + continuation.id + "/ack", { outcomeHash: original.outcomeHash, challenge: original.challenge })).status, 200);
   const current = await f.status(); assert.equal(current.continuations[0].delivery, "confirmed"); assert.equal(current.continuations[0].modelContext, "confirmed");
   assert.deepEqual(f.retained().map(c => c.id), current.continuations.map(c => c.id));
+  await f.restart();
+  assert.equal((await f.status()).continuations[0].modelContext, "confirmed");
+  assert.deepEqual(f.counts(), { effects: 1, charges: 1, acks: 1 });
   f.setModelContext(() => false);
   assert.equal("modelContext" in (await f.status()).continuations[0], false);
 });

@@ -2,7 +2,7 @@
 // requested, never creates or changes a decision, and dispatches nothing.
 import { confirmControlIntent, controlStatus } from "../dist/control/service.js";
 
-const clean = value => String(value).replace(/[\p{Cc}\p{Cf}\u2028\u2029]/gu, char => char === "\n" ? char : "\ufffd");
+const clean = (value, multiline = false) => String(value).replace(/[\p{Cc}\p{Cf}\u2028\u2029]/gu, char => char === "\n" ? (multiline ? char : "\\n") : "\ufffd");
 const confirmable = (intent, operation) => intent.kind === "revoke" || Boolean(operation?.review);
 export function intentCard(intent, operation, now) {
   const seconds = Math.max(0, Math.ceil((intent.expiresAt - now) / 1000));
@@ -10,7 +10,7 @@ export function intentCard(intent, operation, now) {
     `Requested decision: ${intent.kind === "revoke" ? "revoke this session" : clean(intent.kind)}`];
   if (operation) {
     lines.push(`Action: ${clean(operation.tool ?? "operation")} · request ${clean(operation.requestId)}`);
-    if (operation.review) lines.push(`Purpose: ${clean(operation.review.purpose)}`, `Capability: ${clean(operation.review.capabilityId)} · grant TTL ${clean(operation.review.ttlSeconds)}s`, "Arguments:", clean(JSON.stringify(operation.review.arguments, null, 2)));
+    if (operation.review) lines.push(`Purpose: ${clean(operation.review.purpose)}`, `Capability: ${clean(operation.review.capabilityId)} · grant TTL ${clean(operation.review.ttlSeconds)}s`, "Arguments:", clean(JSON.stringify(operation.review.arguments, null, 2), true));
   }
   lines.push(confirmable(intent, operation) ? "Confirm this exact decision? [y] confirm  [n] skip  [q] quit" : "Action unavailable in the current projection; confirmation refused. [n] skip  [q] quit", "");
   return lines.join("\n");
@@ -19,23 +19,36 @@ export async function watch({ statusOptions, operator, input, output, intervalMs
   if (!input.isTTY || !output.isTTY) throw new Error("watch requires an interactive terminal");
   input.setRawMode?.(true); input.resume();
   const keys = [];
-  let wake = () => {};
-  const onData = data => { for (const key of String(data)) { keys.push(key === "\u0003" ? "q" : key); } wake(); };
+  let wake = () => {}, quit = false;
+  const onData = data => {
+    for (const key of String(data)) {
+      if (key === "\u0003" || key === "q") quit = true;
+      else if ((key === "y" || key === "n") && keys.length < 64) keys.push(key);
+    }
+    wake();
+  };
   input.on("data", onData);
   const nextKey = async (allowed, timeoutMs) => {
     const end = timeoutMs === undefined ? Infinity : Date.now() + timeoutMs;
     for (;;) {
+      if (quit) return "q";
       while (keys.length) { const key = keys.shift(); if (allowed.includes(key)) return key; }
       const wait = end === Infinity ? undefined : end - Date.now();
       if (wait !== undefined && wait <= 0) return undefined;
-      await new Promise(resolve => { wake = resolve; if (wait !== undefined) setTimeout(resolve, wait); });
+      await new Promise(resolve => {
+        let timer;
+        const finish = () => { clearTimeout(timer); if (wake === finish) wake = () => {}; resolve(); };
+        wake = finish; if (wait !== undefined) timer = setTimeout(finish, wait);
+      });
     }
   };
   const answered = new Set();
   let line = "";
   try {
     for (;;) {
+      if (quit) return;
       const status = await readStatus(statusOptions);
+      if (quit) return;
       const needing = status.operations.filter(op => op.review?.decision === "required");
       // The service refuses a second intent for the same revision, so an action with any intent cannot be requested again.
       const stuck = needing.filter(op => status.intents.some(i => i.requestId === op.requestId && i.state !== "requested")).length;
