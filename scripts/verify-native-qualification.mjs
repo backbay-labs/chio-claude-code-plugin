@@ -22,7 +22,7 @@ export function qualificationArtifacts(root) {
   return Object.fromEntries([...paths].sort().map(path => [path, createHash("sha256").update(readFileSync(join(root, path))).digest("hex")]));
 }
 export function verifyNativeQualification(root) {
-  const record = JSON.parse(readFileSync(join(root, "acceptance/2026-10-03/controlled-workflows/ACCEPTANCE.json"), "utf8"));
+  const record = JSON.parse(readFileSync(join(root, "acceptance/2026-10-05/rc5/ACCEPTANCE.json"), "utf8"));
   const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
   if (record.version !== pkg.version) throw new Error("Native qualification does not cover this package version");
   if (record.schema !== "chio.claude.native-acceptance.v1" || record.productionQualified !== true) throw new Error("Native mod candidate lacks live production qualification; fixture checks cannot authorize publication");

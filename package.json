@@ -28,6 +28,7 @@
     "tsconfig.mod.json",
     "acceptance/2026-10-03/native-mods",
     "acceptance/2026-10-03/controlled-workflows",
+    "acceptance/2026-10-05/rc5",
     "acceptance/2026-10-03/qualification-environment",
     "docs",
     "SMOKE.md",
