@@ -1,3 +1,6 @@
+import fs from "node:fs";
+import childProcess from "node:child_process";
+import { syncBuiltinESMExports } from "node:module";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { mkdtempSync, rmSync, readdirSync, readFileSync, existsSync, mkdirSync, writeFileSync, symlinkSync } from "node:fs";
@@ -105,4 +108,51 @@ test("oversize and invalid bodies get a 400 JSON-RPC error and the server keeps 
     const response = await raw(body); assert.equal(response.status, 400); assert.ok((await response.json()).error);
   }
   assert.equal((await rpc(f.kernel.url, "chio/execution-context", {}, f.headers)).status, 200);
+});
+
+
+test("a directory swapped at the write boundary cannot redirect a fixture write", async t => {
+  const f = await boot(t), outside = join(f.root, "outside"), parent = join(f.owner, "sub");
+  mkdirSync(outside); mkdirSync(parent);
+  const originalWrite = fs.writeFileSync, originalExec = childProcess.execFileSync;
+  let swapped = false;
+  const swap = () => { if (!swapped) { fs.renameSync(parent, parent + ".original"); symlinkSync(outside, parent); swapped = true; } };
+  fs.writeFileSync = function(path, ...args) { if (path === join(parent, "a.txt")) swap(); return originalWrite.call(this, path, ...args); };
+  childProcess.execFileSync = function(command, args, options) { if (options?.input?.includes('"path":"sub/a.txt"')) swap(); return originalExec.call(this, command, args, options); };
+  syncBuiltinESMExports();
+  try {
+    await f.refusal("write_file", { path: "sub/a.txt", content: "must stay inside" });
+    assert.equal(swapped, true, "the filesystem changed at the effect boundary");
+    assert.deepEqual(readdirSync(outside), []);
+    assert.equal(f.kernel.writes(), 0);
+  } finally { fs.writeFileSync = originalWrite; childProcess.execFileSync = originalExec; syncBuiltinESMExports(); }
+});
+test("fixture reads refuse hard links and oversized regular files", async t => {
+  const f = await boot(t), secret = join(f.root, "secret");
+  writeFileSync(secret, "outside-secret"); fs.linkSync(secret, join(f.owner, "linked"));
+  assert.match(await f.refusal("read_text_file", { path: "linked" }), REFUSAL);
+  writeFileSync(join(f.owner, "large"), "x".repeat(1024 * 1024 + 1));
+  assert.match(await f.refusal("read_text_file", { path: "large" }), REFUSAL);
+});
+
+test("the fixture detects an ancestor swap between lstat and entering that directory", async t => {
+  const f = await boot(t), outside = join(f.root, "outside"), parent = join(f.owner, "sub");
+  mkdirSync(outside); mkdirSync(parent);
+  const originalExec = childProcess.execFileSync; let injected = false;
+  childProcess.execFileSync = function(command, args, options) {
+    if (options?.input?.includes('"path":"sub/a.txt"')) {
+      args = [...args];
+      const original = args.at(-1);
+      args[args.length - 1] = original.replace('process.chdir(segment);', `const attack = await import('node:fs'); attack.renameSync(segment, segment + '.old'); attack.symlinkSync(${JSON.stringify(outside)}, segment); process.chdir(segment);`);
+      injected = args.at(-1) !== original;
+    }
+    return originalExec.call(this, command, args, options);
+  };
+  syncBuiltinESMExports();
+  try {
+    await f.refusal("write_file", { path: "sub/a.txt", content: "must stay inside" });
+    assert.equal(injected, true);
+    assert.ok(fs.lstatSync(parent).isSymbolicLink(), "the swap actually ran inside the helper");
+    assert.deepEqual(readdirSync(outside), []);
+  } finally { childProcess.execFileSync = originalExec; syncBuiltinESMExports(); }
 });

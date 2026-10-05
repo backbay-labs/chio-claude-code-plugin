@@ -1,7 +1,8 @@
 // Local demo fixture. Not a kernel, resource owner or qualified boundary. Keys come from each run's own seed.
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
-import { lstatSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
-import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
+import { mkdirSync } from "node:fs";
+import { createOwnerFiles } from "./owner-files.js";
+import { resolve } from "node:path";
 import { canonicalizeJson, sha256Hex, signUtf8MessageEd25519, receiptSigningBodyCanonicalJson } from "@chio-protocol/sdk/invariants";
 
 // Gateway config and proposal shapes are loose here on purpose: this fixture only reads a few fields.
@@ -68,26 +69,7 @@ export async function startDemoKernel(options: DemoKernelOptions): Promise<DemoK
   const send = (res: ServerResponse, status: number, body: unknown) => { res.writeHead(status, { "Content-Type": "application/json" }); res.end(JSON.stringify(body)); };
 
   mkdirSync(ownerRoot, { recursive: true });
-  const ownerReal = realpathSync(ownerRoot);
-  const inside = (real: string) => real === ownerReal || real.startsWith(ownerReal + sep);
-  const outside = () => new Refusal("path is outside the owner directory");
-  const exists = (p: string) => { try { lstatSync(p); return true; } catch { return false; } };
-  const realInside = (p: string) => { let real: string; try { real = realpathSync(p); } catch { throw outside(); } if (!inside(real)) throw outside(); };
-
-  // Lexical check, then a realpath check of the deepest existing ancestor. With create, missing
-  // parent levels are made one at a time and each is re-verified. Returns the confined path.
-  const confine = (path: unknown, create: boolean): string => {
-    if (typeof path !== "string" || path === "" || path.includes("\u0000") || isAbsolute(path)) throw outside();
-    const full = resolve(ownerRoot, path);
-    const rel = relative(ownerRoot, full);
-    if (rel === "" || rel === ".." || rel.startsWith(".." + sep) || isAbsolute(rel)) throw outside();
-    const missing: string[] = []; let ancestor = dirname(full);
-    while (!exists(ancestor)) { missing.unshift(ancestor); ancestor = dirname(ancestor); }
-    realInside(ancestor);
-    if (missing.length && !create) throw outside();
-    for (const level of missing) { mkdirSync(level); realInside(level); }
-    return full;
-  };
+  const ownerFile = createOwnerFiles(ownerRoot);
 
   const server = createServer((req, res) => {
     handle(req, res).catch(() => { if (!res.headersSent) send(res, 500, { jsonrpc: "2.0", id: null, error: { code: -32603, message: "internal error" } }); else res.end(); });
@@ -138,14 +120,13 @@ export async function startDemoKernel(options: DemoKernelOptions): Promise<DemoK
         if (config.approval?.requiredTools?.includes(params.name) && (!meta.chioGovernedIntent || !meta.chioApprovalToken)) throw new Refusal("approval envelope is required");
         if (params.name === "write_file") {
           if (typeof args.content !== "string") throw new Refusal("content must be a string");
-          const full = confine(args.path, true);
-          if (exists(full)) throw new Refusal("target already exists");
-          writeFileSync(full, args.content, { flag: "wx" });
+          const result = ownerFile("write", args.path, args.content);
+          if (!result.ok) throw new Refusal(result.exists ? "target already exists" : "path is outside the owner directory or file limit");
           writes++; text = `Wrote ${args.path} in the demo owner directory.`;
         } else {
-          const full = confine(args.path, false);
-          if (!exists(full) || !lstatSync(full).isFile()) throw new Refusal("not a regular file in the owner directory");
-          text = readFileSync(full, "utf8");
+          const result = ownerFile("read", args.path);
+          if (!result.ok) throw new Refusal("not a bounded regular file inside the owner directory");
+          text = result.text!;
         }
       } catch (error) { text = `Refused: ${error instanceof Refusal ? error.message : "tool call failed"}`; isError = true; }
       const meta = params._meta ?? {};

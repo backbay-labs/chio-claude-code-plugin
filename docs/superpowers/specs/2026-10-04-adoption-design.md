@@ -103,3 +103,14 @@ started by tests.)
 
 Typecheck, build, `npm test`, `npm run test:mods`, a manual demo start and stop
 in a scratch directory, and the publication guard still refusing.
+
+## Review correction: owner file access
+
+The fixture uses a short-lived Node child with an inode-bound working directory
+for each file operation. Every parent component is checked before entry and its
+identity checked again after entry; final files use exclusive creation or a
+no-follow file descriptor. Reads reject hard links, non-regular files and more
+than 1 MiB. Paths have at most 64 components and 4096 characters. This replaces
+the realpath-then-write approach and its accepted directory-swap race. The helper
+uses only Node built-ins and inherits no preload environment. It is demo file
+handling, not a protected execution or qualification boundary.
