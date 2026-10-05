@@ -30,6 +30,7 @@ await build({
     "gateway-http": "scripts/gateway-http.mjs",
     "gateway-operator": join(bridgeRoot, "dist", "gateway-operator.js"),
     "control/service": "src/control/service.ts",
+    "demo/fixture": "src/demo/fixture.ts",
     "workflow/store": "src/workflow/store.ts",
     "workflow/tasks": "src/workflow/tasks.ts",
     "workflow/handoff": "src/workflow/handoff.ts",
