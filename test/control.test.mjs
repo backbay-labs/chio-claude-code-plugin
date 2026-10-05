@@ -207,3 +207,52 @@ test("a revocation card renders without an operation", () => {
   const card = intentCard({ id: "12345678-1234-4123-8123-123456789abc", kind: "revoke", state: "requested", sessionId: "host-session-a", expiresAt: Date.now() + 60_000 }, undefined, Date.now());
   assert.match(card, /Requested decision: revoke this session/); assert.match(card, /Confirm this exact decision\?/);
 });
+const stubStatus = (operations, intents) => async () => ({ sessionId: "s", authority: "active", operations, intents });
+const stubIntent = (n, extra = {}) => ({ id: `1234567${n}-1234-4123-8123-123456789abc`, kind: "approve", state: "requested", requestId: `req-${n}`, expiresAt: Date.now() + 60_000, ...extra });
+const stubOp = n => ({ requestId: `req-${n}`, tool: "Bash", review: { decision: "required", purpose: "p", capabilityId: "c", ttlSeconds: 60, arguments: { n } } });
+test("a doubled y confirms only the first card and the second awaits a key", async () => {
+  const tty = terminal(); let confirms = 0;
+  const running = watch({ statusOptions: { config: {} }, operator: {}, input: tty.input, output: tty.output, intervalMs: 20,
+    readStatus: stubStatus([stubOp(1), stubOp(2)], [stubIntent(1), stubIntent(2, { expiresAt: Date.now() + 90_000 })]),
+    confirm: async () => { confirms++; return { state: "granted" }; } });
+  await until(() => tty.read().includes("Confirm this exact decision?"));
+  tty.input.write("yy");
+  await until(() => tty.read().split("Confirm this exact decision?").length - 1 === 2);
+  await new Promise(r => setTimeout(r, 100));
+  assert.equal(confirms, 1);
+  tty.input.write("q"); await running;
+});
+test("a y typed before any card exists is not applied to the card that appears", async () => {
+  const tty = terminal(); let confirms = 0; let intents = [];
+  const running = watch({ statusOptions: { config: {} }, operator: {}, input: tty.input, output: tty.output, intervalMs: 20,
+    readStatus: async () => ({ sessionId: "s", authority: "active", operations: [stubOp(1)], intents }),
+    confirm: async () => { confirms++; return { state: "granted" }; } });
+  await until(() => tty.read().includes("Chio watch"));
+  tty.input.write("y"); await new Promise(r => setTimeout(r, 80));
+  intents = [stubIntent(1)];
+  await until(() => tty.read().includes("Confirm this exact decision?"));
+  await new Promise(r => setTimeout(r, 100));
+  assert.equal(confirms, 0);
+  tty.input.write("q"); await running;
+});
+test("a non-revoke intent without a displayable action refuses confirmation", async () => {
+  const intent = stubIntent(1);
+  for (const op of [undefined, { requestId: "req-1", tool: "Bash" }]) {
+    const card = intentCard(intent, op, Date.now());
+    assert.match(card, /Action unavailable in the current projection; confirmation refused\. \[n\] skip  \[q\] quit/);
+    assert.equal(card.includes("[y]"), false);
+  }
+  const tty = terminal(); let confirms = 0;
+  const running = watch({ statusOptions: { config: {} }, operator: {}, input: tty.input, output: tty.output, intervalMs: 20,
+    readStatus: stubStatus([], [intent]), confirm: async () => { confirms++; return { state: "granted" }; } });
+  await until(() => tty.read().includes("confirmation refused"));
+  tty.input.write("y"); await new Promise(r => setTimeout(r, 100));
+  assert.equal(confirms, 0);
+  tty.input.write("q"); await running;
+});
+test("terminal control and bidi characters in projection values are neutralized", () => {
+  const op = stubOp(1); op.review.purpose = "a\u001b[2Jb\u202ec\u2028d"; op.review.ttlSeconds = "6\u001b0";
+  const card = intentCard(stubIntent(1), op, Date.now());
+  assert.equal(/[\u001b\u202e\u2028]/.test(card), false);
+  assert.match(card, /Purpose: a.\[2Jb.c.d/);
+});

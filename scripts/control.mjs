@@ -32,6 +32,7 @@ export async function main(args = process.argv.slice(2)) {
   const authorityExpiresAt = prepared.sessionCredential.expiresAt;
   if (action === "watch") {
     if (!options["--operator-file"] || options["--credential-output"] || options["--intent"]) throw new Error("watch requires --operator-file");
+    if (!process.stdin.isTTY || !process.stdout.isTTY) throw new Error("watch requires an interactive terminal");
     const path = resolve(options["--operator-file"]); privatePath(path, false);
     if (lstatSync(path).size > 1024 * 1024) throw new Error("operator credential file exceeds its bound");
     await watch({ statusOptions: { config, authorityExpiresAt, workflow: prepared.workflow }, operator: JSON.parse(readFileSync(path, "utf8")), input: process.stdin, output: process.stdout });

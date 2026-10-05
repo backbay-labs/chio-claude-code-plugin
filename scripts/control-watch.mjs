@@ -2,16 +2,17 @@
 // requested, never creates or changes a decision, and dispatches nothing.
 import { confirmControlIntent, controlStatus } from "../dist/control/service.js";
 
-const clean = value => String(value).replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g, "�");
+const clean = value => String(value).replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f\u200e\u200f\u2028\u2029\u202a-\u202e\u2066-\u2069]/g, "�");
+const confirmable = (intent, operation) => intent.kind === "revoke" || Boolean(operation?.review);
 export function intentCard(intent, operation, now) {
   const seconds = Math.max(0, Math.ceil((intent.expiresAt - now) / 1000));
   const lines = [`Chio review · intent ${clean(intent.id)} · expires in ${seconds}s`,
     `Requested decision: ${intent.kind === "revoke" ? "revoke this session" : clean(intent.kind)}`];
   if (operation) {
     lines.push(`Action: ${clean(operation.tool ?? "operation")} · request ${clean(operation.requestId)}`);
-    if (operation.review) lines.push(`Purpose: ${clean(operation.review.purpose)}`, `Capability: ${clean(operation.review.capabilityId)} · grant TTL ${operation.review.ttlSeconds}s`, "Arguments:", clean(JSON.stringify(operation.review.arguments, null, 2)));
+    if (operation.review) lines.push(`Purpose: ${clean(operation.review.purpose)}`, `Capability: ${clean(operation.review.capabilityId)} · grant TTL ${clean(operation.review.ttlSeconds)}s`, "Arguments:", clean(JSON.stringify(operation.review.arguments, null, 2)));
   }
-  lines.push("Confirm this exact decision? [y] confirm  [n] skip  [q] quit", "");
+  lines.push(confirmable(intent, operation) ? "Confirm this exact decision? [y] confirm  [n] skip  [q] quit" : "Action unavailable in the current projection; confirmation refused. [n] skip  [q] quit", "");
   return lines.join("\n");
 }
 export async function watch({ statusOptions, operator, input, output, intervalMs = 1000, now = Date.now, confirm = confirmControlIntent, readStatus = controlStatus }) {
@@ -36,17 +37,19 @@ export async function watch({ statusOptions, operator, input, output, intervalMs
     for (;;) {
       const status = await readStatus(statusOptions);
       const waiting = status.operations.filter(op => op.review?.decision === "required" && !status.intents.some(i => i.requestId === op.requestId && i.state === "requested")).length;
-      const summary = `Chio watch · session ${clean(status.sessionId)} · authority ${status.authority} · ${waiting} action${waiting === 1 ? "" : "s"} awaiting a review request from Claude\n`;
+      const summary = `Chio watch · session ${clean(status.sessionId)} · authority ${clean(status.authority)} · ${waiting} action${waiting === 1 ? "" : "s"} awaiting a review request from Claude\n`;
       if (summary !== line) { output.write(summary); line = summary; }
       const pending = status.intents.filter(i => i.state === "requested" && i.expiresAt > now() && !answered.has(i.id)).sort((a, b) => a.expiresAt - b.expiresAt);
       if (!pending.length) { if (await nextKey(["q"], intervalMs) === "q") return; continue; }
       const intent = pending[0];
-      output.write("\x07" + intentCard(intent, status.operations.find(op => op.requestId === intent.requestId), now()));
-      const key = await nextKey(["y", "n", "q"]);
+      const operation = status.operations.find(op => op.requestId === intent.requestId);
+      keys.length = 0; // only keystrokes typed after the card is on screen count
+      output.write("\x07" + intentCard(intent, operation, now()));
+      const key = await nextKey(confirmable(intent, operation) ? ["y", "n", "q"] : ["n", "q"]);
       answered.add(intent.id);
       if (key === "q") return;
       if (key === "n") { output.write("Skipped. The intent expires on its own.\n"); continue; }
-      try { const result = await confirm(statusOptions.config, operator, intent.id); output.write(`Retained intent state: ${result.state}. No protected action was dispatched.\n`); }
+      try { const result = await confirm(statusOptions.config, operator, intent.id); output.write(`Retained intent state: ${clean(result.state)}. No protected action was dispatched.\n`); }
       catch (error) { output.write(`Confirmation failed: ${clean(error.message)}. The intent is retained for inspection; do not resubmit blindly.\n`); }
       line = "";
     }
