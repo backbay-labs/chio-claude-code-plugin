@@ -462,3 +462,19 @@ test("attaching a share replaces the not-yet-confirmed notice", { options }, asy
   const text = (await $.command.run(command("chio", ""))).text;
   expect(text).toContain("Original result attached to your message for Claude."); expect(text).not.toContain("not yet confirmed");
 });
+test("guidance cache is invalidated when connection or protected scope changes", { options }, async ($, on) => {
+  let live = false, value = projection(); const invalidated: string[] = [];
+  stub(on, () => "session-a", () => { if (!live) throw new Error("offline"); return value; });
+  on("ui.invalidate", ($, e) => { invalidated.push(e.event); return { value: undefined }; });
+  await $.command.run(command("chio-status"));
+  await $.prompt.context({ blocks: [] }); invalidated.length = 0;
+  live = true; await $.command.run(command("chio-status"));
+  expect(invalidated).toContain("prompt.context"); invalidated.length = 0;
+  value = { ...value, protectedTools: ["read_file"] }; await $.command.run(command("chio-status"));
+  expect(invalidated).toContain("prompt.context"); invalidated.length = 0;
+  await $.command.run(command("chio-status")); expect(invalidated.includes("prompt.context")).toBe(false);
+  live = false; await $.command.run(command("chio-status"));
+  expect(invalidated).toContain("prompt.context");
+  const result = await $.prompt.context({ blocks: [{ name: "chio", text: "old authority" }, { name: "other", text: "keep" }] });
+  expect(result.blocks).toEqual([{ name: "other", text: "keep" }]);
+});
