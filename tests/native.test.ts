@@ -2,6 +2,7 @@ import { expect, mock, test } from "claude-code/testing";
 import type { On, CommandRunInput, HttpResponse } from "claude-code";
 import type { ControlStatus } from "../types/control.js";
 import { transitions } from "../hooks/native/projection.ts";
+import { outcomeHash, shareText } from "../hooks/native/workflow.ts";
 
 const options = { control_url: "http://127.0.0.1:12345", control_token: "a".repeat(64) };
 function command(name: string, args = ""): CommandRunInput { return { command: name, args, origin: { kind: "composer" }, presentation: { isFullscreen: false, columns: 80 } }; }
@@ -331,3 +332,46 @@ for (const interactive of [true, false]) {
     expect(toasts).toEqual(interactive ? ["Chio · 1 action awaiting review · /chio-review"] : []);
   });
 }
+const submit = (text: string) => ({ text, wait: false, origin: { kind: "composer" as const } });
+const continuationId = "12345678-1234-4123-8123-123456789abc";
+async function readyOutcome(result: unknown) {
+  const outcome = { state: "completed", evidence: "verified", requestId: "request-a", result, receipt: { id: "receipt-a" } };
+  return { schema: "chio.control.outcome.v1", ready: true, continuation: { id: continuationId, requestId: "request-a", state: "completed", delivery: "pending" }, outcome, outcomeHash: await outcomeHash(outcome), challenge: "c".repeat(64) };
+}
+function outcomeStub(on: On, getSession: () => string, ready: Record<string, unknown>) {
+  const value = projection(); value.continuations = [{ id: continuationId, requestId: "request-a", state: "completed", delivery: "pending" }];
+  on("session.id", () => ({ value: getSession() }));
+  on("ui.close", () => ({ value: undefined }));
+  on("command.register", ($, e) => ({ value: { command: e.name } }));
+  on("prompt.submit", ($, e) => ({ text: e.text, ...(e.context ? { context: e.context } : {}) }));
+  on("http.fetch", ($, e) => {
+    if (e.url.endsWith("/outcome")) return { value: { status: 200, ok: true, headers: {}, text: JSON.stringify(ready) } };
+    if (e.url.endsWith("/ack")) return { value: { status: 200, ok: true, headers: {}, text: JSON.stringify({ acknowledged: true, requestId: "request-a", channel: "native_control" }) } };
+    return { value: { status: 200, ok: true, headers: {}, text: JSON.stringify({ ...value, sessionId: getSession(), checkedAt: Date.now() }) } };
+  });
+}
+test("a received continued result is attached to the next prompt exactly once", { options }, async ($, on) => {
+  const ready = await readyOutcome({ written: "/protected/out.txt" });
+  outcomeStub(on, () => "session-a", ready);
+  expect((await $.command.run(command("chio-outcome", continuationId))).text).toContain("next message");
+  const first = await $.prompt.submit(submit("what happened?"));
+  expect(first.context?.length).toBe(1);
+  expect(first.context?.[0]).toContain(`[chio-outcome sha256:${ready.outcomeHash}]`);
+  expect(first.context?.[0]).toContain("receipt receipt-a");
+  const second = await $.prompt.submit(submit("and now?"));
+  expect(second.context ?? []).toEqual([]);
+});
+test("a queued result is dropped when the session changes", { options }, async ($, on) => {
+  let session = "session-a";
+  outcomeStub(on, () => session, await readyOutcome({ ok: true }));
+  await $.command.run(command("chio-outcome", continuationId));
+  session = "session-b"; await $.command.run(command("chio-status"));
+  expect((await $.prompt.submit(submit("next"))).context ?? []).toEqual([]);
+});
+test("shared text is bounded and sanitized", () => {
+  const text = shareText({ continuationId, requestId: "request-a", tool: "write_file", receiptId: "receipt-a", outcomeHash: "d".repeat(64), result: { body: "x".repeat(10_000) + "\u001b[2J" } });
+  expect(text).toContain("… (truncated)");
+  expect(text.includes("\u001b")).toBe(false);
+  const escaped = shareText({ continuationId, requestId: "request-a", receiptId: "receipt-a", outcomeHash: "d".repeat(64), result: "\u001b]52;c;payload\u0007" });
+  expect(escaped.includes("\u001b")).toBe(false);
+});

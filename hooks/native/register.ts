@@ -2,7 +2,7 @@ import type { EngineInterface, PluginOptions, Register } from "claude-code";
 import type { ControlStatus, IntentKind, OperationView } from "../../types/control.js";
 import type { Chio } from "../../types/chio.js";
 import type { ExplanationView, ContinuationView } from "../../types/workflow.js";
-import { controlOrigin, outcomeHash, taskText } from "./workflow.ts";
+import { controlOrigin, outcomeHash, shareText, taskText, type ShareRecord } from "./workflow.ts";
 import { diagnosticText, operationText, outcomeRequestId, parseStatus, guidanceText, safeText, statusLine, transitions, type NoticeState } from "./projection.ts";
 
 let sessionId = "";
@@ -13,6 +13,7 @@ let interactive = false;
 let notice = "";
 let generation = 0;
 let notices: NoticeState = { authorityWarned: false };
+let shareQueue: ShareRecord[] = [];
 let pane: "operations" | "task" = "operations";
 let refreshRead: { sessionId: string; generation: number; promise: Promise<ControlStatus | null> } | null = null;
 const PANE_OPERATIONS = 12;
@@ -20,7 +21,7 @@ const PANE_OPERATIONS = 12;
 async function refresh($: EngineInterface, options: PluginOptions): Promise<ControlStatus | null> {
   const actual = await $.session.id();
   if (actual !== sessionId) {
-    sessionId = actual; pane = "operations"; status = null; selectedId = null; showDetails = false; notice = ""; generation += 1; notices = { authorityWarned: false };
+    sessionId = actual; pane = "operations"; status = null; selectedId = null; showDetails = false; notice = ""; generation += 1; notices = { authorityWarned: false }; shareQueue = [];
     await $.ui.close({ id: "chio" });
   }
   const thisGeneration = generation;
@@ -69,6 +70,11 @@ async function open($: EngineInterface, options: PluginOptions, requestId?: stri
   if (interactive) await $.ui.open({ id: "chio", title: "Chio", focus: true, closeOnEscape: true });
   return text;
 }
+function queueShare(continuationId: string, received: { requestId: string; result: unknown; receiptId: string; outcomeHash: string }) {
+  const tool = status?.operations.find(op => op.requestId === received.requestId)?.tool;
+  shareQueue = [...shareQueue.filter(record => record.continuationId !== continuationId), { continuationId, requestId: received.requestId, ...(tool ? { tool } : {}), receiptId: received.receiptId, outcomeHash: received.outcomeHash, result: received.result }];
+}
+const SHARE_NOTICE = "Original result received through native control. Claude receives it with your next message; model delivery is not yet confirmed.";
 export const register: Register = (on, options) => {
   on("engine.create", async (_, e, next) => {
     const $ = await next(e);
@@ -105,7 +111,7 @@ export const register: Register = (on, options) => {
           || value.outcome.requestId !== value.continuation.requestId || !/^[0-9a-f]{64}$/.test(value.challenge) || await outcomeHash(value.outcome) !== value.outcomeHash) throw new Error("outcome changed; no acknowledgement sent");
         const ack = (await send("/continuations/" + encodeURIComponent(input.continuationId) + "/ack", { challenge: value.challenge, outcomeHash: value.outcomeHash })).value;
         if (ack.acknowledged !== true || ack.requestId !== value.outcome.requestId || ack.channel !== "native_control") throw new Error("native delivery unconfirmed");
-        return { ready: true as const, requestId: value.outcome.requestId as string, result: value.outcome.result as unknown, receiptId: value.outcome.receipt.id as string, channel: "native_control" as const };
+        return { ready: true as const, requestId: value.outcome.requestId as string, result: value.outcome.result as unknown, receiptId: value.outcome.receipt.id as string, outcomeHash: value.outcomeHash as string, channel: "native_control" as const };
       },
     };
     return { ...$, chio };
@@ -135,7 +141,7 @@ export const register: Register = (on, options) => {
 
   on("classic.SessionStart", async ($, e, next) => {
     // /clear, resume and fork do not fire session.start; always re-resolve the host id.
-    status = null; selectedId = null; showDetails = false; generation += 1; notices = { authorityWarned: false };
+    status = null; selectedId = null; showDetails = false; generation += 1; notices = { authorityWarned: false }; shareQueue = [];
     await refresh($, options); return next(e);
   }).catch(($, e, next) => next(e));
 
@@ -187,8 +193,8 @@ export const register: Register = (on, options) => {
   on("command.run", { command: "chio-outcome" }, async ($, e) => {
     const result = await $.chio.receiveOutcome({ continuationId: e.args.trim() });
     if (!result.ready) return { text: "Original continuation " + result.continuation.state + ". Its fence remains intact." };
-    notice = "Original result received through native control. This does not claim delivery to the model.";
-    await refresh($, options); return { text: notice + "\n" + safeText(JSON.stringify(result.result, null, 2)) + "\nReceipt: " + safeText(result.receiptId) };
+    await refresh($, options); queueShare(e.args.trim(), result); notice = SHARE_NOTICE;
+    return { text: notice + "\n" + safeText(JSON.stringify(result.result, null, 2)) + "\nReceipt: " + safeText(result.receiptId) };
   }).catch(() => ({ text: "Original result or its delivery remains unresolved. Inspect retained evidence; do not dispatch again.", exitCode: 1 }));
   on("command.run", { command: "chio-why" }, async ($, e) => {
     const reason = await $.chio.explain({ requestId: e.args.trim() });
@@ -205,6 +211,11 @@ export const register: Register = (on, options) => {
     const text = guidanceText(status);
     if (!text) return result;
     return { ...result, blocks: [...result.blocks.filter(block => block.name !== "chio"), { name: "chio", text }] };
+  }).catch(($, e, next) => next(e));
+  on("prompt.submit", async ($, e, next) => {
+    if (!shareQueue.length || await $.session.id() !== sessionId) return next(e);
+    const shared = shareQueue; shareQueue = [];
+    return next({ ...e, context: [...(e.context ?? []), ...shared.map(shareText)] });
   }).catch(($, e, next) => next(e));
 
   on("ui.render", { component: "AbovePrompt" }, async ($, e, next) => {
@@ -263,10 +274,12 @@ export const register: Register = (on, options) => {
       $.ui.invalidate("ui.render");
     } }));
     if (continuation && continuation.state !== "unknown" && continuation.delivery !== "confirmed") rows.push(Button({ key: "outcome", label: "Receive original continuation result", onPress: async () => {
-      try { const result = await $.chio.receiveOutcome({ continuationId: continuation.id }); notice = result.ready ? "Result received through native control (model delivery not claimed).\n" + safeText(JSON.stringify(result.result, null, 2)) : "Original continuation " + result.continuation.state + "; fence retained."; await refresh($, options); }
+      try { const result = await $.chio.receiveOutcome({ continuationId: continuation.id }); await refresh($, options); if (result.ready) queueShare(continuation.id, result); notice = result.ready ? SHARE_NOTICE + "\n" + safeText(JSON.stringify(result.result, null, 2)) : "Original continuation " + result.continuation.state + "; fence retained."; }
       catch { notice = "Original result delivery unresolved; do not dispatch again."; }
       $.ui.invalidate("ui.render");
     } }));
+    if (continuation?.modelContext === "confirmed") rows.push(Text({ children: "Shared with Claude · relay-confirmed" }));
+    else if (continuation && shareQueue.some(record => record.continuationId === continuation.id)) rows.push(Text({ dimColor: true, children: "Queued for your next message to Claude" }));
     if (operation) {
       rows.push(Button({ key: "details", label: showDetails ? "Hide evidence and authority details" : "Evidence and authority details", onPress: () => { showDetails = !showDetails; $.ui.invalidate("ui.render"); } }));
       if (showDetails) rows.push(Text({ children: operationText(operation) }));

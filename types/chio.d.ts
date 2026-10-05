@@ -84,6 +84,7 @@ export interface ChioContinuationView {
   requestId: string;
   state: "submitted" | "completed" | "unknown";
   delivery: "pending" | "confirmed";
+  modelContext?: "confirmed";
   receiptConfirmed?: boolean;
   outcomeHash?: string;
 }
@@ -112,5 +113,5 @@ export interface Chio {
   receiveOutcome(input: { continuationId: string }): Promise<ChioReceivedOutcome>;
 }
 export type ChioReceivedOutcome = { ready: false; continuation: ChioContinuationView }
-  | { ready: true; requestId: string; result: unknown; receiptId: string; channel: "native_control" };
+  | { ready: true; requestId: string; result: unknown; receiptId: string; outcomeHash: string; channel: "native_control" };
 declare module "claude-code" { interface EngineInterface { chio: Chio } }

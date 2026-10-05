@@ -40,7 +40,7 @@ export function parseStatus(text: string, sessionId: string): ControlStatus {
       || [t.scope.resources, t.scope.destinations, t.scope.restrictions].some(a => !Array.isArray(a) || a.some(v => typeof v !== "string")))) throw new Error("invalid task contract");
   }
   if (value.continuations && (!Array.isArray(value.continuations) || value.continuations.length > 1000 || value.continuations.some(c => !/^[0-9a-f-]{36}$/.test(c.id)
-    || typeof c.requestId !== "string" || !["submitted", "completed", "unknown"].includes(c.state) || !["pending", "confirmed"].includes(c.delivery)))) throw new Error("invalid continuation projection");
+    || typeof c.requestId !== "string" || !["submitted", "completed", "unknown"].includes(c.state) || !["pending", "confirmed"].includes(c.delivery) || (c.modelContext !== undefined && c.modelContext !== "confirmed")))) throw new Error("invalid continuation projection");
   return value;
 }
 
