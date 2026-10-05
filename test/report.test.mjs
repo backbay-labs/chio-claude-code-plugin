@@ -19,6 +19,20 @@ test("the report renders every section and escapes table cells", () => {
   for (const heading of ["# Chio session report", "## Operations", "## Decisions", "## Continuations", "## Task", "## Model usage", "## What this report is"]) assert.ok(text.includes(heading), heading);
   assert.ok(text.includes("request-b\\|pipe")); assert.ok(text.includes("receipt-b")); assert.ok(text.includes("reconcile\\_original"));
   assert.ok(text.includes("claude-sonnet-5-5")); assert.match(text, /1 request/);
+  assert.ok(text.includes("this report does not re-verify it")); assert.ok(text.includes("`launch.json`")); assert.ok(text.includes("| confirmed |"));
+});
+test("launcher-only facts are not presented as findings unless the projection carries them", () => {
+  const bare = [{ id: "c1", requestId: "r", state: "completed", delivery: "confirmed" }];
+  const text = renderSessionReport({ status: { ...status, scope: "kernel_mcp", operations: [{ ...status.operations[1], deliveryChannel: undefined }, status.operations[0]] }, continuations: bare, generatedAt: 0 });
+  assert.ok(text.includes("not recorded in the journal (the launcher holds it)")); assert.ok(text.includes("not available to the operator report"));
+  assert.ok(text.includes("confirmed \\(channel not recorded\\)")); assert.ok(!text.includes("kernel\\_mcp"));
+  assert.ok(renderSessionReport({ status, continuations: [], generatedAt: 0 }).includes("isolated\\_kernel\\_mcp"));
+  assert.ok(renderSessionReport({ status, continuations: [], generatedAt: 0 }).includes("native\\_control"));
+});
+test("model usage counts every forwarded request and names unknown usage and the source", () => {
+  const events = [{ requestClass: "conversation", forwarded: true, model: "m", usage: { input_tokens: 4, output_tokens: 1 } }, { requestClass: "conversation", forwarded: true, model: "m" }, { requestClass: "conversation", forwarded: false }];
+  const text = renderSessionReport({ status, continuations: [], generatedAt: 0, relayEvents: events });
+  assert.match(text, /2 requests · 4 in · 1 out/); assert.match(text, /1 with unknown usage/); assert.match(text, /supplied by the operator/);
 });
 test("the report omits model usage without relay events and never prints secrets it was not given", () => {
   const text = renderSessionReport({ status, continuations: [], generatedAt: 0 });

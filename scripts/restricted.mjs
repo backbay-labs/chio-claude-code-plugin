@@ -9,7 +9,7 @@ import { spawn, execFileSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
 const scriptDirectory=dirname(realpathSync(fileURLToPath(import.meta.url)));
 const {buildSandboxPolicy,requireSessionCredential}=await import(pathToFileURL(join(scriptDirectory,"sandbox.mjs")).href);
-const {startModelRelay}=await import(pathToFileURL(join(scriptDirectory,"model-relay.mjs")).href);
+const {startModelRelay,parseTokenBudget}=await import(pathToFileURL(join(scriptDirectory,"model-relay.mjs")).href);
 const {observeModelContext}=await import(pathToFileURL(join(scriptDirectory,"model-context.mjs")).href);
 const {createControlTransport}=await import(pathToFileURL(join(scriptDirectory,"control-transport.mjs")).href);
 const {stageNativeMod}=await import(pathToFileURL(join(scriptDirectory,"mod-profile.mjs")).href);
@@ -71,8 +71,7 @@ async function main() {
     opts[args[i]] = args[i+1];
   }
   for (const key of allowed) if (!opts[key]) throw new Error(`${key} is required`);
-  const tokenBudget = opts["--model-token-budget"] === undefined ? undefined : Number(opts["--model-token-budget"]);
-  if (tokenBudget !== undefined && (!Number.isSafeInteger(tokenBudget) || tokenBudget < 1)) throw new Error("--model-token-budget must be a positive integer");
+  const tokenBudget = parseTokenBudget(opts["--model-token-budget"]);
   const mode = opts["--mode"] ?? "print";
   if (!["print", "interactive", "mod-print"].includes(mode)) throw new Error("mode must be print, interactive, or mod-print");
   const native = mode !== "print";

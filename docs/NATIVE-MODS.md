@@ -194,8 +194,9 @@ explicitly reports time-range scope, rather than claiming session filtering.
 
 `node scripts/control.mjs report --gateway-config CONFIG --output NEW_FILE.md`
 writes a Markdown report of the session: authority, operations, decisions,
-continuations, task evidence and, with `--relay-events PROFILE/control/model-relay.json`,
-relay-metered model usage. It references receipts by id and does not verify
+continuations, task evidence and, with `--relay-events CONTROL/model-relay.json` (the launch's control directory,
+recorded as `control` in `launch.json`; not a `control` folder inside the
+profile), relay-metered model usage from that operator-supplied file. It references receipts by id and does not verify
 them, and it never includes credentials or raw resource results.
 
 ## Protected native launcher candidate
@@ -270,7 +271,12 @@ provider-reported token usage in `model-relay.json` and totals in `exit.json`
 the provider's reported counts, not billing records, and are separate from
 kernel tool budgets. `--model-token-budget N` stops new conversation requests
 once input, output and cache tokens together reach N; requests already in
-flight finish, and token-count requests are not refused.
+flight finish and can push the total past N (a soft stop), and token-count
+requests are not refused. Interrupted streams count the usage reported before
+the interruption (`usageComplete: false`). A budget stop ends the launch with
+exit code 3 (`protected-work-incomplete`) and `modelUsage.budgetReached: true`.
+Earlier tool results carried in the refused request are still acknowledged; the
+refused request records no model context.
 
 ## Evidence and recovery
 

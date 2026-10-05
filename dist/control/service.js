@@ -8946,7 +8946,7 @@ function validateTemplate(value) {
       } catch {
         base = void 0;
       }
-      if (!base || typeof c.repository !== "string" || !/^[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/.test(c.repository) || base.protocol !== "https:" && !(base.protocol === "http:" && base.hostname === "127.0.0.1") || base.username || base.password || base.search || base.hash || c.checks !== void 0 && (!Array.isArray(c.checks) || !c.checks.length || c.checks.length > 64 || c.checks.some((name) => typeof name !== "string" || !name || name.length > 256)) || c.tokenFile !== void 0 && (typeof c.tokenFile !== "string" || resolve3(c.tokenFile) !== c.tokenFile)) throw new Error("invalid GitHub collector");
+      if (!base || typeof c.repository !== "string" || !/^[A-Za-z0-9-]{1,39}\/(?!\.\.?$)[A-Za-z0-9._-]{1,100}$/.test(c.repository) || base.protocol !== "https:" && !(base.protocol === "http:" && base.hostname === "127.0.0.1") || base.username || base.password || base.search || base.hash || c.checks !== void 0 && (!Array.isArray(c.checks) || !c.checks.length || c.checks.length > 64 || c.checks.some((name) => typeof name !== "string" || !name || name.length > 256)) || c.tokenFile !== void 0 && (typeof c.tokenFile !== "string" || resolve3(c.tokenFile) !== c.tokenFile)) throw new Error("invalid GitHub collector");
     } else throw new Error("unsupported evidence collector");
   }
   return value;
@@ -9256,7 +9256,7 @@ function renderSessionReport({ status, continuations, generatedAt, relayEvents }
     "# Chio session report",
     "",
     `- Session: ${md(status.sessionId)}`,
-    `- Scope: ${md(status.scope)}`,
+    `- Scope: ${["isolated_kernel_mcp", "demo_fixture"].includes(status.scope) ? md(status.scope) : "not recorded in the journal (the launcher holds it)"}`,
     `- Authority: ${md(status.authority)} \xB7 expires ${time(status.authorityExpiresAt * 1e3)}`,
     `- Projection revision: ${md(status.revision)}`,
     `- Dispatch fence: ${status.fenced ? "retained" : "clear"}`,
@@ -9274,9 +9274,11 @@ function renderSessionReport({ status, continuations, generatedAt, relayEvents }
         op.nextAction,
         op.receiptId,
         op.acknowledged ? "confirmed" : "unconfirmed",
-        op.hostDeliveryConfirmed ? op.deliveryChannel ?? "confirmed" : "unconfirmed"
+        op.hostDeliveryConfirmed ? op.deliveryChannel ?? "confirmed (channel not recorded)" : "unconfirmed"
       ])
     ),
+    "",
+    "Evidence: verified means the gateway checked the receipt signature against the session's pinned signers; this report does not re-verify it.",
     "",
     "## Decisions",
     "",
@@ -9284,7 +9286,7 @@ function renderSessionReport({ status, continuations, generatedAt, relayEvents }
     "",
     "## Continuations",
     "",
-    ...continuations.length ? table(["Continuation", "Original request", "State", "Delivery", "Model context"], continuations.map((c) => [c.id, c.requestId, c.state, c.delivery, c.modelContext ?? "not confirmed"])) : ["No continuations retained."],
+    ...continuations.length ? table(["Continuation", "Original request", "State", "Delivery", "Model context"], continuations.map((c) => [c.id, c.requestId, c.state, c.delivery, c.modelContext ?? "not available to the operator report"])) : ["No continuations retained."],
     ""
   ];
   const task = status.workflow?.task;
@@ -9298,22 +9300,24 @@ function renderSessionReport({ status, continuations, generatedAt, relayEvents }
   else lines.push("No task contract is bound to this session.");
   lines.push("");
   if (Array.isArray(relayEvents)) {
-    const forwarded = relayEvents.filter((e) => e?.requestClass === "conversation" && e.forwarded && e.usage);
-    const sum = (key) => forwarded.reduce((total, e) => total + (Number.isSafeInteger(e.usage[key]) ? e.usage[key] : 0), 0);
+    const forwarded = relayEvents.filter((e) => e?.requestClass === "conversation" && e.forwarded);
+    const unknown = forwarded.filter((e) => !e.usage).length;
+    const sum = (key) => forwarded.reduce((total, e) => total + (Number.isSafeInteger(e.usage?.[key]) ? e.usage[key] : 0), 0);
     const models = [...new Set(forwarded.map((e) => md(e.model)))];
     lines.push(
       "## Model usage",
       "",
-      `- Relay-metered: ${forwarded.length} request${forwarded.length === 1 ? "" : "s"} \xB7 ${sum("input_tokens")} in \xB7 ${sum("output_tokens")} out \xB7 ${sum("cache_read_input_tokens")} cache read \xB7 ${sum("cache_creation_input_tokens")} cache write tokens`,
+      `- Relay-metered: ${forwarded.length} request${forwarded.length === 1 ? "" : "s"} \xB7 ${sum("input_tokens")} in \xB7 ${sum("output_tokens")} out \xB7 ${sum("cache_read_input_tokens")} cache read \xB7 ${sum("cache_creation_input_tokens")} cache write tokens${unknown ? ` \xB7 ${unknown} with unknown usage` : ""}`,
       `- Models: ${models.join(", ") || "\u2014"}`,
       "- Provider-reported counts, not billing records.",
+      "- Source: the relay events file supplied by the operator; this report does not authenticate it.",
       ""
     );
   }
   lines.push(
     "## What this report is",
     "",
-    "Generated from the operator's private journal and the session's authorized projection. Receipts are referenced by id; this report does not verify them. Verify receipts with the kernel's evidence tools. It contains no credentials, approval tokens or raw resource results.",
+    "Generated from the operator's private journal and the session's authorized projection. Receipts are referenced by id; this report does not verify them. Verify receipts with the kernel's evidence tools. Launcher-held facts (scope, relay model context, budget refusals) appear in the launch profile's `launch.json` and `exit.json`. It contains no credentials, approval tokens or raw resource results.",
     ""
   );
   return lines.join("\n");

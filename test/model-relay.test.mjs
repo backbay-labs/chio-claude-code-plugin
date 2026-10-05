@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { validateModelRequest, startModelRelay, usageMeter } from "../scripts/model-relay.mjs";
+import { validateModelRequest, startModelRelay, usageMeter, parseTokenBudget } from "../scripts/model-relay.mjs";
 import { createServer } from "node:http";
 const model = "claude-sonnet-5-5";
 function request(messages) { return { model, max_tokens: 100, system: "fixed instructions", messages, tools: [{ name: "mcp__chio__read", input_schema: { type: "object" } }] }; }
@@ -110,4 +110,49 @@ test("the relay meters forwarded conversations and stops new ones at the token b
   assert.equal(responses, 1);
   assert.equal((await send("/v1/messages/count_tokens")).status, 200);
   assert.equal(relay.events.find(e => e.forwarded && e.requestClass === "conversation").usage.input_tokens, 60);
+});
+
+test("a budget refusal still acknowledges earlier tool results but never records model context", async t => {
+  const server = createServer(async (req, res) => { for await (const chunk of req) void chunk; res.writeHead(200, { "Content-Type": "application/json" }); res.end(JSON.stringify({ usage: { input_tokens: 80, output_tokens: 30 } })); });
+  await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
+  const results = [], models = [];
+  const relay = await startModelRelay({ upstreamBaseUrl: `http://127.0.0.1:${server.address().port}`, apiKey: "upstream-fixture", model, toolNames: [...tools], tokenBudget: 100, onToolResults: async messages => { results.push(messages); }, onModelRequest: async body => { models.push(body); } });
+  t.after(async () => { await relay.close(); await new Promise(resolve => { server.close(resolve); server.closeAllConnections(); }); });
+  const send = messages => fetch(`http://127.0.0.1:${relay.port}/v1/messages`, { method: "POST", headers: { "x-api-key": relay.token, "Content-Type": "application/json" }, body: JSON.stringify(request(messages)) });
+  assert.equal((await send([{ role: "user", content: "task" }])).status, 200);
+  assert.equal(results.length, 1); assert.equal(models.length, 1);
+  const history = [{ role: "user", content: "task" }, { role: "assistant", content: [{ type: "tool_use", id: "tu1", name: "mcp__chio__read", input: {} }] }, { role: "user", content: [{ type: "tool_result", tool_use_id: "tu1", content: "{}" }] }];
+  assert.equal((await send(history)).status, 403);
+  assert.equal(results.length, 2); assert.deepEqual(results[1], history); assert.equal(models.length, 1);
+  assert.equal(relay.events.at(-1).forwarded, false);
+});
+test("an interrupted stream still counts the usage already reported and a later budget refuses", async t => {
+  const server = createServer(async (req, res) => {
+    for await (const chunk of req) void chunk;
+    res.writeHead(200, { "Content-Type": "text/event-stream" });
+    res.write(`event: message_start\ndata: ${JSON.stringify({ type: "message_start", message: { usage: { input_tokens: 500, output_tokens: 1, cache_read_input_tokens: 900, cache_creation_input_tokens: 0 } } })}\n\n`);
+  });
+  await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
+  const relay = await startModelRelay({ upstreamBaseUrl: `http://127.0.0.1:${server.address().port}`, apiKey: "upstream-fixture", model, toolNames: [...tools], tokenBudget: 1000 });
+  t.after(async () => { await relay.close(); await new Promise(resolve => { server.close(resolve); server.closeAllConnections(); }); });
+  const ac = new AbortController();
+  const res = await fetch(`http://127.0.0.1:${relay.port}/v1/messages`, { method: "POST", signal: ac.signal, headers: { "x-api-key": relay.token, "Content-Type": "application/json" }, body: JSON.stringify({ ...request([{ role: "user", content: "x" }]), stream: true }) });
+  await res.body.getReader().read(); ac.abort();
+  for (let i = 0; i < 50 && relay.usage().requests === 0; i++) await new Promise(resolve => setTimeout(resolve, 20));
+  const usage = relay.usage(); assert.equal(usage.requests, 1); assert.equal(usage.inputTokens, 500); assert.equal(usage.cacheReadInputTokens, 900); assert.equal(usage.budgetReached, true);
+  const event = relay.events[0]; assert.equal(event.usageComplete, false); assert.equal(event.usage.input_tokens, 500);
+  const next = await fetch(`http://127.0.0.1:${relay.port}/v1/messages`, { method: "POST", headers: { "x-api-key": relay.token, "Content-Type": "application/json" }, body: JSON.stringify(request([{ role: "user", content: "y" }])) });
+  assert.equal(next.status, 403);
+});
+test("a completed response marks usageComplete", async t => {
+  const server = createServer(async (req, res) => { for await (const chunk of req) void chunk; res.writeHead(200, { "Content-Type": "application/json" }); res.end(JSON.stringify({ usage: { input_tokens: 1, output_tokens: 1 } })); });
+  await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
+  const relay = await startModelRelay({ upstreamBaseUrl: `http://127.0.0.1:${server.address().port}`, apiKey: "upstream-fixture", model, toolNames: [...tools] });
+  t.after(async () => { await relay.close(); await new Promise(resolve => { server.close(resolve); server.closeAllConnections(); }); });
+  await (await fetch(`http://127.0.0.1:${relay.port}/v1/messages`, { method: "POST", headers: { "x-api-key": relay.token, "Content-Type": "application/json" }, body: JSON.stringify(request([{ role: "user", content: "x" }])) })).text();
+  assert.equal(relay.events[0].usageComplete, true);
+});
+test("the token budget parser accepts only positive safe integers", () => {
+  assert.equal(parseTokenBudget(undefined), undefined); assert.equal(parseTokenBudget("50000"), 50000);
+  for (const bad of ["0", "-1", "1.5", "abc", "", "1e3", "9007199254740993"]) assert.throws(() => parseTokenBudget(bad), /positive integer/, bad);
 });

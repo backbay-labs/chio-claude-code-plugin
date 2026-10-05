@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
-import { mkdtempSync, readFileSync, readdirSync, writeFileSync, rmSync, statSync } from "node:fs";
+import { mkdtempSync, readFileSync, readdirSync, writeFileSync, rmSync, statSync, symlinkSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { createGateway, operationKey } from "../dist/gateway.js";
@@ -319,4 +319,23 @@ test("control report relay-events and option scoping", async t => {
   assert.throws(() => statSync(refused));
   await assert.rejects(operatorMain(["report", "--gateway-config", configPath, "--output", refused, "--credential-output", join(f.root, "c.json")]), /credential-output/);
   await assert.rejects(operatorMain(["status", "--gateway-config", configPath, "--output", refused]), /only for report/);
+});
+
+test("the control status passes the relay model usage through when configured and omits it otherwise", async t => {
+  const f = await fixture(t);
+  assert.equal("modelUsage" in await (await f.get()).json(), false);
+  const usage = { model: "claude-sonnet-5-5", requests: 2, inputTokens: 10, outputTokens: 5, cacheCreationInputTokens: 1, cacheReadInputTokens: 3, budget: 100, budgetReached: false };
+  const second = await startControlServer({ ...f.options, modelUsage: () => usage });
+  t.after(() => second.close());
+  const body = await (await fetch(`${second.url}/sessions/${f.config.sessionId}/status`, { headers: { Authorization: `Bearer ${second.token}` } })).json();
+  assert.deepEqual(body.modelUsage, usage);
+});
+test("control report refuses a symlinked relay events file", async t => {
+  const f = await fixture(t); const now = Math.floor(Date.now() / 1000);
+  const prepared = { ...f.config, sessionCredential: { schema: "chio.mcp.session-credential.v1", sessionId: f.config.execution.sessionId,
+    subjectKey: f.config.execution.subjectKey, capabilityIds: [f.config.execution.capabilityId], serverId: f.config.execution.serverId,
+    endpointPath: "/mcp", allowedTools: ["write_file"], issuedAt: now, expiresAt: now + 600 } };
+  const configPath = join(f.root, "link-config.json"); writeFileSync(configPath, JSON.stringify(prepared), { mode: 0o600 });
+  const real = join(f.root, "real-events.json"), link = join(f.root, "link-events.json"); writeFileSync(real, "[]"); symlinkSync(real, link);
+  await assert.rejects(operatorMain(["report", "--gateway-config", configPath, "--output", join(f.root, "l.md"), "--relay-events", link]), /relay events must be a regular file/);
 });

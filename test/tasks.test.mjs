@@ -123,7 +123,7 @@ function githubSource(t, respond) {
 const run = (name, sha, status, conclusion) => ({ id: name.length, name, head_sha: sha, status, conclusion });
 test("GitHub checks bind every run to the exact commit and distinguish running, failed and passed", async t => {
   const f = fixture(t); const sha = f.value.artifact.digest; let runs = [];
-  const source = await githubSource(t, () => [200, { total_count: runs.length, check_runs: runs }]);
+  const source = await githubSource(t, url => { const name = new URL(url, "http://x").searchParams.get("check_name"); const part = runs.filter(r => r.name === name); return [200, { total_count: part.length, check_runs: part }]; });
   f.value.template = taskTemplate([{ id: "ci", title: "GitHub CI", collector: { kind: "github", repository: "owner/name", checks: ["build", "test"], apiBase: source.base } }]);
   createTask(f.path, f.value);
   runs = [run("build", sha, "completed", "success")];
@@ -135,8 +135,8 @@ test("GitHub checks bind every run to the exact commit and distinguish running, 
   runs = [run("build", sha, "completed", "success"), run("test", sha, "completed", "success"), run("lint", sha, "completed", "failure")];
   const passed = await collectRequirement(f.path, "ci");
   assert.equal(passed.requirements[0].state, "passed"); assert.equal(passed.readiness, "ready");
-  assert.match(passed.requirements[0].source, /^github check-runs · owner\/name · 2 checks · /);
-  assert.equal(source.seen.at(-1).url, `/repos/owner/name/commits/${sha}/check-runs?per_page=100`);
+  assert.ok(passed.requirements[0].source.startsWith(`github check-runs · ${source.base} · owner/name · 2 checks · `));
+  assert.deepEqual(source.seen.slice(-2).map(r => r.url), ["build", "test"].map(n => `/repos/owner/name/commits/${sha}/check-runs?check_name=${n}&filter=latest&per_page=100`));
   assert.equal(source.seen.at(-1).accept, "application/vnd.github+json"); assert.ok(source.seen.at(-1).agent);
 });
 test("GitHub evidence for another commit or too many runs is refused and records nothing", async t => {
@@ -177,4 +177,49 @@ test("GitHub evidence requires a git commit artifact and a valid collector", asy
   const value = { ...f.value, checkout: undefined, artifact: { kind: "sha256", digest: "b".repeat(64), label: "blob" }, template: taskTemplate([{ id: "ci", title: "CI", collector: { kind: "github", repository: "o/r" } }]) };
   const path = join(f.root, "sha-task.json"); createTask(path, value);
   await assert.rejects(collectRequirement(path, "ci"), /git commit artifact/);
+});
+
+test("named GitHub checks are requested one name at a time so large commits still work", async t => {
+  const f = fixture(t); const sha = f.value.artifact.digest;
+  const source = await githubSource(t, url => { const name = new URL(url, "http://x").searchParams.get("check_name"); return name === "needs space/1" ? [200, { total_count: 1, check_runs: [run(name, sha, "completed", "success")] }] : [200, { total_count: 150, check_runs: [] }]; });
+  f.value.template = taskTemplate([{ id: "ci", title: "GitHub CI", collector: { kind: "github", repository: "owner/name", checks: ["needs space/1"], apiBase: source.base } }]);
+  createTask(f.path, f.value);
+  assert.equal((await collectRequirement(f.path, "ci")).requirements[0].state, "passed");
+  assert.equal(source.seen.at(-1).url, `/repos/owner/name/commits/${sha}/check-runs?check_name=needs+space%2F1&filter=latest&per_page=100`);
+  f.value.template = taskTemplate([{ id: "ci", title: "GitHub CI", collector: { kind: "github", repository: "owner/name", checks: ["other"], apiBase: source.base } }]);
+  const g = fixture(t); g.value.template = f.value.template; createTask(g.path, g.value);
+  await assert.rejects(collectRequirement(g.path, "ci"), /more than 100 check runs; name the required checks/);
+});
+test("unnamed GitHub checks use an explicit latest filter, refuse over 100 and detect incomplete pages", async t => {
+  const f = fixture(t); const sha = f.value.artifact.digest; let body = { total_count: 150, check_runs: [] };
+  const source = await githubSource(t, () => [200, body]);
+  f.value.template = taskTemplate([{ id: "ci", title: "GitHub CI", collector: { kind: "github", repository: "owner/name", apiBase: source.base } }]);
+  createTask(f.path, f.value);
+  await assert.rejects(collectRequirement(f.path, "ci"), /more than 100 check runs; name the required checks/);
+  assert.equal(source.seen.at(-1).url, `/repos/owner/name/commits/${sha}/check-runs?filter=latest&per_page=100`);
+  body = { total_count: 2, check_runs: [run("a", sha, "completed", "success")] };
+  await assert.rejects(collectRequirement(f.path, "ci"), /incomplete GitHub check-runs page/);
+});
+test("a malformed token file and a control-character token fail with a fixed message that never echoes the token", async t => {
+  const f = fixture(t); const sha = f.value.artifact.digest;
+  const source = await githubSource(t, () => [200, { total_count: 1, check_runs: [run("build", sha, "completed", "success")] }]);
+  const tokenFile = join(f.root, "github-token.json");
+  f.value.template = taskTemplate([{ id: "ci", title: "GitHub CI", collector: { kind: "github", repository: "owner/name", tokenFile, apiBase: source.base } }]);
+  createTask(f.path, f.value);
+  for (const content of ["ghs_rawsecret_notjson", JSON.stringify({ token: "ghs_bad\r\nX-Evil: 1" }), JSON.stringify({ token: "x".repeat(1025) })]) {
+    writeFileSync(tokenFile, content, { mode: 0o600 });
+    await assert.rejects(collectRequirement(f.path, "ci"), error => { assert.equal(error.message, "invalid GitHub token file"); assert.ok(!error.message.includes("ghs_")); return true; });
+  }
+  assert.equal(source.seen.length, 0);
+});
+test("GitHub repository names reject dot segments and over-long names; the source records a non-default API origin", async t => {
+  const f = fixture(t);
+  for (const repository of ["owner/..", "owner/.", `owner/${"a".repeat(101)}`, `${"o".repeat(40)}/r`]) {
+    assert.throws(() => createTask(join(f.root, `bad-${Math.random()}.json`), { ...f.value, template: taskTemplate([{ id: "ci", title: "CI", collector: { kind: "github", repository } }]) }), /invalid GitHub collector/, repository);
+  }
+  const sha = f.value.artifact.digest;
+  const source = await githubSource(t, () => [200, { total_count: 1, check_runs: [run("build", sha, "completed", "success")] }]);
+  f.value.template = taskTemplate([{ id: "ci", title: "GitHub CI", collector: { kind: "github", repository: "owner/name.v2", apiBase: source.base } }]);
+  createTask(f.path, f.value);
+  assert.match((await collectRequirement(f.path, "ci")).requirements[0].source, new RegExp(`^github check-runs · ${source.base.replace(/[.]/g, "\\.")} · owner/name\\.v2 · 1 checks · `));
 });

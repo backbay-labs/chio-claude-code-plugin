@@ -54,6 +54,12 @@ export function validateModelRequest(body,model,toolNames,betaHeaders=[]) {
   // These values cannot authorize remote tools, references, files or background work.
   if (body.metadata!==undefined && (!object(body.metadata)||!keys(body.metadata,["user_id"]))) throw new Error("unsupported metadata");
 }
+/** Operator token budget from a command-line string: a positive safe integer, or undefined when absent. */
+export function parseTokenBudget(value) {
+  if (value===undefined) return undefined;
+  if (!/^[0-9]{1,16}$/.test(value) || !Number.isSafeInteger(Number(value)) || Number(value)<1) throw new Error("--model-token-budget must be a positive integer");
+  return Number(value);
+}
 const usageKeys=["input_tokens","output_tokens","cache_creation_input_tokens","cache_read_input_tokens"];
 /** Provider-reported usage read as response bytes pass through. Never changes the response. */
 export function usageMeter(contentType) {
@@ -87,6 +93,8 @@ export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.co
   const server=createServer(async (request,response)=>{
     const controller=new AbortController();response.on("close",()=>controller.abort());
     const event={method:request.method,path:request.url,forwarded:false};events.push(event);
+    let meter=null,counted=false;
+    const count=complete=>{ if(!meter||counted) return; counted=true; try { event.usage=meter.end(); } catch { event.usage=null; } event.usageComplete=complete; totals.requests++; if(event.usage) for(const key of usageKeys) totals[key]+=event.usage[key]; };
     try {
       const target=new URL(request.url,"http://127.0.0.1");
       if (request.method!=="POST" || !["/v1/messages","/v1/messages/count_tokens"].includes(target.pathname) || [...target.searchParams].some(([key,value])=>key!=="beta"||value!=="true") || request.headers["x-api-key"]!==token) throw new Error("model route refused");
@@ -114,7 +122,7 @@ export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.co
       event.messageEfforts=Array.isArray(body.messages)?body.messages.filter(message=>message.output_config!==undefined).map(message=>effort(message.output_config)?message.output_config.effort:"invalid"):[];
       event.thinkingType=body.thinking?.type;
       validateModelRequest(body,model,new Set(toolNames),betaHeaders);
-      if (tokenBudget!==undefined && event.requestClass==="conversation" && spent()>=tokenBudget) { const error=new Error("Operator model token budget reached"); error.budget=true; throw error; }
+      if (tokenBudget!==undefined && event.requestClass==="conversation" && spent()>=tokenBudget) { if(onToolResults) await onToolResults(body.messages); const error=new Error("Operator model token budget reached"); error.budget=true; throw error; }
       if(onModelRequest && target.pathname==="/v1/messages") await onModelRequest(body);
       if(onToolResults) await onToolResults(body.messages);
       event.topLevelKeys=Object.keys(body);event.toolNames=body.tools?.map(tool=>tool.name)??[];event.forwarded=true;
@@ -128,12 +136,14 @@ export async function startModelRelay({upstreamBaseUrl="https://api.anthropic.co
       }
       const result=await fetch(new URL(target.pathname+target.search,upstream),{method:"POST",redirect:"error",signal:controller.signal,headers,body:JSON.stringify(body)});
       event.status=result.status;
-      const meter=target.pathname==="/v1/messages"&&event.requestClass==="conversation"?usageMeter(result.headers.get("content-type")):null;
+      meter=target.pathname==="/v1/messages"&&event.requestClass==="conversation"?usageMeter(result.headers.get("content-type")):null;
       response.writeHead(result.status,{"content-type":result.headers.get("content-type")??"application/json"});
       if(result.body) for await(const data of result.body){ response.write(data); try { meter?.feed(data); } catch { /* metering never affects the response */ } }
       response.end();
-      if(meter){ event.model=body.model; try { event.usage=meter.end(); } catch { event.usage=null; } totals.requests++; if(event.usage) for(const key of usageKeys) totals[key]+=event.usage[key]; }
+      if(meter){ event.model=body.model; count(true); }
     } catch(error) {
+      // An interrupted forwarded stream still spent what the provider reported so far.
+      if(meter&&event.forwarded){ event.model=model; count(false); }
       event.failure=error.message;
       if(!response.headersSent) response.writeHead(403,{"content-type":"application/json"});
       response.end(JSON.stringify({type:"error",error:{type:"permission_error",message:error.budget?"Operator model token budget reached":"Operator model relay refused or failed"}}));

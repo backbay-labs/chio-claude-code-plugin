@@ -38,7 +38,9 @@ export async function main(args = process.argv.slice(2)) {
     let relayEvents;
     if (options["--relay-events"]) {
       const eventsPath = resolve(options["--relay-events"]);
-      if (lstatSync(eventsPath).size > 16 * 1024 * 1024) throw new Error("relay events file exceeds its bound");
+      const stat = lstatSync(eventsPath);
+      if (!stat.isFile()) throw new Error("relay events must be a regular file");
+      if (stat.size > 16 * 1024 * 1024) throw new Error("relay events file exceeds its bound");
       relayEvents = JSON.parse(readFileSync(eventsPath, "utf8"));
       if (!Array.isArray(relayEvents)) throw new Error("relay events must be a JSON array (model-relay.json)");
     }

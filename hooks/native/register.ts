@@ -312,5 +312,5 @@ export const register: Register = (on, options) => {
 };
 
 function modelUsageLine(u: NonNullable<ControlStatus["modelUsage"]>): string {
-  return `\nModel usage (relay-metered): ${u.requests} requests · ${u.inputTokens} in · ${u.outputTokens} out tokens${u.budget !== null ? ` · budget ${u.budget}${u.budgetReached ? " reached" : ""}` : ""}`;
+  return `\nModel usage (relay-metered): ${u.requests} requests · ${u.inputTokens} in · ${u.outputTokens} out · ${u.cacheReadInputTokens} cache read · ${u.cacheCreationInputTokens} cache write tokens${u.budget !== null ? ` · budget ${u.budget}${u.budgetReached ? " reached" : ""}` : ""}`;
 }
