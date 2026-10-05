@@ -519,3 +519,10 @@ test("the pane receive control queues the original result without redispatch", {
   expect((await $.prompt.submit(submit("next"))).context ?? []).toEqual([]);
   expect(acknowledgements).toBe(1); await ui.unmount();
 });
+test("native review text neutralizes bidi and invisible Unicode controls", { options }, async ($, on) => {
+  const value = projection(); value.operations[0]!.review!.arguments = { path: "safe\u202Etxt.exe\u200B\u{E0041}", content: "data" };
+  stub(on, () => "session-a", () => value);
+  const answer = await $.command.run(command("chio-review", "request-a"));
+  expect(/[\p{Cf}\u2028\u2029]/u.test(answer.text ?? "")).toBe(false);
+  expect(answer.text).toContain("safe�txt.exe��");
+});

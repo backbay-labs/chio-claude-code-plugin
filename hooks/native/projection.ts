@@ -45,7 +45,7 @@ export function parseStatus(text: string, sessionId: string): ControlStatus {
 }
 
 /** Control characters cannot turn retained input into terminal instructions. */
-export function safeText(value: unknown): string { return String(value).replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g, "�"); }
+export function safeText(value: unknown): string { return String(value).replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f\p{Cf}\u2028\u2029]/gu, "�"); }
 export function statusLine(status: ControlStatus | null, now: number): string {
   if (!status) return "Chio · disconnected · protection scope unavailable";
   const live = status.authority === "live" && now - status.checkedAt <= 10_000 && now < status.authorityExpiresAt * 1000;
