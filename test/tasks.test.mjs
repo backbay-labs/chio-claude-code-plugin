@@ -223,3 +223,30 @@ test("GitHub repository names reject dot segments and over-long names; the sourc
   createTask(f.path, f.value);
   assert.match((await collectRequirement(f.path, "ci")).requirements[0].source, new RegExp(`^github check-runs · ${source.base.replace(/[.]/g, "\\.")} · owner/name\\.v2 · 1 checks · `));
 });
+
+test("a failed GitHub check remains failed while other required checks are missing or running", async t => {
+  const f = fixture(t), sha = f.value.artifact.digest;
+  const failed = run("build", sha, "completed", "failure"), pending = run("test", sha, "in_progress", null);
+  for (const others of [[], [pending]]) {
+    const runs = [failed, ...others];
+    assert.equal(githubState({ total_count: runs.length, check_runs: runs }, sha, ["build", "test"]).state, "failed");
+    assert.equal(githubState({ total_count: runs.length, check_runs: runs }, sha).state, "failed");
+  }
+  const source = await githubSource(t, url => {
+    const name = new URL(url, "http://x").searchParams.get("check_name");
+    return [200, { total_count: name === "build" ? 1 : 0, check_runs: name === "build" ? [failed] : [] }];
+  });
+  f.value.template = taskTemplate([{ id: "ci", title: "CI", collector: { kind: "github", repository: "owner/name", checks: ["build", "test"], apiBase: source.base } }]);
+  createTask(f.path, f.value);
+  assert.equal((await collectRequirement(f.path, "ci")).requirements[0].state, "failed");
+});
+test("GitHub check names preserve reserved URL characters and Unicode", async t => {
+  const f = fixture(t), sha = f.value.artifact.digest, name = "test & lint?x=#✓";
+  const source = await githubSource(t, url => {
+    assert.equal(new URL(url, "http://x").searchParams.get("check_name"), name);
+    return [200, { total_count: 1, check_runs: [run(name, sha, "completed", "success")] }];
+  });
+  f.value.template = taskTemplate([{ id: "ci", title: "CI", collector: { kind: "github", repository: "owner/name", checks: [name], apiBase: source.base } }]);
+  createTask(f.path, f.value);
+  assert.equal((await collectRequirement(f.path, "ci")).requirements[0].state, "passed");
+});

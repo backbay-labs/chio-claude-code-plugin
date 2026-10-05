@@ -359,3 +359,9 @@ kernel signs with a key made for that run only, and every Chio surface says DEMO
 - `serverId: "demo-owner"` marks demo configurations. `scripts/restricted.mjs` and
   `control.mjs serve` refuse them; `control.mjs status`, `inbox`, `watch` and
   `report` label them `demo_fixture`.
+
+The parent model relay retains at most 1,024 request observations plus one
+limit record. Further requests are refused and the launch records incomplete
+work. Diagnostic field lists are bounded; response forwarding respects host
+backpressure. Start a newly bound launch after inspecting retained work if
+this per-launch request limit is reached.

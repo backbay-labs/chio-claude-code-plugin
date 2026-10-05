@@ -56,10 +56,12 @@ run's `head_sha` must equal the artifact digest, otherwise the evidence is
 refused as belonging to another artifact. `total_count` over 100 is refused
 ("name the required checks").
 
-State: any required check missing, or any considered check not `completed` →
-`running`; any considered conclusion in `failure`, `timed_out`, `cancelled`,
-`action_required`, `startup_failure` or `stale` → `failed`; otherwise
-`passed`. Source: `github check-runs · owner/name · <n> checks · <digest of the
+State: a known failed conclusion takes precedence over missing or pending
+checks. A completed named check must succeed; unnamed checks may also be
+neutral or skipped, but at least one must succeed for the collection to pass.
+With no known failure, missing or incomplete checks remain `running`.
+Only check runs are collected; legacy commit statuses are outside this collector.
+Source: `github check-runs · owner/name · <n> checks · <digest of the
 considered runs>`.
 
 Tests: loopback server returning check-runs for the exact commit (passed,

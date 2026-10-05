@@ -30,3 +30,10 @@ test("a body without a marker never reads the journal", () => {
   assert.equal(reads, 0); assert.deepEqual(recorded, []);
   assert.deepEqual([...extractMarkers(user(`x [chio-outcome sha256:${hash}]`))], [hash]);
 });
+test("the pinned host's trailing system context confirms the current prompt only", () => {
+  const context = { role: "system", content: [{ type: "text", text: `Skills and date\n\nprompt.submit hook additional context: [chio-outcome sha256:${hash}] fixture result\n\nToday's date is 2026-10-04.` }] };
+  const body = { messages: [{ role: "user", content: "what happened?" }, context] };
+  assert.deepEqual(confirmedModelContext(body, [confirmed]), ["request-a"]);
+  assert.deepEqual(confirmedModelContext({ messages: [...body.messages, { role: "assistant", content: "ok" }, { role: "user", content: "next" }] }, [confirmed]), []);
+  assert.deepEqual(confirmedModelContext({ messages: [context] }, [confirmed]), []);
+});

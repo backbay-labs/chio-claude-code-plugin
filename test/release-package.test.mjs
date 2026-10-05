@@ -1,0 +1,23 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
+import { fileURLToPath } from "node:url";
+const root = fileURLToPath(new URL("../", import.meta.url));
+test("a release excludes stale declarations for removed commands", t => {
+  const scratch = mkdtempSync(join(tmpdir(), "chio-pack-test-"));
+  const stale = join(root, "dist", `removed-command-${process.pid}`);
+  t.after(() => { rmSync(scratch, { recursive: true, force: true }); rmSync(stale, { recursive: true, force: true }); });
+  mkdirSync(stale);
+  writeFileSync(join(stale, "old.d.ts"), "export declare function obsolete(): void;\n");
+  writeFileSync(join(stale, "old.d.ts.map"), "{}\n");
+  const packed = spawnSync(process.execPath, [join(root, "scripts/pack-release.mjs"), scratch], { cwd: root, encoding: "utf8", timeout: 60000 });
+  assert.equal(packed.status, 0, packed.stderr);
+  const artifact = JSON.parse(packed.stdout.trim().split("\n").at(-1)).artifact;
+  const listing = spawnSync("tar", ["-tzf", artifact], { encoding: "utf8" });
+  assert.equal(listing.status, 0, listing.stderr);
+  assert.doesNotMatch(listing.stdout, /removed-command-/);
+  assert.match(listing.stdout, /package\/dist\/index.d.ts\n/);
+});

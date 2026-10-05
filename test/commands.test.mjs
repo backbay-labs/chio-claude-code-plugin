@@ -63,3 +63,20 @@ test("attenuation commands the bridge refuses are not delivered", async () => {
   const index = await import(join(root, "dist", "index.js"));
   assert.equal(index.budgetSet, undefined); assert.equal(index.guardPause, undefined);
 });
+
+test("policy-show ignores a revoked bond rather than reading its old policy path", async t => {
+  const f = fixture(t);
+  const policy = join(f.dir, "revoked.yaml");
+  writeFileSync(policy, "hushspec: '0.1.0'\nname: revoked-policy-sentinel\nrules: {}\n");
+  writeFileSync(join(f.dir, "state.json"), JSON.stringify({ bonds: { a: { sessionId: "a", policyPath: policy, revokedAt: "2026-10-04" } } }));
+  const result = await f.run("policy-show", [], { CLAUDE_SESSION_ID: "a" });
+  assert.equal(result.code, 1); assert.match(result.stderr, /no policy path known/);
+  assert.doesNotMatch(result.stdout, /revoked-policy-sentinel/);
+});
+test("bond refuses malformed budgets before issuing an unbounded capability", async t => {
+  const f = fixture(t);
+  for (const budget of ["NaN", "Infinity", "-1", "", " ", "1e999"]) {
+    const result = await f.run("bond", ["/policy", "4h", budget], { CLAUDE_SESSION_ID: "a" });
+    assert.equal(result.code, 1); assert.match(result.stderr, /invalid budget/);
+  }
+});

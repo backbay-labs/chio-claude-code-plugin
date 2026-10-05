@@ -61,6 +61,12 @@ try {
   // Ask npm for the selected release files before adding stage-only dependencies.
   const listing = JSON.parse(run("npm", ["pack", "--dry-run", "--json", "--ignore-scripts"], root, true))[0];
   for (const file of listing.files) {
+    // tsc does not delete declarations for removed source files. Never publish
+    // stale command APIs left by an older checkout/build.
+    if (/^dist\/.*\.d\.ts(?:\.map)?$/.test(file.path)) {
+      const source = file.path.replace(/^dist\//, "src/").replace(/\.d\.ts(?:\.map)?$/, ".ts");
+      if (!existsSync(join(root, source))) continue;
+    }
     // Qualification drivers are operator fixtures, not runtime dependencies.
     // Excluding them also prevents concurrent test development entering a release.
     if (file.path.startsWith("scripts/acceptance/") || file.path === "scripts/test-mods.mjs") continue;

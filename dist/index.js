@@ -10186,7 +10186,8 @@ function getPolicyPath() {
 }
 
 // src/state/store.ts
-import { mkdirSync as mkdirSync2, readFileSync as readFileSync2, renameSync as renameSync2, writeFileSync as writeFileSync2 } from "node:fs";
+import { mkdirSync as mkdirSync2, readFileSync as readFileSync2, renameSync as renameSync2, rmSync, writeFileSync as writeFileSync2 } from "node:fs";
+import { randomUUID } from "node:crypto";
 import { dirname } from "node:path";
 
 // src/state/paths.ts
@@ -10210,9 +10211,13 @@ function readState() {
 }
 function writeState(state) {
   mkdirSync2(dirname(STATE_PATH), { recursive: true });
-  const tmp = `${STATE_PATH}.${process.pid}.tmp`;
-  writeFileSync2(tmp, JSON.stringify(state, null, 2), { mode: 384 });
-  renameSync2(tmp, STATE_PATH);
+  const tmp = `${STATE_PATH}.${randomUUID()}.tmp`;
+  try {
+    writeFileSync2(tmp, JSON.stringify(state, null, 2), { mode: 384, flag: "wx" });
+    renameSync2(tmp, STATE_PATH);
+  } finally {
+    rmSync(tmp, { force: true });
+  }
 }
 function upsertBond(bond2) {
   const state = readState();
@@ -10250,7 +10255,9 @@ function bondPresence(sessionId) {
   if (!bonds || typeof bonds !== "object" || Array.isArray(bonds)) return "invalid";
   if (!Object.hasOwn(bonds, sessionId)) return "absent";
   const entry = bonds[sessionId];
-  return entry && typeof entry === "object" && typeof entry.revokedAt === "string" ? "revoked" : "present";
+  if (!entry || typeof entry !== "object" || Array.isArray(entry)) return "invalid";
+  if (!Object.hasOwn(entry, "revokedAt")) return "present";
+  return typeof entry.revokedAt === "string" ? "revoked" : "invalid";
 }
 function requireSessionBond(explicitSessionId) {
   const hostSessionId = process.env.CLAUDE_SESSION_ID;
@@ -10260,18 +10267,18 @@ function requireSessionBond(explicitSessionId) {
   const sessionId = hostSessionId ?? explicitSessionId;
   if (!sessionId) throw new Error("an exact session id is required; set CLAUDE_SESSION_ID or pass the session explicitly");
   const bond2 = getBond(sessionId);
-  if (!bond2 || bond2.revokedAt || bond2.sessionId !== sessionId) throw new Error(`no bond for session ${sessionId}`);
+  if (!bond2 || Object.hasOwn(bond2, "revokedAt") || bond2.sessionId !== sessionId) throw new Error(`no bond for session ${sessionId}`);
   return bond2;
 }
 function getSoleBond() {
   const state = readState();
-  const entries = Object.values(state.bonds).filter((b) => !b.revokedAt);
+  const entries = Object.values(state.bonds).filter((b) => b && typeof b === "object" && !Object.hasOwn(b, "revokedAt"));
   if (entries.length === 1) return entries[0];
   return void 0;
 }
 function getMostRecentBond() {
   const state = readState();
-  const entries = Object.values(state.bonds).filter((b) => !b.revokedAt);
+  const entries = Object.values(state.bonds).filter((b) => b && typeof b === "object" && !Object.hasOwn(b, "revokedAt"));
   if (entries.length === 0) return void 0;
   entries.sort((a, b) => b.bondedAt.localeCompare(a.bondedAt));
   return entries[0];
@@ -10285,9 +10292,13 @@ async function bond(args) {
   }
   const sessionId = process.env.CLAUDE_SESSION_ID;
   if (!sessionId) throw new Error("CLAUDE_SESSION_ID is required; refusing to create an unbound capability");
+  if (args.length > 3) throw new Error("usage: /chio:bond <policy-path> [ttl] [budget-usd]");
+  const budgetUsd = budgetArg === void 0 ? void 0 : Number(budgetArg);
+  if (budgetArg !== void 0 && (!budgetArg.trim() || !Number.isFinite(budgetUsd) || budgetUsd < 0)) {
+    throw new Error("invalid budget: expected a finite nonnegative USD amount");
+  }
   const policyPath = resolve2(policyArg);
   const bridge = buildBridge();
-  const budgetUsd = budgetArg ? Number(budgetArg) : void 0;
   const bondArgs = { policyPath, ttl };
   if (budgetUsd !== void 0 && Number.isFinite(budgetUsd)) {
     bondArgs.budgetUsd = budgetUsd;
@@ -10326,7 +10337,7 @@ async function bond(args) {
 // src/commands/policy-show.ts
 async function policyShow() {
   const bond2 = getBond(process.env.CLAUDE_SESSION_ID);
-  const policyPath = bond2?.policyPath ?? getPolicyPath();
+  const policyPath = (bond2 && !Object.hasOwn(bond2, "revokedAt") ? bond2.policyPath : void 0) ?? getPolicyPath();
   if (!policyPath) {
     throw new Error(
       "no policy path known; run /chio:bond or set CHIO_POLICY_PATH"

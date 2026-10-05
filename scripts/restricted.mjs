@@ -182,9 +182,8 @@ async function main() {
       const actual = body.tools?.map(tool => tool.name).sort() ?? [];
       if (actual.length !== toolNames.length || actual.some((name, index) => name !== [...toolNames].sort()[index])) { hostInitializationFailed = true; throw new Error("native host tool inventory changed"); }
       if (!controlServer?.statusReads) { hostInitializationFailed = true; throw new Error("native interface has not read its exact session projection"); }
-      observeModelContext(body, () => controlServer.retainedContinuations(), requestId => modelContextRequests.add(requestId));
       hostReady = true;
-    } } : {}) });
+    }, onModelForwarded: body => observeModelContext(body, () => controlServer.retainedContinuations(), requestId => modelContextRequests.add(requestId)) } : {}) });
   try {
     const {startGatewayHttp}=await import(pathToFileURL(gateway).href);
     transport=await startGatewayHttp(config);
