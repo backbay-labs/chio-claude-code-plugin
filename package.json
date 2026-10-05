@@ -1,6 +1,6 @@
 {
   "name": "@chio/claude-code-plugin",
-  "version": "0.4.0-rc.4",
+  "version": "0.4.0-rc.5",
   "description": "Native Chio session controls and kernel MCP execution for Claude Code",
   "type": "module",
   "packageManager": "npm@11.8.0",
@@ -28,6 +28,7 @@
     "tsconfig.mod.json",
     "acceptance/2026-10-03/native-mods",
     "acceptance/2026-10-03/controlled-workflows",
+    "acceptance/2026-10-05/rc5",
     "acceptance/2026-10-03/qualification-environment",
     "docs",
     "SMOKE.md",

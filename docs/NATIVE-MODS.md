@@ -1,6 +1,6 @@
 # Native Chio interface
 
-The 0.4.0-rc.4 candidate adds native session status, exact-action review, evidence,
+The 0.4.0-rc.5 candidate adds native session status, exact-action review, evidence,
 recovery requirements and immediate commands. The kernel and trusted gateway
 retain execution authority. A control in Claude records review intent; trusted
 operator confirmation happens outside the host. The [controlled-task runbook](./CONTROLLED-TASKS.md) covers guided setup, completion evidence, continuation, the typed namespace and handoffs.
@@ -326,7 +326,7 @@ above. Python and the terminal emulator are acceptance-driver dependencies and
 are excluded from the delivered runtime. To fetch the selected host into a new
 separate path, use `node scripts/fetch-host.mjs --output /absolute/new/claude`.
 The current evidence and remaining gates are in the
-[native acceptance report](../acceptance/2026-10-03/controlled-workflows/REPORT.md).
+[native acceptance report](../acceptance/2026-10-05/rc5/REPORT.md).
 The [dedicated environment and recovery report](../acceptance/2026-10-03/qualification-environment/REPORT.md)
 records explicit context binding, actual enforcing-owner failures and shared
 service preservation. Infrastructure recovery does not qualify those open

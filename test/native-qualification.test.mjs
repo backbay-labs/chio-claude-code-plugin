@@ -16,7 +16,7 @@ function fixture(t) {
     mkdirSync(dirname(join(root, path)), { recursive: true }); cpSync(join(source, path), join(root, path), { recursive: true });
   }
   // Only this disposable fixture claims live gates, to exercise artifact checks.
-  const record = JSON.parse(readFileSync(join(source, "acceptance/2026-10-03/controlled-workflows/ACCEPTANCE.json")));
+  const record = JSON.parse(readFileSync(join(source, "acceptance/2026-10-05/rc5/ACCEPTANCE.json")));
   record.productionQualified = true;
   for (const gate of Object.values(record.gates)) { gate.qualified = true; gate.evidenceClass = "live"; }
   record.artifacts = {};
@@ -29,7 +29,7 @@ function fixture(t) {
     }
   }
   retain("");
-  const path = join(root, "acceptance/2026-10-03/controlled-workflows/ACCEPTANCE.json");
+  const path = join(root, "acceptance/2026-10-05/rc5/ACCEPTANCE.json");
   mkdirSync(dirname(path), { recursive: true });
   const save = () => writeFileSync(path, JSON.stringify(record)); save();
   return { root, record, save };
