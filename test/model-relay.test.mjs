@@ -95,3 +95,13 @@ test("model context observation runs only after provider forwarding and never fo
   rejectResult = true; assert.equal((await send("/v1/messages")).status, 403); assert.equal(observed, 1);
   rejectResult = false; assert.equal((await send("/v1/messages/count_tokens")).status, 200); assert.equal(observed, 1);
 });
+test("host request flooding cannot grow the retained relay event log without bound", async t => {
+  const relay = await startModelRelay({ upstreamBaseUrl: "http://127.0.0.1:1", apiKey: "fixture", model, toolNames: [...tools] });
+  t.after(() => relay.close());
+  for (let i = 0; i < 1030; i++) {
+    const response = await fetch(`http://127.0.0.1:${relay.port}/invalid`, { method: "POST" }); await response.text();
+  }
+  assert.ok(relay.events.length <= 1025, `retained ${relay.events.length} events`);
+  assert.equal(relay.events.at(-1).failure, "model relay request limit reached");
+  assert.equal(relay.events.at(-1).requestClass, "conversation");
+});
