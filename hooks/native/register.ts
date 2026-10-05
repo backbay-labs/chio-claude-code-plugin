@@ -3,7 +3,7 @@ import type { ControlStatus, IntentKind, OperationView } from "../../types/contr
 import type { Chio } from "../../types/chio.js";
 import type { ExplanationView, ContinuationView } from "../../types/workflow.js";
 import { controlOrigin, outcomeHash, taskText } from "./workflow.ts";
-import { diagnosticText, operationText, outcomeRequestId, parseStatus, guidanceText, safeText, statusLine } from "./projection.ts";
+import { diagnosticText, operationText, outcomeRequestId, parseStatus, guidanceText, safeText, statusLine, transitions, type NoticeState } from "./projection.ts";
 
 let sessionId = "";
 let status: ControlStatus | null = null;
@@ -12,6 +12,7 @@ let showDetails = false;
 let interactive = false;
 let notice = "";
 let generation = 0;
+let notices: NoticeState = { authorityWarned: false };
 let pane: "operations" | "task" = "operations";
 let refreshRead: { sessionId: string; generation: number; promise: Promise<ControlStatus | null> } | null = null;
 const PANE_OPERATIONS = 12;
@@ -19,7 +20,7 @@ const PANE_OPERATIONS = 12;
 async function refresh($: EngineInterface, options: PluginOptions): Promise<ControlStatus | null> {
   const actual = await $.session.id();
   if (actual !== sessionId) {
-    sessionId = actual; pane = "operations"; status = null; selectedId = null; showDetails = false; notice = ""; generation += 1;
+    sessionId = actual; pane = "operations"; status = null; selectedId = null; showDetails = false; notice = ""; generation += 1; notices = { authorityWarned: false };
     await $.ui.close({ id: "chio" });
   }
   const thisGeneration = generation;
@@ -28,7 +29,9 @@ async function refresh($: EngineInterface, options: PluginOptions): Promise<Cont
     try {
       const received = await $.chio.status();
       if (thisGeneration !== generation || await $.session.id() !== actual) return null;
+      const previous = status;
       status = received;
+      if (interactive) for (const text of transitions(previous, received, Date.now(), notices)) $.ui.toast(text);
     } catch {
       $.ui.log("Chio control refresh unavailable at transport", { to: "debug" });
       if (thisGeneration === generation) { status = null; notice = "Control service disconnected. No authority decision was inferred."; }
@@ -132,7 +135,7 @@ export const register: Register = (on, options) => {
 
   on("classic.SessionStart", async ($, e, next) => {
     // /clear, resume and fork do not fire session.start; always re-resolve the host id.
-    status = null; selectedId = null; showDetails = false; generation += 1;
+    status = null; selectedId = null; showDetails = false; generation += 1; notices = { authorityWarned: false };
     await refresh($, options); return next(e);
   }).catch(($, e, next) => next(e));
 

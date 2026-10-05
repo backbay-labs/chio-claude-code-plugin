@@ -1,6 +1,7 @@
 import { expect, mock, test } from "claude-code/testing";
 import type { On, CommandRunInput, HttpResponse } from "claude-code";
 import type { ControlStatus } from "../types/control.js";
+import { transitions } from "../hooks/native/projection.ts";
 
 const options = { control_url: "http://127.0.0.1:12345", control_token: "a".repeat(64) };
 function command(name: string, args = ""): CommandRunInput { return { command: name, args, origin: { kind: "composer" }, presentation: { isFullscreen: false, columns: 80 } }; }
@@ -293,3 +294,40 @@ test("isolated scope guidance says the session has no other tools", { options },
   const text = (await $.prompt.context({ blocks: [] })).blocks.find(block => block.name === "chio")?.text ?? "";
   expect(text).toContain("This session has no other tools.");
 });
+
+function uncertain(value: ControlStatus): ControlStatus {
+  value.operations = [{ requestId: "request-u", tool: "write_file", state: "unknown", evidence: "unverified", acknowledged: false, hostDeliveryConfirmed: false, nextAction: "reconcile_original" }];
+  value.awaitingReview = 0; value.unresolved = 1; return value;
+}
+test("transitions are silent for a first projection or a reconnect", () => {
+  const state = { authorityWarned: false };
+  expect(transitions(null, projection(), Date.now(), state)).toEqual([]);
+  expect(transitions(projection(), null, Date.now(), state)).toEqual([]);
+});
+test("transitions announce new reviews, new uncertain outcomes, near expiry once, and ready results", () => {
+  const now = Date.now(), state = { authorityWarned: false };
+  const quiet = projection(); quiet.awaitingReview = 0; quiet.operations = []; quiet.authorityExpiresAt = Math.floor(now / 1000) + 3600;
+  const review = projection(); review.authorityExpiresAt = quiet.authorityExpiresAt;
+  expect(transitions(quiet, review, now, state)).toEqual(["Chio · 1 action awaiting review · /chio-review"]);
+  const unknown = uncertain(projection()); unknown.authorityExpiresAt = quiet.authorityExpiresAt;
+  expect(transitions(quiet, unknown, now, state)).toEqual(["Chio · original outcome unresolved · /chio-doctor"]);
+  const expiring = projection(); expiring.awaitingReview = 0; expiring.operations = []; expiring.authorityExpiresAt = Math.floor(now / 1000) + 240;
+  expect(transitions(quiet, expiring, now, state)).toEqual(["Chio · authority expires in 4m"]);
+  expect(transitions(quiet, expiring, now, state)).toEqual([]);
+  const id = "12345678-1234-4123-8123-123456789abc";
+  const submitted = projection(); submitted.authorityExpiresAt = quiet.authorityExpiresAt; submitted.continuations = [{ id, requestId: "request-a", state: "submitted", delivery: "pending" }];
+  const completed = projection(); completed.authorityExpiresAt = quiet.authorityExpiresAt; completed.continuations = [{ id, requestId: "request-a", state: "completed", delivery: "pending" }];
+  expect(transitions(submitted, completed, now, { authorityWarned: true })).toEqual([`Chio · original result ready · /chio-outcome ${id}`]);
+});
+for (const interactive of [true, false]) {
+  test(`a new review ${interactive ? "shows" : "does not show"} a toast`, { options }, async ($, on) => {
+    const toasts: string[] = []; let value = projection(); value.awaitingReview = 0; value.operations = [];
+    stub(on, () => "session-a", () => value);
+    on("ui.toast", ($, e) => { toasts.push(e.text); return { value: undefined }; });
+    await $.session.start({ cwd: "/tmp", surface: null, isInteractive: interactive });
+    await $.command.run(command("chio-status"));
+    value = projection();
+    await $.command.run(command("chio-status"));
+    expect(toasts).toEqual(interactive ? ["Chio · 1 action awaiting review · /chio-review"] : []);
+  });
+}

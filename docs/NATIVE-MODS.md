@@ -63,6 +63,11 @@ every request and after clear, resume or fork. The compact review puts the exact
 payload before its decision controls; a separate control expands evidence and
 authority details. Panes scroll when an exact payload exceeds the viewport.
 
+In an interactive session the mod shows a short notice when a new action awaits
+review, a new original outcome becomes uncertain, live authority has five
+minutes or less left (once per session), or a continued result is ready to
+receive. The first projection after start or reconnect is a silent baseline.
+
 ### Guidance for Claude
 
 When a projection lists protected tools, the mod adds a `chio` context block to

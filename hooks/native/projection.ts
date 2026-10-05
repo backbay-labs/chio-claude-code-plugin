@@ -122,3 +122,22 @@ export function guidanceText(status: ControlStatus | null): string | null {
     status.scope === "isolated_kernel_mcp" ? "This session has no other tools." : "Other tools in this session are not protected by Chio.",
   ].join("\n");
 }
+
+export interface NoticeState { authorityWarned: boolean }
+function uncertainCount(status: ControlStatus): number { return status.operations.filter(op => op.state === "pending" || op.state === "unknown").length; }
+/** Notices for changes between two projections of one session. A first projection or reconnect is a silent baseline. */
+export function transitions(previous: ControlStatus | null, next: ControlStatus | null, now: number, state: NoticeState): string[] {
+  if (!previous || !next || previous.sessionId !== next.sessionId) return [];
+  const notices: string[] = [];
+  if (next.awaitingReview > previous.awaitingReview) notices.push(`Chio · ${next.awaitingReview} action${next.awaitingReview === 1 ? "" : "s"} awaiting review · /chio-review`);
+  if (uncertainCount(next) > uncertainCount(previous)) notices.push("Chio · original outcome unresolved · /chio-doctor");
+  const remaining = next.authorityExpiresAt * 1000 - now;
+  if (!state.authorityWarned && next.authority === "live" && remaining > 0 && remaining <= 5 * 60_000) {
+    state.authorityWarned = true; notices.push(`Chio · authority expires in ${Math.max(1, Math.ceil(remaining / 60_000))}m`);
+  }
+  for (const continuation of next.continuations ?? []) {
+    const before = previous.continuations?.find(prior => prior.id === continuation.id);
+    if (continuation.state === "completed" && continuation.delivery === "pending" && before?.state !== "completed") notices.push(`Chio · original result ready · /chio-outcome ${safeText(continuation.id)}`);
+  }
+  return notices;
+}
