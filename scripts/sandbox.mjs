@@ -61,6 +61,10 @@ ${operatorTransport?"(deny process-fork)":"(allow process-fork)"}
 `;
 }
 
+/** scripts/demo.mjs marks its fixture configuration with this server id; real launchers refuse it. */
+export const DEMO_SERVER_ID="demo-owner";
+export const isDemoConfig=config=>config?.execution?.serverId===DEMO_SERVER_ID;
+export function refuseDemoConfig(config) { if (isDemoConfig(config)) throw new Error("demo configuration; run scripts/demo.mjs instead"); }
 export function requireSessionCredential(config,now=Math.floor(Date.now()/1000)) {
   const c=config.sessionCredential,e=config.execution,names=config.tools?.map(tool=>tool.name).sort();
   if (!c || c.schema!=="chio.mcp.session-credential.v1" || c.sessionId!==e?.sessionId || c.subjectKey!==e?.subjectKey || c.serverId!==e?.serverId || c.endpointPath!=="/mcp" || JSON.stringify(c.capabilityIds)!==JSON.stringify([e?.capabilityId])

@@ -5,6 +5,10 @@ const require = __chioCreateRequire(import.meta.url);
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import { createServer } from "node:http";
 
+// scripts/sandbox.mjs
+var DEMO_SERVER_ID = "demo-owner";
+var isDemoConfig = (config) => config?.execution?.serverId === DEMO_SERVER_ID;
+
 // node_modules/@chio/bridge/dist/gateway.js
 import { createHash as createHash2 } from "node:crypto";
 import { constants, closeSync, fsyncSync, lstatSync, mkdirSync, openSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
@@ -1226,12 +1230,21 @@ if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToP
 }
 
 // scripts/gateway-http.mjs
-async function startGatewayHttp(config) {
+async function startGatewayHttp(config, { requireHostAcknowledgement = true } = {}) {
+  const demo = isDemoConfig(config);
+  let demoCalls = 0;
+  const admitDemoCall = (name) => {
+    if (!demo || name === "chio_resume") return true;
+    if (demoCalls >= 128) return false;
+    demoCalls++;
+    return true;
+  };
+  const displayResult = (outcome) => gatewayToolResult(demo ? { ...outcome, scope: "demo_fixture", notice: "DEMO fixture kernel \xB7 nothing protected" } : outcome);
   const executor = createMcpExecutionClient(config.execution);
   const validation = await executor.validateSession({ allowedTools: config.tools.map((tool) => tool.name) });
   if (!validation.ok)
     throw new Error(validation.reason);
-  const gateway = createGateway(config, executor, { requireHostAcknowledgement: true });
+  const gateway = createGateway(config, executor, { requireHostAcknowledgement });
   const token = randomBytes(32).toString("base64url");
   const session = randomBytes(32).toString("base64url");
   let initialized = false;
@@ -1301,7 +1314,7 @@ async function startGatewayHttp(config) {
       initialized = true;
       response.setHeader("Mcp-Session-Id", session);
       const offered = message.params?.protocolVersion;
-      reply({ protocolVersion: ["2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25"].includes(offered) ? offered : "2025-11-25", capabilities: { tools: {}, experimental: { chioDeliveryAcknowledgement: { version: "1" } } }, serverInfo: { name: "chio-protected-gateway", version: "0.3.0" } });
+      reply({ protocolVersion: ["2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25"].includes(offered) ? offered : "2025-11-25", capabilities: { tools: {}, experimental: { chioDeliveryAcknowledgement: { version: "1" } } }, serverInfo: { name: demo ? "chio-demo-fixture-gateway" : "chio-protected-gateway", version: "0.3.0" } });
       return;
     }
     if (!initialized || request.headers["mcp-session-id"] !== session) {
@@ -1343,6 +1356,10 @@ async function startGatewayHttp(config) {
       fail(-32602, "invalid tool arguments");
       return;
     }
+    if (!admitDemoCall(message.params.name)) {
+      fail(-32600, "demo call limit reached; start a new demo after inspecting retained work");
+      return;
+    }
     const key = JSON.stringify(message.id);
     if (active.has(key)) {
       fail(-32600, "request already in flight");
@@ -1359,7 +1376,7 @@ async function startGatewayHttp(config) {
         fail(-32603, "transport closed before dispatch");
         return;
       }
-      reply(gatewayToolResult(await gateway.call(`${session}:${JSON.stringify(message.id)}`, message.params.name, args, controller.signal)));
+      reply(displayResult(await gateway.call(`${session}:${JSON.stringify(message.id)}`, message.params.name, args, controller.signal)));
     }).catch(() => fail(-32603, "gateway failed; no automatic retry")).finally(() => {
       active.delete(key);
     });
@@ -1384,6 +1401,7 @@ async function startGatewayHttp(config) {
     token,
     controlCall(id, tool, args) {
       if (typeof id !== "string" || !/^[0-9a-f-]{36}$/.test(id) || typeof tool !== "string" || !args || typeof args !== "object" || Array.isArray(args) || Buffer.byteLength(JSON.stringify(args)) > 4096) return Promise.reject(new Error("bounded parent control call required"));
+      if (!admitDemoCall(tool)) return Promise.reject(new Error("demo call limit reached; inspect retained work"));
       const result = queued.then(async () => {
         if (closed) throw new Error("parent transport closed; original operation remains fenced");
         return gateway.call("native-control:" + id, tool, args);

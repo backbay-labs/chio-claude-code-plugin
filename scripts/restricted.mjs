@@ -8,7 +8,7 @@ import { StringDecoder } from "node:string_decoder";
 import { spawn, execFileSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
 const scriptDirectory=dirname(realpathSync(fileURLToPath(import.meta.url)));
-const {buildSandboxPolicy,requireSessionCredential}=await import(pathToFileURL(join(scriptDirectory,"sandbox.mjs")).href);
+const {buildSandboxPolicy,requireSessionCredential,refuseDemoConfig}=await import(pathToFileURL(join(scriptDirectory,"sandbox.mjs")).href);
 const {startModelRelay,parseTokenBudget}=await import(pathToFileURL(join(scriptDirectory,"model-relay.mjs")).href);
 const {observeModelContext}=await import(pathToFileURL(join(scriptDirectory,"model-context.mjs")).href);
 const {createControlTransport}=await import(pathToFileURL(join(scriptDirectory,"control-transport.mjs")).href);
@@ -98,6 +98,7 @@ async function main() {
   if (!configStat.isFile() || configStat.isSymbolicLink() || (configStat.mode & 0o077) !== 0 || configStat.size > 1024*1024) throw new Error("gateway configuration must be a private regular file");
   configPath=realpathSync(configPath);
   const config = requireSessionCredential(JSON.parse(readFileSync(configPath,"utf8")));
+  refuseDemoConfig(config);
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(config.sessionId ?? "")) throw new Error("prepare the gateway with the exact UUID used for the host session");
   if (!config.execution?.sessionId || !config.journalDir || !Array.isArray(config.tools) || !config.tools.length) throw new Error("prepared gateway context, private journal and bounded tools are required");
   const workspace = realpathSync(opts["--workspace"]);

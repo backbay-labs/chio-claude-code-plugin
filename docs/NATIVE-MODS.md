@@ -142,6 +142,13 @@ The compatibility hooks stay inactive in a session that `/chio:bond` has not
 bonded, so loading the plugin does not deny native tools; see
 [compatibility hooks](./RESTRICTED-MODE.md#compatibility-hooks).
 
+In a `kernel_mcp` session the mod also counts tool calls that did not go
+through Chio (native Bash, file and web tools, other MCP servers) and shows the
+total in the status line and per tool in `/chio-status` and `/chio-doctor`.
+These counts are observations only: nothing is checked, blocked or recorded
+outside the session. The protected launcher is the way to bring those effects
+under the kernel boundary.
+
 ## Confirm a decision outside Claude
 
 Inspect the exact retained action and its intent in the trusted terminal:
@@ -325,11 +332,45 @@ records explicit context binding, actual enforcing-owner failures and shared
 service preservation. Infrastructure recovery does not qualify those open
 execution and durability contracts.
 
+## Local demo
+
+`node scripts/demo.mjs --directory NEW_DIR` starts a **demo**: a fixture kernel
+on this machine, the real gateway and control service, and the operator watch
+screen in that terminal. It prints the `claude` command to run in a second
+terminal. Ask Claude to write a file with the chio tool, approve it in the watch
+screen, then continue it from the Chio pane. Nothing is protected: the fixture
+kernel signs with a key made for that run only, and every Chio surface says DEMO.
+
+- The demo reports scope `demo_fixture`.
+- It writes `gateway.json`, `operator.json`, `mcp.json` and `signing-seed.json`
+  (all mode 0600) to the new directory, which must not already exist.
+- The fixture kernel confines writes to the `owner/` subdirectory.
+- It is not a qualification environment.
+
+### What the demo does not show
+
+- The fixture kernel does not verify approval tokens or evaluate policy; its
+  delivery acknowledgement is a constant.
+- The demo gateway does not require host acknowledgement. Only the relay-backed
+  protected launcher can confirm that the host received a result.
+- Claude in the demo has native tools and can read the demo directory, including
+  `operator.json`, so it could approve its own request.
+- Authority lasts one hour.
+- `serverId: "demo-owner"` marks demo configurations. `scripts/restricted.mjs` and
+  `control.mjs serve` refuse them; `control.mjs status`, `inbox`, `watch` and
+  `report` label them `demo_fixture`.
+
 The parent model relay retains at most 1,024 request observations plus one
 limit record. Further requests are refused and the launch records incomplete
 work. Diagnostic field lists are bounded; response forwarding respects host
 backpressure. Start a newly bound launch after inspecting retained work if
 this per-launch request limit is reached.
+
+The demo accepts at most 128 new gateway tool calls and retains at most 128 fixture
+approval proposals per run. Its fixture also caps executed tool requests at 128.
+Exact gateway resumption and retained outcome inspection remain available at the
+admission limit. Start a new demo directory after inspecting retained work. These
+limits bound fixture files and journals; they confer no protection.
 
 New workflow JSON records and review intents stop at 1,000 records per directory.
 Capacity refusal preserves original records, continuation claims, and acknowledgement

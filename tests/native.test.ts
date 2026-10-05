@@ -1,7 +1,7 @@
 import { expect, mock, test } from "claude-code/testing";
 import type { On, CommandRunInput, HttpResponse } from "claude-code";
 import type { ControlStatus } from "../types/control.js";
-import { transitions } from "../hooks/native/projection.ts";
+import { outsideText, transitions } from "../hooks/native/projection.ts";
 import { outcomeHash, shareText } from "../hooks/native/workflow.ts";
 
 const options = { control_url: "http://127.0.0.1:12345", control_token: "a".repeat(64) };
@@ -296,6 +296,16 @@ test("isolated scope guidance says the session has no other tools", { options },
   expect(text).toContain("This session has no other tools.");
 });
 
+test("a demo fixture projection is labeled DEMO and nothing protected everywhere", { options }, async ($, on) => {
+  const value = projection(); value.scope = "demo_fixture";
+  stub(on, () => "session-a", () => value);
+  const status = (await $.command.run(command("chio-status"))).text;
+  expect(status).toContain("Chio · DEMO fixture kernel · nothing protected ·");
+  expect((await $.command.run(command("chio-doctor"))).text).toContain("Demo fixture kernel: nothing is protected.");
+  const guidance = (await $.prompt.context({ blocks: [] })).blocks.find(b => b.name === "chio")?.text ?? "";
+  expect(guidance.startsWith("This is a Chio demo with a fixture kernel; nothing is protected.")).toBe(true);
+});
+
 function uncertain(value: ControlStatus): ControlStatus {
   value.operations = [{ requestId: "request-u", tool: "write_file", state: "unknown", evidence: "unverified", acknowledged: false, hostDeliveryConfirmed: false, nextAction: "reconcile_original" }];
   value.awaitingReview = 0; value.unresolved = 1; return value;
@@ -338,8 +348,8 @@ async function readyOutcome(result: unknown) {
   const outcome = { state: "completed", evidence: "verified", requestId: "request-a", result, receipt: { id: "receipt-a" } };
   return { schema: "chio.control.outcome.v1", ready: true, continuation: { id: continuationId, requestId: "request-a", state: "completed", delivery: "pending" }, outcome, outcomeHash: await outcomeHash(outcome), challenge: "c".repeat(64) };
 }
-function outcomeStub(on: On, getSession: () => string, ready: Record<string, unknown>, onAck?: () => void | Promise<void>, onSubmit?: (e: { text: string; context?: readonly string[] }) => { text: string; context?: readonly string[] } | { drop: string }) {
-  const value = projection(); value.continuations = [{ id: continuationId, requestId: "request-a", state: "completed", delivery: "pending" }];
+function outcomeStub(on: On, getSession: () => string, ready: Record<string, unknown>, onAck?: () => void | Promise<void>, onSubmit?: (e: { text: string; context?: readonly string[] }) => { text: string; context?: readonly string[] } | { drop: string }, scope: ControlStatus["scope"] = "kernel_mcp") {
+  const value = projection(); value.scope = scope; value.continuations = [{ id: continuationId, requestId: "request-a", state: "completed", delivery: "pending" }];
   on("session.id", () => ({ value: getSession() }));
   on("ui.close", () => ({ value: undefined }));
   on("command.register", ($, e) => ({ value: { command: e.name } }));
@@ -478,6 +488,73 @@ test("status rejects a malformed model usage projection", { options }, async ($,
   const text = (await $.command.run(command("chio-status"))).text;
   expect(text).not.toContain("Model usage");
 });
+test("calls outside Chio are counted per tool in a kernel MCP session and shown in status", { options }, async ($, on) => {
+  stub(on, () => "session-a", () => projection());
+  on("tool.call", () => ({ result: "native" }));
+  await $.command.run(command("chio-status"));
+  for (const call of [{ tool: "Bash", command: "ls" }, { tool: "Read", file_path: "/a" }, { tool: "Read", file_path: "/b" }, { tool: "mcp__chio__write_file", path: "/p", content: "c" }]) {
+    expect((await $.tool.call(call as never)).result).toBe("native");
+  }
+  const text = (await $.command.run(command("chio-status"))).text;
+  expect(text!.split("\n")[0]).toContain("· 3 calls outside Chio");
+  expect(text).toContain("Outside Chio protection while connected (observed, not checked): Read 2 · Bash 1");
+  expect(text).not.toContain("mcp__chio__");
+});
+test("isolated sessions count nothing", { options }, async ($, on) => {
+  const value = projection(); value.scope = "isolated_kernel_mcp";
+  stub(on, () => "session-a", () => value);
+  on("tool.call", () => ({ result: "native" }));
+  await $.command.run(command("chio-status"));
+  await $.tool.call({ tool: "Bash", command: "ls" } as never);
+  expect((await $.command.run(command("chio-status"))).text).not.toContain("Outside Chio");
+});
+test("a session change resets outside counts", { options }, async ($, on) => {
+  let session = "session-a";
+  stub(on, () => session, () => projection(session));
+  on("tool.call", () => ({ result: "native" }));
+  await $.command.run(command("chio-status"));
+  await $.tool.call({ tool: "Bash", command: "ls" } as never);
+  expect((await $.command.run(command("chio-status"))).text).toContain("Bash 1");
+  session = "session-b";
+  expect((await $.command.run(command("chio-status"))).text).not.toContain("Outside Chio");
+});
+test("a failing observation still returns the original result once", { options }, async ($, on) => {
+  let dispatched = 0, fail = false;
+  stub(on, () => { if (fail) throw new Error("host lookup failed"); return "session-a"; }, () => projection());
+  on("tool.call", () => { dispatched++; return { result: "native" }; });
+  await $.command.run(command("chio-status"));
+  fail = true;
+  expect((await $.tool.call({ tool: "Bash", command: "ls" } as never)).result).toBe("native");
+  expect(dispatched).toBe(1);
+});
+test("the outside line appears only while connected", { options }, async ($, on) => {
+  let down = false;
+  stub(on, () => "session-a", () => { if (down) throw new Error("control down"); return projection(); });
+  on("tool.call", () => ({ result: "native" }));
+  await $.command.run(command("chio-status"));
+  await $.tool.call({ tool: "Bash", command: "ls" } as never);
+  expect((await $.command.run(command("chio-status"))).text).toContain("Outside Chio protection while connected");
+  down = true;
+  for (const name of ["chio-status", "chio-doctor"]) {
+    const answer = await $.command.run(command(name));
+    expect(answer.exitCode).toBe(1); expect(answer.text).not.toContain("Outside Chio");
+  }
+  down = false;
+  expect((await $.command.run(command("chio-doctor"))).text).toContain("Outside Chio protection while connected");
+});
+test("demo status says mediated tools, not protected tools", { options }, async ($, on) => {
+  const value = projection(); value.scope = "demo_fixture";
+  stub(on, () => "session-a", () => value);
+  const text = (await $.command.run(command("chio-status"))).text!;
+  expect(text).toContain("Mediated tools: write_file"); expect(text).not.toContain("Protected tools:");
+  value.scope = "kernel_mcp";
+  expect((await $.command.run(command("chio-status"))).text).toContain("Protected tools: write_file");
+});
+test("outsideText sorts by count then name and caps at eight tools", () => {
+  expect(outsideText(new Map())).toBe(null);
+  const counts = new Map([["Bash", 4], ["Edit", 2], ["Read", 4], ...Array.from({ length: 8 }, (_, i) => [`T${i}`, 1] as [string, number])]);
+  expect(outsideText(counts)).toBe("Outside Chio protection while connected (observed, not checked): Bash 4 · Read 4 · Edit 2 · T0 1 · T1 1 · T2 1 · T3 1 · T4 1 · +3 more");
+});
 test("guidance cache is invalidated when connection or protected scope changes", { options }, async ($, on) => {
   let live = false, value = projection(); const invalidated: string[] = [];
   stub(on, () => "session-a", () => { if (!live) throw new Error("offline"); return value; });
@@ -539,4 +616,40 @@ test("native review text neutralizes bidi and invisible Unicode controls", { opt
   const answer = await $.command.run(command("chio-review", "request-a"));
   expect(/[\p{Cf}\u2028\u2029]/u.test(answer.text ?? "")).toBe(false);
   expect(answer.text).toContain("safe�txt.exe��");
+});
+
+
+test("demo outcomes remain labeled when shared with Claude", { options }, async ($, on) => {
+  outcomeStub(on, () => "session-a", await readyOutcome({ written: "demo.txt" }), undefined, undefined, "demo_fixture");
+  const received = await $.command.run(command("chio-outcome", continuationId));
+  expect(received.text).toContain("DEMO fixture kernel · nothing protected");
+  const sent = await $.prompt.submit(submit("what happened?"));
+  expect(sent.context?.length).toBe(1);
+  expect(sent.context![0]).toContain("DEMO fixture");
+  expect(sent.context![0]).toContain("nothing protected");
+  expect(sent.context![0]).not.toContain("protected resource");
+  expect(sent.context![0]).not.toContain("Chio verified result");
+});
+
+test("a native call that finishes after a session change is not counted in the new session", { options }, async ($, on) => {
+  let session = "session-a", started = () => {}, release = () => {};
+  const begun = new Promise<void>(r => { started = r; }), gate = new Promise<void>(r => { release = r; });
+  stub(on, () => session, () => projection(session));
+  on("tool.call", async () => { started(); await gate; return { result: "original" }; });
+  await $.command.run(command("chio-status"));
+  const pending = $.tool.call({ tool: "Bash", command: "true" } as never);
+  await begun; session = "session-b"; await $.command.run(command("chio-status")); release();
+  expect((await pending).result).toBe("original");
+  expect((await $.command.run(command("chio-status"))).text).not.toContain("calls outside Chio");
+  expect((await $.command.run(command("chio-status"))).text).not.toContain("Outside Chio protection");
+});
+
+test("outside coverage bounds retained tool names and aggregates excess calls", { options }, async ($, on) => {
+  stub(on, () => "session-a", () => projection());
+  on("tool.call", () => ({ result: "original" }));
+  await $.command.run(command("chio-status"));
+  for (let i = 0; i < 150; i++) await $.tool.call({ tool: `external_${i}` } as never);
+  const text = (await $.command.run(command("chio-status"))).text;
+  expect(text).toContain("150 calls outside Chio");
+  expect(text).toContain("22 additional calls across other tools");
 });

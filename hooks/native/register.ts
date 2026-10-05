@@ -3,7 +3,7 @@ import type { ControlStatus, IntentKind, OperationView } from "../../types/contr
 import type { Chio } from "../../types/chio.js";
 import type { ExplanationView, ContinuationView } from "../../types/workflow.js";
 import { controlOrigin, outcomeHash, shareText, taskText, type ShareRecord } from "./workflow.ts";
-import { diagnosticText, operationText, outcomeRequestId, parseStatus, guidanceText, safeText, statusLine, transitions, type NoticeState } from "./projection.ts";
+import { diagnosticText, operationText, outsideText, outcomeRequestId, parseStatus, guidanceText, safeText, statusLine, transitions, type NoticeState } from "./projection.ts";
 
 let sessionId = "";
 let status: ControlStatus | null = null;
@@ -15,6 +15,11 @@ let generation = 0;
 let notices: NoticeState = { authorityWarned: false };
 let inFlight = 0;
 let shareQueue: ShareRecord[] = [];
+let outside = new Map<string, number>();
+let outsideOther = 0;
+const outsideLine = () => { const text = status?.scope === "kernel_mcp" ? outsideText(outside, outsideOther) : null; return text ? "\n" + text : ""; };
+const outsideTotal = () => status?.scope === "kernel_mcp" ? [...outside.values()].reduce((a, b) => a + b, outsideOther) : 0;
+
 const sharing = new Set<ShareRecord>();
 let pane: "operations" | "task" = "operations";
 let refreshRead: { sessionId: string; generation: number; promise: Promise<ControlStatus | null> } | null = null;
@@ -24,7 +29,7 @@ async function refresh($: EngineInterface, options: PluginOptions): Promise<Cont
   const actual = await $.session.id();
   const priorGuidance = guidanceText(status);
   if (actual !== sessionId) {
-    sessionId = actual; pane = "operations"; status = null; selectedId = null; showDetails = false; notice = ""; generation += 1; notices = { authorityWarned: false }; shareQueue = []; inFlight = 0;
+    sessionId = actual; pane = "operations"; status = null; selectedId = null; showDetails = false; notice = ""; generation += 1; notices = { authorityWarned: false }; shareQueue = []; outside = new Map(); outsideOther = 0; inFlight = 0;
     await $.ui.close({ id: "chio" });
   }
   const thisGeneration = generation;
@@ -72,17 +77,18 @@ async function open($: EngineInterface, options: PluginOptions, requestId?: stri
   showDetails = details;
   if (requestId && !current?.operations.some(op => op.requestId === requestId)) throw new Error("no retained operation for this session and request id");
   const operation = current?.operations.find(op => op.requestId === selectedId);
-  const text = [statusLine(current, Date.now()), `Session: ${safeText(sessionId)}`, ...(operation ? [operationText(operation)] : []), ...(notice ? [notice] : [])].join("\n");
+  const text = [statusLine(current, Date.now(), outsideTotal()), `Session: ${safeText(sessionId)}`, ...(operation ? [operationText(operation)] : []), ...(notice ? [notice] : [])].join("\n");
   if (interactive) await $.ui.open({ id: "chio", title: "Chio", focus: true, closeOnEscape: true });
   return text;
 }
 /** Queues only when the host session is still the one the result was received in. */
 async function queueShare($: EngineInterface, session: string, continuationId: string, received: { requestId: string; result: unknown; receiptId: string; outcomeHash: string }): Promise<boolean> {
-  if (await $.session.id() !== session || sessionId !== session) return false;
+  if (await $.session.id() !== session || sessionId !== session || !status || status.sessionId !== session) return false;
   const tool = status?.operations.find(op => op.requestId === received.requestId)?.tool;
-  shareQueue = [...shareQueue.filter(record => record.continuationId !== continuationId), { continuationId, sessionId: session, requestId: received.requestId, ...(tool ? { tool } : {}), receiptId: received.receiptId, outcomeHash: received.outcomeHash, result: received.result }];
+  shareQueue = [...shareQueue.filter(record => record.continuationId !== continuationId), { demo: status.scope === "demo_fixture", continuationId, sessionId: session, requestId: received.requestId, ...(tool ? { tool } : {}), receiptId: received.receiptId, outcomeHash: received.outcomeHash, result: received.result }];
   return true;
 }
+const demoNotice = () => status?.scope === "demo_fixture" ? "DEMO fixture kernel · nothing protected\n" : "";
 const SHARE_NOTICE = "Original result received through native control. Claude receives it with your next message; model delivery is not yet confirmed.";
 export const register: Register = (on, options) => {
   on("engine.create", async (_, e, next) => {
@@ -151,7 +157,7 @@ export const register: Register = (on, options) => {
   on("classic.SessionStart", async ($, e, next) => {
     // /clear, resume and fork do not fire session.start; always re-resolve the host id.
     if (e.source === "compact") { await refresh($, options); return next(e); }
-    status = null; selectedId = null; showDetails = false; generation += 1; notices = { authorityWarned: false }; shareQueue = [];
+    status = null; selectedId = null; showDetails = false; generation += 1; notices = { authorityWarned: false }; shareQueue = []; outside = new Map(); outsideOther = 0;
     await refresh($, options); return next(e);
   }).catch(($, e, next) => next(e));
 
@@ -159,12 +165,12 @@ export const register: Register = (on, options) => {
     .catch(() => ({ text: "Chio controls unavailable. Authority remains unconfirmed.", exitCode: 1 }));
   on("command.run", { command: "chio-status" }, async ($) => {
     const current = await refresh($, options);
-    return { text: `${statusLine(current, Date.now())}\nSession: ${safeText(sessionId)}${current ? `\nProtected tools: ${current.protectedTools.join(", ")}\nDispatch fence: ${current.fenced ? "retained" : "clear"}` : ""}${current?.modelUsage ? modelUsageLine(current.modelUsage) : ""}`, exitCode: current ? 0 : 1 };
+    return { text: `${statusLine(current, Date.now(), outsideTotal())}\nSession: ${safeText(sessionId)}${current ? `\n${current.scope === "demo_fixture" ? "Mediated" : "Protected"} tools: ${current.protectedTools.join(", ")}\nDispatch fence: ${current.fenced ? "retained" : "clear"}` : ""}${current?.modelUsage ? modelUsageLine(current.modelUsage) : ""}${current ? outsideLine() : ""}`, exitCode: current ? 0 : 1 };
   }).catch(() => ({ text: "Chio status unavailable. Authority remains unconfirmed.", exitCode: 1 }));
   on("command.run", { command: "chio-doctor" }, async ($, e) => {
     if (e.args.trim()) return { text: "Doctor checks the current session; arguments are refused.", exitCode: 1 };
     const current = await refresh($, options);
-    return { text: diagnosticText(current, sessionId, Date.now()), exitCode: current ? 0 : 1 };
+    return { text: diagnosticText(current, sessionId, Date.now()) + (current ? outsideLine() : ""), exitCode: current ? 0 : 1 };
   }).catch(() => ({ text: "Chio diagnosis unavailable. Authority remains unconfirmed; preserve original operation fences.", exitCode: 1 }));
   on("command.run", { command: "chio-review" }, async ($, e) => ({ text: await open($, options, e.args.trim() || undefined) }))
     .catch(() => ({ text: "Chio review unavailable for this exact session and action.", exitCode: 1 }));
@@ -179,7 +185,7 @@ export const register: Register = (on, options) => {
     if (e.args.trim()) throw new Error("completion targets the current task");
     const current = await refresh($, options); pane = "task";
     if (interactive) await $.ui.open({ id: "chio", title: "Chio task", focus: true, closeOnEscape: true });
-    return { text: taskText(current?.workflow?.task, current?.workflow?.templates) };
+    return { text: demoNotice() + taskText(current?.workflow?.task, current?.workflow?.templates) };
   }).catch(() => ({ text: "Task evidence unavailable for this session.", exitCode: 1 }));
   on("command.run", { command: "chio-task" }, async ($, e) => {
     const current = await refresh($, options); pane = "task";
@@ -191,13 +197,13 @@ export const register: Register = (on, options) => {
       notice = "Task scope requested. The trusted operator prepares a new delegated session; no authority granted or action dispatched.";
     }
     if (interactive) await $.ui.open({ id: "chio", title: "Chio task", focus: true, closeOnEscape: true });
-    return { text: taskText(current?.workflow?.task, current?.workflow?.templates) + (id ? "\n" + notice : "") };
+    return { text: demoNotice() + taskText(current?.workflow?.task, current?.workflow?.templates) + (id ? "\n" + notice : "") };
   }).catch(() => ({ text: "Task request unconfirmed. Inspect the original session.", exitCode: 1 }));
   on("command.run", { command: "chio-continue" }, async ($, e) => {
     const current = await refresh($, options), operation = current?.operations.find(o => o.requestId === e.args.trim());
     if (!operation?.review) throw new Error("exact granted operation required");
     const continuation = await $.chio.continueAction({ requestId: operation.requestId, revision: operation.review.revision });
-    notice = "Continuation submitted for original operation " + continuation.requestId + ". Receive its result with /chio-outcome " + continuation.id + ". No planning turn was started.";
+    notice = demoNotice() + "Continuation submitted for original operation " + continuation.requestId + ". Receive its result with /chio-outcome " + continuation.id + ". No planning turn was started.";
     await refresh($, options); return { text: notice };
   }).catch(() => ({ text: "Continuation unavailable or unresolved. Inspect the original operation; do not retry its effect.", exitCode: 1 }));
   on("command.run", { command: "chio-outcome" }, async ($, e) => {
@@ -206,7 +212,7 @@ export const register: Register = (on, options) => {
     if (!result.ready) return { text: "Original continuation " + result.continuation.state + ". Its fence remains intact." };
     await refresh($, options);
     if (!await queueShare($, session, e.args.trim(), result)) return { text: "Original result was received, but the session changed; it was not shared with Claude.", exitCode: 1 };
-    notice = SHARE_NOTICE;
+    notice = demoNotice() + SHARE_NOTICE;
     return { text: notice + "\n" + safeText(JSON.stringify(result.result, null, 2)) + "\nReceipt: " + safeText(result.receiptId) };
   }).catch(() => ({ text: "Original result or its delivery remains unresolved. Inspect retained evidence; do not dispatch again.", exitCode: 1 }));
   on("command.run", { command: "chio-why" }, async ($, e) => {
@@ -220,6 +226,18 @@ export const register: Register = (on, options) => {
     try { result = await next(e); } finally { inFlight = Math.max(0, inFlight - 1); }
     await refresh($, options); return result;
   }).catch(($, e, next) => next(e)); // Observation only; replay-safe preservation after next.
+  on("tool.call", async ($, e, next) => {
+    const startedSession = sessionId, startedGeneration = generation, startedScope = status?.scope;
+    const result = await next(e);
+    try {
+      if (!e.tool.startsWith("mcp__chio__") && startedScope === "kernel_mcp" && status?.scope === "kernel_mcp"
+        && await $.session.id() === startedSession && sessionId === startedSession && generation === startedGeneration) {
+        if (e.tool.length <= 128 && (outside.has(e.tool) || outside.size < 128)) outside.set(e.tool, Math.min(Number.MAX_SAFE_INTEGER, (outside.get(e.tool) ?? 0) + 1));
+        else outsideOther = Math.min(Number.MAX_SAFE_INTEGER, outsideOther + 1);
+      }
+    } catch { /* Observation only: a failure never changes the call. */ }
+    return result;
+  }).catch(($, e, next) => next(e));
   on("turn.complete", async ($, e, next) => { await refresh($, options); return next(e); })
     .catch(($, e, next) => next(e));
   on("prompt.context", async ($, e, next) => {
@@ -251,7 +269,7 @@ export const register: Register = (on, options) => {
   on("ui.render", { component: "AbovePrompt" }, async ($, e, next) => {
     const existing = await next(e);
     const { Box, Text } = $.ui.resolve(e);
-    return Box({ flexDirection: "column", children: [existing, Text({ dimColor: true, children: statusLine(status, Date.now()) })] });
+    return Box({ flexDirection: "column", children: [existing, Text({ dimColor: true, children: statusLine(status, Date.now(), outsideTotal()) })] });
   }).catch(($, e, next) => next(e));
   on("ui.render", { component: "ToolResult" }, async ($, e, next) => {
     const existing = await next(e);
@@ -260,14 +278,14 @@ export const register: Register = (on, options) => {
     const operation = status?.operations.find(op => op.requestId === requestId);
     if (!operation) return existing;
     const { Box, Button } = $.ui.resolve(e);
-    return Box({ flexDirection: "column", children: [existing, Button({ key: "chio-evidence", label: `Chio evidence · ${operation.evidence} · ${operation.state}`,
+    return Box({ flexDirection: "column", children: [existing, Button({ key: "chio-evidence", label: `${demoNotice()}Chio evidence · ${operation.evidence} · ${operation.state}`,
       onPress: async () => { try { await open($, options, operation.requestId); } catch { notice = "Evidence unavailable for the current session."; $.ui.invalidate("ui.render"); } } })] });
   }).catch(($, e, next) => next(e));
   on("ui.render", { component: "Pane" }, ($, e, next) => {
     if (e.requestId !== "chio") return next(e);
     const { Box, Text, Button } = $.ui.resolve(e);
     if (pane === "task") {
-      const rows = [Text({ children: statusLine(status, Date.now()) }), Text({ children: taskText(status?.workflow?.task, status?.workflow?.templates) }), Text({ children: safeText(notice) })];
+      const rows = [Text({ children: statusLine(status, Date.now(), outsideTotal()) }), Text({ children: taskText(status?.workflow?.task, status?.workflow?.templates) }), Text({ children: safeText(notice) })];
       for (const template of status?.workflow?.templates ?? []) rows.push(Button({ key: "task-" + template.id, label: "Request scope: " + safeText(template.title), onPress: async () => {
         try { await $.chio.selectTask({ templateId: template.id, revision: template.revision }); notice = "Scope requested. Trusted operator preparation required; no authority granted."; }
         catch { notice = "Task request unconfirmed; inspect the current catalog."; }
@@ -289,7 +307,7 @@ export const register: Register = (on, options) => {
       "Kernel policy applies. Budget impact unavailable.",
       "Exact arguments:", safeText(JSON.stringify(operation.review.arguments, null, 2)),
     ].join("\n") : operation ? operationText(operation) : "No selected retained operation.";
-    const rows = [Text({ children: statusLine(status, Date.now()) }), Text({ dimColor: true, children: `Session ${safeText(sessionId)}` }),
+    const rows = [Text({ children: statusLine(status, Date.now(), outsideTotal()) }), Text({ dimColor: true, children: `Session ${safeText(sessionId)}` }),
       Text({ children: summary }), Text({ children: safeText(notice) })];
     for (const intent of intents) rows.push(Text({ children: `${intent.kind} ${intent.state} · ${safeText(intent.id)}${Date.now() >= intent.expiresAt ? " · request expired; inspect its original outcome" : ""}` }));
     if (fresh && operation?.review?.decision === "required" && !intents.some(intent => intent.kind !== "alternative")) {
@@ -299,12 +317,12 @@ export const register: Register = (on, options) => {
     }
     const continuation = status?.continuations?.find(c => c.requestId === operation?.requestId);
     if (fresh && operation?.review?.decision === "granted" && status?.workflow?.continuation && !continuation) rows.push(Button({ key: "continue", label: "Continue this exact action", onPress: async () => {
-      try { const submitted = await $.chio.continueAction({ requestId: operation.requestId, revision: operation.review!.revision }); notice = "Continuation submitted · " + submitted.id; await refresh($, options); }
+      try { const submitted = await $.chio.continueAction({ requestId: operation.requestId, revision: operation.review!.revision }); notice = demoNotice() + "Continuation submitted · " + submitted.id; await refresh($, options); }
       catch { notice = "Continuation unresolved; inspect the original operation without retry."; }
       $.ui.invalidate("ui.render");
     } }));
     if (continuation && continuation.state !== "unknown" && continuation.delivery !== "confirmed") rows.push(Button({ key: "outcome", label: "Receive original continuation result", onPress: async () => {
-      try { const session = await $.session.id(); const result = await $.chio.receiveOutcome({ continuationId: continuation.id }); await refresh($, options); const queued = result.ready && await queueShare($, session, continuation.id, result); notice = result.ready && !queued ? "Original result received, but the session changed; it was not shared with Claude." : result.ready ? SHARE_NOTICE + "\n" + safeText(JSON.stringify(result.result, null, 2)) : "Original continuation " + result.continuation.state + "; fence retained."; }
+      try { const session = await $.session.id(); const result = await $.chio.receiveOutcome({ continuationId: continuation.id }); await refresh($, options); const queued = result.ready && await queueShare($, session, continuation.id, result); notice = result.ready && !queued ? "Original result received, but the session changed; it was not shared with Claude." : result.ready ? demoNotice() + SHARE_NOTICE + "\n" + safeText(JSON.stringify(result.result, null, 2)) : "Original continuation " + result.continuation.state + "; fence retained."; }
       catch { notice = "Original result delivery unresolved; do not dispatch again."; }
       $.ui.invalidate("ui.render");
     } }));

@@ -12,7 +12,7 @@ function table(headers: string[], rows: unknown[][]): string[] {
 }
 /** Markdown from authorized projections only. It references receipts by id and verifies nothing. */
 export function renderSessionReport({ status, continuations, generatedAt, relayEvents }: ReportInput): string {
-  const lines = ["# Chio session report", "",
+  const lines = ["# Chio session report", "", ...(status.scope === "demo_fixture" ? ["DEMO fixture kernel · nothing protected", ""] : []),
     `- Session: ${md(status.sessionId)}`, `- Scope: ${["isolated_kernel_mcp", "demo_fixture"].includes(status.scope) ? md(status.scope) : "not recorded in the journal (the launcher holds it)"}`,
     `- Authority: ${md(status.authority)} · expires ${time(status.authorityExpiresAt * 1000)}`,
     `- Projection revision: ${md(status.revision)}`, `- Dispatch fence: ${status.fenced ? "retained" : "clear"}`,
@@ -20,7 +20,7 @@ export function renderSessionReport({ status, continuations, generatedAt, relayE
     "## Operations", "", ...table(["Request", "Tool", "State", "Evidence", "Next action", "Receipt", "Kernel ACK", "Delivery"],
       status.operations.map(op => [op.requestId, op.tool, op.state, op.evidence, op.nextAction, op.receiptId, op.acknowledged ? "confirmed" : "unconfirmed",
         op.hostDeliveryConfirmed ? op.deliveryChannel ?? "confirmed (channel not recorded)" : "unconfirmed"])), "",
-    "Evidence: verified means the gateway checked the receipt signature against the session's pinned signers; this report does not re-verify it.", "",
+    status.scope === "demo_fixture" ? "DEMO evidence: signatures match only this demo run’s fixture key; no protected kernel or resource is established." : "Evidence: verified means the gateway checked the receipt signature against the session's pinned signers; this report does not re-verify it.", "",
     "## Decisions", "", ...(status.intents.length ? table(["Intent", "Kind", "State", "Request", "Expires"], status.intents.map(i => [i.id, i.kind, i.state, i.requestId, time(i.expiresAt)])) : ["No review intents retained."]), "",
     "## Continuations", "", ...(continuations.length ? table(["Continuation", "Original request", "State", "Delivery", "Model context"], continuations.map(c => [c.id, c.requestId, c.state, c.delivery, c.modelContext ?? "not available to the operator report"])) : ["No continuations retained."]), ""];
   const task = status.workflow?.task;
