@@ -22,6 +22,7 @@
     "LICENSE",
     "vendor",
     "docs/RESTRICTED-MODE.md",
+    "docs/GETTING-STARTED.md",
     "acceptance/2026-09-09/REPORT.md",
     "acceptance/2026-09-09/ACCEPTANCE.json",
     "docs/assets"
