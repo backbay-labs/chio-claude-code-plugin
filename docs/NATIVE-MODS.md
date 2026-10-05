@@ -192,6 +192,12 @@ before clearing its bond. Compatibility `/chio:approve` reports `signed_intent`
 or `decision_submitted`, never accepted authority. Compatibility receipt export
 explicitly reports time-range scope, rather than claiming session filtering.
 
+`node scripts/control.mjs report --gateway-config CONFIG --output NEW_FILE.md`
+writes a Markdown report of the session: authority, operations, decisions,
+continuations, task evidence and, with `--relay-events PROFILE/control/model-relay.json`,
+relay-metered model usage. It references receipts by id and does not verify
+them, and it never includes credentials or raw resource results.
+
 ## Protected native launcher candidate
 
 | Mode | Purpose |

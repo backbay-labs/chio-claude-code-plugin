@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
-import { mkdtempSync, readFileSync, readdirSync, writeFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, readdirSync, writeFileSync, rmSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { createGateway, operationKey } from "../dist/gateway.js";
@@ -290,4 +290,17 @@ test("an action that already has an intent is not counted as awaiting a request"
   assert.match(tty.read(), /1 action awaiting a review request from Claude/);
   assert.match(tty.read(), /1 action needs inspection: an earlier request for the same revision was skipped, expired or unresolved/);
   tty.input.write("q"); await running;
+});
+test("control report writes a private Markdown report once and never includes credentials", async t => {
+  const f = await fixture(t); const now = Math.floor(Date.now() / 1000);
+  const prepared = { ...f.config, sessionCredential: { schema: "chio.mcp.session-credential.v1", sessionId: f.config.execution.sessionId,
+    subjectKey: f.config.execution.subjectKey, capabilityIds: [f.config.execution.capabilityId], serverId: f.config.execution.serverId,
+    endpointPath: "/mcp", allowedTools: ["write_file"], issuedAt: now, expiresAt: now + 600 } };
+  const configPath = join(f.root, "report-config.json"); const outPath = join(f.root, "report.md");
+  writeFileSync(configPath, JSON.stringify(prepared), { mode: 0o600 });
+  await operatorMain(["report", "--gateway-config", configPath, "--output", outPath]);
+  assert.equal(statSync(outPath).mode & 0o777, 0o600);
+  const text = readFileSync(outPath, "utf8");
+  assert.ok(text.includes("# Chio session report")); assert.ok(text.includes(f.config.sessionId)); assert.ok(!text.includes(f.config.execution.bearerToken));
+  await assert.rejects(operatorMain(["report", "--gateway-config", configPath, "--output", outPath]), /EEXIST/);
 });

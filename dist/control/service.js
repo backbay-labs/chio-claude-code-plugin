@@ -9243,6 +9243,81 @@ function createWorkflowControl(access, options = {}) {
   };
 }
 
+// src/control/report.ts
+var clean = (value) => String(value ?? "").replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]/g, " ");
+var cell = (value) => clean(value).replace(/\|/g, "\\|") || "\u2014";
+var time = (ms) => new Date(ms).toISOString();
+function table(headers, rows) {
+  return [`| ${headers.join(" | ")} |`, `| ${headers.map(() => "---").join(" | ")} |`, ...rows.map((row) => `| ${row.map(cell).join(" | ")} |`)];
+}
+function renderSessionReport({ status, continuations, generatedAt, relayEvents }) {
+  const lines = [
+    "# Chio session report",
+    "",
+    `- Session: ${clean(status.sessionId)}`,
+    `- Scope: ${clean(status.scope)}`,
+    `- Authority: ${clean(status.authority)} \xB7 expires ${time(status.authorityExpiresAt * 1e3)}`,
+    `- Projection revision: ${clean(status.revision)}`,
+    `- Dispatch fence: ${status.fenced ? "retained" : "clear"}`,
+    `- Generated: ${time(generatedAt)}`,
+    "",
+    "## Operations",
+    "",
+    ...table(
+      ["Request", "Tool", "State", "Evidence", "Next action", "Receipt", "Kernel ACK", "Delivery"],
+      status.operations.map((op) => [
+        op.requestId,
+        op.tool,
+        op.state,
+        op.evidence,
+        op.nextAction,
+        op.receiptId,
+        op.acknowledged ? "confirmed" : "unconfirmed",
+        op.hostDeliveryConfirmed ? op.deliveryChannel ?? "confirmed" : "unconfirmed"
+      ])
+    ),
+    "",
+    "## Decisions",
+    "",
+    ...status.intents.length ? table(["Intent", "Kind", "State", "Request", "Expires"], status.intents.map((i) => [i.id, i.kind, i.state, i.requestId, time(i.expiresAt)])) : ["No review intents retained."],
+    "",
+    "## Continuations",
+    "",
+    ...continuations.length ? table(["Continuation", "Original request", "State", "Delivery", "Model context"], continuations.map((c) => [c.id, c.requestId, c.state, c.delivery, c.modelContext ?? "not confirmed"])) : ["No continuations retained."],
+    ""
+  ];
+  const task = status.workflow?.task;
+  lines.push("## Task", "");
+  if (task) lines.push(
+    `- ${clean(task.title)} \xB7 ${clean(task.readiness)}`,
+    `- Artifact: ${clean(task.artifact.kind)} ${clean(task.artifact.digest)} \xB7 ${clean(task.artifact.label)}`,
+    "",
+    ...table(["Requirement", "State", "Evidence class", "Source", "Observed"], task.requirements.map((r) => [r.title, r.state, r.evidenceClass, r.source, r.observedAt ? time(r.observedAt) : void 0]))
+  );
+  else lines.push("No task contract is bound to this session.");
+  lines.push("");
+  if (Array.isArray(relayEvents)) {
+    const forwarded = relayEvents.filter((e) => e?.requestClass === "conversation" && e.forwarded && e.usage);
+    const sum = (key) => forwarded.reduce((total, e) => total + (Number.isSafeInteger(e.usage[key]) ? e.usage[key] : 0), 0);
+    const models = [...new Set(forwarded.map((e) => clean(e.model)))];
+    lines.push(
+      "## Model usage",
+      "",
+      `- Relay-metered: ${forwarded.length} request${forwarded.length === 1 ? "" : "s"} \xB7 ${sum("input_tokens")} in \xB7 ${sum("output_tokens")} out \xB7 ${sum("cache_read_input_tokens")} cache read \xB7 ${sum("cache_creation_input_tokens")} cache write tokens`,
+      `- Models: ${models.join(", ") || "\u2014"}`,
+      "- Provider-reported counts, not billing records.",
+      ""
+    );
+  }
+  lines.push(
+    "## What this report is",
+    "",
+    "Generated from the operator's private journal and the session's authorized projection. Receipts are referenced by id; this report does not verify them. Verify receipts with the kernel's evidence tools. It contains no credentials, approval tokens or raw resource results.",
+    ""
+  );
+  return lines.join("\n");
+}
+
 // src/control/service.ts
 var LIMIT = 1024 * 1024;
 var kinds = ["approve", "decline", "revoke"];
@@ -9449,6 +9524,16 @@ async function body(request) {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("intent object required");
   return value;
 }
+async function controlReport(options) {
+  const status = await controlStatus(options);
+  const config = options.config;
+  const workflow = createWorkflowControl({ config, binding: hash(gatewayBinding(config)), read: () => records(config), view: (record) => project(config, record), live: async () => false }, options.workflow);
+  try {
+    return { status, continuations: workflow.retained() };
+  } finally {
+    await workflow.close();
+  }
+}
 async function startControlServer(options) {
   const pinned = { ...options, config: JSON.parse(JSON.stringify(options.config)) };
   records(pinned.config);
@@ -9591,6 +9676,8 @@ async function confirmControlIntent(config, operator, id) {
 }
 export {
   confirmControlIntent,
+  controlReport,
   controlStatus,
+  renderSessionReport,
   startControlServer
 };

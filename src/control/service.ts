@@ -13,6 +13,8 @@ import type { ControlStatus, IntentKind, ModelUsageView, IntentState, IntentView
 import { createWorkflowControl, type WorkflowOptions } from "../workflow/control.js";
 import { projectTask, readCatalog, readTask, templateView } from "../workflow/tasks.js";
 import { verifiedOriginal } from "../workflow/outcome.js";
+import type { ContinuationView } from "../../types/workflow.js";
+export { renderSessionReport } from "./report.js";
 
 const LIMIT = 1024 * 1024;
 const kinds: IntentKind[] = ["approve", "decline", "revoke"];
@@ -178,6 +180,13 @@ async function body(request: IncomingMessage): Promise<Record<string, unknown>> 
   const value: unknown = JSON.parse(Buffer.concat(chunks).toString("utf8"));
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("intent object required");
   return value as Record<string, unknown>;
+}
+/** Operator-side projection for the session report: status plus retained continuations. */
+export async function controlReport(options: ControlOptions): Promise<{ status: ControlStatus; continuations: ContinuationView[] }> {
+  const status = await controlStatus(options);
+  const config = options.config;
+  const workflow = createWorkflowControl({ config, binding: hash(gatewayBinding(config)), read: () => records(config), view: record => project(config, record), live: async () => false }, options.workflow);
+  try { return { status, continuations: workflow.retained() }; } finally { await workflow.close(); }
 }
 export async function startControlServer(options: ControlOptions) {
   // Freeze all authority selection before exposing a host credential.
