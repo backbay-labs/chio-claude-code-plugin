@@ -9485,7 +9485,7 @@ async function startControlServer(options) {
         for (const operation of status.operations) {
           if (operation.hostDeliveryConfirmed) operation.deliveryChannel = continuations.some((c) => c.requestId === operation.requestId && c.receiptConfirmed === true) ? "native_control" : pinned.modelDeliveryConfirmed?.(operation.requestId) ? "model_tool_result" : "unclassified";
         }
-        return reply(response, 200, { ...status, continuations });
+        return reply(response, 200, { ...status, continuations, ...pinned.modelUsage ? { modelUsage: pinned.modelUsage() } : {} });
       }
       if (request.method === "POST" && request.url === root + "/intents") return reply(response, 202, { intent: requestIntent(pinned, await body(request)), authorityAccepted: false, dispatchPerformed: false });
       if (request.method === "POST" && request.url === root + "/continuations") return reply(response, 202, { continuation: await workflow.startContinuation(await body(request)) });

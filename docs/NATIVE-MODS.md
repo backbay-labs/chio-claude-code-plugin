@@ -258,6 +258,14 @@ not establish natural terminal shutdown, live provider behavior, the full
 session lifecycle, signed live kernel decisions or resource recovery. Those
 checks must pass with delivered artifacts before production qualification.
 
+The parent relay records each forwarded conversation's model and
+provider-reported token usage in `model-relay.json` and totals in `exit.json`
+(`modelUsage`); `/chio-status` shows the totals as "relay-metered". These are
+the provider's reported counts, not billing records, and are separate from
+kernel tool budgets. `--model-token-budget N` stops new conversation requests
+once input, output and cache tokens together reach N; requests already in
+flight finish, and token-count requests are not refused.
+
 ## Evidence and recovery
 
 The pane and tool-result evidence link preserve authorization, host delivery and

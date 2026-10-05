@@ -41,6 +41,11 @@ export function parseStatus(text: string, sessionId: string): ControlStatus {
   }
   if (value.continuations && (!Array.isArray(value.continuations) || value.continuations.length > 1000 || value.continuations.some(c => !/^[0-9a-f-]{36}$/.test(c.id)
     || typeof c.requestId !== "string" || !["submitted", "completed", "unknown"].includes(c.state) || !["pending", "confirmed"].includes(c.delivery) || (c.modelContext !== undefined && c.modelContext !== "confirmed")))) throw new Error("invalid continuation projection");
+  if (value.modelUsage !== undefined) {
+    const u = value.modelUsage;
+    if (!u || typeof u.model !== "string" || u.model.length > 128 || [u.requests, u.inputTokens, u.outputTokens, u.cacheCreationInputTokens, u.cacheReadInputTokens].some(n => !Number.isSafeInteger(n) || n < 0)
+      || !(u.budget === null || Number.isSafeInteger(u.budget) && u.budget > 0) || typeof u.budgetReached !== "boolean") throw new Error("invalid model usage projection");
+  }
   return value;
 }
 

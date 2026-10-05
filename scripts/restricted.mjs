@@ -65,12 +65,14 @@ async function main() {
   const args = process.argv.slice(2);
   const allowed = new Set(["--host", "--host-sha256", "--profile", "--workspace", "--gateway-config", "--gateway-sha256", "--model"]);
   const opts = {};
-  const optional = new Set(["--model-auth", "--mode", "--mod-sha256"]);
+  const optional = new Set(["--model-auth", "--mode", "--mod-sha256", "--model-token-budget"]);
   for (let i=0; i<args.length; i+=2) {
     if ((!allowed.has(args[i]) && !optional.has(args[i])) || !args[i+1] || Object.hasOwn(opts,args[i])) throw new Error("expected unique --host, --host-sha256, --profile, --workspace, --gateway-config, --gateway-sha256 and --model options");
     opts[args[i]] = args[i+1];
   }
   for (const key of allowed) if (!opts[key]) throw new Error(`${key} is required`);
+  const tokenBudget = opts["--model-token-budget"] === undefined ? undefined : Number(opts["--model-token-budget"]);
+  if (tokenBudget !== undefined && (!Number.isSafeInteger(tokenBudget) || tokenBudget < 1)) throw new Error("--model-token-budget must be a positive integer");
   const mode = opts["--mode"] ?? "print";
   if (!["print", "interactive", "mod-print"].includes(mode)) throw new Error("mode must be print, interactive, or mod-print");
   const native = mode !== "print";
@@ -174,7 +176,7 @@ async function main() {
   const oauth=modelAuth==="claude-login" ? await (await import(pathToFileURL(join(scriptDirectory,"native-login.mjs")).href)).nativeLogin(host,workspace) : undefined;
   // A Messages request is actual host delivery evidence. Confirm it before
   // returning the next model turn so fast providers cannot outrun kernel ACK.
-  const relay=await startModelRelay({upstreamBaseUrl:process.env.ANTHROPIC_BASE_URL??"https://api.anthropic.com",apiKey:oauth?undefined:process.env.ANTHROPIC_API_KEY,oauth,model:opts["--model"],toolNames,onToolResults:receiveHostResults,pinnedHostEffortBeta:native,
+  const relay=await startModelRelay({upstreamBaseUrl:process.env.ANTHROPIC_BASE_URL??"https://api.anthropic.com",apiKey:oauth?undefined:process.env.ANTHROPIC_API_KEY,oauth,model:opts["--model"],toolNames,onToolResults:receiveHostResults,pinnedHostEffortBeta:native,tokenBudget,
     ...(native ? { onModelRequest: body => {
       if (controlServer?.sessionMismatch) { hostInitializationFailed = true; throw new Error("native host session changed"); }
       const actual = body.tools?.map(tool => tool.name).sort() ?? [];
@@ -188,7 +190,7 @@ async function main() {
     transport=await startGatewayHttp(config);
     if (native) {
       const { startControlServer } = await import(pathToFileURL(join(scriptDirectory, "..", "dist", "control", "service.js")).href);
-      controlServer = await startControlServer({ config, authorityExpiresAt: config.sessionCredential.expiresAt, scope: "isolated_kernel_mcp", modelDeliveryConfirmed: requestId => modelDeliveredRequests.has(requestId), modelContextConfirmed: requestId => modelContextRequests.has(requestId), workflow: { ...(config.workflow ?? {}), ...createControlTransport(transport, config, outcome => {
+      controlServer = await startControlServer({ config, modelUsage: () => relay.usage(), authorityExpiresAt: config.sessionCredential.expiresAt, scope: "isolated_kernel_mcp", modelDeliveryConfirmed: requestId => modelDeliveredRequests.has(requestId), modelContextConfirmed: requestId => modelContextRequests.has(requestId), workflow: { ...(config.workflow ?? {}), ...createControlTransport(transport, config, outcome => {
         hostPendingRequests.delete(outcome.requestId); nativeDeliveredRequests.add(outcome.requestId);
         if (outcome.result?.isError === true) hostWorkIncomplete = true;
       }) }, onSessionMismatch: () => {
@@ -268,7 +270,7 @@ async function main() {
     const initializationFailed=hostInitializationFailed||!hostReady&&!nativeControlOnly;
     const executionOutcome=unresolved?"unresolved":initializationFailed?"host-initialization-failed":pending?"awaiting-approval":unsuccessful?"protected-work-incomplete":state.code===0?"completed":"host-failed";
     const exitCode=unresolved?2:initializationFailed?1:pending?4:unsuccessful?3:state.code??1;
-    writeFileSync(join(profile,"exit.json"),JSON.stringify({...state,exitCode,hostInitialization:{ready:hostReady||nativeControlOnly,failed:initializationFailed,...(native?{nativeStatusReads:controlServer.statusReads,controlOnly:nativeControlOnly,sessionChanged:controlServer.sessionMismatch}:{})},hostDelivery:{confirmed:delivered,failed:deliveryFailed},nativeControlDelivery:{confirmed:nativeDeliveredRequests.size,modelDeliveryClaimed:false,modelContextConfirmed:modelContextRequests.size},modelWorkFailed,executionOutcome,retry:"never-automatic"}),{mode:0o600});
+    writeFileSync(join(profile,"exit.json"),JSON.stringify({...state,exitCode,hostInitialization:{ready:hostReady||nativeControlOnly,failed:initializationFailed,...(native?{nativeStatusReads:controlServer.statusReads,controlOnly:nativeControlOnly,sessionChanged:controlServer.sessionMismatch}:{})},modelUsage:relay.usage(),hostDelivery:{confirmed:delivered,failed:deliveryFailed},nativeControlDelivery:{confirmed:nativeDeliveredRequests.size,modelDeliveryClaimed:false,modelContextConfirmed:modelContextRequests.size},modelWorkFailed,executionOutcome,retry:"never-automatic"}),{mode:0o600});
     process.exitCode=exitCode;
   } finally {
     await controlServer?.close();

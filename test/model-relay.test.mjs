@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { validateModelRequest, startModelRelay } from "../scripts/model-relay.mjs";
+import { validateModelRequest, startModelRelay, usageMeter } from "../scripts/model-relay.mjs";
 import { createServer } from "node:http";
 const model = "claude-sonnet-5-5";
 function request(messages) { return { model, max_tokens: 100, system: "fixed instructions", messages, tools: [{ name: "mcp__chio__read", input_schema: { type: "object" } }] }; }
@@ -81,4 +81,33 @@ test("refused conversation attempts remain distinct from unsupported auxiliary t
   assert.equal((await send(request([{ role: "user", content: "work" }]))).status, 200);
   assert.equal(relay.events[2].requestClass, "conversation"); assert.equal(relay.events[2].forwarded, true); assert.equal(calls, 1);
   assert.ok(!JSON.stringify(relay.events).includes("private fixture")); assert.ok(!JSON.stringify(relay.events).includes("private title"));
+});
+const sse = events => events.map(e => `event: ${e.type}\ndata: ${JSON.stringify(e)}\n\n`).join("");
+test("usage is read from streamed and JSON responses without changing them", () => {
+  const stream = sse([{ type: "message_start", message: { usage: { input_tokens: 10, output_tokens: 1, cache_creation_input_tokens: 3, cache_read_input_tokens: 4 } } }, { type: "content_block_delta", delta: { text: "hi" } }, { type: "message_delta", usage: { output_tokens: 25 } }, { type: "message_stop" }]);
+  const meter = usageMeter("text/event-stream; charset=utf-8");
+  for (let i = 0; i < stream.length; i += 7) meter.feed(Buffer.from(stream.slice(i, i + 7)));
+  assert.deepEqual(meter.end(), { input_tokens: 10, output_tokens: 25, cache_creation_input_tokens: 3, cache_read_input_tokens: 4 });
+  const json = usageMeter("application/json"); json.feed(JSON.stringify({ usage: { input_tokens: 5, output_tokens: 6 } }));
+  assert.deepEqual(json.end(), { input_tokens: 5, output_tokens: 6, cache_creation_input_tokens: 0, cache_read_input_tokens: 0 });
+  const none = usageMeter("text/event-stream"); none.feed(sse([{ type: "message_stop" }])); assert.equal(none.end(), null);
+  const broken = usageMeter("application/json"); broken.feed("{not json"); assert.equal(broken.end(), null);
+});
+test("the relay meters forwarded conversations and stops new ones at the token budget", async t => {
+  let responses = 0;
+  const server = createServer(async (req, res) => {
+    for await (const chunk of req) void chunk; responses++;
+    res.writeHead(200, { "Content-Type": "application/json" }); res.end(JSON.stringify({ usage: { input_tokens: 60, output_tokens: 50 } }));
+  });
+  await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
+  const relay = await startModelRelay({ upstreamBaseUrl: `http://127.0.0.1:${server.address().port}`, apiKey: "upstream-fixture", model, toolNames: [...tools], tokenBudget: 100 });
+  t.after(async () => { await relay.close(); await new Promise(resolve => { server.close(resolve); server.closeAllConnections(); }); });
+  const send = (path = "/v1/messages") => fetch(`http://127.0.0.1:${relay.port}${path}`, { method: "POST", headers: { "x-api-key": relay.token, "Content-Type": "application/json" }, body: JSON.stringify(request([{ role: "user", content: "task" }])) });
+  assert.equal((await send()).status, 200);
+  assert.deepEqual(relay.usage(), { model, requests: 1, inputTokens: 60, outputTokens: 50, cacheCreationInputTokens: 0, cacheReadInputTokens: 0, budget: 100, budgetReached: true });
+  const refused = await send(); assert.equal(refused.status, 403);
+  assert.match((await refused.json()).error.message, /token budget reached/);
+  assert.equal(responses, 1);
+  assert.equal((await send("/v1/messages/count_tokens")).status, 200);
+  assert.equal(relay.events.find(e => e.forwarded && e.requestClass === "conversation").usage.input_tokens, 60);
 });

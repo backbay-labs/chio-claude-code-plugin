@@ -462,3 +462,9 @@ test("attaching a share replaces the not-yet-confirmed notice", { options }, asy
   const text = (await $.command.run(command("chio", ""))).text;
   expect(text).toContain("Original result attached to your message for Claude."); expect(text).not.toContain("not yet confirmed");
 });
+test("status prints relay-metered model usage when the projection carries it", { options }, async ($, on) => {
+  const value = projection();
+  value.modelUsage = { model: "claude-sonnet-5-5", requests: 3, inputTokens: 1200, outputTokens: 340, cacheCreationInputTokens: 0, cacheReadInputTokens: 800, budget: null, budgetReached: false };
+  stub(on, () => "session-a", () => value);
+  expect((await $.command.run(command("chio-status"))).text).toContain("Model usage (relay-metered): 3 requests · 1200 in · 340 out tokens");
+});
